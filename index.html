@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FSU-COP4610-Operating-Systems</title>
+    <title>FSU-CIS5930-Future-Edge-Networks</title>
     <link rel="icon" type="image/x-icon" href="./figure/tux.png"> 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -93,13 +93,13 @@
     </style>
 </head>
 
-<dialog id="videoDialog">
+<!-- <dialog id="videoDialog">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #ddd;">
     <strong>Lecture 6 Demo</strong>
     <button onclick="closeVideo()" style="font-size:16px;">✕</button>
   </div>
   <video id="player" controls style="width:100%;height:auto;display:block;"></video>
-</dialog>
+</dialog> -->
 
 <style>
   /* 右侧抽屉式对话框 */
@@ -147,7 +147,7 @@
 <body>
 
     <div class="container">
-        <h1><i class="fas fa-laptop-code"></i> CIS 4930/5930 Future Edge Network and Distributed Intelligence - Spring 2025</h1>
+        <h1><i class="fas fa-laptop-code"></i> CIS 4930/5930 Future Edge Networks and Distributed Intelligence - Spring 2026</h1>
 
         <h2><i class="fas fa-info-circle"></i> Lecture</h2>
         <ul class="indented">
@@ -157,11 +157,12 @@
             <li><i class="fas fa-envelope"></i> <strong>Email:</strong> <a href="mailto:xliu15j@fsu.edu">xliu15j@fsu.edu</a></li>
             <li>    
                 <i class="fas fa-clock"></i> 
-                <strong>Office Hours:</strong>Thursday, 3:30 p.m. - 5:30 p.m. 
-                <div style="margin-left: 150px;">Available via Zoom (appointment required).
+                <strong>Office Hours:</strong> Thursday, 3:30 p.m. - 5:30 p.m. 
+                <div style="margin-left: 150px;"> Available via Zoom (appointment required).
                 </div>
             </li>
             <li><i class="fas fa-map-marker-alt"></i> <strong>Office:</strong> James Jay Love Building, 160</li>
+            <li><i class="fas fa-user"></i> <strong>Teaching Assistant:</strong> TBD <a href="mailto:@fsu.edu">tbd@fsu.edu</a></li>
         </ul>
 
         <!-- <h2><i class="fas fa-user"></i> Instructor Information</h2>
@@ -178,22 +179,19 @@
         </ul> -->
 
         <h2><i class="fas fa-bullseye"></i> Course Objectives</h2>
-<ul class="indented"> <li><i class="fas fa-dot-circle"></i> <strong>Fundamental Goal: Applying AI/ML to 5G and Beyond</strong>
+
+        <ul class="indented"> <li><i class="fas fa-dot-circle"></i> <strong>Fundamental Goal: Applying AI/ML to 5G and Beyond.</strong> This course is designed to explore how machine learning—particularly deep learning—can be applied in modern wireless networks, especially in the context of 5G and beyond. </li> 
 
 
-This course is designed to explore how machine learning—particularly deep learning—can be applied in modern wireless networks, especially in the context of 5G and beyond. </li> <li><i class="fas fa-dot-circle"></i> <strong>Core Focus: 5G/ORAN and Hybrid Routing Systems</strong>
-
-
-We’ll focus primarily on the 5G network architecture, especially on the Open Radio Access Network (ORAN). One of the central themes will be how to intelligently route models (i.e., model routing) in edge environments—selecting and placing ML models dynamically across the network. This intersects with both model routing and network routing, so students will learn how to design such hybrid systems from the ground up. </li> <li><i class="fas fa-dot-circle"></i> <strong>Key Topics and Emphasis on Edge-Side Challenges</strong>
-
-
-The course will also touch on topics such as resource allocation, OFDM, and other essential concepts in edge wireless systems. While we’ll briefly cover elements of the 5G core network (e.g., slicing strategies), the emphasis will be on edge-side challenges. </li> </ul>
+        <li><i class="fas fa-dot-circle"></i> <strong>Core Focus: 5G/ORAN and Hybrid Routing Systems.</strong> We’ll focus primarily on the 5G network architecture, especially on the Open Radio Access Network (ORAN). One of the central themes will be how to intelligently route models (i.e., model routing) in edge environments—selecting and placing ML models dynamically across the network. This intersects with both model routing and network routing, so students will learn how to design such hybrid systems from the ground up. </li>
+        
+        <li><i class="fas fa-dot-circle"></i> <strong>Key Topics and Emphasis on Edge-Side Challenges.</strong> The course will also touch on topics such as resource allocation, OFDM, and other essential concepts in edge wireless systems. While we’ll briefly cover elements of the 5G core network (e.g., slicing strategies), the emphasis will be on edge-side challenges. </li> </ul>
 
 
 
         <h2><i class="fas fa-book-open"></i> Prerequisites</h2>
         <ul class="indented">      
-            While no prior experience with wireless systems is required, students should be comfortable with programming <span style="color: #ff4500; font-weight: bold; background-color: #f0f0f0; padding: 2px 5px; border-radius: 3px;">MatLab and Python</span> will be used frequently) and have a basic understanding of machine learning, including some hands-on experience with deep learning techniques.
+            While no prior experience with wireless systems is required, students should be comfortable with programming (<span style="color: #ff4500; font-weight: bold; background-color: #f0f0f0; padding: 2px 5px; border-radius: 3px;">MatLab and Python</span> will be used frequently) and have a basic understanding of machine learning, including some hands-on experience with deep learning techniques.
         </ul>
 
         <h2><i class="fas fa-file-alt"></i> Course Material</h2>
@@ -239,8 +237,10 @@ The course will also touch on topics such as resource allocation, OFDM, and othe
                 <tr>
                     <td rowspan="1" style="text-align: center; vertical-align: middle;">1</td>
                     <td style="text-align: center; vertical-align: middle;">1/8</br>(Tu)</br></td>
-                    <td style="vertical-align: middle;">L1: Hello, Network! <a href=".pdf" target="_blank">[PDF]</a><a href="" target="_blank" rel="noopener">[Code]</a></br>()</td>
-                    <td style="text-align: left; vertical-align: middle;">HW 1 Posted on <a href="" target="_blank" rel="noopener">[GHC]</a></td>
+                    <td style="vertical-align: middle;">Course Syllabus <a href="syllabus_cop4610.pdf" target="_blank">[PDF]</a> 
+                        </br>L1: Preparation for Learning Edge Networks <a href="l1_preparation.pdf" target="_blank" rel="noopener">[PDF]</a></br>(VS Code, GitHub, JSON, and AI)</a> 
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">HW 1 Posted on <a href="https://classroom.github.com/a/VDFNoC_Y" target="_blank" rel="noopener">[GHC]</a></td>
                 </tr>
 
 
@@ -261,7 +261,7 @@ The course will also touch on topics such as resource allocation, OFDM, and othe
                     <td style="text-align: center; vertical-align: middle;">1/15</br>(Th)</td>
                     <td style="vertical-align: middle;">L:  <a href=".pdf" target="_blank">[PDF]</a><a href="" target="_blank" rel="noopener">[Code]</a></br>()
                     </td>
-                    <td style="text-align: left; vertical-align: middle;">HW 1 DDL at 23:59 PM (ET)</br>HW 2 Posted on <a href="https://classroom.github.com/a/aTVyKsuL" target="_blank" rel="noopener">[GHC]</a></td>
+                    <td style="text-align: left; vertical-align: middle;">HW 1 DDL at 23:59 PM (ET)</br>HW 2 Posted on <a href="" target="_blank" rel="noopener">[GHC]</a></td>
                 </tr>
 
                 <!-- ======================================================
