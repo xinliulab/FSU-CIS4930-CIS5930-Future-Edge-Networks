@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -6,143 +6,335 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FSU-CIS4930-CIS5930-Future-Edge-Networks</title>
     <link rel="icon" type="image/x-icon" href="./figure/tux.png"> 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
+        <style>
+        :root {
+            --bg-1: #f8fafc;
+            --bg-2: #e9f4ff;
+            --text: #10243e;
+            --muted: #4f6782;
+            --surface: rgba(255, 255, 255, 0.84);
+            --surface-strong: #ffffff;
+            --line: rgba(15, 50, 87, 0.14);
+            --brand: #0f5fa8;
+            --brand-soft: #e0f0ff;
+            --accent: #ff7f32;
+            --good: #12804a;
+            --shadow: 0 18px 35px rgba(11, 59, 104, 0.12);
+        }
         body {
-            font-size: 18px;
-            line-height: 1.6;
-            color: #333;
+            font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+            font-size: 17px;
+            line-height: 1.7;
+            color: var(--text);
+            background:
+                radial-gradient(1200px 550px at 0% 0%, #d9ecff 0%, transparent 68%),
+                radial-gradient(900px 460px at 100% 10%, #fff0df 0%, transparent 64%),
+                linear-gradient(160deg, var(--bg-1), var(--bg-2));
+            min-height: 100vh;
         }
-
         .container {
-            max-width: 960px;
-            margin-top: 20px;
+            max-width: 1120px;
+            margin: 24px auto 72px;
+            padding: 0 20px 30px;
         }
-
         h1, h2, h3 {
-            margin-top: 20px;
-            color: #0056b3;
+            color: #0f3a67;
+            letter-spacing: 0.01em;
         }
-
+        h1 {
+            font-family: "Sora", "Segoe UI", sans-serif;
+            font-weight: 800;
+            margin: 10px 0 18px;
+            line-height: 1.24;
+            font-size: clamp(1.55rem, 2.6vw, 2.35rem);
+            text-wrap: balance;
+        }
+        h2 {
+            margin: 0;
+            font-weight: 750;
+            font-size: clamp(1.1rem, 1.9vw, 1.4rem);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
         h3 {
-            margin-left: 20px;
+            margin: 14px 0 8px 0;
+            color: #184f87;
+            font-size: 1.04rem;
+            padding-left: 8px;
+            border-left: 4px solid var(--brand-soft);
         }
-
         ul {
             list-style-type: none;
             padding-left: 0;
         }
-
         ul.indented {
             padding-left: 20px;
         }
-
         ul li {
             margin-bottom: 10px;
         }
-
         ul li i {
             margin-right: 10px;
-            color: #0056b3;
+            color: #0f6cbf;
         }
-
         table {
             width: 100%;
-            margin-bottom: 20px;
-            border-collapse: collapse;
+            margin-bottom: 16px;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: inset 0 0 0 1px rgba(20, 65, 110, 0.06);
         }
-
         table, th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            border: 1px solid rgba(20, 65, 110, 0.08);
+            padding: 10px;
         }
-
         th {
-            background-color: #f2f2f2;
+            background: linear-gradient(180deg, #eaf4ff, #dceeff);
             text-align: center;
+            color: #133b66;
+            font-weight: 700;
         }
-
         th, td {
             text-align: left;
         }
-
         .icon {
             font-size: 1.5em;
             vertical-align: middle;
             margin-right: 8px;
-            color: #28a745;
+            color: var(--good);
         }
-
         .btn-social {
             margin-right: 5px;
         }
-
         .fa-envelope {
             color: #c23a2b;
         }
-
         .fa-map-marker-alt {
             color: #006400;
         }
-
+        .content-section {
+            background: var(--surface);
+            backdrop-filter: blur(7px);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 16px 18px 14px;
+            margin: 14px 0;
+            box-shadow: var(--shadow);
+            transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+        }
+        .content-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(6, 47, 89, 0.16);
+            border-color: rgba(15, 95, 168, 0.3);
+        }
+        .section-body {
+            margin-top: 12px;
+            transition: opacity 180ms ease, max-height 220ms ease;
+            opacity: 1;
+            max-height: 20000px;
+            overflow: visible;
+        }
+        .content-section.is-collapsed .section-body {
+            opacity: 0;
+            max-height: 0;
+            margin-top: 0;
+            overflow: hidden;
+        }
+        .toggle-indicator {
+            color: var(--muted);
+            font-size: 0.95rem;
+            transition: transform 180ms ease;
+        }
+        .content-section.is-collapsed .toggle-indicator {
+            transform: rotate(-90deg);
+        }
+        .top-controls {
+            position: sticky;
+            top: 10px;
+            z-index: 999;
+            margin-bottom: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 10px 12px;
+            box-shadow: 0 8px 24px rgba(15, 63, 110, 0.15);
+            backdrop-filter: blur(8px);
+        }
+        .btn-control {
+            border: 1px solid rgba(15, 95, 168, 0.2);
+            background: #fff;
+            color: #123f6f;
+            border-radius: 999px;
+            font-weight: 650;
+            padding: 7px 12px;
+            font-size: 0.9rem;
+            transition: all 160ms ease;
+        }
+        .btn-control:hover {
+            background: var(--brand-soft);
+            border-color: rgba(15, 95, 168, 0.45);
+            transform: translateY(-1px);
+        }
+        .quick-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 8px 0 22px;
+        }
+        .quick-nav a {
+            text-decoration: none;
+            background: rgba(15, 95, 168, 0.1);
+            color: #134a82;
+            border: 1px solid rgba(15, 95, 168, 0.16);
+            padding: 6px 11px;
+            border-radius: 999px;
+            font-size: 0.86rem;
+            font-weight: 640;
+            transition: all 150ms ease;
+        }
+        .quick-nav a:hover {
+            background: #d9ebff;
+            transform: translateY(-1px);
+        }
+        .quick-nav a.is-active {
+            background: #0f5fa8;
+            color: #fff;
+            border-color: #0f5fa8;
+        }
+        .hero {
+            position: relative;
+            border: 1px solid rgba(15, 95, 168, 0.2);
+            border-radius: 22px;
+            padding: 22px 22px 16px;
+            background:
+                linear-gradient(130deg, rgba(255, 255, 255, 0.95), rgba(236, 246, 255, 0.9)),
+                radial-gradient(850px 280px at 84% -10%, rgba(255, 127, 50, 0.2), transparent 62%);
+            box-shadow: 0 24px 42px rgba(8, 57, 104, 0.17);
+            overflow: hidden;
+        }
+        .hero p {
+            margin: 0;
+            color: #34516f;
+            max-width: 74ch;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 720;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #0f5fa8;
+            background: #e9f3ff;
+            border: 1px solid rgba(15, 95, 168, 0.16);
+            border-radius: 999px;
+            padding: 5px 12px;
+            margin-bottom: 12px;
+        }
+        .calendar-tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .calendar-tools input {
+            border: 1px solid rgba(15, 95, 168, 0.25);
+            border-radius: 10px;
+            padding: 7px 10px;
+            min-width: 260px;
+            font-size: 0.94rem;
+        }
+        .calendar-tools .hint {
+            font-size: 0.86rem;
+            color: var(--muted);
+            align-self: center;
+        }
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            z-index: 1300;
+            background: transparent;
+        }
+        #scroll-progress > span {
+            display: block;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #0f5fa8, #1a8ed1 65%, #ff7f32);
+            box-shadow: 0 0 12px rgba(15, 95, 168, 0.5);
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 320ms ease, transform 320ms ease;
+        }
+        .fade-in.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        #backToTop {
+            position: fixed;
+            right: 18px;
+            bottom: 20px;
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            background: #0f5fa8;
+            color: #fff;
+            font-size: 1.1rem;
+            box-shadow: 0 14px 28px rgba(9, 61, 111, 0.32);
+            display: none;
+            z-index: 1200;
+        }
+        #backToTop.show {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px;
+            }
+            .container {
+                padding: 0 12px 24px;
+            }
+            .content-section {
+                padding: 14px;
+            }
+            .top-controls {
+                top: 6px;
+                padding: 10px;
+            }
+            .calendar-tools input {
+                min-width: 100%;
+            }
+        }
         @keyframes blink {
             0%, 100% { color: red; }
-            50% { color: orange; } 
+            50% { color: orange; }
         }
     </style>
 </head>
-
-<!-- <dialog id="videoDialog">
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #ddd;">
-    <strong>Lecture 6 Demo</strong>
-    <button onclick="closeVideo()" style="font-size:16px;">✕</button>
-  </div>
-  <video id="player" controls style="width:100%;height:auto;display:block;"></video>
-</dialog> -->
-
-<style>
-  /* 右侧抽屉式对话框 */
-  #videoDialog {
-    inset: 0 0 0 auto;          /* 贴右侧 */
-    width: min(720px, 90vw);
-    height: 100dvh;
-    margin: 0;
-    padding: 0;
-    border: none;
-    overflow: hidden;
-  }
-  #videoDialog::backdrop { background: rgba(0,0,0,0.35); }
-</style>
-
-<script>
-  const dlg = document.getElementById('videoDialog');
-  const vid = document.getElementById('player');
-
-  function openVideo(src) {
-    vid.src = src;         
-    dlg.showModal();        
-    vid.play().catch(()=>{}); 
-  }
-
-  function closeVideo() {
-    vid.pause();
-    vid.removeAttribute('src'); 
-    vid.load();
-    dlg.close();
-  }
-
-
-  dlg.addEventListener('click', (e) => {
-    const rect = dlg.getBoundingClientRect();
-    const inPanel = e.clientX >= rect.left && e.clientX <= rect.right &&
-                    e.clientY >= rect.top  && e.clientY <= rect.bottom;
-    if (!inPanel) closeVideo();
-  });
-
-
-  dlg.addEventListener('close', closeVideo);
-</script>
 
 <body>
 
@@ -180,12 +372,12 @@
 
         <h2><i class="fas fa-bullseye"></i> Course Objectives</h2>
 
-        <ul class="indented"> <li><i class="fas fa-dot-circle"></i> <strong>Fundamental Goal: Applying AI/ML to 5G and Beyond.</strong> This course is designed to explore how machine learning—particularly deep learning—can be applied in modern wireless networks, especially in the context of 5G and beyond. </li> 
+        <ul class="indented"> <li><i class="fas fa-dot-circle"></i> <strong>Fundamental Goal: Applying AI/ML to 5G and Beyond.</strong> This course is designed to explore how machine learning-particularly deep learning-can be applied in modern wireless networks, especially in the context of 5G and beyond. </li> 
 
 
-        <li><i class="fas fa-dot-circle"></i> <strong>Core Focus: 5G/ORAN and Hybrid Routing Systems.</strong> We’ll focus primarily on the 5G network architecture, especially on the Open Radio Access Network (ORAN). One of the central themes will be how to intelligently route models (i.e., model routing) in edge environments—selecting and placing ML models dynamically across the network. This intersects with both model routing and network routing, so students will learn how to design such hybrid systems from the ground up. </li>
+        <li><i class="fas fa-dot-circle"></i> <strong>Core Focus: 5G/ORAN and Hybrid Routing Systems.</strong> We'll focus primarily on the 5G network architecture, especially on the Open Radio Access Network (ORAN). One of the central themes will be how to intelligently route models (i.e., model routing) in edge environments-selecting and placing ML models dynamically across the network. This intersects with both model routing and network routing, so students will learn how to design such hybrid systems from the ground up. </li>
         
-        <li><i class="fas fa-dot-circle"></i> <strong>Key Topics and Emphasis on Edge-Side Challenges.</strong> The course will also touch on topics such as resource allocation, OFDM, and other essential concepts in edge wireless systems. While we’ll briefly cover elements of the 5G core network (e.g., slicing strategies), the emphasis will be on edge-side challenges. </li> </ul>
+        <li><i class="fas fa-dot-circle"></i> <strong>Key Topics and Emphasis on Edge-Side Challenges.</strong> The course will also touch on topics such as resource allocation, OFDM, and other essential concepts in edge wireless systems. While we'll briefly cover elements of the 5G core network (e.g., slicing strategies), the emphasis will be on edge-side challenges. </li> </ul>
 
 
 
@@ -197,7 +389,7 @@
         <h2><i class="fas fa-file-alt"></i> Course Material</h2>
         <ul class="indented">
             
-            <li><i class="fas fa-book"></i> <strong>Textbook:</strong> Editors: Afif Osseiran, José F. Monserrat, Patrick Marsch, <em><a href="https://digilib.stekom.ac.id/assets/dokumen/ebook/feb_6dc75f6bb1ff6ccaf3c3bc84d5bfb41cd71f701a_1652450470.pdf" target="_blank" rel="noopener">5G Mobile and Wireless Communications Technology</a></em>.</li>
+            <li><i class="fas fa-book"></i> <strong>Textbook:</strong> Editors: Afif Osseiran, Jose F. Monserrat, Patrick Marsch, <em><a href="https://digilib.stekom.ac.id/assets/dokumen/ebook/feb_6dc75f6bb1ff6ccaf3c3bc84d5bfb41cd71f701a_1652450470.pdf" target="_blank" rel="noopener">5G Mobile and Wireless Communications Technology</a></em>.</li>
             <li><i class="fas fa-chalkboard"></i> <strong>Slides and Codes:</strong> Availabl edirectly on this website.</li>
         </ul>
 
@@ -309,7 +501,7 @@
                         HW 4 Posted on Canvas</td>
                 </tr>
 
-                <tr><td colspan="4" style="text-align: center;"><strong>Don’t Be Afraid of Artificial Intelligence. It’s Not That Intelligent. Just Systems and Trade-offs.</strong></td></tr>
+                <tr><td colspan="4" style="text-align: center;"><strong>Don't Be Afraid of Artificial Intelligence. It's Not That Intelligent. Just Systems and Trade-offs.</strong></td></tr>
 
                 <tr>
                     <td rowspan="2" style="text-align: center; vertical-align: middle;">5</td>
@@ -362,7 +554,7 @@
                     <td style="text-align: left; vertical-align: middle;"></td>
                 </tr>
 
-                 <tr><td colspan="4" style="text-align: center;"><strong>Now, Let’s Put Edge and Intelligence Together.</strong></td></tr>               
+                 <tr><td colspan="4" style="text-align: center;"><strong>Now, Let's Put Edge and Intelligence Together.</strong></td></tr>               
 
                 <tr>
                     <td rowspan="2" style="text-align: center; vertical-align: middle;">9</td>
@@ -408,8 +600,7 @@ Language Models</td>
                 <tr>
                     <td style="text-align: center; vertical-align: middle;">3/26</br>(Th)</td>
                     <td style="vertical-align: middle;">L:  <a href=".pdf" target="_blank">[PDF]</a><a href="" target="_blank" rel="noopener">[Code]</a></br>()</td>
-                    <td style="text-align: left; vertical-align: middle;">HW 8 DDL at 23:59 PM (ET)</br>
-                        HW 9 Posted on Canvas</td>
+                    <td style="text-align: left; vertical-align: middle;">HW 9 Posted on Canvas</td>
                 </tr>
 
 
@@ -417,7 +608,7 @@ Language Models</td>
                     <td rowspan="2" style="text-align: center; vertical-align: middle;">13</td>
                     <td style="text-align: center; vertical-align: middle;">3/31</br>(Tu)</td>
                     <td style="vertical-align: middle;">L:  <a href=".pdf" target="_blank">[PDF]</a><a href="" target="_blank" rel="noopener">[Code]</a></br></td>
-                    <td style="text-align: left; vertical-align: middle;"></br></td>
+                    <td style="text-align: left; vertical-align: middle;">HW 8 DDL at 23:59 PM (ET)</td>
                 </tr>
                 <tr>
                     <td style="text-align: center; vertical-align: middle;">4/3</br>(Th)</td>
@@ -471,7 +662,7 @@ Language Models</td>
                 <tr>
                     <td style="text-align: center; vertical-align: middle;">4/30</br>(Th)</td>
                     <td>
-                        <span style="color: red; font-weight: bold;">Final Exam (5:30 p.m. – 7:30 p.m)</span><br>
+                        <span style="color: red; font-weight: bold;">Final Exam (5:30 p.m. - 7:30 p.m)</span><br>
                         <span style="color: red; font-weight: bold; animation: blink 1s infinite;">
                         
                         <span style="font-size: larger;">NO MAKE-UPs</span>
@@ -619,8 +810,8 @@ Language Models</td>
         <h3><i class="fas fa-exclamation-circle"></i> Missed Exam Policy</h3>
         <p style="margin-left: 25px;">Unexcused missed exams and HW will be given a grade of 0. See the University Attendance Policy for a discussion of valid reasons to excuse absences (<a href="https://registrar.fsu.edu/bulletin/graduate/information/academic_regulations/" target="_blank" rel="noopener">https://registrar.fsu.edu/bulletin/graduate/information/academic_regulations/</a>).</p>
 
-        <h3><i class="fas fa-info-circle"></i> Grade of “I” Policy</h3>
-        <p style="margin-left: 25px;">Incomplete (“I”) grades should be recorded only in exceptional cases when a student, who has completed a substantial portion of the course and who is otherwise passing, is unable to complete a well-defined portion of a course for reasons beyond the student’s control. Students in these circumstances must petition the instructor and should be prepared to present documentation that substantiates their case.</p>
+        <h3><i class="fas fa-info-circle"></i> Grade of "I" Policy</h3>
+        <p style="margin-left: 25px;">Incomplete ("I") grades should be recorded only in exceptional cases when a student, who has completed a substantial portion of the course and who is otherwise passing, is unable to complete a well-defined portion of a course for reasons beyond the student's control. Students in these circumstances must petition the instructor and should be prepared to present documentation that substantiates their case.</p>
 
 
         <h3><i class="fas fa-user-check"></i> University Attendance Policy</h3>
@@ -658,7 +849,7 @@ Language Models</td>
         </ul>
 
         <h3><i class="fas fa-graduation-cap"></i> Free Tutoring from FSU</h3>
-        <p style="margin-left: 25px;">On-campus tutoring and writing assistance is available for many courses at Florida State University. For more information, visit the Academic Center for Excellence (ACE) Tutoring Services’ comprehensive list of on-campus tutoring options at <a href="http://ace.fsu.edu/tutoring" target="_blank" rel="noopener">http://ace.fsu.edu/tutoring</a> or contact <a href="mailto:tutor@fsu.edu">tutor@fsu.edu</a>. High-quality tutoring is available by appointment and on a walk-in basis. These services are offered by tutors trained to encourage the highest level of individual academic success while upholding personal academic integrity.</p>
+        <p style="margin-left: 25px;">On-campus tutoring and writing assistance is available for many courses at Florida State University. For more information, visit the Academic Center for Excellence (ACE) Tutoring Services' comprehensive list of on-campus tutoring options at <a href="http://ace.fsu.edu/tutoring" target="_blank" rel="noopener">http://ace.fsu.edu/tutoring</a> or contact <a href="mailto:tutor@fsu.edu">tutor@fsu.edu</a>. High-quality tutoring is available by appointment and on a walk-in basis. These services are offered by tutors trained to encourage the highest level of individual academic success while upholding personal academic integrity.</p>
 
         <h3><i class="fas fa-hourglass-half"></i> Late Policy and Make-up Exams</h3>
         <ul style="margin-left: 50px; list-style-type: disc;">
@@ -672,5 +863,167 @@ Language Models</td>
         <p style="margin-left: 25px;">Except for changes that substantially affect the implementation of the evaluation (grading) statement, this syllabus is a guide for the course and is subject to change with advance notice.</p>
     </div>
 
+<div id="scroll-progress" aria-hidden="true"><span></span></div>
+<button id="backToTop" type="button" aria-label="Back to top"><i class="fas fa-chevron-up"></i></button>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const container = document.querySelector('.container');
+    if (!container) return;
+    const pageTitle = container.querySelector('h1');
+    if (pageTitle) {
+        const hero = document.createElement('section');
+        hero.className = 'hero fade-in';
+        hero.innerHTML = '' +
+            '<div class="hero-badge"><i class="fas fa-satellite-dish"></i> Future Edge Networks</div>' +
+            '<p>Explore wireless intelligence with clear milestones, quick navigation, and interactive syllabus sections built for student use on desktop and mobile.</p>';
+        container.insertBefore(hero, pageTitle);
+    }
+    const controls = document.createElement('div');
+    controls.className = 'top-controls';
+    controls.innerHTML = '' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+            '<button class="btn-control" type="button" id="expandAllBtn"><i class="fas fa-plus-square"></i> Expand All</button>' +
+            '<button class="btn-control" type="button" id="collapseAllBtn"><i class="fas fa-minus-square"></i> Collapse All</button>' +
+            '<button class="btn-control" type="button" id="jumpCalendarBtn"><i class="fas fa-calendar-day"></i> Jump to Calendar</button>' +
+        '</div>' +
+        '<span style="font-size:0.86rem;color:#4f6782;">Click section headers to toggle details.</span>';
+    if (pageTitle) {
+        pageTitle.insertAdjacentElement('afterend', controls);
+    }
+    const childNodes = Array.from(container.children);
+    const topLevelH2 = childNodes.filter(function (node) { return node.tagName === 'H2'; });
+    const quickNav = document.createElement('nav');
+    quickNav.className = 'quick-nav';
+    controls.insertAdjacentElement('afterend', quickNav);
+    topLevelH2.forEach(function (heading, index) {
+        const section = document.createElement('section');
+        section.className = 'content-section fade-in';
+        const sectionBody = document.createElement('div');
+        sectionBody.className = 'section-body';
+        const titleText = heading.textContent.trim();
+        const slug = titleText.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || ('section-' + index);
+        section.id = slug;
+        heading.innerHTML = heading.innerHTML + '<span class="toggle-indicator" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>';
+        heading.setAttribute('tabindex', '0');
+        heading.setAttribute('role', 'button');
+        heading.setAttribute('aria-expanded', 'true');
+        heading.parentNode.insertBefore(section, heading);
+        section.appendChild(heading);
+        while (section.nextSibling && section.nextSibling.tagName !== 'H2') {
+            sectionBody.appendChild(section.nextSibling);
+        }
+        section.appendChild(sectionBody);
+        const navLink = document.createElement('a');
+        navLink.href = '#' + slug;
+        navLink.textContent = titleText.replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ');
+        quickNav.appendChild(navLink);
+        const toggle = function () {
+            const collapsed = section.classList.toggle('is-collapsed');
+            heading.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        };
+        heading.addEventListener('click', toggle);
+        heading.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                toggle();
+            }
+        });
+        if (titleText.indexOf('Course Calendar') === -1 && index > 1) {
+            section.classList.add('is-collapsed');
+            heading.setAttribute('aria-expanded', 'false');
+        }
+    });
+    const sections = Array.from(document.querySelectorAll('.content-section'));
+    const expandAllBtn = document.getElementById('expandAllBtn');
+    const collapseAllBtn = document.getElementById('collapseAllBtn');
+    const jumpCalendarBtn = document.getElementById('jumpCalendarBtn');
+    if (expandAllBtn) {
+        expandAllBtn.addEventListener('click', function () {
+            sections.forEach(function (section) {
+                section.classList.remove('is-collapsed');
+                const heading = section.querySelector('h2');
+                if (heading) heading.setAttribute('aria-expanded', 'true');
+            });
+        });
+    }
+    if (collapseAllBtn) {
+        collapseAllBtn.addEventListener('click', function () {
+            sections.forEach(function (section) {
+                section.classList.add('is-collapsed');
+                const heading = section.querySelector('h2');
+                if (heading) heading.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
+    const calendarSection = sections.find(function (section) {
+        const h2 = section.querySelector('h2');
+        return h2 && h2.textContent.indexOf('Course Calendar') !== -1;
+    });
+    if (calendarSection) {
+        if (jumpCalendarBtn) {
+            jumpCalendarBtn.addEventListener('click', function () {
+                calendarSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
+        const table = calendarSection.querySelector('table');
+        if (table) {
+            const tools = document.createElement('div');
+            tools.className = 'calendar-tools';
+            tools.innerHTML = '' +
+                '<input type="search" id="calendarFilterInput" placeholder="Filter by week, date, topic, assignment..." aria-label="Filter course calendar">' +
+                '<span class="hint"><i class="fas fa-filter"></i> Live filter</span>';
+            table.insertAdjacentElement('beforebegin', tools);
+            const input = tools.querySelector('#calendarFilterInput');
+            const rows = Array.from(table.querySelectorAll('tbody tr'));
+            if (input) {
+                input.addEventListener('input', function () {
+                    const query = input.value.trim().toLowerCase();
+                    rows.forEach(function (row) {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = (query === '' || text.indexOf(query) !== -1) ? '' : 'none';
+                    });
+                });
+            }
+        }
+    }
+    const progressBar = document.querySelector('#scroll-progress > span');
+    const backToTop = document.getElementById('backToTop');
+    const onScroll = function () {
+        const doc = document.documentElement;
+        const max = doc.scrollHeight - doc.clientHeight;
+        const ratio = max > 0 ? (doc.scrollTop / max) * 100 : 0;
+        if (progressBar) progressBar.style.width = ratio + '%';
+        if (backToTop) backToTop.classList.toggle('show', doc.scrollTop > 460);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    if (backToTop) {
+        backToTop.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+    const revealObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.fade-in').forEach(function (el) { revealObserver.observe(el); });
+    const navLinks = Array.from(quickNav.querySelectorAll('a'));
+    const sectionObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                navLinks.forEach(function (link) {
+                    link.classList.toggle('is-active', link.getAttribute('href') === '#' + entry.target.id);
+                });
+            }
+        });
+    }, { rootMargin: '-30% 0px -55% 0px', threshold: 0 });
+    sections.forEach(function (section) { sectionObserver.observe(section); });
+});
+</script>
 </body>
 </html>
+
