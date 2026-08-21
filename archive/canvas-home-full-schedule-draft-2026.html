@@ -1,0 +1,459 @@
+<!-- Canvas page body for CIS 4930/5930 Future Edge Networks. Paste this into Canvas using the HTML editor/source view. -->
+<div style="max-width: 1100px; margin: 0 auto; font-family: Arial, Helvetica, sans-serif; line-height: 1.55; color: #1f2937;">
+<div style="border: 1px solid #ceb888; border-left: 6px solid #782f40; padding: 14px 16px; margin: 0 0 18px; background: #fffaf0;">
+  <p style="margin: 0;"><strong>Course materials:</strong> Lecture slides and PDFs are linked to the public course website. Canvas is the course hub for announcements, grades, submissions, and assignment details.</p>
+</div>
+<h1 style="font-size: 28px; line-height: 1.25; margin: 0 0 16px; color: #782f40;">CIS 4930/5930 Future Edge Networks and Distributed Intelligence - Fall 2026</h1>
+
+        <h2 style="font-size: 22px; margin: 28px 0 10px; padding: 8px 0; border-bottom: 2px solid #ceb888; color: #782f40;">Lecture</h2>
+        <ul>
+            <li><strong>Instructor:</strong> Dr. Xin Liu</li>
+            <li><strong>Lecture Room:</strong> LOV 0307</li>
+            <li><strong>Lecture Times:</strong> Monday, Wednesday, 1:20 p.m. - 2:35 p.m.</li>
+            <li><strong>Email:</strong> <a href="mailto:xliu15@fsu.edu">xliu15@fsu.edu</a></li>
+            <li>    
+                <strong>Office Hours:</strong> Monday, 3:30 p.m. - 5:30 p.m. 
+                <div style="margin-left: 150px;"> Available via Zoom (appointment required).
+                </div>
+            </li>
+            <li><strong>Office:</strong> James Jay Love Building, 160</li>
+            <li><strong>Teaching Assistant:</strong> Zhankai Ye <a href="mailto:zy22b@fsu.edu">zy22b@fsu.edu</a></li>
+        </ul>
+
+        
+
+        
+
+        <h2 style="font-size: 22px; margin: 28px 0 10px; padding: 8px 0; border-bottom: 2px solid #ceb888; color: #782f40;">Course Objectives</h2>
+
+        <ul> <li><strong>Fundamental Goal: Applying AI/ML to 5G and Beyond.</strong> This course is designed to explore how machine learning, particularly deep learning, can be applied in modern wireless networks, especially in the context of 5G and beyond. </li> 
+
+
+        <li><strong>Core Focus: 5G/ORAN and Hybrid Routing Systems.</strong> We'll focus primarily on the 5G network architecture, especially on the Open Radio Access Network (ORAN). One of the central themes will be how to intelligently route models (i.e., model routing) in edge environments, selecting and placing ML models dynamically across the network. This intersects with both model routing and network routing, so students will learn how to design such hybrid systems from the ground up. </li>
+        
+        <li><strong>Key Topics and Emphasis on Edge-Side Challenges.</strong> The course will also touch on topics such as resource allocation, OFDM, and other essential concepts in edge wireless systems. While we'll briefly cover elements of the 5G core network (e.g., slicing strategies), the emphasis will be on edge-side challenges. </li> </ul>
+
+
+
+        <h2 style="font-size: 22px; margin: 28px 0 10px; padding: 8px 0; border-bottom: 2px solid #ceb888; color: #782f40;">Prerequisites</h2>
+        <ul>      
+            While no prior experience with wireless systems is required, students should be comfortable with programming (<span style="color: #ff4500; font-weight: bold; background-color: #f0f0f0; padding: 2px 5px; border-radius: 3px;">MatLab and Python</span> will be used frequently) and have a basic understanding of machine learning, including some hands-on experience with deep learning techniques.
+        </ul>
+
+        <h2 style="font-size: 22px; margin: 28px 0 10px; padding: 8px 0; border-bottom: 2px solid #ceb888; color: #782f40;">Course Material</h2>
+        <ul>
+            
+            <li><strong>Textbook:</strong> Editors: Afif Osseiran, Jose F. Monserrat, Patrick Marsch, <em><a href="https://digilib.stekom.ac.id/assets/dokumen/ebook/feb_6dc75f6bb1ff6ccaf3c3bc84d5bfb41cd71f701a_1652450470.pdf" target="_blank" rel="noopener">5G Mobile and Wireless Communications Technology</a></em>.</li>
+            <li><strong>Slides and Codes:</strong> Available directly on this website.</li>
+        </ul>
+
+        <h2 style="font-size: 22px; margin: 28px 0 10px; padding: 8px 0; border-bottom: 2px solid #ceb888; color: #782f40;">Computer Accounts</h2>
+        <ul>
+            <li>You will need a <strong>GitHub account</strong> to access course assignments and use GitHub Codespaces.</li>
+            <li>It is strongly recommended to apply for the <a href="https://education.github.com/pack" target="_blank" rel="noopener">GitHub Student Developer Pack</a> to access free credits for Codespaces and other developer tools.</li>
+            <li>You will need a <strong>my.fsu.edu</strong> account for receiving class emails. For more information, visit: 
+                <a href="https://servicecenter.fsu.edu/s/article/Email-Account-Management-Information2" target="_blank" rel="noopener">https://servicecenter.fsu.edu/s/article/Email-Account-Management-Information2</a>.
+            </li>
+        </ul>
+
+
+        <h2 style="font-size: 22px; margin: 28px 0 10px; padding: 8px 0; border-bottom: 2px solid #ceb888; color: #782f40;">Your Responsibilities</h2>
+        <ul>
+            <li>Check the course website and your email account regularly.</li>
+            <li>Understand the lecture slides and reading assignments.</li>
+            <li>Uphold academic honesty in completing your assignments, projects, and exams.</li>
+            <li>Turn in your projects on time.</li>
+            <li>Attend office hours for extra help, as needed.</li>
+        </ul>
+
+
+
+        <h2 style="font-size: 22px; margin: 28px 0 10px; padding: 8px 0; border-bottom: 2px solid #ceb888; color: #782f40;">Course Calendar (Tentative)</h2>
+        <table border="1" cellpadding="6" style="width: 100%; border-collapse: collapse; margin: 12px 0 22px; font-size: 14px; border: 1px solid #d1d5db;">
+            <thead>
+                <tr>
+                    <th style="text-align: center; width: 2%; border: 1px solid #d1d5db; padding: 8px; background: #f3f4f6">Week</th>
+                    <th style="text-align: center; width: 2%; border: 1px solid #d1d5db; padding: 8px; background: #f3f4f6">Date</th>
+                    <th style="text-align: center; width: 62%; border: 1px solid #d1d5db; padding: 8px; background: #f3f4f6">Topic</th>
+                    <th style="text-align: center; width: 34%; border: 1px solid #d1d5db; padding: 8px; background: #f3f4f6">Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="4" style="text-align: center; border: 1px solid #d1d5db; padding: 8px"><strong>Introduction</strong></td></tr>
+                <tr>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">1</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">8/24<br>(M)<br></td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">Course Syllabus <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/syllabus-cis4930-cis5930.pdf" target="_blank">[PDF]</a> 
+                        <br>L1: Preparation for Learning Edge Networks <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/l1_preparation.pdf" target="_blank" rel="noopener">[PDF]</a><br>(XG, VS Code, GitHub, JSON, AI, and 5G Toolbox)</a> 
+                    </td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">Mandatory first-day attendance.
+                    <br><span style="color: red; font-weight: bold;">No-shows will be dropped.</span><br>
+                    HW 1 Posted on <a href="https://classroom.github.com/a/PLiQJaX1" target="_blank" rel="noopener">[GHC]</a></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">8/26<br>(W)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L2-3: 5G Architecture Basics <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/l2_5g.pptx" target="_blank">[Slides]</a>
+                    <br>(RAN, Core, ORAN)
+                    <br>
+                        Recommended reading: <em>How to deploy "antivirus software" on each 5G base station?</em> <a href="https://www.ndss-symposium.org/wp-content/uploads/2024-527-paper.pdf" target="_blank">[Paper]</a><a href="https://github.com/5GSEC/5G-Spector" target="_blank" rel="noopener">[Code]</a><a href="https://www.5gsec.com/post/5g-spector-demo" target="_blank" rel="noopener">[Demo]</a></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+
+
+                
+
+                <tr>
+                    <td colspan="4" style="text-align: center; border: 1px solid #d1d5db; padding: 8px"><strong>Don't rush to test the speed; first, let's understand the 'G' in 5G.</strong></td>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">2</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">8/31<br>(M)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L2-3: 5G Architecture Basics <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/l2_5g.pptx" target="_blank">[Slides]</a>
+                    <br>(RAN, Core, ORAN)
+                    <br>
+                        Recommended reading: <em>How to deploy "antivirus software" on each 5G base station?</em> <a href="https://www.ndss-symposium.org/wp-content/uploads/2024-527-paper.pdf" target="_blank">[Paper]</a><a href="https://github.com/5GSEC/5G-Spector" target="_blank" rel="noopener">[Code]</a><a href="https://www.5gsec.com/post/5g-spector-demo" target="_blank" rel="noopener">[Demo]</a></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">HW 1 DDL at 23:59 PM (ET)<br>
+                        HW 2 Posted on <a href="https://classroom.github.com/a/o4CcDW5K" target="_blank" rel="noopener">[GHC]</a></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">9/2<br>(W)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L4-5: Core Models of Modern AI <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/l4_nn.pptx" target="_blank">[Slides]</a><a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/l5_pytorch.pdf" target="_blank">[PyTorch Tutorial]</a><br>(CNN, RNN, Transformer, LLM, Agent, Diffusion, PyTorch)
+                    <br>
+                        Recommended reading:  <a href="https://d2l.ai/" target="_blank" rel="noopener"><em>Dive into Deep Learning?</em></a></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+
+                
+
+
+                <tr>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">3</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">9/7<br>(M)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">No Class Due to Labor Day.</td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">9/9<br>(W)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L4-5: Core Models of Modern AI <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/l4_nn.pptx" target="_blank">[Slides]</a><a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/l5_pytorch.pdf" target="_blank">[PyTorch Tutorial]</a><br>(CNN, RNN, Transformer, LLM, Agent, Diffusion, PyTorch)
+                    <br>
+                        Recommended reading:  <a href="https://d2l.ai/" target="_blank" rel="noopener"><em>Dive into Deep Learning?</em></a></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">HW 2 DDL at 23:59 PM (ET)<br>
+                        HW 3 Posted on Canvas</td>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">4</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">9/14<br>(M)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L6: 5G PHY <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/l6_phy.pdf" target="_blank">[PDF]</a>
+                    <br>(OFDM, MIMO, mmWave, Beamforming)
+                    <br>Recommended reading: <a href="https://www.mathworks.com/products/5g.html" target="_blank" rel="noopener"><em>MATLAB 5G Toolbox</em></a></td>
+                    <td style="border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">9/16<br>(W)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L7: Integrated Sensing and Communication (ISAC)
+                    <br><a href="https://wireless.egr.uh.edu/wp-content/uploads/2025/01/ISAC-V1.pdf" target="_blank">[Reference Slides]</a>
+                    <br>(Channel, Beamforming Feedback, Sensing, Security)
+                    <br>Recommended reading: <a href="https://rt.cto.mil/wp-content/uploads/2025/07/ISAC-Report-from-Apr-2025-Workshop.pdf" target="_blank" rel="noopener"><em>ISAC Report</em></a>
+                    </td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">HW 3 DDL at 23:59 PM (ET)<br>
+                        HW 4 Posted on Canvas</td>
+                </tr>
+
+                <tr><td colspan="4" style="text-align: center; border: 1px solid #d1d5db; padding: 8px"><strong>Don't Be Afraid of Artificial Intelligence. It's Not That Intelligent. Just Systems and Trade-offs.</strong></td></tr>
+
+                <tr>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">5</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">9/21<br>(M)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L8: Agents 101: Reasoning + Tool Use <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/react.pptx" target="_blank">[Slides]</a><a href="https://arxiv.org/abs/2210.03629" target="_blank">[PDF]</a><a href="https://iclr.cc/virtual/2023/oral/12647" target="_blank" rel="noopener">[Video]</a><br>Recommended reading: <a href="https://www.google.com/search?q=Toolformer%3A+Language+Models+Can+Teach+Themselves+to+Use+Tools&oq=Toolformer%3A+Language+Models+Can+Teach+Themselves+to+Use+Tools&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIGCAEQRRg6MgYIAhBFGD0yCAgDEOkHGPxVMgcIBBDrBxhA0gEHNDc3ajBqNKgCAbACAQ&sourceid=chrome&ie=UTF-8#fpstate=ive&vld=cid:24675a18,vid:UID_oXuN-0Y,st:0" target="_blank" rel="noopener"><em>Toolformer</em></a> <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/toolformer.pptx" target="_blank">[Slides]</a>
+                    </td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">9/23<br>(W)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L9: Agent Systems: Memory, Planning, and Multi-Agent Optimization <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/generativeagents.pptx" target="_blank">[Slides]</a><a href="https://arxiv.org/abs/2304.03442" target="_blank">[PDF]</a><a href="https://www.ted.com/talks/joon_sung_park_a_simulation_of_human_reality_powered_by_ai" target="_blank" rel="noopener">[Video]</a><br>Recommended reading: <a href="https://www.youtube.com/watch?v=IaOKPjT0aQQ" target="_blank" rel="noopener"><em>Agent for Network Control</em></a> <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/teal.pptx" target="_blank">[Slides]</a></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">HW 4 DDL at 23:59 PM (ET)<br>
+                        HW 5 Posted on Canvas</td>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">6</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">9/28<br>(M)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L10: Making On-Device LLM Possible: Small-Model Design + Memory-Bounded Inference <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/mobilellm.pptx" target="_blank">[Slides]</a><a href="https://arxiv.org/abs/2402.14905" target="_blank">[PDF]</a><a href="https://icml.cc/virtual/2024/poster/34590" target="_blank" rel="noopener">[Video]</a><br>Recommended reading: <a href="https://powerinfer.ai/v2/" target="_blank" rel="noopener"><em>Mobile LLM inference</em></a> <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/powerinfer2.pptx" target="_blank">[Slides]</a></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"><br></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">9/30<br>(W)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L11:  Agent-Grade On-Device LLM: Serving + Personalization <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/elasticllm.pptx" target="_blank">[Slides]</a><a href="https://arxiv.org/pdf/2409.09071" target="_blank">[PDF]</a><a href="https://www.youtube.com/watch?v=G7TYh0Wuv4I" target="_blank" rel="noopener">[Video]</a><br>Recommended reading: <a href="https://www.youtube.com/watch?v=XmJLlLyGyrg" target="_blank" rel="noopener"><em>Never Start from Scratch</em></a> <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/neverscratch.pdf" target="_blank">[Slides]</a></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">HW 5 DDL at 23:59 PM (ET)<br>
+                        HW 6 Posted on <a href="https://classroom.github.com/a/WyAmdkpW" target="_blank" rel="noopener">[GHC]</a></td>
+                </tr>     
+                <tr>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">7</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">10/5<br>(M)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L12:  LoRA-as-a-Service: Multi-Tenant LLM Serving on Edge Devices <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/edgelora.pptx" target="_blank">[Slides]</a><a href="https://arxiv.org/pdf/2507.01438.pdf" target="_blank">[PDF]</a><a href="https://www.youtube.com/watch?v=fxGSj4oyQFk" target="_blank" rel="noopener">[Video]</a><br>Recommended reading: <a href="https://www.usenix.org/conference/osdi24/presentation/wu-bingyang" target="_blank" rel="noopener"><em>Adapter Orchestration</em></a> <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/dlora.pptx" target="_blank">[Slides]</a></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">10/7<br>(W)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L13:  On-Device Agents in Action: From Tool Calling to GUI Execution <span style="color:#6b7280;">[Slides TBA]</span><a href="https://arxiv.org/abs/2412.18116" target="_blank">[PDF]</a><a href="https://www.youtube.com/watch?v=bzdAosG4qBk" target="_blank" rel="noopener">[Video]</a><br>Recommended reading: <a href="https://nexa.ai/blogs/octopus-v2" target="_blank" rel="noopener"><em>On-Device Function Calling</em></a> <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/octopus_v2.pptx" target="_blank">[Slides]</a></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+
+
+                <tr>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">8</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">10/12<br>(M)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L14: Multi-Agent Collaboration Frameworks and Workflows <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/agentverse.pptx" target="_blank">[Slides]</a><a href="https://arxiv.org/abs/2308.10848" target="_blank">[PDF]</a><a href="https://iclr.cc/virtual/2024/poster/19109" target="_blank" rel="noopener">[Video]</a><br>Recommended reading: <a href="https://iclr.cc/media/iclr-2024/Slides/18491.pdf" target="_blank" rel="noopener"><em>Role-Based Workflow</em></a> <a href="https://metagpt-meta-programming-erloffd.gamma.site/" target="_blank">[Slides]</a></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">10/14<br>(W)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L15: Communication for Multi-Agent and Multi-LLM Systems <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/how2comm.pptx" target="_blank">[Slides]</a><a href="https://neurips.cc/virtual/2023/poster/72362" target="_blank">[PDF]</a><a href="https://neurips.cc/virtual/2023/poster/72362" target="_blank" rel="noopener">[Video]</a><br>Recommended reading: <a href="https://arxiv.org/abs/2510.03215" target="_blank" rel="noopener"><em>KV-Cache Communication</em></a> <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/cache-to-cache.pptx" target="_blank">[Slides]</a></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+
+                 <tr><td colspan="4" style="text-align: center; border: 1px solid #d1d5db; padding: 8px"><strong>Now, Let's Put Edge and Intelligence Together.</strong></td></tr>               
+
+                <tr>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">9</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">10/19<br>(M)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L16 -17: Transformer Architecture Explained <a href="https://harvard-iacs.github.io/2021-CS109B/lectures/lecture25/presentation/Lecture25_Transformers.pdf" target="_blank">[PDF]</a><br>(Tokenization, Embedding Layer, Positional Encoding, Self-Attention Layer, Multi-Head Attention, Feed Forward Network, Residual Connection, Layer Normalization)<br>Reading and Running Transformer Code <a href="https://colab.research.google.com/drive/12B3DfgQ9OmRK6oREePKgb1trCDNfJ1fC?usp=sharing" target="_blank" rel="noopener">[Code: Seq2Seq]</a> <a href="https://colab.research.google.com/drive/1mr8Pvx9ZH3p6RjUcX_WFE_BWEu1gxAf3?usp=sharing" target="_blank" rel="noopener">[Code: Transformer]</a></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">HW 6 DDL at 23:59 PM (ET)<br>
+                        HW 7 Posted on Canvas</td>                   
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">10/21<br>(W)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L18: Play around with your first agent: OpenClaw <a href="https://docs.openclaw.ai/tools/creating-skills?utm_source=chatgpt.com" target="_blank" rel="noopener">[Code]</a><br>Recommended reading: <a href="https://arxiv.org/pdf/2602.20021" target="_blank" rel="noopener"><em>Safety and Security of OpenClaw</em></a></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">HW 8 Posted on Canvas</td>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">10</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">10/26<br>(M)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L19: From AI Research to AI Products <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/GeoMotionGPT.pptx" target="_blank">[Research]</a><a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/orbit.pdf" target="_blank" rel="noopener">[Product]</a><br>Recommended reading: <a href="https://arxiv.org/pdf/2601.07632" target="_blank" rel="noopener"><em>GeoMotionGPT: Geometry-Aligned Motion Understanding with Large
+Language Models</td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">10/28<br>(W)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L20-21: Physical Learning in Distributed Edge  <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/v2x.pptx" target="_blank">[Slides]</a><br>(V2X as a Use Case)</td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">HW 7 DDL at 23:59 PM (ET)</td>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">11</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">11/2<br>(M)</td>
+                    <td rowspan="1"  style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L22: Edge Assisted Collaborative Perception in 
+Autonomous Driving  (A Reflection on Communication Design) <a href="https://ruozhouy.github.io/docs/sec-wkshps-21-slides.pdf" target="_blank">[Slides]</a> <br>
+                        Recommended reading: <a href="https://gamma.cs.unc.edu/courses/planning-f17/SLIDES/lec06_autonomousDrivingOverview.pdf" target="_blank">Overview of Autonomous Driving</a></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">11/4<br>(W)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">L23: From Features to Multimodal Fusion for Collaborative Perception <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/fusion.pdf" target="_blank">[PDF]</a>
+                    <br>Recommended reading: <a href="https://neurips.cc/media/neurips-2023/Slides/72362.pdf" target="_blank">Communication-Efficient and Collaboration-Pragmatic Multi-Agent Perception</a>
+                    </td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+
+
+                <tr>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">12</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">11/9<br>(M)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">Project Presentation 1: Physics-Guided Learning 
+for NextG Channel Modeling <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/slides/Proj_diffracNeRF_Zhuoyuan.pdf" target="_blank">[PDF]</a></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">HW 8 DDL at 23:59 PM (ET)</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">11/11<br>(W)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">No Class Due to Veterans' Day Observed.</td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">13</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">11/16<br>(M)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">Project presentation 2</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">11/18<br>(W)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">Project presentation 3</td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+
+                <tr>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">14</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">11/23<br>(M)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">Project presentation 4<br></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">11/25<br>(W)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">No Class Due to Thanksgiving Holiday.<br></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+
+                <tr><td colspan="4" style="text-align: center; border: 1px solid #d1d5db; padding: 8px"><strong>Final Week</strong></td></tr>
+
+                <tr>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">15</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">11/30<br>(M)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">Project presentation 5</td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">12/2<br>(W)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">Project presentation 6<br></td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px"></td>
+                </tr>
+
+                <tr><td colspan="4" style="text-align: center; border: 1px solid #d1d5db; padding: 8px"><strong>Final Exam Week</strong></td></tr>
+
+                <tr>
+                    <td rowspan="1" style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">16</td>
+                    <td style="text-align: center; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">12/7-12/11<br>(M-F)</td>
+                    <td style="vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">No class / no final exam.</td>
+                    <td style="text-align: left; vertical-align: middle; border: 1px solid #d1d5db; padding: 8px">This course has no final exam during Final Exam Week.</td>
+                </tr>
+            </tbody>
+        </table>
+
+<h2 style="font-size: 22px; margin: 28px 0 10px; padding: 8px 0; border-bottom: 2px solid #ceb888; color: #782f40;">Grading Policy</h2>
+<ul style="list-style-type: disc;">
+
+
+<li>
+  <strong>Assignments: 45%</strong>
+  <div style="margin-left: 24px;">
+    There will be several homework assignments (written and coding-based) spaced out over the course of the semester. All assignments are equally weighted. Submission and other instructions will be posted on Canvas or GitHub.
+  </div>
+</li>
+
+
+
+<li>
+  <strong>Paper Practicum (Reading &amp; Presentation): 15%</strong>
+  <div style="margin-left: 24px;">
+    Each student will complete <strong>one</strong> in-class paper practicums on top-tier conference papers related to Future Edge Networks.
+    <ol style="margin: 8px 0 0 24px;">
+      
+        
+        
+      
+      <li>
+        <strong>Format:</strong> <strong>Individual presentation only</strong> (one person per practicum).
+        Each practicum follows one of the two formats below:
+        <ol style="margin: 8px 0 0 24px;">
+        <li><strong>For undergraduate students:</strong> <strong>15 minutes</strong> presentation + <strong>5 minutes</strong> Q&amp;A.</li>
+        <li><strong>For graduate students:</strong> <strong>30 minutes</strong> presentation + <strong>10 minutes</strong> Q&amp;A.</li>
+        </ol>
+      </li>
+      <li>
+        <strong>Paper selection:</strong> Papers will be assigned by the instructor. Students will first submit their preferred presentation dates (and optionally topics of interest). The instructor will then assign a paper to each student based on the course schedule and topic sequence.
+      </li>
+    </ol>
+
+    <div style="margin-top: 10px;">
+      <strong>Important policy for paper practicum:</strong>
+      <ol style="margin: 8px 0 0 24px;">
+        <li><strong>In-person presentation only.</strong> No make-up or deferred practicums will be approved.</li>
+        <li>Presentation time slots will be assigned in random order. Plan ahead when submitting your availability.</li>
+      </ol>
+    </div>
+  </div>
+</li>
+
+
+<li>
+  <strong>Final Project Report &amp; Presentation: 40%</strong>
+  <div style="margin-left: 24px;">
+    <ol style="margin: 8px 0 0 24px;">
+    <li>
+        <strong>Final presentation (15%)</strong> will take place at the end of the semester (dates subject to change). Each person will have <strong>15 minutes</strong> for presentation and <strong>5 minutes</strong> for Q&amp;A.
+      </li>
+      <li>
+         <strong>Demo (25%)</strong> You may choose whether or not to share the demo code. However, you must present a working demo during your project presentation.
+      </li>
+
+    </ol>
+
+    <div style="margin-top: 10px;">
+      <strong>Important policy for final presentation:</strong>
+      <ol style="margin: 8px 0 0 24px;">
+        <li><strong>In-person presentation only.</strong> No make-up or deferred presentations will be approved.</li>
+        <li>Multiple time slots will be assigned for each class in random order among groups. Plan ahead when submitting your availability.</li>
+      </ol>
+    </div>
+
+  </div>
+</li>
+
+<li>
+  <strong>Extra Bonus.</strong>
+      <div style="margin-top: 6px;">
+        Students are encouraged to prepare submissions to arXiv or major AI/ML/DM conferences based on their projects. Please make an appointment with the instructor prior to any submission plan for a comprehensive evaluation of the research topic. Each submission under the instructor's recognition will gain <strong>2 points</strong> on the final grade.
+      </div>
+</li>
+
+</ul>
+
+
+
+        <h2 style="font-size: 22px; margin: 28px 0 10px; padding: 8px 0; border-bottom: 2px solid #ceb888; color: #782f40;">Course Policies</h2>
+
+        <h3 style="font-size: 18px; margin: 20px 0 8px; color: #4b5563;">Missed Exam Policy</h3>
+        <p style="margin-left: 25px;">Unexcused missed exams and HW will be given a grade of 0. See the University Attendance Policy for a discussion of valid reasons to excuse absences (<a href="https://registrar.fsu.edu/bulletin/graduate/information/academic_regulations/" target="_blank" rel="noopener">https://registrar.fsu.edu/bulletin/graduate/information/academic_regulations/</a>).</p>
+
+        <h3 style="font-size: 18px; margin: 20px 0 8px; color: #4b5563;">Grade of "I" Policy</h3>
+        <p style="margin-left: 25px;">Incomplete ("I") grades should be recorded only in exceptional cases when a student, who has completed a substantial portion of the course and who is otherwise passing, is unable to complete a well-defined portion of a course for reasons beyond the student's control. Students in these circumstances must petition the instructor and should be prepared to present documentation that substantiates their case.</p>
+
+
+        <h3 style="font-size: 18px; margin: 20px 0 8px; color: #4b5563;">University Attendance Policy</h3>
+        <p style="margin-left: 25px;">Excused absences include documented illness, deaths in the family and other documented crises, call to active military duty or jury duty, religious holy days, and official University activities. These absences will be accommodated in a way that does not arbitrarily penalize students who have a valid excuse. Consideration will also be given to students whose dependent children experience serious illness.</p>
+
+        <h3 style="font-size: 18px; margin: 20px 0 8px; color: #4b5563;">Academic Honor Policy</h3>
+        <p style="margin-left: 25px;">The Florida State University Academic Honor Policy outlines the University's expectations for the integrity of students' academic work, the procedures for resolving alleged violations of those expectations, and the rights and responsibilities of students and faculty members throughout the process. Students are responsible for reading the Academic Honor Policy and for living up to their pledge to "...be honest and truthful and...[to] strive for personal and institutional integrity at Florida State University." (Florida State University Academic Honor Policy, found at <a href="http://fda.fsu.edu/Academics/Academic-Honor-Policy" target="_blank" rel="noopener">http://fda.fsu.edu/Academics/Academic-Honor-Policy</a>).
+        <p>
+        <p style="margin-left: 25px;">For this course, in particular, every student must complete his/her assignments, quizzes, and exams independently. Showing your work to your peers or making it accessible to them is considered academic dishonesty. You are responsible for ensuring that your work is adequately protected and not accessible to others.
+        </p>
+
+
+        <h3 style="font-size: 18px; margin: 20px 0 8px; color: #4b5563;">Americans with Disabilities Act</h3>
+        <p style="margin-left: 25px;">Students with disabilities needing academic accommodation should: 
+            <ol>
+                <li>Register with and provide documentation to the Student Disability Resource Center (SDRC).</li>
+                <li>Bring a letter to the instructor indicating the need for accommodation and the specific type required.</li>
+            </ol>
+        </p>
+        <p style="margin-left: 25px;">Please note that instructors cannot provide classroom accommodations until appropriate verification from the SDRC has been received. This syllabus and other class materials are available in alternative formats upon request. 
+        </p>
+        <p style="margin-left: 25px;">For more information about services available to FSU students with disabilities, please contact the SDRC:
+            <br><strong>Address:</strong> 874 Traditions Way, 108 Student Services Building, Florida State University, Tallahassee, FL 32306-4167
+            <br><strong>Phone:</strong> (850) 644-9566 (voice), (850) 644-8504 (TDD)
+            <br><strong>Email:</strong> <a href="mailto:sdrc@admin.fsu.edu">sdrc@admin.fsu.edu</a>
+            <br><strong>Website:</strong> <a href="http://www.disabilitycenter.fsu.edu" target="_blank" rel="noopener">http://www.disabilitycenter.fsu.edu</a>
+        </p>
+
+        <h3 style="font-size: 18px; margin: 20px 0 8px; color: #4b5563;">Confidential Campus Resources</h3>
+        <p style="margin-left: 25px;">Various centers and programs are available to assist students with navigating stressors that might impact academic success. These include the following:</p>
+        <ul style="margin-left: 50px;">
+            <li><strong>Victim Advocate Program:</strong> University Center A, Room 4100, (850) 644-7161, Available 24/7/365, Office Hours: M-F 8-5, <a href="https://dsst.fsu.edu/vap" target="_blank" rel="noopener">https://dsst.fsu.edu/vap</a></li>
+            <li><strong>University Counseling Center:</strong> Askew Student Life Center, 2nd Floor, 942 Learning Way. (850) 644-8255, <a href="https://counseling.fsu.edu/" target="_blank" rel="noopener">https://counseling.fsu.edu/</a></li>
+            <li><strong>University Health Services:</strong> Health and Wellness Center, (850) 644-6230, <a href="https://uhs.fsu.edu/" target="_blank" rel="noopener">https://uhs.fsu.edu/</a></li>
+        </ul>
+
+        <h3 style="font-size: 18px; margin: 20px 0 8px; color: #4b5563;">Free Tutoring from FSU</h3>
+        <p style="margin-left: 25px;">On-campus tutoring and writing assistance is available for many courses at Florida State University. For more information, visit the Academic Center for Excellence (ACE) Tutoring Services' comprehensive list of on-campus tutoring options at <a href="http://ace.fsu.edu/tutoring" target="_blank" rel="noopener">http://ace.fsu.edu/tutoring</a> or contact <a href="mailto:tutor@fsu.edu">tutor@fsu.edu</a>. High-quality tutoring is available by appointment and on a walk-in basis. These services are offered by tutors trained to encourage the highest level of individual academic success while upholding personal academic integrity.</p>
+
+        <h3 style="font-size: 18px; margin: 20px 0 8px; color: #4b5563;">Late Policy and Make-up Exams</h3>
+        <ul style="margin-left: 50px; list-style-type: disc;">
+            <li>Late assignments will not ordinarily be accepted. If, for some compelling reason, you cannot hand in an assignment on time, please contact the instructor as far in advance as possible.</li>
+            <li>No credit will be given to late course projects.</li>
+            <li>No make-up exams (except under extremely unusual circumstances).</li>
+        </ul>
+
+
+        <h3 style="font-size: 18px; margin: 20px 0 8px; color: #4b5563;">Syllabus Change Policy</h3>
+        <p style="margin-left: 25px;">Except for changes that substantially affect the implementation of the evaluation (grading) statement, this syllabus is a guide for the course and is subject to change with advance notice.</p>
+</div>

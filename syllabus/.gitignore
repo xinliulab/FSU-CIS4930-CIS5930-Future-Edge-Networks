@@ -1,0 +1,10 @@
+## Core LaTeX 
+build/
+*.aux
+*.log
+*.out
+*.synctex.gz
+
+
+## Mac 
+.DS_Store

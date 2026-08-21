@@ -1,0 +1,109 @@
+% Sat Aug 18 11:45:30 EDT 2024
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+% SUMMARY   :  Syllabus for CIS 4930/5930 Future Edge Networks
+%           :  Xin Liu 
+%           :  Florida State University
+%           :  MIT License
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+\documentclass[11pt]{handout}
+
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{calc}
+\usepackage{color} 
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{lmodern}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{mathabx} 
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{nopageno}
+\usepackage{outlines}
+\usepackage{rotating}
+\usepackage{tabularx}
+
+\usepackage{xcolor}  
+
+
+
+
+% Outline - Enumerated Lists
+
+
+\setenumerate[1]{label=\arabic*.}
+\setenumerate[2]{label=(\alph*).}
+\setenumerate[3]{label=\roman*.}
+\setenumerate[4]{label= - }
+
+
+% HACK (see hyperlink)
+% https://newbedev.com/how-to-find-this-unicode-character-u-202f-in-your-latex-documents
+\DeclareUnicodeCharacter{202F}{FIX ME!!!!}
+
+
+% LAYOUT(S) 
+\geometry{margin=1in,top=0.4in,bottom=0.75in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{0in}
+
+% Spacing 
+\setlength{\parindent}{0in}
+\setlength{\parskip}{0in}
+
+
+% USER-DEFINED COMMANDS
+\newcommand{\peem}{\textsc{p.m.}}
+\newcommand{\ayem}{\textsc{a.m.}}
+
+
+% STYLE OVERRIDES
+% Puts a blue bullet for list items.  Comment out for standard bullet
+\renewcommand{\labelitemi}{\includegraphics[]{figure/blue_bullet.png}}
+
+
+% LOGO and HEADER 
+  \title{\includegraphics[scale=0.6]{figure/logo.png}}
+  \author{Fall 2026}
+  \course{CIS 4930/5930 Future Edge Networks and Distributed Intelligence} 
+  \date{}	
+
+
+% DOCUMENT
+% ----------------------------------------------------- %
+\begin{document}
+\maketitle
+
+
+\input{0_courseinfo}
+
+\input{1_instructor.tex}
+  
+\vspace{2ex}\hrule\vspace{2ex}
+
+\input{2_objectives.tex}
+
+\input{3_prerequisites}
+
+\input{4_materials}
+
+\input{5_equipment}
+
+\input{6_resposibility}
+
+\input{7_1_schedule.tex}
+
+% \input{7_2_calendar.tex}
+
+\input{8_evaluation.tex}
+\vspace{2ex}\hrule\vspace{2ex}
+
+\input{9_policies}
+
+ 
+\end{document} % /END DOCUMENT
