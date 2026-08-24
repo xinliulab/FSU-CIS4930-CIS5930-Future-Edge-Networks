@@ -1,0 +1,82 @@
+\usepackage{array}    % <-- For defining new column types
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{makecell} % <-- For multi-line cells
+\usepackage[default]{opensans} 
+\usepackage{pgffor}
+\usepackage{pdfpages}
+\usepackage{palatino}  
+\usepackage{tcolorbox} 
+\usepackage{textcomp}
+\usepackage{ulem}
+\usepackage{xcolor} 
+\usepackage{tcolorbox} 
+\usepackage{tikz}
+\usepackage{tabularx}
+
+
+
+\usetikzlibrary{arrows.meta} 
+\usetikzlibrary{decorations.pathreplacing} 
+\usetikzlibrary{decorations.pathmorphing}  
+\usetikzlibrary{decorations.markings}     
+\usetikzlibrary{decorations.text}      
+
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  breaklines=true,
+  frame=single,
+  showstringspaces=false,
+  showspaces=false,
+  keepspaces=true,
+  tabsize=4
+}
+
+
+\newtcbox{\highlighttexttt}{nobeforeafter, colframe=white, colback=lightgray!30, boxrule=0pt, arc=2pt, boxsep=0pt, left=1pt, right=1pt, top=1pt, bottom=1pt}
+\newcommand{\hl}[1]{\colorbox{lightgray!30}{\texttt{#1}}}
+\newcommand{\blink}[2]{\href{#1}{\textcolor{blue}{\underline{#2}}}}
+\newcommand{\try}[1]{Have A Try: \blink{https://github.com/FSU-COP4610-F25/in-class-code}{#1}}
+
+\usetheme{Madrid}
+\usefonttheme{default} 
+
+\useinnertheme{circles}
+
+\setbeamertemplate{footline}{
+    \leavevmode%
+    \hbox{%
+        \begin{beamercolorbox}[wd=0.92\paperwidth,ht=2.5ex,dp=1ex,left]{section in head/foot}
+            \hspace{0.5em}
+            \insertsectionnavigationhorizontal{0.9\paperwidth}{}{}
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[wd=0.08\paperwidth,ht=2.5ex,dp=1ex,right]{section in head/foot}
+            \insertframenumber{} / \inserttotalframenumber
+            \hspace{0.2em}
+        \end{beamercolorbox}%
+    }%
+    \vskip0pt%
+}
+
+
+\setbeamersize{text margin left=1em, text margin right=1em}
+
+\setbeamertemplate{frametitle}{
+    \vspace{-0.5em} 
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=0.75ex,left]{frametitle} 
+        \usebeamerfont{frametitle}\hspace{0.72em}\insertframetitle
+    \end{beamercolorbox}
+    \vspace{-0.5em} 
+}
+
+
+\newcommand{\FSUOSMeta}{%
+  \author[Xin Liu]{\small Xin Liu}%
+  \institute[FSU]{\small Florida State University\\[2pt]
+    \href{mailto:xliu15@fsu.edu}{xliu15@fsu.edu}}%
+  \date[\today]{\small CIS 4930/5930 Future Edge Networks\\[2pt]
+    \href{https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/}
+         {https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/}}%
+}

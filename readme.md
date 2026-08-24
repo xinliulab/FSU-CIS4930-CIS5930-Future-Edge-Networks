@@ -1,11 +1,12 @@
-# FSU COP4610 Operating Systems Demo Codes
+# FSU CIS4930/CIS5930 Future Edge Networks
 
-This repository contains lecture slides and demonstration code for the **COP4610 Operating Systems** course at **Florida State University (FSU)**. It includes slides, examples, exercises, and projects designed to help students grasp key OS concepts such as process management, threading, CPU scheduling, synchronization, memory management, and file systems. The provided code serves as a hands-on supplement to the lectures, allowing students to practice and explore various aspects of operating system implementation.
+This repository contains the public course homepage and materials for **CIS4930/CIS5930 Future Edge Networks** at **Florida State University (FSU)**.
 
-## Key Concepts Covered
+## Updating LaTeX-Generated PDFs
 
-- **Process Creation and Management**
-- **CPU Scheduling** (e.g., Round Robin, Priority Scheduling, etc.)
-- **Threading and Synchronization** (e.g., Mutexes, Semaphores)
-- **Memory Management and Virtual Memory**
-- **File Systems and I/O**
+The GitHub homepage and Canvas homepage link directly to LaTeX-generated PDFs in their source folders:
+
+- `syllabus/syllabus-cis4930-cis5930.pdf`
+- `slides/Class_1_Preparation/main.pdf`
+
+After editing the LaTeX source files, compile the PDF in that source folder. The homepage links will point to the generated PDF directly.

@@ -14,6 +14,8 @@ When updating the course schedule, update both:
 - `../index.html` for the GitHub course homepage.
 - `home.html` for the Canvas copy/paste version.
 
+LaTeX-generated PDFs are linked directly from their source folders. After editing and compiling LaTeX, the homepage links use the newly generated PDFs without a separate copy step.
+
 Full draft backups are stored in:
 
 - `../archive/index-full-schedule-draft-2026.html`
@@ -30,7 +32,7 @@ In practice:
 - The Canvas page links to course files with absolute GitHub Pages URLs, so Canvas does not need to preserve the repository folder structure.
 - Use Canvas Files only for materials that should be private to enrolled students or that FSU requires to stay inside Canvas.
 
-This avoids uploading the same slides twice. When a lecture file is updated in GitHub, the Canvas homepage link keeps working without editing Canvas.
+This avoids uploading the same slides twice. When a lecture file is updated and compiled in GitHub, the Canvas homepage link keeps working without editing Canvas.
 
 ## If Canvas-only files are required
 
