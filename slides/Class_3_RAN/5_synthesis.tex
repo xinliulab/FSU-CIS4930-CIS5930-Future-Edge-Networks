@@ -1,0 +1,76 @@
+%!TEX root = ./main.tex
+
+\section{Wrap-up}
+
+% SECTION TIMING: 69:00--75:00. Use the comparison only to close the story, then collect the exit ticket.
+
+% TEACHING NOTE (2:30): Read down by generation, then across one row. Do not test acronym memorization.
+\begin{frame}{Five generations in one low-resolution map}
+  \centering
+  \scriptsize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{1.28}
+  \begin{tabular}{>{\bfseries\raggedright\arraybackslash}p{0.45cm}
+      >{\raggedright\arraybackslash}p{1.35cm}
+      >{\raggedright\arraybackslash}p{1.45cm}
+      >{\raggedright\arraybackslash}p{2.15cm}
+      >{\raggedright\arraybackslash}p{1.25cm}
+      >{\raggedright\arraybackslash}p{2.25cm}}
+    \toprule
+    & \textbf{Radio} & \textbf{Control} & \textbf{Core} & \textbf{Mode} & \textbf{Example} \\
+    \midrule
+    1G & Base station & MTSO & Analog mobile core & Circuit & Voice in a car \\
+    2G & BTS & BSC & MSC + identity DBs & Circuit; GPRS packet & SMS, roaming \\
+    3G & NodeB & RNC & CS + PS cores & Both & Mobile web / video \\
+    4G & eNodeB & In eNodeB & EPC, all-IP & Packet & Maps, apps, streaming \\
+    5G & gNodeB & CU / DU / RU & Service-based 5GC & Packet + QoS flows & Flexible services + edge \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.55em}
+  \takeaway{The radio name changes. The deeper story is where control, state, and forwarding live.}
+\end{frame}
+
+% TEACHING NOTE (2:00): Point along the path and ask students to finish each phrase aloud.
+\begin{frame}{Follow the same action one last time}
+  \centering
+  \begin{tikzpicture}[node distance=0.2cm]
+    \node[netnode,minimum width=1.58cm] (g1) {1G\\[-1pt]{\scriptsize circuit}};
+    \node[netnode,minimum width=1.58cm,right=of g1] (g2) {2G\\[-1pt]{\scriptsize identity}};
+    \node[netnode,minimum width=1.58cm,right=of g2] (g3) {3G\\[-1pt]{\scriptsize packet data}};
+    \node[netnode,minimum width=1.58cm,right=of g3] (g4) {4G\\[-1pt]{\scriptsize all-IP}};
+    \node[corenode,minimum width=1.58cm,right=of g4] (g5) {5G\\[-1pt]{\scriptsize modular core}};
+    \node[oranode,minimum width=1.58cm,right=of g5] (o) {O-RAN\\[-1pt]{\scriptsize open control}};
+    \draw[flow] (g1)--(g2); \draw[flow] (g2)--(g3); \draw[flow] (g3)--(g4);
+    \draw[flow] (g4)--(g5); \draw[flow] (g5)--(o);
+  \end{tikzpicture}
+
+  \vspace{1em}
+  \Large
+  The packet still needs \textcolor{ranblue}{radio access},\\[0.25em]
+  \textcolor{coreorange}{identity + policy + routing},\\[0.25em]
+  and now sometimes \textcolor{ranpurple}{programmable control}.
+
+  \vspace{0.65em}
+  \takeaway{Each generation relocates functions; O-RAN changes who may build and control them.}
+\end{frame}
+
+% TEACHING NOTE (2:30): Collect on paper or LMS. Require one boundary and one sentence.
+\begin{frame}{Exit ticket: draw the boundaries}
+  \begin{center}
+  \begin{tikzpicture}[node distance=0.32cm]
+    \node[netnode,minimum width=1.55cm] (ue) {UE};
+    \node[netnode,right=of ue,minimum width=2.25cm] (ran) {Radio system};
+    \node[corenode,right=of ran,minimum width=2.35cm] (core) {Network services};
+    \node[netnode,right=of core,minimum width=2.35cm,font=\small\bfseries] (data) {PSTN / Internet};
+    \draw[flow] (ue)--(ran); \draw[flow] (ran)--(core); \draw[flow] (core)--(data);
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.7em}
+  \begin{enumerate}
+    \item Mark the \textcolor{ranblue}{RAN} and \textcolor{coreorange}{Core} boundary.
+    \item Add one \textcolor{ranpurple}{O-RAN} interface or controller.
+    \item Answer in one sentence: \textbf{What changes next---radio, core, or who can control the network?}
+  \end{enumerate}
+\end{frame}

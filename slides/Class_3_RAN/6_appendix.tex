@@ -1,0 +1,116 @@
+%!TEX root = ./main.tex
+
+\section{Appendix}
+
+% BACKUP ONLY: five reference slides; do not include in the planned 75-minute path.
+
+\begin{frame}{Appendix: the acronym decoder ring}
+  \scriptsize
+  \renewcommand{\arraystretch}{1.12}
+  \begin{tabularx}{\textwidth}{l l X}
+    \toprule
+    \textbf{Era} & \textbf{Node} & \textbf{Meaning / job} \\
+    \midrule
+    1G & MTSO & Mobile Telephone Switching Office; switching and mobility control \\
+    2G & BTS / BSC & Base Transceiver Station / Base Station Controller \\
+    2G/3G & MSC, HLR, VLR, AuC & Voice switch; home/visitor state; authentication \\
+    GPRS & SGSN / GGSN & Packet mobility + gateway to external packet networks \\
+    3G & NodeB / RNC & Radio node / Radio Network Controller \\
+    4G & eNodeB & LTE radio node; absorbs most RNC control \\
+    4G & MME, HSS, S-GW, P-GW & Mobility; subscriber data; serving and packet gateways \\
+    5G & gNodeB & 5G radio node, often split into CU / DU / RU \\
+    5GC & AMF, SMF, UPF & Access/mobility; session control; packet forwarding \\
+    5GC & AUSF, UDM, PCF, NRF & Authentication; subscriber data; policy; service registry \\
+    O-RAN & SMO / RIC & Management/orchestration and intelligent control \\
+    \bottomrule
+  \end{tabularx}
+\end{frame}
+
+\begin{frame}{Appendix: interface map}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \small
+      \plainterm{Uu}{UE $\leftrightarrow$ radio: air}
+      \par\vspace{0.65em}
+      \plainterm{S1 / NG}{RAN $\leftrightarrow$ core}
+      \par\vspace{0.65em}
+      \plainterm{X2 / Xn}{neighbor handover}
+      \par\vspace{0.65em}
+      \plainterm{F1}{O-CU $\leftrightarrow$ O-DU}
+      \par\vspace{0.65em}
+      \plainterm{Open FH}{O-DU $\leftrightarrow$ O-RU}
+    \end{column}
+    \begin{column}{0.49\textwidth}
+      \small
+      \plainterm{E2}{Near-RT RIC $\leftrightarrow$ RAN}
+      \par\vspace{0.65em}
+      \plainterm{A1}{Non-RT RIC $\leftrightarrow$ Near-RT RIC}
+      \par\vspace{0.65em}
+      \plainterm{O1}{SMO $\leftrightarrow$ managed functions}
+      \par\vspace{0.65em}
+      \plainterm{O2}{SMO $\leftrightarrow$ cloud platform}
+      \par\vspace{0.65em}
+      \textcolor{softgray}{Interfaces expose coordination; they do not remove it.}
+    \end{column}
+  \end{columns}
+  \source{https://www.o-ran.org/o-ran-resources}{O-RAN ALLIANCE architecture and resources}
+\end{frame}
+
+\begin{frame}{Appendix: where the protocol stack is split}
+  \centering
+  \begin{tikzpicture}[node distance=0.22cm]
+    \node[oranode,minimum width=7.8cm] (cp) {O-CU-CP \quad RRC + control-side PDCP};
+    \node[oranode,minimum width=7.8cm,below=of cp] (up) {O-CU-UP \quad SDAP + user-side PDCP};
+    \node[netnode,minimum width=7.8cm,below=of up] (du) {O-DU \quad RLC + MAC + High-PHY};
+    \node[netnode,minimum width=7.8cm,below=of du] (ru) {O-RU \quad Low-PHY + RF};
+    \node[below=0.25cm of ru] (air) {\Large Antenna $\longleftrightarrow$ air $\longleftrightarrow$ UE};
+    \draw[flow] (cp)--node[right]{\scriptsize E1}(up);
+    \draw[flow] (up)--node[right]{\scriptsize F1-U}(du);
+    \draw[flow] (cp.east) to[bend left=24] node[right]{\scriptsize F1-C}(du.east);
+    \draw[flow] (du)--node[right]{\scriptsize Open Fronthaul}(ru);
+  \end{tikzpicture}
+
+  \vspace{0.5em}
+  \takeaway{A split is a placement decision: latency, bandwidth, compute, and ownership all move with it.}
+\end{frame}
+
+\begin{frame}{Appendix: handover changed owners, not purpose}
+  \small
+  \renewcommand{\arraystretch}{1.22}
+  \vspace{0.15em}
+  \begin{tabularx}{\textwidth}{
+      >{\raggedright\arraybackslash}p{0.75cm}
+      >{\raggedright\arraybackslash}p{3.2cm}
+      >{\raggedright\arraybackslash}X
+      >{\raggedright\arraybackslash}X}
+    \toprule
+    \textbf{Era} & \textbf{Main controller} & \textbf{What crosses the boundary?} & \textbf{What must survive?} \\
+    \midrule
+    1G & MTSO & Analog voice circuit & The conversation \\
+    2G & BSC / MSC & Radio channel + circuit state & Call and subscriber context \\
+    3G & RNC / core & Radio bearer; CS or PS state & Voice or packet session \\
+    4G & eNodeB + EPC & IP bearer and mobility context & All-IP session \\
+    5G & gNodeB + 5GC & PDU session, QoS flows, policy & Service continuity \\
+    O-RAN & Same 3GPP functions & RIC may influence parameters & Safe control under open APIs \\
+    \bottomrule
+  \end{tabularx}
+
+  \vspace{0.25em}
+  \centering\small Which is harder to move---a radio channel, a packet tunnel, or its policy?
+\end{frame}
+
+\begin{frame}{Sources and further reading}
+  \small
+  \begin{itemize}
+    \item \href{https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=3144}{\textbf{3GPP TS 23.501}} --- authoritative 5G system architecture.
+    \item \href{https://www.nokia.com/asset/i/210365/}{\textbf{Nokia: 5G Core service-based architecture}} --- readable SBA role map.
+    \item \href{https://www.o-ran.org/o-ran-resources}{\textbf{O-RAN Architecture and Resources}} --- interfaces, RICs, and current specifications.
+    \item \href{https://mediastorage.o-ran.org/overview/o-ran-overview-presentation/o-ran-overview-of-the-o-ran-alliance-presentation.pdf}{\textbf{O-RAN ALLIANCE overview (2026)}} --- current official overview.
+    \item \href{https://about.att.com/blogs/2025/5g-standalone-nationwide.html}{\textbf{AT\&T 5G Standalone announcement (2025)}} --- why a 5G icon can precede 5G Core.
+    \item \textbf{Course references:} local materials in \texttt{reference/} were used for background only, not reproduced as slide images.
+  \end{itemize}
+
+  \vspace{0.55em}
+  \centering
+  \large Image licenses and page-level provenance: \texttt{figure/SOURCES.md}
+\end{frame}

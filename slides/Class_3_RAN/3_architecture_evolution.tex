@@ -1,0 +1,452 @@
+%!TEX root = ./main.tex
+
+\section{Architecture Across Generations}
+
+% SECTION TIMING: 20:00--52:00. Follow one call/packet; abbreviations are roles, not a memorization list.
+
+\begin{frame}{1G connected radio voice to the telephone network}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.58\textwidth}
+      \centering
+      \begin{tikzpicture}[node distance=0.55cm,scale=0.76,transform shape]
+        \node[netnode,minimum width=1.55cm] (phone) {Mobile\\phone};
+        \node[netnode,minimum width=1.65cm,right=of phone] (bs) {Base\\station};
+        \node[corenode,minimum width=1.75cm,right=of bs] (mtso) {MTSO};
+        \node[corenode,minimum width=1.65cm,right=of mtso] (pstn) {PSTN};
+        \draw[flow] (phone)--(bs);
+        \draw[flow] (bs)--(mtso);
+        \draw[flow] (mtso)--(pstn);
+        \node[align=center,font=\scriptsize,text width=5.2cm] at (2.8,-1.35)
+          {A circuit stays reserved while the call is active.};
+      \end{tikzpicture}
+    \column{0.42\textwidth}
+      \Large\textbf{The path was a circuit.}
+      \normalsize
+      \begin{itemize}
+        \item Analog radio in the cell
+        \item MTSO coordinated towers and calls
+        \item PSTN carried the call onward
+      \end{itemize}
+
+      \takeaway{A mobile call was still a telephone call.}
+  \end{columns}
+\end{frame}
+
+% Prediction (60 s): ask who notices the weakening signal and who reroutes the call.
+\begin{frame}{Mobility means changing the network while using it}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.58\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.9,transform shape]
+        \draw[draw=ranblue!55,fill=blue!3] (0,0) circle (1.35);
+        \draw[draw=ranblue!55,fill=blue!3] (2.6,0) circle (1.35);
+        \node[netnode,minimum width=1.2cm] at (0,0) {Cell A};
+        \node[netnode,minimum width=1.2cm] at (2.6,0) {Cell B};
+        \node[corenode,minimum width=1.75cm] (core) at (1.3,-1.95) {Switch /\\controller};
+        \draw[flow] (0,-0.45)--(core);
+        \draw[flow] (2.6,-0.45)--(core);
+        \draw[flow,draw=ranpurple] (-0.8,1.55)--node[above,font=\scriptsize]{moving call}(3.4,1.55);
+        \filldraw[fill=coreorange,draw=coreorange] (1.3,1.55) circle (2.5pt);
+        \node[font=\scriptsize,align=center] at (1.3,2.0) {handoff\\decision};
+      \end{tikzpicture}
+    \column{0.42\textwidth}
+      \large\textbf{A moving car creates three questions:}
+      \normalsize
+      \begin{itemize}
+        \item Who measures the signal?
+        \item Who chooses the next cell?
+        \item Who keeps the call alive?
+      \end{itemize}
+      \ask{What happens if handoff is late? What if it is too early?}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{2G split the base station into radio and control}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.62\textwidth}
+      \centering
+      \begin{tikzpicture}[node distance=0.40cm,scale=0.64,transform shape]
+        \node[netnode] (ms) {Mobile\\station};
+        \node[netnode,right=of ms] (bts) {BTS};
+        \node[netnode,right=of bts] (bsc) {BSC};
+        \node[corenode,right=of bsc] (msc) {MSC};
+        \node[corenode,above=0.55cm of msc] (db) {HLR / VLR\\AuC};
+        \node[corenode,right=of msc] (pstn) {PSTN};
+        \draw[flow] (ms)--(bts);
+        \draw[flow] (bts)--(bsc);
+        \draw[flow] (bsc)--(msc);
+        \draw[flow] (msc)--(pstn);
+        \draw[flow,dashed] (msc)--(db);
+      \end{tikzpicture}
+    \column{0.38\textwidth}
+      \large
+      \plainterm{BTS}{talks over radio}\par\vspace{0.65em}
+      \plainterm{BSC}{coordinates cells}\par\vspace{0.65em}
+      \plainterm{MSC}{switches calls}\par\vspace{0.65em}
+      \plainterm{HLR/VLR}{tracks subscribers}
+
+      \vspace{0.9em}
+      \takeaway{Digital radio made identity and roaming scalable.}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The SIM became a network passport}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.43\textwidth}
+      \centering
+      \includegraphics[width=0.85\linewidth]{figure/xg/sim_card.png}
+      \source{https://commons.wikimedia.org/wiki/File:Sim_card.png}{GSM SIM card}
+    \column{0.57\textwidth}
+      \Large\textbf{Home network}
+      \normalsize knows your subscription, number, and credentials.
+
+      \vspace{0.7em}
+      \Large\textbf{Visited network}
+      \normalsize knows where to reach you right now.
+
+      \vspace{0.8em}
+      \ask{If you replace the phone but keep the SIM, what changed in the network?}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{A call can find you even when you leave home}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.62\textwidth}
+      \centering
+      \begin{tikzpicture}[node distance=0.55cm,scale=0.76,transform shape]
+        \node[corenode,minimum width=2.25cm] (home) {Home network\\HLR};
+        \node[corenode,minimum width=2.25cm,right=2.6cm of home] (visit) {Visited network\\VLR / MSC};
+        \node[netnode,below=0.75cm of visit] (bob) {Bob's phone};
+        \node[netnode,below=0.75cm of home] (mary) {Mary};
+        \draw[flow] (bob)--node[right,font=\scriptsize]{register}(visit);
+        \draw[flow,dashed] (visit)--node[above,font=\scriptsize]{update location}(home);
+        \draw[flow] (mary)--node[left,font=\scriptsize]{call Bob}(home);
+        \draw[flow] (home)--node[below,font=\scriptsize]{route call}(visit);
+      \end{tikzpicture}
+    \column{0.38\textwidth}
+      \large\textbf{Bob visits another city.}
+      \normalsize
+      \begin{enumerate}
+        \item Bob registers there.
+        \item The home record is updated.
+        \item Mary's call is forwarded.
+      \end{enumerate}
+
+      \takeaway{Mobility is a database problem as well as a radio problem.}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{GPRS was an Internet sidecar}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.62\textwidth}
+      \centering
+      \begin{tikzpicture}[node distance=0.42cm,scale=0.63,transform shape]
+        \node[netnode] (phone) {Phone};
+        \node[netnode,right=of phone] (bss) {BSS\\BTS+BSC};
+        \node[corenode,right=of bss,yshift=0.70cm] (msc) {MSC\\voice};
+        \node[corenode,right=of bss,yshift=-0.70cm] (sgsn) {SGSN};
+        \node[corenode,right=of sgsn] (ggsn) {GGSN};
+        \node[netnode,right=of ggsn] (inet) {Internet};
+        \node[netnode,right=of msc] (pstn) {PSTN};
+        \draw[flow] (phone)--(bss);
+        \draw[flow] (bss)--(msc);
+        \draw[flow] (msc)--(pstn);
+        \draw[flow,draw=ranblue] (bss)--(sgsn);
+        \draw[flow,draw=ranblue] (sgsn)--(ggsn);
+        \draw[flow,draw=ranblue] (ggsn)--(inet);
+      \end{tikzpicture}
+    \column{0.38\textwidth}
+      \large
+      Voice still used the MSC path.
+
+      \vspace{0.7em}
+      Packet data gained SGSN and GGSN.
+
+      \vspace{0.7em}
+      The phone now had a persistent route toward the Internet.
+
+      \takeaway{2.5G added packet data without replacing the old core.}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{3G changed the radio faster than the architecture}
+  \centering
+  \begin{tikzpicture}[node distance=0.45cm]
+    \node[netnode] (ue) {UE};
+    \node[netnode,right=of ue] (nb) {NodeB};
+    \node[netnode,right=of nb] (rnc) {RNC};
+    \node[corenode,right=of rnc,yshift=0.65cm] (msc) {MSC\\voice};
+    \node[corenode,right=of rnc,yshift=-0.65cm] (sgsn) {SGSN/GGSN\\data};
+    \draw[flow] (ue) -- (nb);
+    \draw[flow] (nb) -- (rnc);
+    \draw[flow] (rnc) -- (msc);
+    \draw[flow] (rnc) -- (sgsn);
+  \end{tikzpicture}
+
+  \vspace{1.0em}
+  \begin{itemize}
+    \item UMTS/WCDMA raised mobile-data capability.
+    \item NodeB and RNC echoed the BTS/BSC split.
+    \item Circuit voice and packet data still lived side by side.
+  \end{itemize}
+  \source{https://www.3gpp.org/technologies/3g}{3GPP 3G overview}
+\end{frame}
+
+\begin{frame}{3G carried two networks in one trench coat}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.50\textwidth}
+      \centering
+      \Huge\textcolor{coreorange}{\textbf{Voice}}
+
+      \vspace{0.6em}
+      \Large Circuit switched
+
+      \vspace{0.5em}
+      \normalsize MSC and the telephone world
+    \column{0.50\textwidth}
+      \centering
+      \Huge\textcolor{ranblue}{\textbf{Data}}
+
+      \vspace{0.6em}
+      \Large Packet switched
+
+      \vspace{0.5em}
+      \normalsize SGSN/GGSN and the Internet
+  \end{columns}
+
+  \vspace{1.0em}
+  \takeaway{The transition worked. It was not simple.}
+\end{frame}
+
+% Classroom check (90 s): students match names before the answers appear orally.
+\begin{frame}{Can you match the tower name to the generation?}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.50\textwidth}
+      \Large
+      \begin{enumerate}
+        \item BTS
+        \item NodeB
+        \item eNodeB
+        \item gNodeB
+      \end{enumerate}
+    \column{0.50\textwidth}
+      \Large
+      \begin{itemize}
+        \item 2G GSM
+        \item 3G UMTS
+        \item 4G LTE
+        \item 5G NR
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.8em}
+  \ask{Which generation removed the separate RNC?}
+\end{frame}
+
+\begin{frame}{4G flattened the RAN}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.62\textwidth}
+      \centering
+      \begin{tikzpicture}[node distance=0.45cm,scale=0.62,transform shape]
+        \node[netnode] (ue) {UE};
+        \node[netnode,right=of ue] (enb1) {eNodeB};
+        \node[netnode,below=0.55cm of enb1] (enb2) {eNodeB};
+        \node[corenode,right=1.0cm of enb1] (epc) {EPC};
+        \node[netnode,right=of epc] (net) {Internet};
+        \draw[flow] (ue)--(enb1);
+        \draw[flow] (enb1)--(epc);
+        \draw[flow] (enb2)--(epc);
+        \draw[flow,dashed] (enb1)--node[right,font=\scriptsize]{X2}(enb2);
+        \draw[flow] (epc)--(net);
+        \node[align=center,font=\scriptsize,text width=4.1cm] at (1.65,-2.10)
+          {No separate RNC in the main LTE path.};
+      \end{tikzpicture}
+    \column{0.38\textwidth}
+      \large
+      eNodeB absorbed radio control that had lived in the RNC.
+
+      \vspace{0.8em}
+      Neighboring eNodeBs could coordinate over X2.
+
+      \vspace{0.8em}
+      The core became the Evolved Packet Core.
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The EPC turned the core into packet plumbing}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.61\textwidth}
+      \centering
+      \begin{tikzpicture}[node distance=0.48cm,scale=0.62,transform shape]
+        \node[netnode] (ue) {UE};
+        \node[netnode,right=of ue] (enb) {eNodeB};
+        \node[corenode,right=of enb,yshift=0.75cm] (mme) {MME};
+        \node[corenode,right=of mme] (hss) {HSS};
+        \node[corenode,right=of enb,yshift=-0.75cm] (sgw) {SGW};
+        \node[corenode,right=of sgw] (pgw) {PGW};
+        \node[netnode,right=of pgw] (inet) {Internet};
+        \draw[flow] (ue)--(enb);
+        \draw[flow,dashed] (enb)--(mme);
+        \draw[flow,dashed] (mme)--(hss);
+        \draw[flow,draw=ranblue] (enb)--(sgw);
+        \draw[flow,draw=ranblue] (sgw)--(pgw);
+        \draw[flow,draw=ranblue] (pgw)--(inet);
+      \end{tikzpicture}
+    \column{0.39\textwidth}
+      \small
+      \plainterm{MME}{mobility and access}\par\vspace{0.55em}
+      \plainterm{HSS}{subscriber data}\par\vspace{0.55em}
+      \plainterm{SGW}{mobility anchor}\par\vspace{0.55em}
+      \plainterm{PGW}{gateway to Internet}
+
+      \vspace{0.7em}
+      \takeaway{No memorization test. Learn the jobs.}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Control asks; the user plane moves packets}
+  \centering
+  \begin{tikzpicture}[node distance=0.75cm]
+    \node[netnode] (ue) {UE};
+    \node[netnode,right=of ue] (enb) {eNodeB};
+    \node[corenode,right=of enb,yshift=0.75cm] (mme) {MME\\control};
+    \node[corenode,right=of enb,yshift=-0.75cm] (gw) {S/PGW\\user data};
+    \node[netnode,right=of gw] (net) {Internet};
+    \draw[flow,dashed] (ue) -- (enb);
+    \draw[flow,dashed] (enb) -- (mme);
+    \draw[flow,draw=ranblue] (ue) to[bend right=18] (enb);
+    \draw[flow,draw=ranblue] (enb) -- (gw);
+    \draw[flow,draw=ranblue] (gw) -- (net);
+  \end{tikzpicture}
+
+  \vspace{1.0em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.50\textwidth}
+      \Large\textbf{Control plane}
+
+      \normalsize attach, authenticate, move, establish bearer
+    \column{0.50\textwidth}
+      \Large\textbf{User plane}
+
+      \normalsize carry the voice, video, game, or web packets
+  \end{columns}
+\end{frame}
+
+% Discussion (60 s): why did an early LTE phone sometimes fall back to 3G for a call?
+\begin{frame}{In 4G, a phone call had to become an Internet app}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      \centering
+      \Huge\textcolor{gray}{\textbf{Early LTE}}
+
+      \vspace{0.8em}
+      \large Data on LTE\par
+      Voice may fall back to 2G/3G
+    \column{0.52\textwidth}
+      \centering
+      \Huge\textcolor{ranblue}{\textbf{VoLTE}}
+
+      \vspace{0.8em}
+      \large Voice carried as managed IP service\par
+      IMS provides call control
+  \end{columns}
+
+  \vspace{1.0em}
+  \ask{Why was ``all-IP'' a bigger change than simply making the radio faster?}
+\end{frame}
+
+\begin{frame}{5G made the core look more like a cloud platform}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.58\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \node[corenode,minimum width=1.25cm,font=\scriptsize\bfseries] (amf) at (0,1.25) {AMF};
+        \node[corenode,minimum width=1.25cm,font=\scriptsize\bfseries] (smf) at (1.8,1.25) {SMF};
+        \node[corenode,minimum width=1.25cm,font=\scriptsize\bfseries] (ausf) at (3.6,1.25) {AUSF};
+        \node[corenode,minimum width=1.25cm,font=\scriptsize\bfseries] (udm) at (0,0.15) {UDM};
+        \node[corenode,minimum width=1.25cm,font=\scriptsize\bfseries] (pcf) at (1.8,0.15) {PCF};
+        \node[corenode,minimum width=1.25cm,font=\scriptsize\bfseries] (nrf) at (3.6,0.15) {NRF};
+        \node[oranode,minimum width=5.35cm,minimum height=0.58cm,font=\scriptsize\bfseries] (bus) at (1.8,-0.95) {Service-based interfaces};
+        \foreach \n in {amf,smf,ausf,udm,pcf,nrf} \draw[thin,draw=coreorange] (\n) -- (bus);
+        \node[netnode,minimum width=1.35cm,font=\scriptsize\bfseries] (ran) at (-0.05,-2.15) {RAN};
+        \node[corenode,minimum width=1.35cm,font=\scriptsize\bfseries] (upf) at (1.8,-2.15) {UPF};
+        \node[netnode,minimum width=1.55cm,font=\scriptsize\bfseries] (data) at (3.65,-2.15) {Data net};
+        \draw[flow] (ran)--(upf); \draw[flow] (upf)--(data);
+        \draw[flow,dashed] (smf) to[bend left=18] node[right,font=\tiny]{session control} (upf);
+      \end{tikzpicture}
+      \source{https://www.nokia.com/asset/i/210365/}{Nokia 5G Core Service Based Architecture}
+    \column{0.42\textwidth}
+      \small
+      \plainterm{AMF}{access + mobility}\par\vspace{0.4em}
+      \plainterm{SMF}{session manager}\par\vspace{0.4em}
+      \plainterm{UPF}{packet forwarding}\par\vspace{0.4em}
+      \plainterm{AUSF/UDM}{identity}\par\vspace{0.4em}
+      \plainterm{PCF}{policy}\par\vspace{0.4em}
+      \plainterm{NRF}{service directory}
+
+      \vspace{0.6em}
+      \takeaway{Functions discover and consume services.}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{A 5G radio does not guarantee a 5G core}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.50\textwidth}
+      \centering
+      \Large\textbf{NSA}
+
+      \vspace{0.5em}
+      \begin{tikzpicture}[node distance=0.35cm,scale=0.86,transform shape]
+        \node[netnode] (lte) {LTE anchor};
+        \node[netnode,below=of lte] (nr) {5G NR};
+        \node[corenode,right=of lte] (epc) {4G EPC};
+        \draw[flow] (lte) -- (epc);
+        \draw[flow] (nr) -- (lte);
+      \end{tikzpicture}
+
+      \vspace{0.4em}
+      \small Fast deployment; inherits parts of 4G architecture.
+    \column{0.50\textwidth}
+      \centering
+      \Large\textbf{SA}
+
+      \vspace{0.5em}
+      \begin{tikzpicture}[node distance=0.35cm,scale=0.86,transform shape]
+        \node[netnode] (nr) {5G NR};
+        \node[corenode,right=of nr] (gc) {5G Core};
+        \draw[flow] (nr) -- (gc);
+      \end{tikzpicture}
+
+      \vspace{1.18em}
+      \small Enables the full 5G system architecture.
+  \end{columns}
+
+  \source{https://about.att.com/blogs/2025/5g-standalone-nationwide.html}{AT\&T: ``Not all 5G is created equal,'' 2025}
+\end{frame}
+
+\begin{frame}{The 5G base station can be split across locations}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.62\textwidth}
+      \centering
+      \begin{tikzpicture}[node distance=0.38cm,scale=0.65,transform shape]
+        \node[netnode,minimum width=1.45cm] (ue) {UE};
+        \node[netnode,minimum width=1.45cm,right=of ue,font=\scriptsize\bfseries] (ru) {RU\\RF + low PHY};
+        \node[netnode,minimum width=1.75cm,right=of ru,font=\scriptsize\bfseries] (du) {DU\\high PHY\\MAC / RLC};
+        \node[netnode,minimum width=1.8cm,right=of du,font=\scriptsize\bfseries] (cu) {CU\\PDCP\\RRC / SDAP};
+        \node[corenode,minimum width=1.55cm,right=of cu] (core) {5G Core};
+        \draw[flow] (ue)--node[above,font=\scriptsize]{radio}(ru);
+        \draw[flow] (ru)--node[above,font=\scriptsize]{fronthaul}(du);
+        \draw[flow] (du)--node[above,font=\scriptsize]{F1}(cu);
+        \draw[flow] (cu)--node[above,font=\scriptsize]{N2/N3}(core);
+        \node[align=center,font=\scriptsize,text width=5.2cm] at (3.25,-1.55)
+          {A gNodeB can be a system spread across several physical places.};
+      \end{tikzpicture}
+    \column{0.38\textwidth}
+      \small
+      \plainterm{RU}{RF + lower PHY}\par\vspace{0.65em}
+      \plainterm{DU}{upper PHY, MAC, RLC}\par\vspace{0.65em}
+      \plainterm{CU}{PDCP, RRC, SDAP}\par\vspace{0.65em}
+
+      \takeaway{Now the question is: who owns each box and each interface?}
+  \end{columns}
+\end{frame}

@@ -1,0 +1,42 @@
+%!TEX root = ./main.tex
+
+\usetikzlibrary{positioning,fit,backgrounds}
+
+\definecolor{ranblue}{RGB}{46,91,186}
+\definecolor{coreorange}{RGB}{222,122,36}
+\definecolor{ranpurple}{RGB}{109,53,151}
+\definecolor{softgreen}{RGB}{73,139,74}
+\definecolor{softgray}{RGB}{92,98,105}
+
+\newcommand{\source}[2]{%
+  \par\vspace{0.25em}%
+  {\tiny\textcolor{gray}{\href{#1}{\underline{#2}}}\par}%
+}
+
+\newcommand{\plainterm}[2]{%
+  \textbf{#1}\hspace{0.25em}{\small\textcolor{softgray}{#2}}%
+}
+
+\newcommand{\ask}[1]{%
+  \begin{tcolorbox}[colback=blue!4,colframe=ranblue,boxrule=0.7pt,arc=2pt,
+    left=5pt,right=5pt,top=4pt,bottom=4pt]
+    \centering\large #1
+  \end{tcolorbox}%
+}
+
+\newcommand{\takeaway}[1]{%
+  \begin{tcolorbox}[colback=orange!7,colframe=coreorange,boxrule=0.7pt,arc=2pt,
+    left=5pt,right=5pt,top=4pt,bottom=4pt]
+    \centering\large #1
+  \end{tcolorbox}%
+}
+
+\tikzset{
+  netnode/.style={draw=ranblue,fill=blue!5,rounded corners=3pt,
+    minimum width=1.9cm,minimum height=0.82cm,align=center,font=\bfseries},
+  corenode/.style={draw=coreorange,fill=orange!7,rounded corners=3pt,
+    minimum width=1.9cm,minimum height=0.82cm,align=center,font=\bfseries},
+  oranode/.style={draw=ranpurple,fill=purple!6,rounded corners=3pt,
+    minimum width=1.9cm,minimum height=0.82cm,align=center,font=\bfseries},
+  flow/.style={-{Latex[length=2.4mm]},thick,draw=softgray}
+}
