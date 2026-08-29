@@ -25,40 +25,45 @@ Expected: Nothing happens to the bill. The product is access to the network, not
 data by the gigabyte, which is why carriers compete on bundles rather than on price
 per megabit.
 
-### [1_generation_recap] Now multiply that by a nationwide build
+### [1_generation_recap] The bills are flat. The build is not.
 Q: Is revenue per phone line going up or down, and is network spending going up or down?
-Expected: Revenue per line is flat to slightly down (AT&T postpaid phone ARPU about
-$56.64, down 0.8% year over year). Spending is going up (Verizon guided 2025 capex to
-$17.5-18.5 billion, up from $17.1 billion). The two move in opposite directions.
+Expected: Revenue per line is roughly flat and slightly down (AT&T postpaid phone ARPU
+$56.57, down 0.3% year over year, and about flat for three years). Spending is going up
+(AT&T guides $23-24 billion a year of capital investment through 2028, and last quarter
+was $5.7 billion against $4.9 billion a year earlier). Both figures are AT&T's.
 
 ### [1_generation_recap] Your phone picks the loudest tower, not the honest one
-Q: What decides which tower your phone connects to?
-Expected: Signal strength. The phone attaches to the strongest signal it can hear, and
-that choice happens before any identity check.
+Q: What decides which tower your phone connects to, and what identity does the phone
+normally hand over once it gets there?
+Expected: Signal strength decides, and the choice happens before any identity check.
+The phone normally answers with a temporary ID -- unless the tower insists on the
+permanent one, which is exactly what an IMSI catcher is built to do.
 
 ### [1_generation_recap] 2G checked your ID. You never got to check theirs.
-Q: In 2G, who proves their identity to whom?
-Expected: The phone proves itself to the network. The network proves nothing back.
-Authentication ran one direction only, which is what made a fake base station work.
+Q: In 2G, who proves their identity to whom, and from which generation did that change?
+Expected: The phone proves itself to the network; the network proves nothing back, and
+it also chose whether to encrypt at all. From 3G onward the network must prove itself
+too -- but the phone still has to pick a tower before it can check anything.
 
 ### [3_architecture_evolution] Wait --- where did SGSN and GGSN go?
-Q: SGSN and GGSN worked. Why did 4G split them apart anyway?
-Expected: Each box was doing two jobs with different growth rates: making control
-decisions and carrying user traffic. Traffic grew much faster than the number of
-decisions, so scaling for data forced you to buy decision capacity you did not need.
-4G cut along that seam into MME (decisions) and S-GW/P-GW (packets).
+Q: SGSN and GGSN worked. Why did 4G split them apart, and was that split finished in 4G?
+Expected: Each box made control decisions and carried user traffic, two jobs with very
+different growth rates -- ten times the video does not mean ten times the attach
+requests, so scaling for data forced you to buy decision capacity you did not need. 4G
+started the cut: the MME decides and never touches packets. But the gateways kept doing
+both, and finishing the split took until 2017.
 
 ### [3_architecture_evolution] And the MSC? It had been there since 2G.
-Q: Why could the MSC not survive into LTE?
-Expected: The MSC was a circuit switch, and LTE carried only IP. Keeping it meant
-running a second, separate network alongside the packet one. Voice had to stop being a
-network service and become an application riding on IP instead.
+Q: LTE had no circuit switch. So what happened when an early LTE phone made a call?
+Expected: It dropped back to 2G or 3G to make the call -- circuit-switched fallback,
+CSFB. Texts still reached a legacy switch too. The MSC was not replaced when LTE
+arrived; it was demoted to a fallback and stayed in service for years.
 
-### [3_architecture_evolution] You have now watched the same move twice
-Q: State in one sentence the rule that explains both the 2G base station split and the
-4G core split.
-Expected: One box becomes two when its two halves need to change or scale at different
-speeds.
+### [3_architecture_evolution] This is not a coincidence anymore
+Q: State in one sentence the seam that the 2G base station split, the 2001 MSC split,
+and the 4G core split all fall along.
+Expected: The seam between deciding and carrying. One box becomes two when the part
+that makes decisions and the part that moves traffic need to grow or change separately.
 
 ## Part 2
 
