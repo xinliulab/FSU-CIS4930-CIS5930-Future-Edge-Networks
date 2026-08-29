@@ -64,3 +64,21 @@ overall direction of this market has been.
 
 ### [8_economics] What a satellite can and cannot take
 Q: Why does a satellite network not simply replace towers?
+
+### [5_part2_open] Two things from Monday you need today
+Q: State the rule from Monday in the form the slide gives it, and say how many times
+you have already seen it happen.
+Q-note: this question exists to detect cold-start failure. If the answer comes back
+with the wrong count, or with "different speeds" but not the deciding/carrying seam,
+the refresher is not doing its job.
+
+### [4_oran] O-RAN opens the seams, then adds control loops
+Q: What does opening an interface between two boxes actually buy you, and what does it
+cost you?
+
+### [4_oran] So: where does the fake-tower detector live?
+Q: Earlier the lecture asked where a fake-tower detector could live. What is the answer,
+and what made that answer possible?
+
+### [5_synthesis] Five generations in one low-resolution map
+Q: Across all five generations, what is the one thing that kept moving?
