@@ -1,0 +1,227 @@
+%!TEX root = ./main.tex
+
+\section[Money]{Does Any of This Make Money?}
+
+% SECTION TIMING: 8 frames, about 15 minutes. This section closes the loop opened by
+% the two money frames in 01_your_phone.tex -- the $50 bill and the flat-revenue /
+% rising-spend pair. End on the Starlink question, not on a summary: it is the one
+% students will actually go look up afterwards.
+%
+% VERIFY BEFORE CLASS: every figure in this section moves. Re-check each one and update
+% the "as of" line on the slide. A stale number that is visibly dated is acceptable; a
+% stale number presented as current is not.
+
+\begin{frame}{The question we opened with}
+  \vspace{0.6em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \draw[flow,draw=softgreen,very thick] (0,0.6) -- (5.4,0.6);
+    \node[font=\small,anchor=south] at (2.7,0.7) {AT\&T revenue per line: flat};
+    \draw[flow,draw=coreorange,very thick] (0,-0.6) -- (5.4,0.35);
+    \node[font=\small,anchor=north] at (2.7,-0.7) {what AT\&T spends building it: up};
+  \end{tikzpicture}
+
+  \vspace{1.2em}
+  \large
+  Two lines going different directions.
+
+  \vspace{0.8em}
+  \ask{How long can that last, and what happens at the end of it?}
+\end{frame}
+
+% Back-of-envelope. Inputs:
+% SOURCE: Verizon FY2025 ACTUAL consolidated capex $17.0B. FY2026 guidance is
+%   $16.0-16.5B -- Verizon capex has fallen two years running.
+%   https://www.verizon.com/about/news/verizon-delivers-2025-financial-guidance-highest-quarterly-net-adds
+% This frame is about MAGNITUDE, not direction. The "spend is rising" claim belongs to
+%   Monday's frame and is AT&T's. Do not let this slide imply Verizon capex is rising.
+% SOURCE: Verizon wireless retail postpaid CONNECTIONS ~125.8M as of 2025-03-31
+%   (94.9M Consumer + 30.9M Business). Connections, not phones -- includes tablets,
+%   watches, and other devices. https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000732712
+% The division below is deliberately crude and is labeled as such on the slide.
+\begin{frame}{Roughly where a fifth of your bill goes}
+  \vspace{0.4em}
+  \centering
+  {\large
+  \begin{tabular}{@{}r@{\hspace{0.5em}}l@{}}
+    \textcolor{coreorange}{\textbf{\$17 billion}} & a year of network construction\\[4pt]
+    \textcolor{softgray}{$\div$} & \\[4pt]
+    \textcolor{ranblue}{\textbf{126 million}} & postpaid connections\\[6pt]
+    \midrule
+    $\approx$ \textbf{\$11} & per connection per month\\
+  \end{tabular}\par}
+
+  \vspace{0.9em}
+  \small
+  Against a bill of roughly \$50, that is about a fifth of what you pay going
+  straight back into towers, spectrum, fiber, and power.
+
+  \vspace{0.5em}
+  {\scriptsize\textcolor{softgray}{Deliberately crude: consolidated capex covers
+   broadband and business too, and ``connections'' counts tablets and watches, not
+   just phones. Verizon FY2025 actual capex and Q1 2025 connections.}\par}
+\end{frame}
+
+\begin{frame}{Four national carriers became three}
+  \vspace{0.8em}
+  \centering
+  \begin{tikzpicture}[scale=0.88,transform shape,
+      ev/.style={font=\scriptsize,align=center,text width=2.5cm}]
+    \draw[flow,draw=softgray,very thick] (-0.6,0) -- (10.4,0);
+    \foreach \x/\y in {0/2004, 2.4/2005, 5.6/2009, 9.2/2020} {
+      \filldraw[fill=ranblue,draw=ranblue] (\x,0) circle (3pt);
+      \node[font=\small\bfseries,anchor=north] at (\x,-0.2) {\y};
+    }
+    \node[ev,anchor=south] at (0,0.25)   {Cingular buys\\AT\&T Wireless};
+    \node[ev,anchor=south] at (2.4,0.25) {Sprint merges\\with Nextel};
+    \node[ev,anchor=south] at (5.6,0.25) {Verizon buys\\Alltel};
+    \node[ev,anchor=south] at (9.2,0.25) {T-Mobile\\merges Sprint};
+  \end{tikzpicture}
+
+  \vspace{1.4em}
+  \small
+  Years shown are when each deal \textbf{closed}. Brands lingered for years after,
+  which is why you still hear some of these names.
+
+  \vspace{0.6em}
+  \takeaway{This is a market that consolidates, not one that fragments.}
+\end{frame}
+
+\begin{frame}{So are they in trouble, or are they fine?}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \large\textbf{\textcolor{softgreen}{Fine}}
+
+      \vspace{0.5em}
+      \small
+      \begin{itemize}\itemsep5pt
+        \item Three players, high barriers
+        \item Spectrum licenses are scarce
+        \item Everyone needs a phone
+        \item Steady, predictable revenue
+      \end{itemize}
+    \column{0.47\textwidth}
+      \large\textbf{\textcolor{coreorange}{In trouble}}
+
+      \vspace{0.5em}
+      \small
+      \begin{itemize}\itemsep5pt
+        \item Revenue per line is not growing
+        \item Every generation costs billions
+        \item Customers switch on price
+        \item Debt from spectrum and mergers
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.9em}
+  \qa{Which of these is a network architecture problem?}
+     {Most of them. Cheaper coverage, shared infrastructure, and software you can
+      upgrade without replacing hardware are all architecture answers to a
+      financial question. That is a large part of why O-RAN exists.}
+\end{frame}
+
+\begin{frame}{The competitor already in your pocket}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.50\textwidth}
+      \large\textbf{Wi-Fi.}
+
+      \vspace{0.6em}
+      \small
+      Every hour you spend on home or campus Wi-Fi is an hour the carrier
+      does not have to build capacity for.
+
+      \vspace{0.6em}
+      That is help --- and it is also a ceiling on what they can charge for
+      data you were never going to buy from them.
+    \column{0.46\textwidth}
+      \vspace{0.4em}
+      \ask{When did you last care which one you were on?}
+
+      \vspace{0.6em}
+      {\small The answer is usually: when something broke.\par}
+  \end{columns}
+
+  \vspace{0.7em}
+  \takeaway{A competitor you do not notice is still a competitor.}
+\end{frame}
+
+% SOURCE: Starlink direct-to-cell status and the June 2026 market reaction.
+% Verizon fell about 7%; T-Mobile touched a 52-week low; T-Mobile's CEO publicly
+% called the threat exaggerated. VERIFY and update -- this story is still moving.
+\begin{frame}{The competitor in orbit}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.50\textwidth}
+      \large\textbf{Starlink direct-to-cell.}
+
+      \vspace{0.6em}
+      \small
+      \begin{itemize}\itemsep5pt
+        \item Ordinary phones, no special hardware
+        \item Started as a carrier partnership
+        \item Then began looking like a rival
+      \end{itemize}
+    \column{0.46\textwidth}
+      \large\textbf{June 2026.}
+
+      \vspace{0.6em}
+      \small
+      On the news that SpaceX might go direct to consumers, carrier
+      shares fell sharply in a single session.
+
+      \vspace{0.5em}
+      T-Mobile's CEO called the threat exaggerated.
+  \end{columns}
+
+  \vspace{0.7em}
+  {\scriptsize\textcolor{softgray}{As of late June 2026. This story is two months
+   old and still moving --- check what has happened since.}\par}
+
+  \ask{Who is right?}
+\end{frame}
+
+\begin{frame}{What a satellite can and cannot take}
+  \vspace{0.4em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \large\textbf{\textcolor{softgreen}{Satellites win}}
+
+      \vspace{0.5em}
+      \small
+      Where there are no towers and never will be: oceans, deserts,
+      mountains, disasters.
+
+      \vspace{0.5em}
+      Coverage is their whole argument.
+    \column{0.47\textwidth}
+      \large\textbf{\textcolor{coreorange}{Towers win}}
+
+      \vspace{0.5em}
+      \small
+      Where the people are. A stadium needs capacity in one small place,
+      and capacity comes from cells close together.
+
+      \vspace{0.5em}
+      One satellite covers a huge area --- and everyone in it shares.
+  \end{columns}
+
+  \vspace{0.9em}
+  \takeaway{Coverage and capacity are different products. So far they are
+    losing to each other on different ground.}
+\end{frame}
+
+\begin{frame}{The question to leave with}
+  \vspace{1.0em}
+  \centering
+  \Large
+  Every architecture change we walked through\\
+  was somebody trying to serve more people\\
+  for less money per person.
+
+  \vspace{1.4em}
+  \normalsize
+  Splitting boxes. Moving voice onto IP. Turning the core into software.\\
+  Opening the RAN so you can buy the pieces separately.
+
+  \vspace{1.4em}
+  \ask{If that pressure never stops, what does the network look like next?}
+\end{frame}
