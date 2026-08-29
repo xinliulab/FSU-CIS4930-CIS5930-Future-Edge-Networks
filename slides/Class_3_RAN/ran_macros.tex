@@ -61,3 +61,25 @@
     \noindent\hangindent=1.25em\hangafter=1
     \textcolor{coreorange}{\textbf{A:}}\hspace{0.35em}#2\par}%
 }
+
+% Repeating template for "this box is gone in the next diagram" frames.
+% The deck's spine: a term never vanishes between two architecture diagrams
+% without a frame explaining the pressure that removed it.
+% #1 what it did, #2 what broke, #3 what replaced it
+\newcommand{\gonebox}[3]{%
+  \vspace{0.5em}%
+  \begin{columns}[T,onlytextwidth]
+    \column{0.30\textwidth}
+      {\small\textbf{\textcolor{softgray}{What it did}}\par}
+      \vspace{0.4em}
+      {\small #1\par}
+    \column{0.34\textwidth}
+      {\small\textbf{\textcolor{coreorange}{What broke}}\par}
+      \vspace{0.4em}
+      {\small #2\par}
+    \column{0.30\textwidth}
+      {\small\textbf{\textcolor{softgreen}{What replaced it}}\par}
+      \vspace{0.4em}
+      {\small #3\par}
+  \end{columns}%
+}

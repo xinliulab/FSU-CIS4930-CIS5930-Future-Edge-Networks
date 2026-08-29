@@ -2,7 +2,9 @@
 
 \section{What You Already Know}
 
-% SECTION TIMING: 0:00--12:00. Keep all media excerpts short; skip one if discussion runs long.
+% SECTION TIMING: 0:00--22:00 (11 frames). Keep all media excerpts short; skip one if
+% discussion runs long. The two money frames and the two IMSI-catcher frames both plant
+% threads that pay off on Wednesday -- do not cut them without cutting the payoff too.
 % LAYOUT RULE: every bullet must fit on one line. Shorten the text, do not let it wrap.
 
 % Teaching note (60 s): ask students to disable Wi-Fi briefly. Do not interpret
@@ -36,6 +38,78 @@
      {Only the radio access, and even that is filtered through carrier branding.
       It says nothing about the core behind it, and nothing about the speed you
       actually get.}
+\end{frame}
+
+% Teaching note (60 s): ask for a show of hands on who knows their own monthly bill.
+% Most will not know. That is the slide.
+% SOURCE: entry unlimited plan pricing, autopay, August 2026.
+% https://www.usmobile.com/blog/best-unlimited-data-plan/
+% VERIFY before class: consumer pricing changes constantly.
+\begin{frame}{Somebody paid about \$50 for that icon this month}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \large\textbf{What a line costs}
+
+      \vspace{0.5em}
+      \small
+      \begin{itemize}\itemsep4pt
+        \item Unlimited starts at \$45--\$60
+        \item Same price at 2 GB or 60 GB
+        \item Bundled video and hotspot
+      \end{itemize}
+    \column{0.47\textwidth}
+      \large\textbf{What is not on the bill}
+
+      \vspace{0.5em}
+      \small
+      \begin{itemize}\itemsep4pt
+        \item A price per gigabyte
+        \item A speed you are owed
+        \item Which radio you get
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.2em}
+  {\scriptsize\textcolor{softgray}{Entry unlimited plans, autopay, August 2026.}\par}
+
+  \qa{If your bill does not change when your usage doubles, what are you buying?}
+     {Access, not data. You are buying the right to attach at all, which is why
+      carriers compete on bundles instead of on megabits.}
+\end{frame}
+
+% SOURCE: AT&T postpaid phone ARPU $56.64 in Q3 2025, down 0.8% YoY.
+% https://investors.att.com/
+% SOURCE: Verizon 2025 consolidated capex guidance $17.5-18.5B vs $17.1B in 2024.
+% https://www.verizon.com/about/investors/
+% VERIFY before class: both move every quarter. Update the "as of" line below.
+\begin{frame}{Now multiply that by a nationwide build}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \large\textbf{Money coming in}
+
+      \vspace{0.6em}
+      \small
+      Revenue per phone line is flat, and in places falling.
+
+      \vspace{0.5em}
+      AT\&T postpaid phone ARPU was about \$56.64, down 0.8\% in a year.
+    \column{0.47\textwidth}
+      \large\textbf{Money going out}
+
+      \vspace{0.6em}
+      \small
+      Verizon guided 2025 capital spending to \$17.5--18.5 billion.
+
+      \vspace{0.5em}
+      That is up from \$17.1 billion the year before.
+  \end{columns}
+
+  \vspace{0.2em}
+  {\scriptsize\textcolor{softgray}{AT\&T Q3 2025; Verizon 2025 guidance.}\par}
+
+  \glossline{ARPU = Average Revenue Per User \quad capex = capital expenditure}
+
+  \ask{Flat revenue per user, rising spend. How long does that work?}
 \end{frame}
 
 \begin{frame}{Each generation made a new habit feel normal}
@@ -127,6 +201,62 @@
      {The SIM. It stores the subscriber identity and the secret key used to
       authenticate you. The number is only a label the network maps onto that
       identity.}
+\end{frame}
+
+% Teaching note (90 s): let the class propose how a phone could check a tower
+% before revealing that in 2G it simply could not. The wrong guesses are useful.
+% BOUNDARY: this describes a capability and a known class of equipment.
+% It is not a claim that anyone in this room is being intercepted.
+\begin{frame}{Your phone picks the loudest tower, not the honest one}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.50\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.86,transform shape]
+        \node[netnode,minimum width=1.35cm] (ph) at (0,0) {Phone};
+        \node[netnode,minimum width=1.75cm] (real) at (3.4,1.15) {Real tower};
+        \node[oranode,minimum width=1.75cm] (fake) at (3.4,-1.15) {Fake tower};
+        \draw[flow,draw=softgray,dashed] (ph) -- (real);
+        \node[font=\scriptsize,align=center] at (1.55,1.15) {weak};
+        \draw[flow,draw=ranpurple,very thick] (ph) -- (fake);
+        \node[font=\scriptsize,align=center] at (1.55,-1.15) {stronger};
+      \end{tikzpicture}
+    \column{0.46\textwidth}
+      \large\textbf{Three steps.}
+
+      \vspace{0.5em}
+      \small
+      \begin{itemize}\itemsep5pt
+        \item The phone attaches to the strongest signal.
+        \item The tower asks who it is.
+        \item The phone answers with its identity.
+      \end{itemize}
+  \end{columns}
+
+  \glossline{IMSI = International Mobile Subscriber Identity}
+
+  \takeaway{Equipment built to do this has a name: an IMSI catcher.}
+\end{frame}
+
+\begin{frame}{2G checked your ID. You never got to check theirs.}
+  \vspace{0.3em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \node[netnode,minimum width=1.8cm] (ph) at (0,0) {Phone};
+    \node[corenode,minimum width=1.8cm] (nw) at (5.2,0) {Network};
+    \draw[flow,draw=softgreen,very thick] (0.95,0.42) -- (4.25,0.42);
+    \node[font=\small,anchor=south] at (2.6,0.5) {prove who you are};
+    \draw[draw=coreorange,very thick,dashed] (4.25,-0.42) -- (0.95,-0.42);
+    \node[font=\small,anchor=north] at (2.6,-0.5) {\textcolor{coreorange}{nothing comes back}};
+  \end{tikzpicture}
+
+  \vspace{0.9em}
+  \qa{The SIM proves the phone is real. What proved the tower was real?}
+     {In 2G, nothing. Authentication ran one direction only. Later generations
+      add mutual authentication, but the phone still has to pick a tower before
+      it can check anything.}
+
+  \vspace{0.2em}
+  {\small\textcolor{softgray}{We trace what each generation did about this on Wednesday.}\par}
 \end{frame}
 
 % Video cue (35 s): Nokia 6680 commercial. Play 0:00--0:35.
