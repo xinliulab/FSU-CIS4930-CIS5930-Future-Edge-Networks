@@ -24,6 +24,11 @@
     O-RAN & SMO / RIC & Management/orchestration and intelligent control \\
     \bottomrule
   \end{tabularx}
+
+  \glossline{Generic terms:\\
+    3GPP = 3rd Generation Partnership Project \quad IP = Internet Protocol\\
+    QoS = Quality of Service \quad PDU = Protocol Data Unit\\
+    CS / PS = circuit- / packet-switched \quad CP / UP = control / user plane}
 \end{frame}
 
 \begin{frame}{Appendix: interface map}
@@ -71,16 +76,16 @@
   \end{tikzpicture}
 
   \vspace{0.5em}
-  \takeaway{A split is a placement decision: latency, bandwidth, compute, and ownership all move with it.}
+  \takeaway{A split is a placement decision.\\Latency, bandwidth, compute, and ownership all move with it.}
 \end{frame}
 
 \begin{frame}{Appendix: handover changed owners, not purpose}
-  \small
-  \renewcommand{\arraystretch}{1.22}
+  \scriptsize
+  \renewcommand{\arraystretch}{1.20}
   \vspace{0.15em}
   \begin{tabularx}{\textwidth}{
-      >{\raggedright\arraybackslash}p{0.75cm}
-      >{\raggedright\arraybackslash}p{3.2cm}
+      >{\raggedright\arraybackslash}p{1.05cm}
+      >{\raggedright\arraybackslash}p{3.1cm}
       >{\raggedright\arraybackslash}X
       >{\raggedright\arraybackslash}X}
     \toprule
@@ -95,22 +100,31 @@
     \bottomrule
   \end{tabularx}
 
-  \vspace{0.25em}
-  \centering\small Which is harder to move---a radio channel, a packet tunnel, or its policy?
+  \vspace{0.4em}
+  \qa{Which is harder to move---a radio channel, a packet tunnel, or its policy?}
+     {The channel has the hardest deadline; the policy is the hardest to keep
+      consistent across cells, cores, and vendors.}
 \end{frame}
 
 \begin{frame}{Sources and further reading}
   \small
-  \begin{itemize}
-    \item \href{https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=3144}{\textbf{3GPP TS 23.501}} --- authoritative 5G system architecture.
-    \item \href{https://www.nokia.com/asset/i/210365/}{\textbf{Nokia: 5G Core service-based architecture}} --- readable SBA role map.
-    \item \href{https://www.o-ran.org/o-ran-resources}{\textbf{O-RAN Architecture and Resources}} --- interfaces, RICs, and current specifications.
-    \item \href{https://mediastorage.o-ran.org/overview/o-ran-overview-presentation/o-ran-overview-of-the-o-ran-alliance-presentation.pdf}{\textbf{O-RAN ALLIANCE overview (2026)}} --- current official overview.
-    \item \href{https://about.att.com/blogs/2025/5g-standalone-nationwide.html}{\textbf{AT\&T 5G Standalone announcement (2025)}} --- why a 5G icon can precede 5G Core.
-    \item \textbf{Course references:} local materials in \texttt{reference/} were used for background only, not reproduced as slide images.
+  \begin{itemize}\itemsep5pt
+    \item \href{https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=3144}{\textbf{3GPP TS 23.501}}\\
+      {\footnotesize\color{softgray}Authoritative 5G system architecture.}
+    \item \href{https://www.nokia.com/asset/i/210365/}{\textbf{Nokia: 5G Core service-based architecture}}\\
+      {\footnotesize\color{softgray}Readable service-based-architecture role map.}
+    \item \href{https://www.o-ran.org/o-ran-resources}{\textbf{O-RAN Architecture and Resources}}\\
+      {\footnotesize\color{softgray}Interfaces, RICs, and current specifications.}
+    \item \href{https://mediastorage.o-ran.org/overview/o-ran-overview-presentation/o-ran-overview-of-the-o-ran-alliance-presentation.pdf}{\textbf{O-RAN ALLIANCE overview (2026)}}\\
+      {\footnotesize\color{softgray}Current official overview.}
+    \item \href{https://about.att.com/blogs/2025/5g-standalone-nationwide.html}{\textbf{AT\&T 5G Standalone announcement (2025)}}\\
+      {\footnotesize\color{softgray}Why a 5G icon can appear before a 5G core.}
+    \item \textbf{Course references}\\
+      {\footnotesize\color{softgray}Local materials in \texttt{reference/} were used for background only,
+      not reproduced as slide images.}
   \end{itemize}
 
-  \vspace{0.55em}
+  \vspace{0.4em}
   \centering
-  \large Image licenses and page-level provenance: \texttt{figure/SOURCES.md}
+  \small Image licenses and page-level provenance: \texttt{figure/SOURCES.md}
 \end{frame}

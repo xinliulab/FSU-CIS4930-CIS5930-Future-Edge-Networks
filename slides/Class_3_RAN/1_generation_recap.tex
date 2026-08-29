@@ -3,28 +3,43 @@
 \section{What You Already Know}
 
 % SECTION TIMING: 0:00--12:00. Keep all media excerpts short; skip one if discussion runs long.
+% LAYOUT RULE: every bullet must fit on one line. Shorten the text, do not let it wrap.
 
 % Teaching note (60 s): ask students to disable Wi-Fi briefly. Do not interpret
 % the icon yet; collect LTE / 5G / 5G UW answers first.
 \begin{frame}{What does the icon actually tell you?}
   \begin{columns}[T,onlytextwidth]
-    \column{0.39\textwidth}
+    \column{0.37\textwidth}
       \centering
       \includegraphics[width=\linewidth]{figure/xg/5g_antenna.jpg}
       \source{https://commons.wikimedia.org/wiki/File:Antennes_actives_5G_Ericsson.jpg}{Ericsson active 5G antennas}
-    \column{0.53\textwidth}
+    \column{0.59\textwidth}
       \large\textbf{Turn off Wi-Fi for ten seconds.}
 
-      \vspace{0.7em}
+      \vspace{0.5em}
       \normalsize
       What appears: LTE, 5G, 5G+, or 5G UW?
 
-      \vspace{0.8em}
-      \ask{Does that icon describe the radio, the core, or the whole network?}
+      \vspace{0.5em}
+      \small
+      \begin{itemize}\itemsep4pt
+        \item \textbf{LTE:} 4G radio access.
+        \item \textbf{5G:} 5G radio is available.
+        \item \textbf{5G+:} AT\&T mid- or high-band.
+        \item \textbf{5G UW:} Verizon C-band or mmWave.
+      \end{itemize}
   \end{columns}
+
+  \glossline{LTE = Long Term Evolution \quad mmWave = millimeter wave}
+
+  \qa{Does that icon describe the radio, the core, or the whole network?}
+     {Only the radio access, and even that is filtered through carrier branding.
+      It says nothing about the core behind it, and nothing about the speed you
+      actually get.}
 \end{frame}
 
 \begin{frame}{Each generation made a new habit feel normal}
+  \vspace{0.6em}
   \centering
   \begin{tikzpicture}[
       gen/.style={draw=ranblue,fill=blue!5,rounded corners=3pt,
@@ -45,8 +60,10 @@
     \node[note] at (8.4,-1.0) {Flexible\\systems};
   \end{tikzpicture}
 
-  \vspace{1.1em}
-  \Large The app was visible. The architecture underneath was not.
+  \vspace{1.6em}
+  \Large
+  The app was visible.\\[0.35em]
+  The architecture underneath was not.
 \end{frame}
 
 % Video cue (45 s): first mobile-call story. Play 0:00--0:45.
@@ -54,24 +71,28 @@
 % Boundary: the 1973 call predates commercial 1G service; it is a doorway into the era.
 \begin{frame}{The first mobile call was basically a flex}
   \begin{columns}[T,onlytextwidth]
-    \column{0.42\textwidth}
+    \column{0.34\textwidth}
       \centering
       \href{https://www.weforum.org/videos/the-first-mobile-phone-call-was-made-50-years-ago/}{%
-        \includegraphics[height=0.65\textheight]{figure/xg/1g_dynatac.jpg}}
-      \source{https://commons.wikimedia.org/wiki/File:DynaTAC8000X.jpg}{Motorola DynaTAC 8000X}
-    \column{0.58\textwidth}
-      \Large\textbf{Martin Cooper called his rival.}
+        \includegraphics[width=\linewidth]{figure/xg/1g_cooper_dynatac.jpg}}
+      \source{https://commons.wikimedia.org/wiki/File:2007Computex_e21Forum-MartinCooper.jpg}{Martin Cooper with a 1973 DynaTAC prototype}
+    \column{0.62\textwidth}
+      \large\textbf{Martin Cooper called his rival.}
 
-      \vspace{0.7em}
-      \normalsize
-      \begin{itemize}
-        \item The prototype call happened in 1973.
-        \item Commercial analog cellular service followed in the 1980s.
-        \item The service ordinary users noticed was mobile voice.
+      \vspace{0.6em}
+      \small
+      \begin{itemize}\itemsep4pt
+        \item Cooper was a Motorola engineer.
+        \item In 1973 he called Joel Engel.
+        \item Engel led AT\&T's cellular team.
+        \item AT\&T was betting on car phones.
+        \item Motorola bet on a handheld.
+        \item Service reached users in the 1980s.
       \end{itemize}
-
-      \takeaway{1G moved the telephone away from the wall.}
   \end{columns}
+
+  \vspace{0.4em}
+  \takeaway{1G moved the telephone away from the wall.}
 \end{frame}
 
 % Audio cue (25 s): play the familiar Nokia tune. Play 0:00--0:25.
@@ -79,67 +100,86 @@
 % Boundary: the ringtone is a memory cue, not a 2G standard or launch milestone.
 \begin{frame}{The SIM card is the part that knows you}
   \begin{columns}[T,onlytextwidth]
-    \column{0.34\textwidth}
+    \column{0.28\textwidth}
       \centering
       \href{https://www.youtube.com/watch?v=0F8AmuobbZk}{%
-        \includegraphics[height=0.57\textheight]{figure/xg/2g_nokia3310.jpg}}
+        \includegraphics[height=0.40\textheight]{figure/xg/2g_nokia3310.jpg}}
       \source{https://commons.wikimedia.org/wiki/File:Nokia_3310.jpg}{Nokia 3310}
-    \column{0.26\textwidth}
+    \column{0.22\textwidth}
       \centering
-      \includegraphics[width=0.95\linewidth]{figure/xg/sim_card.png}
+      \includegraphics[width=\linewidth]{figure/xg/sim_card.png}
       \source{https://commons.wikimedia.org/wiki/File:Sim_card.png}{GSM SIM card}
-    \column{0.40\textwidth}
-      \Large\textbf{2G went digital.}
-      \normalsize
-      \begin{itemize}
+    \column{0.46\textwidth}
+      \large\textbf{2G went digital.}
+
+      \vspace{0.4em}
+      \small
+      \begin{itemize}\itemsep4pt
         \item Digital voice and SMS
-        \item SIM-based subscriber identity in GSM
-        \item Mass-market roaming and feature phones
+        \item Identity moved onto the SIM
+        \item Mass-market roaming
       \end{itemize}
-      \ask{Which is ``you'': the phone, the SIM, or the number?}
   \end{columns}
+
+  \glossline{SMS = Short Message Service \quad SIM = Subscriber Identity Module}
+
+  \qa{Which one is ``you'' to the network: the phone, the SIM, or the number?}
+     {The SIM. It stores the subscriber identity and the secret key used to
+      authenticate you. The number is only a label the network maps onto that
+      identity.}
 \end{frame}
 
 % Video cue (35 s): Nokia 6680 commercial. Play 0:00--0:35.
 % https://www.youtube.com/watch?v=1YAdWbBg0w0
 \begin{frame}{3G brought video calls before eye contact}
   \begin{columns}[T,onlytextwidth]
-    \column{0.52\textwidth}
+    \column{0.44\textwidth}
       \centering
       \href{https://www.youtube.com/watch?v=1YAdWbBg0w0}{%
         \includegraphics[width=\linewidth]{figure/xg/video_nokia6680.jpg}}
       \source{https://www.youtube.com/watch?v=1YAdWbBg0w0}{Nokia 6680 commercial (YouTube)}
-    \column{0.48\textwidth}
-      \Large\textbf{Data became central.}
-      \normalsize
-      \begin{itemize}
+    \column{0.52\textwidth}
+      \large\textbf{Data became central.}
+
+      \vspace{0.4em}
+      \small
+      \begin{itemize}\itemsep4pt
         \item Web, email, multimedia
         \item UMTS/WCDMA radio access
-        \item Packet data grew beside legacy voice
+        \item Packet data grew beside voice
       \end{itemize}
-      \vspace{0.4em}
-      \centering
-      \includegraphics[height=0.23\textheight]{figure/xg/nokia_6680.png}
   \end{columns}
+
+  \glossline{UMTS = Universal Mobile Telecommunications System\\
+    WCDMA = Wideband Code Division Multiple Access}
+
+  \vspace{0.3em}
+  \takeaway{3G made the phone a data device.\\
+    The core still ran voice and data as two separate worlds.}
 \end{frame}
 
 \begin{frame}{4G made buffering feel like a personal insult}
   \begin{columns}[T,onlytextwidth]
-    \column{0.47\textwidth}
+    \column{0.44\textwidth}
       \centering
       \includegraphics[width=\linewidth]{figure/xg/4g_tiktok_app.jpg}
       \source{https://commons.wikimedia.org/wiki/File:TikTok_app.jpg}{TikTok app on phone}
-    \column{0.49\textwidth}
+    \column{0.52\textwidth}
       \large\textbf{Broadband became the default.}
-      \normalsize
-      \begin{itemize}
+
+      \vspace{0.4em}
+      \small
+      \begin{itemize}\itemsep4pt
         \item Streaming and short video
         \item Maps, ride sharing, live apps
-        \item Voice moved toward IP with VoLTE
+        \item Voice moved to IP with VoLTE
       \end{itemize}
-
-      \takeaway{4G did not invent video. It made mobile video routine.}
   \end{columns}
+
+  \glossline{VoLTE = Voice over LTE \quad IP = Internet Protocol}
+
+  \vspace{0.4em}
+  \takeaway{4G did not invent video. It made video normal.}
 \end{frame}
 
 % Video cue (45 s): use the opening comparison. Play 0:20--1:05.
@@ -147,20 +187,23 @@
 % Forum prompts are anecdotes, not performance evidence.
 \begin{frame}{The 5G icon can lie by omission}
   \begin{columns}[T,onlytextwidth]
-    \column{0.52\textwidth}
+    \column{0.44\textwidth}
       \centering
       \href{https://www.youtube.com/watch?v=ik15HVNzJVg}{%
         \includegraphics[width=\linewidth]{figure/xg/video_fake5g.jpg}}
       \source{https://www.youtube.com/watch?v=ik15HVNzJVg}{Trying AT\&T's ``5G E'' (YouTube)}
-    \column{0.48\textwidth}
-      \large\textit{``Why is LTE faster than 5G here?''}
-      \source{https://www.reddit.com/r/verizon/comments/1qou5p5/lte/}{Paraphrased user question, 2026}
-
-      \normalsize
-      \begin{itemize}
-        \item The icon mainly reflects radio access and branding.
-        \item Coverage, spectrum, congestion, and deployment mode matter.
-        \item A 5G radio can still depend on a 4G core.
+    \column{0.52\textwidth}
+      \small
+      \begin{itemize}\itemsep5pt
+        \item It names a radio, not a speed.
+        \item Branding sits on top of it.
+        \item Spectrum and congestion decide.
+        \item A 5G radio may use a 4G core.
       \end{itemize}
   \end{columns}
+
+  \qa{``Why is LTE faster than 5G here?''}
+     {A congested 5G cell on a narrow band can lose to a clean LTE cell. AT\&T's
+      old ``5G E'' icon was LTE-Advanced wearing a 5G name.}
+  \source{https://www.reddit.com/r/verizon/comments/1qou5p5/lte/}{Paraphrased user question, 2026}
 \end{frame}
