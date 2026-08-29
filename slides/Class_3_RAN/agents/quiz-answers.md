@@ -84,3 +84,22 @@ Verizon), or Sprint (into T-Mobile). The direction is consolidation, not fragmen
 Expected: Coverage and capacity are different products. A satellite covers a huge area
 and everyone inside it shares that capacity, so it wins where there are no towers and
 loses where people are dense, which is exactly where towers are built.
+
+### [5_part2_open] Two things from Monday you need today
+Expected: One box becomes two along the seam between deciding and carrying, because the
+halves grow at different rates. Three times so far: the 2G base station, the MSC in
+2001, and the GPRS core.
+
+### [4_oran] O-RAN opens the seams, then adds control loops
+Expected: It buys the option to put a different vendor's box on the other side of that
+line. It costs integration work, because two boxes that both claim the same interface
+still have to be made to work together.
+
+### [4_oran] So: where does the fake-tower detector live?
+Expected: As an xApp on the Near-RT RIC, reading measurements from the RAN over E2.
+It became possible because opening the interfaces turned a change that used to require
+the base-station vendor into an application somebody else can write.
+
+### [5_synthesis] Five generations in one low-resolution map
+Expected: Where control lives. The radio name changes every generation, but the deeper
+story is which box decides and where that box sits.

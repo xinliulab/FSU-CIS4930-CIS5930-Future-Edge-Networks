@@ -2,7 +2,7 @@
 
 \section[O-RAN]{O-RAN}
 
-% SECTION TIMING: 52:00--69:00. Separate virtualization, disaggregation, openness, and control.
+% SECTION TIMING: 33:00--52:00 (8 frames). Separate virtualization, disaggregation, openness, and control.
 
 % TEACHING NOTE (2:00): Let students propose a deployment path before revealing the punchline.
 \begin{frame}{Can base-station security become an app?}
@@ -54,7 +54,7 @@
 \end{frame}
 
 % TEACHING NOTE (2:30): Reveal one column at a time. Stress that these adjectives are not synonyms.
-\begin{frame}{Four RAN models, four different questions}
+\begin{frame}{Four RAN models, three different questions}
   \vspace{0.4em}
   \centering
   \begin{tikzpicture}[node distance=0.22cm]
@@ -126,6 +126,9 @@
     \end{column}
   \end{columns}
   \source{https://mediastorage.o-ran.org/white-papers/O-RAN.WG1.Vertical-Industry-White-Paper-2023-12.pdf}{O-RAN ALLIANCE architecture, redrawn from 2023 white paper}
+
+  \takeaway{Every line on this diagram is a place a second vendor could plug in ---
+    and a place integration can fail.}
 \end{frame}
 
 % TEACHING NOTE (2:00): Ask for a show of hands before showing the right column.
@@ -179,6 +182,53 @@
     \end{column}
   \end{columns}
   \source{https://www.youtube.com/watch?v=dgiWoTrQ19I}{ITU, O-RAN / RIC demonstration}
+\end{frame}
+
+% This frame closes the thread opened in 7_security ("Where in the network could
+% that detector even live?"). Without it the security section builds to a question
+% the O-RAN section never answers, and every abstraction here stays abstract.
+% The 5G-Spector paper is the recommended reading already on the course homepage
+% for this class -- point at it here, out loud.
+\begin{frame}{So: where does the fake-tower detector live?}
+  \vspace{0.3em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.50\textwidth}
+      \small
+      Remember what detection needed:
+
+      \vspace{0.5em}
+      \begin{itemize}\itemsep5pt
+        \item see many cells at once
+        \item watch them over time
+        \item update faster than the standard
+      \end{itemize}
+
+      \vspace{0.6em}
+      \small
+      That is the same shape as traffic steering. Which means it can be the same
+      kind of thing.
+    \column{0.46\textwidth}
+      \centering
+      \begin{tikzpicture}[node distance=0.42cm,scale=0.78,transform shape]
+        \node[oranode,minimum width=3.5cm,align=center] (app)
+          {xApp:\\{\scriptsize watch for a fake cell}};
+        \node[oranode,minimum width=3.5cm,below=of app] (ric) {Near-RT RIC};
+        \node[netnode,minimum width=3.5cm,below=of ric] (ran) {O-CU / O-DU / O-RU};
+        \draw[flow] (app)--(ric);
+        \draw[flow] (ric)--node[right]{\scriptsize E2}(ran);
+        \draw[flow,draw=coreorange] (ran.east) -- ++(0.45,0) |- (app.east);
+        \node[font=\scriptsize,text=coreorange,anchor=south,rotate=270] at (2.35,-1.2)
+          {measurements};
+      \end{tikzpicture}
+  \end{columns}
+
+  \vspace{0.5em}
+  \takeaway{Opening the seams turned ``who would even build this?'' into
+    ``who wants to write the app?''}
+
+  \vspace{0.2em}
+  {\scriptsize\textcolor{softgray}{This is the idea behind your recommended reading
+   for today, 5G-Spector. It is a research prototype, not a deployed product.}\par}
 \end{frame}
 
 % TEACHING NOTE (2:30): End with the tradeoff question; accept multiple defensible answers.
