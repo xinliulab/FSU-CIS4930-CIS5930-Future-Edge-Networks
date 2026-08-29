@@ -33,10 +33,12 @@
   \end{tcolorbox}%
 }
 
+% Font is deliberately \normalsize, not \large: at \large a one-sentence takeaway
+% wraps to two lines and the box grows into whatever is below it.
 \newcommand{\takeaway}[1]{%
   \begin{tcolorbox}[colback=orange!7,colframe=coreorange,boxrule=0.7pt,arc=2pt,
     left=5pt,right=5pt,top=4pt,bottom=4pt]
-    \centering\large #1
+    \centering\normalsize #1
   \end{tcolorbox}%
 }
 
