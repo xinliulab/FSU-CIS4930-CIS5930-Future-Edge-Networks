@@ -2,7 +2,9 @@
 
 \section{Architecture Across Generations}
 
-% SECTION TIMING: 20:00--52:00. Follow one call/packet; abbreviations are roles, not a memorization list.
+% SECTION TIMING: 30:00--75:00 (19 frames). Follow one call/packet; abbreviations are
+% roles, not a memorization list. The three spine frames (SGSN/GGSN gone, MSC gone,
+% "the same move twice") are the point of the section -- give the last one 3 minutes.
 
 \begin{frame}{1G connected radio voice to the telephone network}
   \begin{columns}[T,onlytextwidth]
@@ -343,6 +345,36 @@
   \takeaway{Learn the jobs, not the acronym list.}
 \end{frame}
 
+% Teaching note (90 s): before showing the answer, ask the class to look back at
+% the GPRS diagram and find the two boxes that are missing from the EPC diagram.
+% Let them notice the disappearance themselves.
+\begin{frame}{Wait --- where did SGSN and GGSN go?}
+  \gonebox
+    {SGSN tracked where you were and kept your data session alive.
+     GGSN was the door out to the Internet.
+
+     \vspace{0.4em}
+     Each box did both jobs at once: it made decisions \textbf{and} it
+     carried your traffic.}
+    {Traffic grew far faster than decisions did.
+
+     \vspace{0.4em}
+     Ten times the video does not mean ten times the number of
+     attach requests. But because one box did both, carrying more
+     data meant buying more decision-making you did not need.}
+    {4G cut each box along that seam.
+
+     \vspace{0.4em}
+     MME decides and never touches your packets. S-GW and P-GW
+     move packets and decide nothing.
+
+     \vspace{0.4em}
+     Now each side grows on its own.}
+
+  \vspace{0.6em}
+  \takeaway{The box did not fail. It was doing two jobs with one growth rate.}
+\end{frame}
+
 \begin{frame}{Control asks; the user plane moves packets}
   \centering
   \begin{tikzpicture}[node distance=0.75cm]
@@ -372,6 +404,31 @@
 
   \vspace{0.8em}
   \takeaway{Separating the two planes\\lets each one scale on its own.}
+\end{frame}
+
+% Teaching note (60 s): the MSC has been on every diagram since 2G. Point at the
+% 4G diagram and let the class notice it is gone before answering.
+\begin{frame}{And the MSC? It had been there since 2G.}
+  \gonebox
+    {The MSC was a telephone switch that happened to serve mobiles.
+
+     \vspace{0.4em}
+     It set up a circuit for each call and held that circuit open
+     until somebody hung up.}
+    {LTE carried IP and nothing else.
+
+     \vspace{0.4em}
+     A circuit switch has no place in a packet network. Keeping one
+     meant running a second network beside the first, with its own
+     equipment, its own staff, and its own bill.}
+    {Nothing, at first --- and that was the problem.
+
+     \vspace{0.4em}
+     Voice had to stop being a network service and become an
+     application riding on IP, like any other app.}
+
+  \vspace{0.6em}
+  \ask{So who carries your voice call on an all-IP network?}
 \end{frame}
 
 % Discussion (60 s): why did an early LTE phone sometimes fall back to 3G for a call?
@@ -404,6 +461,43 @@
      {Speed is one number. All-IP changed the structure: one packet transport
       carries everything, and voice becomes an application on top of it instead
       of its own circuit-switched network.}
+\end{frame}
+
+% This is the spine of the whole deck. If students remember one slide from
+% Monday, it should be this one. Do not rush it: 3 minutes minimum.
+\begin{frame}{You have now watched the same move twice}
+  \vspace{0.3em}
+  \centering
+  \begin{tikzpicture}[scale=0.82,transform shape,
+      one/.style={draw=softgray,fill=black!4,rounded corners=3pt,
+        minimum width=2.3cm,minimum height=0.8cm,align=center,font=\small\bfseries}]
+
+    \node[one] (bs) at (0,1.4) {Base station};
+    \node[netnode,minimum width=1.5cm] (bts) at (3.6,1.85) {BTS};
+    \node[netnode,minimum width=1.5cm] (bsc) at (3.6,0.95) {BSC};
+    \draw[flow] (bs) -- (bts);
+    \draw[flow] (bs) -- (bsc);
+    \node[font=\scriptsize,anchor=west,text width=4.1cm,align=left] at (4.9,1.4)
+      {radio timing vs.\ call control};
+
+    \node[one] (gprs) at (0,-1.0) {SGSN / GGSN};
+    \node[corenode,minimum width=1.5cm] (mme) at (3.6,-0.55) {MME};
+    \node[corenode,minimum width=1.8cm] (gw) at (3.6,-1.45) {S-GW / P-GW};
+    \draw[flow] (gprs) -- (mme);
+    \draw[flow] (gprs) -- (gw);
+    \node[font=\scriptsize,anchor=west,text width=4.1cm,align=left] at (4.9,-1.0)
+      {decisions vs.\ packet volume};
+
+    \node[font=\small\bfseries,anchor=east,text=softgray] at (-1.4,1.4) {2G};
+    \node[font=\small\bfseries,anchor=east,text=softgray] at (-1.4,-1.0) {4G};
+  \end{tikzpicture}
+
+  \vspace{0.8em}
+  \takeaway{One box becomes two when its halves need to change at different speeds.}
+
+  \vspace{0.3em}
+  {\small\textcolor{softgray}{On Wednesday you will watch it happen twice more ---
+   to the core, and then to the base station itself.}\par}
 \end{frame}
 
 \begin{frame}{5G made the core look more like a cloud platform}
