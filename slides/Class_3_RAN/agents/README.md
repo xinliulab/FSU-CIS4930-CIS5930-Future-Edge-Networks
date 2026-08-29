@@ -1,37 +1,60 @@
-# Class 1 Preparation Slide Agents
+# Slide Review Agents
 
-This folder defines three reusable agents for developing `Class_1_Preparation` slides.
+The agent definitions moved to `.claude/agents/` at the repository root so Claude Code can
+invoke them directly as subagents. This folder now holds only the shared state they pass
+between each other.
 
-## Agents
+## The agents
 
-- `slides-writer.md`: writes and revises slides as a young FSU professor teaching Future Edge Networks.
-- `technical-history-reviewer.md`: checks technical, historical, and factual accuracy.
-- `education-reviewer.md`: checks pedagogy, student accessibility, curiosity, humor, and classroom flow.
+| Agent | Role | Writes files? |
+|---|---|---|
+| `ran-slides-engineer` | Senior cellular engineer turned professor. Drafts and revises the LaTeX. | Yes |
+| `ran-fact-checker` | Technical, historical, financial, and security accuracy. | No |
+| `ran-education-reviewer` | Comprehension, pacing, cognitive load, humor, visuals. | No |
+| `ran-student` | Sophomore with no networking background. Read-only, no web access. | No |
 
-## Recommended Workflow
+## The loop
 
-1. Ask `slides-writer` to draft or revise a slide section.
-2. Ask `technical-history-reviewer` to flag factual, historical, or technical issues.
-3. Ask `education-reviewer` to make the material clearer, funnier, and more engaging for students.
-4. Send the combined feedback back to `slides-writer` for a final revision.
-
-## Local Context
-
-The main LaTeX entry point is:
-
-```text
-../main.tex
+```
+ran-slides-engineer  --writes/revises-->  section draft + quiz entries
+        ^                                          |
+        |                                          v
+        |                                  ran-fact-checker
+        |                                          |
+        |                                          v
+        |                                  ran-education-reviewer
+        |                                          |
+        |                                          v
+        |                                     ran-student
+        +----- CONFUSED or BORED ------------------+
+                       |
+                  PASS |
+                       v
+              compile + commit section
 ```
 
-The XG history section is:
+Run it **one section at a time**. A ninety-frame draft produces feedback too diffuse to act on.
 
-```text
-../3_xg.tex
-```
+**Precedence when reviewers disagree: facts first, then teachability.** A `Critical` from the
+fact checker outranks a boredom complaint from the student. If the only way to make a slide fun
+is to make it false, the slide stays boring.
 
-Figures live in:
+**Cap at three iterations per section.** If the student is still confused after three passes,
+the section is scoped wrong rather than worded wrong. Stop and raise it with the instructor
+instead of looping again.
 
-```text
-../figure/
-```
+## Files here
 
+- `quiz.md` — one comprehension question and expected answer per frame. Written by
+  `ran-slides-engineer`, read by `ran-student`, which sees **only the `Q:` lines**.
+
+## Why the student agent is read-only
+
+`ran-student` is declared with `tools: Read` and no web search. This is deliberate. Given search
+access, it quietly repairs gaps in the slides using outside knowledge and then reports that
+everything was clear — which is precisely the failure the loop exists to catch. Its ignorance is
+the instrument.
+
+For the same reason, comprehension is measured by whether it answers `quiz.md` questions
+correctly from the slides alone, not by asking it whether it understood. Asked directly, a
+language model will say yes.
