@@ -13,7 +13,9 @@ Accessed 2026-08-27. Images are used for classroom teaching with a short source 
 
 - `5g_antenna.jpg` — slide 2, “What does the icon actually tell you?” Active Ericsson 5G antennas; SimplySacha, Wikimedia Commons, CC BY-SA 4.0.
   Original: https://commons.wikimedia.org/wiki/File:Antennes_actives_5G_Ericsson.jpg
-- `1g_dynatac.jpg` — slide 4, “The first mobile call was basically a flex.” Motorola DynaTAC 8000X; Redrum0486, Wikimedia Commons, CC BY-SA. The photograph is also the clickable cue for the World Economic Forum historical video.
+- `1g_cooper_dynatac.jpg` — slide 4, “The first mobile call was basically a flex.” Dr. Martin Cooper posing with a 1973 DynaTAC prototype at the e21 Forum, Taipei, 5 June 2007; Rico Shen, Wikimedia Commons, CC BY-SA 3.0 / CC BY-SA 2.5 TW. Cropped to the upper body for slide layout; no other edits. The photograph is also the clickable cue for the World Economic Forum historical video.
+  Original: https://commons.wikimedia.org/wiki/File:2007Computex_e21Forum-MartinCooper.jpg
+- `1g_dynatac.jpg` — no longer used in the Class 3 deck (replaced by the Cooper photograph above); retained for reuse. Motorola DynaTAC 8000X, the 1983 commercial handset; Redrum0486, Wikimedia Commons, CC BY-SA.
   Original: https://commons.wikimedia.org/wiki/File:DynaTAC8000X.jpg
 - `2g_nokia3310.jpg` — slide 5, “The SIM card is the part that knows you.” Nokia 3310; Jpk, Wikimedia Commons, CC BY-SA. The photograph is also the clickable cue for the Nokia ringtone audio.
   Original: https://commons.wikimedia.org/wiki/File:Nokia_3310.jpg

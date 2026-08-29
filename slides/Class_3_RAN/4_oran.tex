@@ -6,10 +6,8 @@
 
 % TEACHING NOTE (2:00): Let students propose a deployment path before revealing the punchline.
 \begin{frame}{Can base-station security become an app?}
-  \ask{Who installs it? Who approves it? What happens at 2:00 a.m.?}
-
-  \vspace{0.4em}
-  \begin{center}
+  \vspace{0.3em}
+  \centering
   \begin{tikzpicture}[node distance=0.32cm]
     \node[netnode,minimum width=2.0cm] (idea) {New defense};
     \node[netnode,minimum width=2.1cm,right=of idea] (vendor) {Vendor ticket};
@@ -19,37 +17,45 @@
     \draw[flow] (vendor)--(image);
     \draw[flow] (image)--(window);
   \end{tikzpicture}
-  \end{center}
 
-  \takeaway{A programmable RAN asks: can a network behavior become a tested software application?}
+  \vspace{0.5em}
+  {\small You invent a defense against a new attack on the base station.\par}
+
+  \qa{Who installs it, who approves it, and what happens at 2:00 a.m.?}
+     {In a classic RAN the vendor answers all three. Your idea becomes a support
+      ticket, then a firmware image, then a scheduled maintenance window --- and
+      nothing moves fast at 2:00 a.m.}
+
+  \vspace{0.3em}
+  \takeaway{O-RAN's bet:\\some network behavior can ship as a tested application.}
 \end{frame}
 
 % TEACHING NOTE (2:00): This is a memory anchor, not evidence that every vendor cabinet looks identical.
 \begin{frame}{A traditional RAN often arrived as a sealed appliance}
   \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.46\textwidth}
+    \begin{column}{0.42\textwidth}
       \centering
-      \includegraphics[height=0.67\textheight]{figure/ran_equipment_rack.jpg}
+      \includegraphics[height=0.62\textheight]{figure/ran_equipment_rack.jpg}
     \end{column}
-    \begin{column}{0.51\textwidth}
-      \vspace{0.8em}
-      \begin{itemize}
-        \item Hardware, software, and interfaces came as one system.
-        \item One vendor owned most of the debugging story.
-        \item Upgrades followed the vendor's release train.
+    \begin{column}{0.54\textwidth}
+      \vspace{1.2em}
+      \small
+      \begin{itemize}\itemsep7pt
+        \item One vendor shipped the box.
+        \item One vendor owned the debugging.
+        \item Upgrades followed its train.
       \end{itemize}
-
-      \vspace{0.7em}
-      \Large\centering
-      Easy to blame one box.\\[0.3em]
-      Hard to change one piece.
     \end{column}
   \end{columns}
+
+  \vspace{0.5em}
+  \takeaway{Easy to blame one box. Hard to change one piece.}
   \source{https://commons.wikimedia.org/wiki/File:Telenor_base_station_radio_equipment_rack.jpg}{Telenor radio equipment rack}
 \end{frame}
 
 % TEACHING NOTE (2:30): Reveal one column at a time. Stress that these adjectives are not synonyms.
 \begin{frame}{Four RAN models, four different questions}
+  \vspace{0.4em}
   \centering
   \begin{tikzpicture}[node distance=0.22cm]
     \node[netnode,minimum width=2.18cm,minimum height=1.15cm] (d) {D-RAN\\[-1pt]{\scriptsize process at site}};
@@ -59,27 +65,30 @@
     \draw[flow] (d)--(c); \draw[flow] (c)--(v); \draw[flow] (v)--(o);
   \end{tikzpicture}
 
-  \vspace{0.8em}
+  \vspace{1.0em}
   \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.32\textwidth}\centering
+    \begin{column}{0.31\textwidth}\centering
       \textbf{Virtualization}\\\small What runs where?
     \end{column}
-    \begin{column}{0.32\textwidth}\centering
+    \begin{column}{0.31\textwidth}\centering
       \textbf{Disaggregation}\\\small Which functions split?
     \end{column}
-    \begin{column}{0.32\textwidth}\centering
+    \begin{column}{0.31\textwidth}\centering
       \textbf{Open interfaces}\\\small Who can connect?
     \end{column}
   \end{columns}
 
-  \vspace{0.7em}
-  \takeaway{Cloud software does not automatically create an open, multi-vendor RAN.}
+  \glossline{D-RAN = Distributed RAN \quad C-RAN = Centralized (or Cloud) RAN\\
+    vRAN = Virtualized RAN \quad O-RAN = Open RAN}
+
+  \vspace{1.0em}
+  \takeaway{Cloud software alone does not create an open, multi-vendor RAN.}
 \end{frame}
 
 % TEACHING NOTE (3:00): Zoom the lower RAN chain first, then the two RIC loops. Do not inventory every box.
-\begin{frame}{O-RAN opens the seams---and adds control loops}
+\begin{frame}{O-RAN opens the seams, then adds control loops}
   \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.66\textwidth}
+    \begin{column}{0.64\textwidth}
       \centering
       \begin{tikzpicture}[node distance=0.30cm,scale=0.84,transform shape]
         \node[oranode,minimum width=5.9cm,font=\small\bfseries] (smo) {SMO + Non-RT RIC};
@@ -97,7 +106,7 @@
         \draw[flow,dashed] (smo.west) to[bend right=40] node[left,font=\tiny]{O1} (du.west);
       \end{tikzpicture}
     \end{column}
-    \begin{column}{0.31\textwidth}
+    \begin{column}{0.33\textwidth}
       \small
       \textbf{RAN chain}\\
       O-CU-CP / O-CU-UP\\
@@ -106,7 +115,14 @@
       SMO + Non-RT RIC\\
       Near-RT RIC\\[0.7em]
       \textbf{Open seams}\\
-      A1, E2, O1,\\Open Fronthaul
+      A1, E2, O1, Open Fronthaul\\[0.7em]
+      {\scriptsize\color{softgray}
+      SMO = Service Management\\
+      and Orchestration\\
+      RIC = RAN Intelligent Controller\\
+      Non-RT / Near-RT =\\
+      non- and near-real-time\\
+      CP / UP = control / user plane\par}
     \end{column}
   \end{columns}
   \source{https://mediastorage.o-ran.org/white-papers/O-RAN.WG1.Vertical-Industry-White-Paper-2023-12.pdf}{O-RAN ALLIANCE architecture, redrawn from 2023 white paper}
@@ -126,35 +142,40 @@
       \begin{tcolorbox}[colback=purple!5,colframe=ranpurple,title=Open source]
         Source code is available\\[0.35em]
         License permits reuse\\[0.35em]
-        Interface may still be proprietary
+        Interface may stay closed
       \end{tcolorbox}
     \end{column}
   \end{columns}
 
-  \vspace{0.55em}
-  \ask{If two boxes claim the same interface, will they work when plugged together?}
-  \takeaway{A specification begins interoperability; profiles, testing, and integration finish it.}
+  \qa{If two boxes claim the same interface, will they work when plugged together?}
+     {Not automatically. A specification leaves options, versions, and timing
+      choices open. Conformance and interoperability testing --- plugfests, lab
+      integration --- is what finishes the job.}
   \source{https://www.o-ran.org/o-ran-resources}{O-RAN ALLIANCE architecture and resources}
 \end{frame}
 
 % TEACHING NOTE (3:00): Video 0:18--1:12. Offline fallback: use the diagram and traffic-steering example.
 \begin{frame}{RIC makes optimization an application}
   \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.45\textwidth}
+    \begin{column}{0.43\textwidth}
       \href{https://www.youtube.com/watch?v=dgiWoTrQ19I}{\includegraphics[width=\linewidth]{figure/oran_ric_video.jpg}}
       \centering\small\textcolor{blue}{\underline{Play: a real RIC demo (0:18--1:12)}}
     \end{column}
-    \begin{column}{0.52\textwidth}
+    \begin{column}{0.53\textwidth}
       \begin{tikzpicture}[node distance=0.48cm]
-        \node[oranode,minimum width=4.6cm] (nonrt) {Non-RT RIC + rApp\\[-1pt]{\scriptsize policy, models, longer horizon}};
+        \node[oranode,minimum width=4.6cm] (nonrt) {Non-RT RIC + rApp\\[-1pt]{\scriptsize policy and models, seconds and up}};
         \node[oranode,minimum width=4.6cm,below=of nonrt] (near) {Near-RT RIC + xApp\\[-1pt]{\scriptsize faster decisions: roughly 10 ms--1 s}};
         \node[netnode,minimum width=4.6cm,below=of near] (ran) {O-CU / O-DU / O-RU};
         \draw[flow] (nonrt)--node[right]{\scriptsize A1}(near);
         \draw[flow] (near)--node[right]{\scriptsize E2}(ran);
       \end{tikzpicture}
 
+      \vspace{0.4em}
       \small\textbf{Example: traffic steering}\\
-      rApp sets policy; xApp reacts to load; RAN executes.
+      The rApp sets the policy.\\
+      The xApp reacts to load.\\
+      The RAN executes.
+      \glossline{rApp / xApp = apps on the\\Non-RT / Near-RT RIC}
     \end{column}
   \end{columns}
   \source{https://www.youtube.com/watch?v=dgiWoTrQ19I}{ITU, O-RAN / RIC demonstration}
@@ -165,26 +186,29 @@
   \begin{columns}[T,onlytextwidth]
     \begin{column}{0.47\textwidth}
       \begin{tcolorbox}[colback=green!5,colframe=softgreen,title=Options]
-        \begin{itemize}
+        \small
+        \begin{itemize}\itemsep4pt
           \item More vendor choice
-          \item Faster software experiments
-          \item Programmable optimization
+          \item Faster experiments
+          \item Programmable control
         \end{itemize}
       \end{tcolorbox}
     \end{column}
     \begin{column}{0.47\textwidth}
       \begin{tcolorbox}[colback=orange!6,colframe=coreorange,title=Work]
-        \begin{itemize}
+        \small
+        \begin{itemize}\itemsep4pt
           \item Fronthaul and timing
-          \item Integration and testing
-          \item Larger security surface
+          \item Integration testing
+          \item Bigger security surface
         \end{itemize}
       \end{tcolorbox}
     \end{column}
   \end{columns}
 
-  \vspace{0.05em}
-  \ask{Would you rather debug one black box or five open interfaces?}
-  \takeaway{Openness moves work. It does not make the work disappear.}
+  \qa{Would you rather debug one black box or five open interfaces?}
+     {Both are work, in different places. One box hides the failure and hands the
+      whole fix to one vendor. Five interfaces make the failure visible, and make
+      the integration yours.}
   \source{https://mediastorage.o-ran.org/overview/o-ran-overview-presentation/o-ran-overview-of-the-o-ran-alliance-presentation.pdf}{O-RAN ALLIANCE overview (2026)}
 \end{frame}
