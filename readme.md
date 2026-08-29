@@ -8,5 +8,6 @@ The GitHub homepage and Canvas homepage link directly to LaTeX-generated PDFs in
 
 - `syllabus/syllabus-cis4930-cis5930.pdf`
 - `slides/Class_1_Preparation/main.pdf`
+- `slides/Class_3_RAN/main.pdf`
 
 After editing the LaTeX source files, compile the PDF in that source folder. The homepage links will point to the generated PDF directly.
