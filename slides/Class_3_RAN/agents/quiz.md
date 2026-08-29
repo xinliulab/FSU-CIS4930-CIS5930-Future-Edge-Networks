@@ -59,3 +59,52 @@ Q: State in one sentence the rule that explains both the 2G base station split a
 4G core split.
 Expected: One box becomes two when its two halves need to change or scale at different
 speeds.
+
+## Part 2
+
+### [6_5g_core] Third time. Where did the MME go?
+Q: The MME made control decisions and never touched user packets. It was already on
+the right side of the 4G split. So why did 5G split it again?
+Expected: Because the decisions inside it did not resemble each other. Checking who
+you are happens once, tracking where you are happens constantly, and setting up a
+session happens per app -- three different loads in one box. 5G separated them into
+AMF (access and mobility) and SMF (sessions).
+
+### [7_security] The same problem, four times
+Q: What did every generation from 2G to 5G fail to fix about the first contact
+between a phone and a tower?
+Expected: The phone still has to choose a tower and start talking to it before it can
+verify anything about that tower. Each generation closed a specific weakness; none
+removed the need to go first.
+
+### [7_security] 5G stopped sending the identity in the clear
+Q: What is sent over the air in 5G instead of the permanent subscriber identity, and
+what are the two ways that protection can still fail?
+Expected: A concealed identifier (SUCI), encrypted so only the home network can open
+it. It fails if the operator has not enabled concealment, and it can be sidestepped by
+pushing the phone down to an older generation that never had it.
+
+### [7_security] Two ways it still leaks
+Q: Why does a phone supporting older generations create a security problem?
+Expected: Backward compatibility means the phone can be pushed onto an older
+generation so it keeps working outside 5G coverage -- and once there, it plays by that
+generation's weaker rules.
+
+### [8_economics] Roughly where a fifth of your bill goes
+Q: About how much of a $50 monthly bill goes back into building the network, and why
+is that figure only an estimate?
+Expected: Roughly $12 a month, about a fifth. It is crude because the capex figure
+covers broadband and business lines too, and because "connections" counts tablets and
+watches rather than just phones.
+
+### [8_economics] Four national carriers became three
+Q: Name two carrier brands that no longer exist independently, and say what the
+overall direction of this market has been.
+Expected: Any two of AT&T Wireless (into Cingular), Nextel (into Sprint), Alltel (into
+Verizon), or Sprint (into T-Mobile). The direction is consolidation, not fragmentation.
+
+### [8_economics] What a satellite can and cannot take
+Q: Why does a satellite network not simply replace towers?
+Expected: Coverage and capacity are different products. A satellite covers a huge area
+and everyone inside it shares that capacity, so it wins where there are no towers and
+loses where people are dense, which is exactly where towers are built.
