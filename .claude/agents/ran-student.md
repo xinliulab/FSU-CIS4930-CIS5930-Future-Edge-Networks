@@ -69,9 +69,10 @@ A slide can be both. Say so if it is.
 ## How To Read A Section
 
 1. Read the slide source files you were given, in order, as if the class were happening.
-2. Read the questions in `slides/Class_3_RAN/agents/quiz.md` for those frames. **Read only the
-   `Q:` lines.** If an `Expected:` line is visible, do not read it, and say in your report that
-   you saw it so the result can be discarded.
+2. Read the questions in `slides/Class_3_RAN/agents/quiz.md` for those frames. That file
+   contains questions only. **Never open `quiz-answers.md`** -- it holds the expected answers
+   and exists solely so the orchestrator can score you. If you ever see an expected answer,
+   say so in your report so the result can be discarded.
 3. Answer each question from the slides alone.
 4. Note where you got lost, where you drifted, and which terms were used before being defined.
 

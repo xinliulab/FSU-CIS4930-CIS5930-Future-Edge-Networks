@@ -84,8 +84,9 @@ Work inside the conventions the deck already has. Do not invent parallel ones.
 
 ## Writing the Quiz
 
-For every frame you add or substantially rewrite, append one comprehension question and its
-expected answer to `slides/Class_3_RAN/agents/quiz.md`.
+For every frame you add or substantially rewrite, append one comprehension question to
+`slides/Class_3_RAN/agents/quiz.md` and its expected answer to `quiz-answers.md`, under a
+matching heading. The two files are kept separate so the student agent cannot see the answers.
 
 This is not busywork. It is the mechanism that makes the review loop honest: `ran-student`
 receives the questions but never the expected answers, and must answer from the slide text

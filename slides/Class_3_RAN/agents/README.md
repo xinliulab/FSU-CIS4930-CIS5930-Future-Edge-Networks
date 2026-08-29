@@ -45,8 +45,11 @@ instead of looping again.
 
 ## Files here
 
-- `quiz.md` — one comprehension question and expected answer per frame. Written by
-  `ran-slides-engineer`, read by `ran-student`, which sees **only the `Q:` lines**.
+- `quiz.md` — one comprehension question per frame. The only file `ran-student` opens.
+- `quiz-answers.md` — the expected answers, for the orchestrator to score against.
+  `ran-student` must never open this one. The two were a single file until two separate
+  student passes reported accidentally seeing an answer while filtering for questions;
+  splitting them removes the failure mode rather than relying on the agent to look away.
 
 ## Why the student agent is read-only
 
