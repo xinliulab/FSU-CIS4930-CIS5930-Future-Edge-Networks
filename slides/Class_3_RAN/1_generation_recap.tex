@@ -54,9 +54,9 @@
       \vspace{0.5em}
       \small
       \begin{itemize}\itemsep4pt
-        \item Unlimited starts at \$45--\$60
+        \item Entry unlimited: \$45--\$51
         \item Same price at 2 GB or 60 GB
-        \item Bundled video and hotspot
+        \item Hotspot only on some plans
       \end{itemize}
     \column{0.47\textwidth}
       \large\textbf{What is not on the bill}
@@ -71,51 +71,54 @@
   \end{columns}
 
   \vspace{0.2em}
-  {\scriptsize\textcolor{softgray}{Entry unlimited plans, autopay, August 2026.}\par}
+  {\scriptsize\textcolor{softgray}{Entry unlimited, one line, autopay required, before taxes and fees. August 2026.}\par}
 
   \qa{If your bill does not change when your usage doubles, what are you buying?}
      {Access, not data. You are buying the right to attach at all, which is why
       carriers compete on bundles instead of on megabits.}
 \end{frame}
 
-% SOURCE: AT&T postpaid phone ARPU $56.64 in Q3 2025, down 0.8% YoY.
-% https://investors.att.com/
-% SOURCE: Verizon 2025 consolidated capex guidance $17.5-18.5B vs $17.1B in 2024.
-% https://www.verizon.com/about/investors/
-% VERIFY before class: both move every quarter. Update the "as of" line below.
-% NOTE: these are deliberately two different carriers, and the slide now says so.
-% An earlier draft put them side by side unlabeled and read as one company's books.
+% SOURCE: AT&T postpaid phone ARPU $56.57 vs $56.72, (0.3)%, Q4 2025.
+%   https://www.sec.gov/Archives/edgar/data/732717/000073271726000047/t-4q2025exhibit991.htm
+%   This is the NEWEST ARPU with an SEC filing behind it. AT&T stopped publishing a
+%   numeric postpaid phone ARPU in its 2026 filings -- any 2026 figure circulating
+%   online traces to investor slides, not to a filing. Do not quote one as filed.
+% SOURCE: AT&T capital investment $23-24B/yr guidance for 2026-2028;
+%   2Q26 capex $5.7B vs $4.9B a year earlier.
+%   https://www.sec.gov/Archives/edgar/data/732717/000073271726000294/t-2q2026exhibit991.htm
+% BOTH COLUMNS ARE AT&T ON PURPOSE. An earlier draft paired AT&T revenue with Verizon
+% capex, which read as one company's books. It also used Verizon's superseded FY2025
+% capex guidance to argue spend was rising -- Verizon capex has in fact fallen two
+% years running ($17.1B FY24, $17.0B FY25, $16.0-16.5B FY26 guidance). Do not
+% reintroduce Verizon here without checking which direction its number points.
+% NOTE: "capital investment" is AT&T's own term and means capex PLUS vendor financing.
+% It is not the same metric as capex. Keep the two apart.
 \begin{frame}{The bills are flat. The build is not.}
   \begin{columns}[T,onlytextwidth]
     \column{0.47\textwidth}
       \large\textbf{What one line brings in}
 
-      \vspace{0.5em}
+      \vspace{0.6em}
       \small
-      \textcolor{softgray}{AT\&T, Q3 2025}
+      About \$56.57 a month per postpaid phone line.
 
-      \vspace{0.4em}
-      About \$56.64 a month per postpaid phone line.
-
-      \vspace{0.4em}
-      \textbf{Down 0.8\% in a year.}
+      \vspace{0.5em}
+      \textbf{Down 0.3\% in a year} --- and roughly flat for three.
     \column{0.47\textwidth}
-      \large\textbf{What one carrier spends}
+      \large\textbf{What the build costs}
+
+      \vspace{0.6em}
+      \small
+      \$23--24 billion a year, guided through 2028.
 
       \vspace{0.5em}
-      \small
-      \textcolor{softgray}{Verizon, 2025 guidance}
-
-      \vspace{0.4em}
-      \$17.5--18.5 billion building the network.
-
-      \vspace{0.4em}
-      \textbf{Up from \$17.1 billion.}
+      \textbf{Last quarter: \$5.7 billion}, against \$4.9 billion a year earlier.
   \end{columns}
 
-  \vspace{0.5em}
-  {\scriptsize\textcolor{softgray}{Two different carriers on purpose --- no single
-   company's books are shown here. The pattern is the industry's.}\par}
+  \vspace{0.7em}
+  {\scriptsize\textcolor{softgray}{Both columns are AT\&T, from its Q4 2025 and
+   Q2 2026 SEC filings. Revenue per line is one carrier's; the pattern is the
+   industry's.}\par}
 
   \glossline{ARPU = Average Revenue Per User \quad capex = money spent building things}
 
@@ -215,8 +218,12 @@
 
 % Teaching note (90 s): let the class propose how a phone could check a tower
 % before revealing that in 2G it simply could not. The wrong guesses are useful.
-% BOUNDARY: this describes a capability and a known class of equipment.
-% It is not a claim that anyone in this room is being intercepted.
+%
+% ACCURACY NOTE: in normal operation the phone answers with a TEMPORARY identity
+% (TMSI/GUTI), not its permanent one. The attack works because the network can send
+% an Identity Request that forces the permanent identity, and the phone has no basis
+% to refuse. Do not flatten step 3 back to "answers with its identity" -- that
+% conflates the identifier, the protection, and the attack.
 \begin{frame}{Your phone picks the loudest tower, not the honest one}
   \begin{columns}[T,onlytextwidth]
     \column{0.50\textwidth}
@@ -238,13 +245,21 @@
       \begin{itemize}\itemsep5pt
         \item The phone attaches to the strongest signal.
         \item The tower asks who it is.
-        \item The phone answers with its identity.
+        \item The phone answers --- normally with a temporary ID.
       \end{itemize}
+
+      \vspace{0.5em}
+      {\small\textcolor{coreorange}{\textbf{Unless the tower insists on the
+       permanent one.}}\par}
   \end{columns}
 
-  \glossline{IMSI = International Mobile Subscriber Identity}
+  \glossline{IMSI = International Mobile Subscriber Identity, the permanent one}
 
-  \takeaway{Equipment built to do this has a name: an IMSI catcher.}
+  \takeaway{Equipment built to insist has a name: an IMSI catcher.}
+
+  \vspace{0.2em}
+  {\scriptsize\textcolor{softgray}{This describes a capability and a class of
+   equipment. It is not a claim about anyone in this room.}\par}
 \end{frame}
 
 \begin{frame}{2G checked your ID. You never got to check theirs.}
@@ -261,9 +276,9 @@
 
   \vspace{0.9em}
   \qa{The SIM proves the phone is real. What proved the tower was real?}
-     {In 2G, nothing. Authentication ran one direction only. Later generations
-      add mutual authentication, but the phone still has to pick a tower before
-      it can check anything.}
+     {In 2G, nothing --- and the network also chose whether to encrypt at all.
+      From 3G onward it must prove itself too, but the phone still has to pick
+      a tower before it can check anything.}
 
   \vspace{0.2em}
   {\small\textcolor{softgray}{We trace what each generation did about this on Wednesday.}\par}

@@ -350,9 +350,15 @@
   \takeaway{Learn the jobs, not the acronym list.}
 \end{frame}
 
-% Teaching note (90 s): before showing the answer, ask the class to look back at
-% the GPRS diagram and find the two boxes that are missing from the EPC diagram.
-% Let them notice the disappearance themselves.
+% Teaching note (2 min): before showing the answer, ask the class to look back at
+% the GPRS diagram and find the two boxes missing from the EPC diagram.
+%
+% ACCURACY NOTE, do not flatten this again: in Release 8 EPC only the MME became a
+% pure control node. S-GW and P-GW kept BOTH planes -- GTP-C signaling, IP address
+% allocation, policy enforcement, charging. The clean control/user cut of the
+% gateways is Release 14 CUPS (2017), and the "traffic grows faster than decisions"
+% argument below is CUPS's own stated rationale, not Release 8's.
+% https://www.3gpp.org/news-events/3gpp-news/cups
 \begin{frame}{Wait --- where did SGSN and GGSN go?}
   \gonebox
     {SGSN tracked where you were and kept your data session alive.
@@ -367,16 +373,17 @@
      Ten times the video does not mean ten times the number of
      attach requests. But because one box did both, carrying more
      data meant buying more decision-making you did not need.}
-    {4G cut each box along that seam.
+    {4G \textbf{started} the cut. MME decides and never touches your packets.
 
      \vspace{0.4em}
-     MME decides and never touches your packets. S-GW and P-GW
-     move packets and decide nothing.
+     The gateways moved packets --- but kept deciding too. Finishing the
+     split took until 2017.}
 
-     \vspace{0.4em}
-     Now each side grows on its own.}
+  \vspace{0.5em}
+  {\small The clean idea arrived in one release. The clean \textbf{implementation}
+   took nine more years.\par}
 
-  \vspace{0.6em}
+  \vspace{0.3em}
   \takeaway{The box did not fail. It was doing two jobs with one growth rate.}
 \end{frame}
 
@@ -411,8 +418,15 @@
   \takeaway{Separating the two planes\\lets each one scale on its own.}
 \end{frame}
 
-% Teaching note (60 s): the MSC has been on every diagram since 2G. Point at the
+% Teaching note (2 min): the MSC has been on every diagram since 2G. Point at the
 % 4G diagram and let the class notice it is gone before answering.
+%
+% ACCURACY NOTE: an earlier draft said nothing replaced it "at first". Wrong, and it
+% skipped the acronym students will actually meet in a fallback log. What replaced
+% the MSC at first was the MSC, reached by falling back: CSFB (3GPP TS 23.272).
+% SMS also kept reaching a legacy MSC/VLR over the SGs interface from the MME, and
+% SRVCC handed VoLTE calls back to the CS domain when LTE coverage dropped. The CS
+% core stayed in production for years. "Demoted, not replaced" is the honest beat.
 \begin{frame}{And the MSC? It had been there since 2G.}
   \gonebox
     {The MSC was a telephone switch that happened to serve mobiles.
@@ -420,20 +434,26 @@
      \vspace{0.4em}
      It set up a circuit for each call and held that circuit open
      until somebody hung up.}
-    {LTE carried IP and nothing else.
+    {LTE's own bearers carried IP and nothing else.
 
      \vspace{0.4em}
      A circuit switch has no place in a packet network. Keeping one
      meant running a second network beside the first, with its own
-     equipment, its own staff, and its own bill.}
-    {Nothing, at first --- and that was the problem.
+     equipment, staff, and bill.}
+    {At first, the MSC itself.
 
      \vspace{0.4em}
-     Voice had to stop being a network service and become an
-     application riding on IP, like any other app.}
+     An LTE phone that wanted to call \textbf{dropped back} to 2G or 3G to
+     do it. Texts still reached a legacy switch.
 
-  \vspace{0.6em}
-  \ask{So who carries your voice call on an all-IP network?}
+     \vspace{0.4em}
+     It was not replaced. It was demoted.}
+
+  \vspace{0.5em}
+  \glossline{CSFB = Circuit-Switched Fallback, the standardized way an LTE phone
+    borrowed an older network to make a call}
+
+  \ask{So who finally carries your voice call on an all-IP network?}
 \end{frame}
 
 % Discussion (60 s): why did an early LTE phone sometimes fall back to 3G for a call?
@@ -470,37 +490,53 @@
 
 % This is the spine of the whole deck. If students remember one slide from
 % Monday, it should be this one. Do not rush it: 3 minutes minimum.
-\begin{frame}{You have now watched the same move twice}
-  \vspace{0.3em}
+%
+% An earlier draft said "twice" and listed only 2G and 4G. That undercounts:
+% 3GPP Release 4 (2001) had already split the MSC into MSC Server + CS-MGW along
+% the same seam. The honest claim is that this is THE recurring move, not a move
+% that happened twice. Also note the seam is deciding vs. carrying -- the 2G row
+% is radio transmission vs. radio resource control, NOT "call control", which
+% belonged to the MSC, not the BSC.
+\begin{frame}{This is not a coincidence anymore}
+  \vspace{0.2em}
   \centering
-  \begin{tikzpicture}[scale=0.82,transform shape,
+  \begin{tikzpicture}[scale=0.76,transform shape,
       one/.style={draw=softgray,fill=black!4,rounded corners=3pt,
-        minimum width=2.3cm,minimum height=0.8cm,align=center,font=\small\bfseries}]
+        minimum width=2.3cm,minimum height=0.75cm,align=center,font=\small\bfseries}]
 
-    \node[one] (bs) at (0,1.4) {Base station};
-    \node[netnode,minimum width=1.5cm] (bts) at (3.6,1.85) {BTS};
-    \node[netnode,minimum width=1.5cm] (bsc) at (3.6,0.95) {BSC};
+    \node[one] (bs) at (0,2.5) {Base station};
+    \node[netnode,minimum width=1.5cm] (bts) at (3.6,2.9) {BTS};
+    \node[netnode,minimum width=1.5cm] (bsc) at (3.6,2.1) {BSC};
     \draw[flow] (bs) -- (bts);
     \draw[flow] (bs) -- (bsc);
-    \node[font=\scriptsize,anchor=west,text width=4.1cm,align=left] at (4.9,1.4)
-      {radio timing vs.\ call control};
+    \node[font=\scriptsize,anchor=west,align=left] at (4.85,2.5)
+      {sending radio\\vs.\ managing radio};
 
-    \node[one] (gprs) at (0,-1.0) {SGSN / GGSN};
-    \node[corenode,minimum width=1.5cm] (mme) at (3.6,-0.55) {MME};
-    \node[corenode,minimum width=1.8cm] (gw) at (3.6,-1.45) {S-GW / P-GW};
+    \node[one] (msc) at (0,0.5) {MSC};
+    \node[corenode,minimum width=1.9cm] (mscs) at (3.7,0.9) {MSC Server};
+    \node[corenode,minimum width=1.9cm] (mgw) at (3.7,0.1) {CS-MGW};
+    \draw[flow] (msc) -- (mscs);
+    \draw[flow] (msc) -- (mgw);
+    \node[font=\scriptsize,anchor=west,align=left] at (4.85,0.5)
+      {setting up the call\\vs.\ carrying the audio};
+
+    \node[one] (gprs) at (0,-1.5) {SGSN / GGSN};
+    \node[corenode,minimum width=1.5cm] (mme) at (3.6,-1.1) {MME};
+    \node[corenode,minimum width=1.9cm] (gw) at (3.7,-1.9) {S-GW / P-GW};
     \draw[flow] (gprs) -- (mme);
     \draw[flow] (gprs) -- (gw);
-    \node[font=\scriptsize,anchor=west,text width=4.1cm,align=left] at (4.9,-1.0)
-      {decisions vs.\ packet volume};
+    \node[font=\scriptsize,anchor=west,align=left] at (4.85,-1.5)
+      {deciding\\vs.\ carrying the packets};
 
-    \node[font=\small\bfseries,anchor=east,text=softgray] at (-1.4,1.4) {2G};
-    \node[font=\small\bfseries,anchor=east,text=softgray] at (-1.4,-1.0) {4G};
+    \node[font=\small\bfseries,anchor=east,text=softgray] at (-1.4,2.5)  {2G};
+    \node[font=\small\bfseries,anchor=east,text=softgray] at (-1.4,0.5)  {2001};
+    \node[font=\small\bfseries,anchor=east,text=softgray] at (-1.4,-1.5) {4G};
   \end{tikzpicture}
 
-  \vspace{0.8em}
-  \takeaway{One box becomes two when its halves need to change at different speeds.}
+  \vspace{0.6em}
+  \takeaway{One box becomes two along the seam between deciding and carrying.}
 
-  \vspace{0.3em}
-  {\small\textcolor{softgray}{On Wednesday you will watch it happen twice more ---
-   to the core, and then to the base station itself.}\par}
+  \vspace{0.2em}
+  {\small\textcolor{softgray}{You will meet this seam twice more on Wednesday ---
+   in the 5G core, and in the base station itself.}\par}
 \end{frame}
