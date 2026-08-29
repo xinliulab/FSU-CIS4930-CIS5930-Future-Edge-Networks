@@ -1,0 +1,197 @@
+%!TEX root = ./main.tex
+
+\section[Security]{The Arms Race}
+
+% SECTION TIMING: 30:00--45:00 (7 frames). This section pays off the IMSI-catcher
+% thread planted on Monday and hands directly to the O-RAN opener, which asks
+% whether base-station security could be an app. Do not reorder those two.
+%
+% FRAMING BOUNDARY, enforced throughout: everything here describes capabilities and
+% published research. Nothing here claims that anyone in the room is being intercepted.
+% If a student asks "is this happening to me right now", the honest answer is that the
+% equipment class is real and documented, and that we are not in a position to say more.
+
+\begin{frame}{Monday's loose end}
+  \vspace{0.3em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \node[netnode,minimum width=1.8cm] (ph) at (0,0) {Phone};
+    \node[corenode,minimum width=1.8cm] (nw) at (5.2,0) {Network};
+    \draw[flow,draw=softgreen,very thick] (0.95,0.42) -- (4.25,0.42);
+    \node[font=\small,anchor=south] at (2.6,0.5) {prove who you are};
+    \draw[draw=coreorange,very thick,dashed] (4.25,-0.42) -- (0.95,-0.42);
+    \node[font=\small,anchor=north] at (2.6,-0.5) {\textcolor{coreorange}{nothing comes back}};
+  \end{tikzpicture}
+
+  \vspace{0.9em}
+  \small
+  In 2G the phone proved itself to the network. The network proved nothing back,
+  and the phone had already picked the loudest tower before anyone asked.
+
+  \vspace{0.6em}
+  \ask{Every generation since has been trying to close that gap. Did they?}
+\end{frame}
+
+\begin{frame}{The same problem, four times}
+  \vspace{0.4em}
+  {\small
+  \begin{tabular}{@{}p{0.09\textwidth}p{0.40\textwidth}p{0.42\textwidth}@{}}
+    \toprule
+    & \textbf{\textcolor{coreorange}{The weakness}} & \textbf{\textcolor{softgreen}{The answer}}\\
+    \midrule
+    \textbf{2G} & Network never authenticates itself & ---\\[3pt]
+    \textbf{3G} & Identity still sent in the clear at first contact & Mutual authentication added\\[3pt]
+    \textbf{4G} & Same first-contact exposure & Stronger keys, same opening move\\[3pt]
+    \textbf{5G} & Phone must still pick a tower first & Identity encrypted before it is sent\\
+    \bottomrule
+  \end{tabular}\par}
+
+  \vspace{0.8em}
+  \takeaway{Each generation closed a door. None of them closed the doorway.}
+
+  \vspace{0.3em}
+  {\scriptsize\textcolor{softgray}{Simplified for teaching. Each row is a family of
+   changes across many releases, not a single switch that was flipped.}\par}
+\end{frame}
+
+\begin{frame}{Why the first message is the hard one}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.52\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.8,transform shape,
+          step/.style={font=\scriptsize,align=left,text width=3.6cm}]
+        \node[netnode,minimum width=1.5cm] (ph) at (0,0) {Phone};
+        \node[oranode,minimum width=1.8cm] (bs) at (3.8,0) {Tower};
+        \draw[flow,draw=ranpurple] (0.8,0.75) -- (2.9,0.75);
+        \node[font=\scriptsize,anchor=south] at (1.85,0.8) {1. I want to attach};
+        \draw[flow,draw=softgray] (2.9,0.05) -- (0.8,0.05);
+        \node[font=\scriptsize,anchor=south] at (1.85,0.1) {2. Who are you?};
+        \draw[flow,draw=coreorange,very thick] (0.8,-0.75) -- (2.9,-0.75);
+        \node[font=\scriptsize,anchor=south] at (1.85,-0.7) {3. Here is my identity};
+      \end{tikzpicture}
+
+      \vspace{0.6em}
+      {\scriptsize\textcolor{softgray}{Step 3 happens before the phone
+       has verified anything about the tower.}\par}
+    \column{0.44\textwidth}
+      \large\textbf{The bootstrap problem.}
+
+      \vspace{0.5em}
+      \small
+      To check a tower's credentials, the phone needs a channel.
+
+      \vspace{0.5em}
+      To get a channel, it has to talk to the tower.
+
+      \vspace{0.5em}
+      Something has to go first.
+  \end{columns}
+
+  \vspace{0.3em}
+  \glossline{IMSI = International Mobile Subscriber Identity \quad
+    SUPI = Subscription Permanent Identifier}
+\end{frame}
+
+\begin{frame}{5G stopped sending the identity in the clear}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.50\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.86,transform shape]
+        \node[netnode,minimum width=1.9cm] (supi) at (0,0.9) {SUPI};
+        \node[corenode,minimum width=2.4cm] (key) at (0,-0.15) {home network\\public key};
+        \node[oranode,minimum width=1.9cm] (suci) at (0,-1.3) {SUCI};
+        \draw[flow] (supi) -- (key);
+        \draw[flow] (key) -- (suci);
+        \node[font=\scriptsize,anchor=west,text width=2.9cm,align=left] at (1.5,-1.3)
+          {this is what goes over the air};
+      \end{tikzpicture}
+    \column{0.46\textwidth}
+      \large\textbf{Encrypt it first.}
+
+      \vspace{0.5em}
+      \small
+      The permanent identity never leaves the phone unprotected.
+
+      \vspace{0.5em}
+      What the tower receives is a concealed version that only the home
+      network can open.
+  \end{columns}
+
+  \glossline{SUCI = Subscription Concealed Identifier}
+
+  \qa{So is the problem solved?}
+     {Partly. It closes the easy collection of permanent identities --- but only
+      where the operator has actually turned it on, and only if the phone stays
+      on 5G.}
+\end{frame}
+
+\begin{frame}{Two ways it still leaks}
+  \vspace{0.4em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \large\textbf{\textcolor{coreorange}{Configuration}}
+
+      \vspace{0.5em}
+      \small
+      Concealment is a feature operators enable.
+
+      \vspace{0.5em}
+      A network that has not turned it on gets none of the benefit, and
+      the phone cannot tell from the outside.
+    \column{0.47\textwidth}
+      \large\textbf{\textcolor{coreorange}{Downgrade}}
+
+      \vspace{0.5em}
+      \small
+      Phones still support older generations so they keep working
+      where 5G does not reach.
+
+      \vspace{0.5em}
+      Push a phone down to a weaker generation and you are back to that
+      generation's rules.
+  \end{columns}
+
+  \vspace{0.8em}
+  \takeaway{Backward compatibility is a feature and an attack surface at once.}
+
+  \vspace{0.3em}
+  {\scriptsize\textcolor{softgray}{Downgrade behavior against 5G devices is
+   demonstrated in the research literature. Treat it as a known capability,
+   not as a claim about any particular network.}\par}
+\end{frame}
+
+\begin{frame}{What would it take to notice?}
+  \vspace{0.4em}
+  \small
+  \begin{itemize}\itemsep6pt
+    \item A real tower and a fake one look similar from one measurement.
+    \item The signal that matters is a \textbf{pattern}: odd parameters, a
+      cell that appears from nowhere, a push to an older generation.
+    \item Seeing a pattern means watching many cells at once, over time.
+    \item And the pattern changes faster than the standards do.
+  \end{itemize}
+
+  \vspace{0.8em}
+  \ask{Where in the network could that detector even live?}
+
+  \vspace{0.4em}
+  {\small\textcolor{softgray}{Hold that question. It is the one the next section
+   was built to answer.}\par}
+\end{frame}
+
+\begin{frame}{Why this belongs in an architecture lecture}
+  \vspace{0.6em}
+  \large
+  Every fix in this section was a change to \textbf{who talks to whom, in what
+  order, and who is allowed to decide}.
+
+  \vspace{1.0em}
+  \normalsize
+  That is not a security topic bolted onto an architecture topic.
+
+  \vspace{0.5em}
+  It is the same topic.
+
+  \vspace{1.0em}
+  \takeaway{Architecture decides what an attacker is allowed to try.}
+\end{frame}

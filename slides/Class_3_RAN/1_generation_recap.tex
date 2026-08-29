@@ -1,6 +1,6 @@
 %!TEX root = ./main.tex
 
-\section{What You Already Know}
+\section[Your Phone]{What You Already Know}
 
 % SECTION TIMING: 0:00--22:00 (11 frames). Keep all media excerpts short; skip one if
 % discussion runs long. The two money frames and the two IMSI-catcher frames both plant
@@ -35,9 +35,10 @@
   \glossline{LTE = Long Term Evolution \quad mmWave = millimeter wave}
 
   \qa{Does that icon describe the radio, the core, or the whole network?}
-     {Only the radio access, and even that is filtered through carrier branding.
-      It says nothing about the core behind it, and nothing about the speed you
-      actually get.}
+     {Only the \textbf{radio} --- the link between your phone and the tower ---
+      and even that is filtered through carrier branding. It says nothing about
+      the \textbf{core}, the machinery behind the towers that knows who you are
+      and decides where your traffic goes. And nothing about the speed you get.}
 \end{frame}
 
 % Teaching note (60 s): ask for a show of hands on who knows their own monthly bill.
@@ -82,34 +83,43 @@
 % SOURCE: Verizon 2025 consolidated capex guidance $17.5-18.5B vs $17.1B in 2024.
 % https://www.verizon.com/about/investors/
 % VERIFY before class: both move every quarter. Update the "as of" line below.
-\begin{frame}{Now multiply that by a nationwide build}
+% NOTE: these are deliberately two different carriers, and the slide now says so.
+% An earlier draft put them side by side unlabeled and read as one company's books.
+\begin{frame}{The bills are flat. The build is not.}
   \begin{columns}[T,onlytextwidth]
     \column{0.47\textwidth}
-      \large\textbf{Money coming in}
-
-      \vspace{0.6em}
-      \small
-      Revenue per phone line is flat, and in places falling.
+      \large\textbf{What one line brings in}
 
       \vspace{0.5em}
-      AT\&T postpaid phone ARPU was about \$56.64, down 0.8\% in a year.
+      \small
+      \textcolor{softgray}{AT\&T, Q3 2025}
+
+      \vspace{0.4em}
+      About \$56.64 a month per postpaid phone line.
+
+      \vspace{0.4em}
+      \textbf{Down 0.8\% in a year.}
     \column{0.47\textwidth}
-      \large\textbf{Money going out}
-
-      \vspace{0.6em}
-      \small
-      Verizon guided 2025 capital spending to \$17.5--18.5 billion.
+      \large\textbf{What one carrier spends}
 
       \vspace{0.5em}
-      That is up from \$17.1 billion the year before.
+      \small
+      \textcolor{softgray}{Verizon, 2025 guidance}
+
+      \vspace{0.4em}
+      \$17.5--18.5 billion building the network.
+
+      \vspace{0.4em}
+      \textbf{Up from \$17.1 billion.}
   \end{columns}
 
-  \vspace{0.2em}
-  {\scriptsize\textcolor{softgray}{AT\&T Q3 2025; Verizon 2025 guidance.}\par}
+  \vspace{0.5em}
+  {\scriptsize\textcolor{softgray}{Two different carriers on purpose --- no single
+   company's books are shown here. The pattern is the industry's.}\par}
 
-  \glossline{ARPU = Average Revenue Per User \quad capex = capital expenditure}
+  \glossline{ARPU = Average Revenue Per User \quad capex = money spent building things}
 
-  \ask{Flat revenue per user, rising spend. How long does that work?}
+  \ask{Flat revenue per line, rising spend. How long does that work?}
 \end{frame}
 
 \begin{frame}{Each generation made a new habit feel normal}
