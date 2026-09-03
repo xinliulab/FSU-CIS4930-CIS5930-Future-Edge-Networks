@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class 5 ISAC · 讲稿</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --panel:#ffffff; --ink:#1a1f26; --muted:#6b7280;
+    --line:#e3e6ea; --blue:#2e5bba; --orange:#de7a24; --purple:#6d3597;
+    --green:#498b4a; --hl:#fff8e6;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",-apple-system,sans-serif;
+    font-size:16px; line-height:1.85; overflow:hidden;
+  }
+
+  /* ---- top bar ---- */
+  #bar{
+    height:46px; display:flex; align-items:center; gap:14px;
+    padding:0 18px; background:var(--panel); border-bottom:1px solid var(--line);
+  }
+  #bar b{font-size:14px; color:var(--blue); letter-spacing:.02em}
+  #sec{
+    font-size:12.5px; color:var(--muted); padding:2px 9px;
+    border:1px solid var(--line); border-radius:99px; white-space:nowrap;
+  }
+  #count{margin-left:auto; font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums}
+  #prog{height:3px; background:var(--line)}
+  #prog>i{display:block; height:100%; background:var(--blue); width:0; transition:width .18s}
+
+  /* ---- layout ---- */
+  #wrap{display:flex; height:calc(100% - 49px)}
+  #left{
+    flex:0 0 54%; display:flex; align-items:center; justify-content:center;
+    padding:20px; background:#eceef1;
+  }
+  #left img{
+    max-width:100%; max-height:100%; border-radius:6px;
+    box-shadow:0 3px 16px rgba(20,35,60,.18); background:#fff;
+  }
+  #right{
+    flex:1; overflow-y:auto; padding:26px 32px 90px;
+    background:var(--panel); border-left:1px solid var(--line);
+  }
+
+  /* ---- notes typography ---- */
+  h2{margin:0 0 4px; font-size:20px; line-height:1.4; color:#132b52}
+  .en{margin:0 0 18px; font-size:13px; color:var(--muted); font-family:Georgia,serif; font-style:italic}
+  h3{
+    margin:22px 0 8px; font-size:14px; color:var(--blue);
+    padding-left:9px; border-left:3px solid var(--blue);
+  }
+  p{margin:0 0 12px}
+  ul{margin:0 0 12px; padding-left:1.3em}
+  li{margin-bottom:7px}
+  b{color:#0d2340}
+  .say{
+    background:var(--hl); border-left:3px solid var(--orange);
+    padding:12px 15px; margin:0 0 14px; border-radius:0 5px 5px 0;
+  }
+  .say:before{
+    content:"课上这样说"; display:block; font-size:11.5px; color:var(--orange);
+    letter-spacing:.1em; margin-bottom:5px; font-weight:700;
+  }
+  .warn{
+    background:#fdf2f2; border-left:3px solid #c0392b;
+    padding:12px 15px; margin:0 0 14px; border-radius:0 5px 5px 0; font-size:15px;
+  }
+  .warn:before{
+    content:"别讲错"; display:block; font-size:11.5px; color:#c0392b;
+    letter-spacing:.1em; margin-bottom:5px; font-weight:700;
+  }
+  .ask{
+    background:#f0f5ff; border-left:3px solid var(--blue);
+    padding:12px 15px; margin:0 0 14px; border-radius:0 5px 5px 0; font-size:15px;
+  }
+  .ask:before{
+    content:"问学生"; display:block; font-size:11.5px; color:var(--blue);
+    letter-spacing:.1em; margin-bottom:5px; font-weight:700;
+  }
+  code{
+    background:#f0f2f5; padding:1px 5px; border-radius:3px;
+    font-family:Consolas,monospace; font-size:14px; color:#8b3a00;
+  }
+  .t{font-family:Consolas,monospace; font-size:14.5px; color:var(--purple)}
+
+  /* ---- footer hint ---- */
+  #hint{
+    position:fixed; bottom:0; right:0; left:54%;
+    padding:9px 32px; font-size:12px; color:var(--muted);
+    background:linear-gradient(transparent,var(--panel) 45%);
+    border-left:1px solid var(--line);
+  }
+  kbd{
+    background:#fff; border:1px solid #c8cdd4; border-bottom-width:2px;
+    border-radius:4px; padding:1px 6px; font-size:11px; font-family:inherit; color:#333;
+  }
+
+  @media (max-width:900px){
+    body{overflow:auto}
+    #wrap{flex-direction:column; height:auto}
+    #left{flex:none; padding:12px}
+    #right{border-left:none; border-top:1px solid var(--line); padding:20px 18px 70px}
+    #hint{left:0}
+  }
+</style>
+</head>
+<body>
+
+<div id="bar">
+  <b>Class 5 · ISAC</b>
+  <span id="sec"></span>
+  <span id="count"></span>
+</div>
+<div id="prog"><i></i></div>
+
+<div id="wrap">
+  <div id="left"><img id="slide" alt=""></div>
+  <div id="right"><div id="note"></div></div>
+</div>
+
+<div id="hint">
+  <kbd>Enter</kbd> <kbd>→</kbd> <kbd>↓</kbd> <kbd>空格</kbd> 下一页 &nbsp;·&nbsp;
+  <kbd>←</kbd> <kbd>↑</kbd> 上一页 &nbsp;·&nbsp; <kbd>Home</kbd> 回到开头 &nbsp;·&nbsp; 输入数字跳页
+</div>
+
+<script>
+const S = [
+{s:"开场", t:"标题页", e:"Class 5: Integrated Sensing and Communication", n:`
+<p>这门课到目前为止,网络一直在做一件事:<b>把比特从一头搬到另一头</b>。今天这节课要讲的是一件完全不同的事 —— 网络开始<b>看东西</b>。</p>
+<div class="say">前面几节课我们讲的都是怎么把信息送出去。今天我们问一个别的问题:同一个信号,能不能在送信息的同时,顺便告诉我们外面的世界长什么样?<br><br>副标题里那五个词 —— 波形、资源分配、攻击、原型、标准 —— 就是今天的五站。你们会发现它们其实是<b>同一个问题的五个版本</b>。</div>
+<h3>你自己心里要有的一句话</h3>
+<p>整节课只有一个核心思想,后面 38 页全是它的推论:</p>
+<p class="t">ISAC 不是在网络旁边装一个雷达,而是把网络自己发出去的信号当雷达来读。</p>
+<p>如果学生下课只记住一句话,就是这句。你在第 3 页会正式说出来,但心里从现在就要瞄着它。</p>
+`},
+
+{s:"为什么", t:"两台机器,一片天空", e:"Two machines, one sky", n:`
+<p>左边是法兰克福机场的监视雷达,右边是爱立信的 5G 有源天线。这一页<b>先不要说话</b>,让两张照片摆着。</p>
+<div class="say">你们看这两个东西,有什么共同点?<br><br>(等学生答。他们一定会说"都有天线"。)<br><br>对,都有天线。但还有更要紧的一层 —— 它们<b>想要的东西是一样的</b>。都要频谱、都要功率、都要天线面积、都要芯片算力。而天,只有一片。</div>
+<h3>这一页在整个逻辑链里的位置</h3>
+<p>它建立的是<b>动机,而且是经济动机不是技术动机</b>。学生容易以为 ISAC 是因为"技术上很酷"才做的。不是。是因为:</p>
+<ul>
+  <li>频谱是拍卖来的,极贵,而且不可再生;</li>
+  <li>雷达和通信各建一套,等于<b>同一份硬件付两遍钱</b>。</li>
+</ul>
+<p>回到我们讲运营商经济那节课的老话题:每一次架构变化,都是有人想用更低的人均成本服务更多人。ISAC 也是这个逻辑,只不过省的不是基站,是<b>频谱和天线</b>。</p>
+<div class="ask">如果你是运营商 CFO,有人告诉你可以不再单独买一套雷达系统,你最先问什么问题?<br><br>(想引出的答案:那通信会变差吗?—— 这正是这节课后半段整个在回答的问题。)</div>
+`},
+
+{s:"为什么", t:"一个波形,两份工作", e:"One waveform, two jobs", n:`
+<p><b>这是整节课唯一那一页。</b>后面所有内容都是这一页的推论。慢一点,两个箭头都要指着讲。</p>
+<h3>图在说什么</h3>
+<ul>
+  <li><b>蓝色箭头</b>(基站 → 手机):信号往外走,<b>载着比特</b>。这是通信,你们已经很熟了。</li>
+  <li><b>橙色实线</b>(基站 → 目标):同一个信号也打在了某个物体上 —— 一辆车、一个人、一面墙。</li>
+  <li><b>橙色虚线</b>(目标 → 基站):打上去的东西<b>弹回来了</b>。这条虚线是这节课的全部新意。</li>
+</ul>
+<div class="say">注意,这里<b>只有一次发射</b>。不是发两个信号,一个通信一个雷达 —— 是同一个信号。<br><br>它往外走的时候是<b>信息</b>,弹回来的时候是<b>测量</b>。<br><br>换个说法:你的手机在下载视频,基站发出去的那个信号,同时也在照亮马路上的一辆车,而反射回来的那一点点能量,告诉基站那辆车在哪、跑多快。整件事里没有任何人上传过这辆车的位置。</div>
+<h3>学生最容易搞错的地方</h3>
+<div class="warn">学生会以为 ISAC = "基站里加了个雷达模块"。这是错的,而且错得很关键。<br><br>正确的说法是:<b>雷达功能是从通信信号本身里读出来的</b>,没有加任何新的发射机。这就是为什么它省钱,也是为什么它难 —— 一个波形现在要同时满足两套互相冲突的指标。</div>
+<p>橙色框那句话("ISAC 不是给网络加雷达,而是把网络自己的信号当雷达读")就是让学生抄下来的。</p>
+`},
+
+{s:"为什么", t:"回波是没人上传的数据", e:"An echo is data nobody uploaded", n:`
+<p>上一页讲了原理,这一页回答"那有什么用"。左边是 Waymo 自动驾驶车顶上那一坨传感器。</p>
+<h3>右边六条,别一条条念</h3>
+<p>挑两三条讲透,比六条都念一遍强。我建议挑这几条:</p>
+<ul>
+  <li><b>车:</b> 摄像头看不见的东西,回波能看见 —— 大雾、黑夜、拐角后面。</li>
+  <li><b>XR:</b> 追踪你的手,<b>不用戴任何东西</b>。现在的 VR 要么戴手柄要么靠摄像头,ISAC 直接用 Wi-Fi 信号的回波。</li>
+  <li><b>IoT:</b> 数房间里有几个人,<b>不用摄像头</b> —— 这条对隐私敏感的场景特别有意思,养老院、教室。</li>
+</ul>
+<div class="say">这六个场景表面上八竿子打不着 —— 车、VR、数人、卫星、救灾、种地。但它们是<b>同一件事</b>:网络自己注意到了什么,而不是等某个 App 上报。<br><br>你们现在手机上所有的定位数据,都是手机<b>主动上传</b>的。ISAC 是反过来的:网络自己就知道了。</div>
+<h3>这里要埋一颗钉子</h3>
+<p>"不用摄像头就能数人" 听起来是个隐私优点,但反过来想 —— <b>网络在你完全不知情、也没装任何 App 的情况下,知道你在哪个房间、有没有摔倒</b>。这颗钉子第 23 页(不发射的干扰机)会拔出来。现在只需要让学生心里有点不舒服就够了,不用展开。</p>
+<div class="ask">网络能测到什么,是 App 测不到的?<br><br>(值得接的答案:房间里有没有人、有人摔倒了、两个街区外有辆车、下雨了。)</div>
+`},
+
+{s:"为什么", t:"感知被写进了 6G 框架", e:"Sensing is written into the 6G frame", n:`
+<p>前三页是技术和用途。这一页是<b>政治</b> —— 而且这页很重要,别跳。</p>
+<h3>图在说什么</h3>
+<p>ITU 在 2023 年发了 M.2160 建议书,定义了 IMT-2030(就是 6G 的官方框架),里面列了六个"使用场景"。<b>ISAC 是其中一个</b>,AI 与通信融合是另一个,还有四个。</p>
+<div class="say">你们可能会想,标准组织写不写有什么关系?一个技术好就是好啊。<br><br>关系大了。一个东西被写进"使用场景",意味着三件事会为它发生:<b>分频谱、定性能指标、写测试流程</b>。<br><br>在 ISAC 被正式点名之前,<b>没有任何一台无线设备有义务是"可测量的"</b>。厂商可以说"我这个也能感知",但没人能验证,也没人必须支持。写进去之后,它从"某些人的研究方向"变成了"要交付的东西"。</div>
+<h3>和前面课程的连接</h3>
+<p>这跟我们讲 O-RAN 的时候是一个道理:一个接口只有被标准化了,你才能分开采购。同理,一个能力只有被标准化了,才有人真的去建。</p>
+<div class="warn">2027 年之后的时间点(第 32 页那条时间轴)是<b>演讲者的预测</b>,不是 ITU 或 3GPP 发布的日程。这一页说 M.2160 是事实,那是真的;但不要把预测讲成已定的时间表。</div>
+`},
+
+{s:"两个盒子", t:"两个盒子变成一个盒子", e:"Two boxes became one box", n:`
+<p>这一节要把上一节的想法落到硬件上。左边:传统做法 —— 通信一套、雷达一套,各有各的频段和天线。右边:DFRC,<b>一条发射链</b>,比特出去、回波进来。</p>
+<h3>DFRC 这个词</h3>
+<p>Dual-Function Radar Communication,双功能雷达通信。学生第一次见,要念全称。</p>
+<div class="say">左边那两个盒子,各自都很成熟,几十年的工程积累。把它们合成右边那一个盒子,<b>省下来的东西是实打实的</b>:一张频谱牌照、一个功放、一个天线面、一份功率预算。<br><br>但代价也是实打实的,而且这个代价是这节课剩下 30 页的全部内容 —— <b>一个波形,现在要同时满足两套规格</b>。<br><br>这就像让一个人同时当翻译和测量员。省了一个人的工资,但这个人现在很难做。</div>
+<h3>节奏提示</h3>
+<p>"What it buys / What it costs" 这两栏,一定要<b>都讲</b>。只讲省钱,学生会觉得这是白捡的便宜,后面讲权衡的时候就接不上了。这两栏是在为第 14–16 页那个 Pareto 前沿铺路。</p>
+`},
+
+{s:"两个盒子", t:"DFRC 是一个盒子,ISAC 是一个问题", e:"DFRC is one box. ISAC is the question.", n:`
+<p>这一页在纠正一个学生一定会犯的混淆:<b>DFRC 和 ISAC 不是一回事</b>。</p>
+<h3>关系是包含,不是等价</h3>
+<ul>
+  <li><b>DFRC</b>:在<b>一台</b>无线设备<b>里面</b>,共享波形、天线、处理链。是硬件层面的合并。</li>
+  <li><b>ISAC</b>:范围更大。它还允许 <b>A 节点发射、B 节点接听</b> —— 发的和收的可以是两台设备、两个站址。</li>
+</ul>
+<div class="say">图上大橙框是 ISAC,里面那个小蓝框是 DFRC。所以:<br><br><b>每一个 DFRC 系统都是 ISAC,但不是每一个 ISAC 系统都装得进一个盒子。</b><br><br>为什么这个区别重要?因为如果发射和接收可以分开,你就可以让整个网络的所有基站<b>一起</b>形成一张感知的图。这个时候感知就不再是"某个基站的功能",而是"网络的功能"。</div>
+<h3>可以顺口提一句</h3>
+<p>分开收发在雷达界有个老名字叫 <b>bistatic radar</b>(双基地雷达),二战时期就有。不是新东西,新的是把它放在蜂窝网络里。这一句能让学生放松 —— 原来这些概念都有根。</p>
+`},
+
+{s:"两个盒子", t:"回波到底告诉你什么", e:"What an echo actually tells you", n:`
+<p><b>这一页是全课的技术地基,绝对不能省。</b>后面讲波形、讲时延-多普勒域,全靠这一页。这页原始演讲里没有,是专门加进来的。</p>
+<h3>三个量,建议边讲边在黑板上画三个箭头</h3>
+<ul>
+  <li><b>时延(Delay)→ 距离</b>。公式 <code>R = cτ/2</code>。信号跑过去再跑回来,走了两倍距离,所以除以 2。c 是光速。</li>
+  <li><b>多普勒(Doppler)→ 接近速度</b>。物体朝你来,回波频率偏高;离开你,偏低。就是救护车经过时鸣笛音调的变化,只不过用的是无线电。</li>
+  <li><b>角度(Angle)→ 方向</b>。靠多根天线收到回波的<b>相位差</b>算出来。</li>
+</ul>
+<div class="say">τ 是时延,c 是光速,除以 2 是因为信号走了个来回。<br><br>多普勒你们都体验过 —— 救护车朝你开来的时候笛声尖,过去之后变闷。无线电波一模一样,只不过变化太小,人感觉不到,但接收机能算出来。</div>
+<h3>下面那个问答是关键,别当装饰</h3>
+<p>问:哪个旋钮买到更细的<b>距离</b>分辨率,哪个买到更细的<b>速度</b>分辨率?</p>
+<ul>
+  <li><b>带宽</b>买距离分辨率 —— 信号越宽,时间上的峰越尖,越能分开两个靠得近的目标。</li>
+  <li><b>观测时间</b>买速度分辨率 —— 你必须盯得够久,相位才漂移出足够的差别。</li>
+</ul>
+<div class="warn">这两条一定要讲清楚,因为第 14 页"感知要宽带宽、通信要省带宽"那句冲突,学生只有知道<b>带宽是买来干什么用的</b>,才会觉得那个冲突是真冲突,而不是随口一说。</div>
+`},
+
+{s:"两个盒子", t:"四个难点,先摊在桌上", e:"The four hard parts, named up front", n:`
+<p>这一页是<b>路标</b>,不是内容页。作用是让学生知道后面要去哪,别一条条深讲。</p>
+<h3>左栏:技术手段(后面会展开)</h3>
+<ul>
+  <li>波形设计 → 第 10–13 页</li>
+  <li>MIMO、波束成形 → 第 22、26 页</li>
+  <li>共享射频硬件 → 第 29–31 页</li>
+  <li>编码与资源分配 → 第 17–21 页</li>
+</ul>
+<h3>右栏:四个挑战</h3>
+<ul>
+  <li><b>权衡:躲不开</b>(第 14–16 页专门讲)</li>
+  <li><b>干扰:互相的</b> —— 雷达那半会污染星座图,通信那半会污染回波</li>
+  <li><b>复杂度:非凸</b> —— 这类优化问题没有保证找到全局最优的算法</li>
+  <li><b>监管:谁说了算</b></li>
+</ul>
+<div class="say">前三个是工程问题,给我足够的时间和聪明人,总能往前推。<br><br><b>第四个是委员会。</b>(等一下笑声)<br><br>我不是在开玩笑。频谱是谁的?雷达频段的规则是航空和军方定的,通信频段的规则是电信监管机构定的。当一个信号同时干两件事,它归谁管?这个问题的答案不在物理里,在会议室里。</div>
+<p>橙框那句 "Three of the four are engineering. The fourth is a committee." 就是这一页的记忆点。</p>
+`},
+
+{s:"波形", t:"OFDM 里面本来就藏着一个雷达", e:"OFDM already carries a radar inside it", n:`
+<p>波形这一节开始。第一个消息是好消息:<b>你不需要新东西就能开始</b>。</p>
+<h3>左边那张格子图</h3>
+<p>横轴是时间(一个个 OFDM 符号),纵轴是频率(一个个子载波)。每个小格子叫一个<b>资源元(RE)</b>。这张图学生在讲 5G 物理层那节课见过,提醒他们一句。</p>
+<div class="say">OFDM 已经部署在 Wi-Fi、4G、5G、6G 里了,是最成熟的波形。<br><br>妙的地方在于:<b>这张格子本身就是一堆旋钮</b>。每个格子你都可以决定它装什么、用多大功率。既然如此,为什么不能让一部分格子装比特,一部分格子专门用来照亮目标?<br><br>而且子载波天生就能当雷达的频率通道用。<b>一个新的调制器都不用做。</b></div>
+<h3>那为什么还要设计新波形?</h3>
+<p>这是这一页下面那个问答,也是通往第 11 页的桥:</p>
+<p>因为 OFDM 是用<b>时间和频率</b>描述的,而一个<b>运动的</b>目标天生是用<b>时延和多普勒</b>描述的。快速移动的目标会把 OFDM 的格子<b>抹花</b>(smear)—— 具体说,多普勒会破坏子载波之间的正交性。而在时延-多普勒的坐标系里,同一个目标是<b>不动的一个点</b>。</p>
+<div class="ask">如果 OFDM 已经够用了,为什么还要设计新波形?<br><br>(这个问题不要马上答,让它悬着,直接翻到下一页用图回答。)</div>
+`},
+
+{s:"波形", t:"时延-多普勒是另一个站位", e:"Delay–Doppler is a different place to stand", n:`
+<p>这一页是整节课<b>最抽象</b>的一页,也是学生最容易掉队的一页。花时间。</p>
+<h3>图在说什么</h3>
+<p>左边蓝框:时间-频率域,五个点散落着 —— 一个运动目标的能量被<b>抹开</b>了。右边橙框:同一个目标,在时延-多普勒域里就是<b>两个干净的点</b>。中间那个箭头标着 ISFFT,是两个域之间的变换。</p>
+<div class="say">这个不好想,我换个说法。<br><br>你去看一张长曝光的照片,一辆开过的车拍出来是一道<b>拖影</b>,糊了一大片。但如果你换一种记录方式,只记"这个东西在哪、以多快的速度动",那辆车就变回<b>一个数据点</b>:位置 + 速度。<br><br>拖影和数据点是<b>同一辆车</b>,只是你站的地方不一样。时间-频率域是那张长曝光照片,时延-多普勒域是那个数据点。<br><br>换个站位,同一个物理现实就从"糊成一片"变成"一个尖锐的点"。而估计器最喜欢尖锐的点。</div>
+<h3>ISFFT 要不要讲</h3>
+<p>Inverse Symplectic Finite Fourier Transform。<b>不要展开讲数学。</b>只说一句:它是两个域之间的换算工具,像坐标变换。学生只要知道"有个数学工具能来回换"就够了,这门课不考它。</p>
+<div class="warn">别说成"时延-多普勒域比时间-频率域更好"。它不是更好,是<b>对不同的东西更方便</b>。通信在时间-频率域里更自然,感知在时延-多普勒域里更自然。这正是矛盾的来源 —— 第 15 页有一行专门讲这个("Domain")。</div>
+`},
+
+{s:"波形", t:"三种波形,三种赌注", e:"Three waveforms, three bets", n:`
+<p>表格页。<b>不要念完 12 个格子。</b>按列读一遍,然后只横着读一行。</p>
+<h3>三行的实质</h3>
+<ul>
+  <li><b>OFDM</b> —— 符号住在时间-频率。<b>优势</b>:到处都部署了,子载波顺便当雷达通道。<b>劣势</b>:多普勒会破坏子载波正交性。</li>
+  <li><b>OTFS</b> —— 符号住在时延-多普勒,但要靠 ISFFT 映射<b>上去</b>到时间-频率再发。<b>优势</b>:抗高速移动,而且能直接挂在现有 OFDM 上。<b>劣势</b>:格子之间会<b>泄漏</b>,而且 PAPR 高。</li>
+  <li><b>ODDM</b> —— 符号<b>原生</b>住在时延-多普勒。<b>优势</b>:脉冲真正正交,回波稀疏干净。<b>劣势</b>:还在研究阶段,硬件不成熟。</li>
+</ul>
+<div class="warn">这里有个精确性问题,很容易讲错。<br><br><b>不要把 ODDM 说成"脉冲更好的 OTFS"。</b>两者的区别不是脉冲质量,是<b>正交性的定义方式</b>:OTFS 是把时延-多普勒的符号<b>映射到</b>时间-频率格子上发,所以它继承了一个类 OFDM 的调制器;ODDM 是直接构造出<b>相对时延-多普勒分辨率就正交</b>的脉冲。那个正交性声明本身就是 ODDM 的全部意义。</div>
+<h3>PAPR 值得多说一句</h3>
+<p>Peak-to-Average Power Ratio,峰均功率比。用大白话讲:<b>它决定功放要多辛苦</b>。PAPR 高意味着信号偶尔会冲出一个很高的峰,功放必须为那个峰留余量,平时就用不满,费电还费钱。这对手机和基站都是真实的成本。</p>
+<p>橙框:"OFDM is what ships. ODDM is what the sensing side wants." —— 一句话概括了工业界和研究界的分歧。</p>
+`},
+
+{s:"波形", t:"正交性为什么值得费这个劲", e:"Why orthogonality is worth the trouble", n:`
+<p>上一页说 ODDM 的卖点是"真正交",这一页用图告诉你正交到底买到了什么。</p>
+<h3>两张图</h3>
+<ul>
+  <li><b>左(OTFS,泄漏的基)</b>:两个亮点,但每个周围都糊着一圈淡的。那圈淡的就是<b>泄漏</b> —— 能量跑到了不该去的格子里。</li>
+  <li><b>右(ODDM,正交的基)</b>:两个干干净净的点,周围什么都没有。</li>
+</ul>
+<div class="say">两个糊点和两个尖点,估计器为什么在乎?<br><br>泄漏就是<b>跑错格子的能量</b>。它造成三个后果:<br><br>一,<b>抬高旁瓣</b> —— 你的"背景噪声"变高了。<br>二,<b>一个强目标旁边的弱目标会被埋掉</b>。想象一辆大卡车旁边有个行人,卡车的回波泄漏一圈,行人就消失了。这在自动驾驶里是要命的。<br>三,在多用户系统里,<b>它直接变成用户之间的干扰</b>。</div>
+<h3>连到后面</h3>
+<p>第三点是通往第 21 页的桥:那页会说 "Sparser echoes mean less interference, and less interference is rate you keep."(回波越稀疏,干扰越少;干扰越少,你保住的速率越多。)这一页的"泄漏"和那一页的"速率",是同一件事的两头。</p>
+`},
+
+{s:"权衡", t:"它们想要的东西相反 (1/2)", e:"They want opposite things (1/2)", n:`
+<p>这一节是全课的<b>思想核心</b>。表格分成两页是因为十行放一页看不清,不是两个话题。</p>
+<h3>五行,按列读再横着读一行</h3>
+<table style="width:100%;border-collapse:collapse;font-size:14.5px;margin-bottom:12px">
+<tr><th style="text-align:left;padding:5px;border-bottom:1px solid #ddd"></th><th style="text-align:left;padding:5px;border-bottom:1px solid #ddd;color:#de7a24">感知要</th><th style="text-align:left;padding:5px;border-bottom:1px solid #ddd;color:#2e5bba">通信要</th></tr>
+<tr><td style="padding:5px"><b>频谱</b></td><td style="padding:5px">宽带宽,为了分辨率</td><td style="padding:5px">省带宽,为了速率</td></tr>
+<tr><td style="padding:5px"><b>信号</b></td><td style="padding:5px">确定性波形</td><td style="padding:5px">随机的、载信息的符号</td></tr>
+<tr><td style="padding:5px"><b>功率</b></td><td style="padding:5px">往目标上砸大功率</td><td style="padding:5px">每比特的功率效率</td></tr>
+<tr><td style="padding:5px"><b>时间</b></td><td style="padding:5px">连续照射</td><td style="padding:5px">低时延的短突发</td></tr>
+<tr><td style="padding:5px"><b>空间</b></td><td style="padding:5px">宽波束或扫描波束</td><td style="padding:5px">窄波束,一人一个</td></tr>
+</table>
+<h3>只要讲透一行,就讲"信号"那行</h3>
+<div class="say">看第二行。这一行是整个矛盾的<b>数学根源</b>,其他四行都是它的表现。<br><br>通信要的信号是什么样?<b>随机的</b>。为什么?因为随机才携带信息 —— 如果我发的东西你能猜到,那我就没告诉你任何新东西。信息量的定义就是不可预测性。<br><br>雷达要的信号是什么样?<b>确定性的</b>。为什么?因为雷达要拿收到的回波去和它<b>原本发出去的东西</b>做相关。你必须精确知道自己发了什么,才能认出回来的是不是它。<br><br>所以:<b>随机性携带信息,同时毁掉自相关。</b><br><br>这一句话就是全部冲突。不是工程没做好,是两个需求在信息论层面上就朝着相反方向拉。</div>
+<div class="warn">这一行讲不透,后面 20 页学生都会觉得"那优化一下不就好了"。要让他们理解这是<b>原理性的</b>冲突,不是实现上的缺陷。</div>
+`},
+
+{s:"权衡", t:"它们想要的东西相反 (2/2)", e:"They want opposite things (2/2)", n:`
+<p>后五行。同样别念完,挑两行。</p>
+<h3>建议挑这两行</h3>
+<ul>
+  <li><b>Domain(域)</b>:感知要时延-多普勒的分辨率,通信要时间-频率的复用。<b>这一行直接回收第 11 页</b> —— 那页讲的"两个站位",在这里变成了一条设计冲突。</li>
+  <li><b>Latency(时延)</b>:感知要低时延的跟踪反馈(你要实时知道那辆车在哪);而通信的很多业务其实<b>能容忍延迟</b>(视频缓冲、后台同步)。这一行有点反直觉 —— 学生一般以为通信才是急的那个。</li>
+</ul>
+<h3>下面那个问答是这一节的落点</h3>
+<p>问:有没有一种设置让两者<b>同时</b>最优?</p>
+<p><b>答:没有。</b>存在一条 <b>Pareto 前沿</b>(帕累托前沿):过了某个点之后,一方的每一点改善,都必须从另一方身上付账。设计工作是<b>选择坐在这条线的哪个位置</b>,而不是逃离这条线。</p>
+<div class="say">我要你们记住这个词的态度,而不只是词本身。<br><br>工程里有两种问题。一种是"还没做好",努力就能变好。另一种是"结构上就这样",你只能<b>选</b>,不能<b>赢</b>。<br><br>ISAC 属于第二种。这节课后面每一篇论文、每一个原型,都不是在"解决"这个权衡 —— 它们都是在这条曲线上<b>挑了一个点,然后论证这个点挑得好</b>。</div>
+`},
+
+{s:"权衡", t:"前沿,画一次", e:"The frontier, drawn once", n:`
+<p>上一页说了有条前沿,这一页把它画出来。<b>这张图后面会反复回来</b>(第 21、28、33、35 页),所以这里要讲到学生真的看懂。</p>
+<h3>两根轴,而且横轴是反的</h3>
+<ul>
+  <li><b>纵轴</b>:可达速率(achievable rate)。<b>越高越好</b>,这个符合直觉。</li>
+  <li><b>横轴</b>:CRLB,感知的误差下限。<b>越小越好</b> —— 所以<b>越往右越差</b>。</li>
+</ul>
+<div class="warn">这一页最大的教学陷阱:<b>学生看任何曲线图都默认"右上角最好"。这张图不是。</b><br><br>这张图的好角落在<b>左上</b>:速率高(上)+ 感知误差小(左)。<br><br>你必须<b>明确地说出来</b>,而且最好用手在屏幕上指一下左上角。不说,一半的学生会理解成相反的。</div>
+<h3>CRLB 是什么</h3>
+<p>Cramér–Rao Lower Bound,克拉美-罗下界。大白话:<b>任何无偏估计器能达到的最小方差</b>。也就是"你再聪明也不可能比这个更准"的那条线。</p>
+<div class="say">CRLB 不是某个算法的性能,是<b>物理和信息给你划的天花板</b> —— 或者说地板。它说的是:给定这个信号、这个信噪比,不管你用多神的算法,估出来的误差都不可能小于这个数。<br><br>所以当一篇论文说"我们逼近了 CRLB",意思是"我们的算法已经好到接近理论极限了,别再指望算法上能有大改进"。</div>
+<h3>图上四个标注</h3>
+<ul>
+  <li><b>attainable frontier</b>:那条蓝线,能做到的最好组合。</li>
+  <li><b>sensing-first</b>(绿点,靠左上):偏感知的设计点。</li>
+  <li><b>comms-first</b>(橙点,靠右下):偏通信的设计点。</li>
+  <li><b>unreachable / infeasible</b>:线外的两个区域,做不到。</li>
+</ul>
+<p>橙框那句是本节的总结,也是给后半节课定调:"后面每一个结果,都是关于这样一条曲线上某一个点的声明。"</p>
+`},
+
+{s:"资源分配", t:"格子就是预算", e:"The grid is the budget", n:`
+<p>前面讲的是"有个权衡",从这一节开始讲"<b>那具体怎么分</b>"。这是最工程的一节。</p>
+<h3>图在说什么</h3>
+<p>又是那张时间-频率格子,但现在<b>每个格子被涂了色</b>:蓝格子分给通信,橙格子分给感知。</p>
+<h3>四个要点,建议这样串</h3>
+<div class="say">一个 RE 就是一个格子,一个子载波在一个 OFDM 符号期间。<br><br>每个格子承载两样东西:<b>一个符号,和一份功率</b>。<br><br>所以资源分配是两步:<b>先决定这个格子归谁,再决定给它多少功率。</b><br><br>整节课的"预算"比喻就在这里 —— 这张格子就是你的钱,总量固定。给感知多一格,通信就少一格。没有第三个选择。</div>
+<h3>两个缩写先埋下,后面要用</h3>
+<ul>
+  <li><b>RE</b> = Resource Element,资源元。</li>
+  <li><b>PSLR</b> = Peak-to-SideLobe Ratio,峰值旁瓣比。第 18 页会用它当感知的评分。</li>
+  <li><b>RoI</b> = Region of Interest,感兴趣区域。<b>第 19 页那个"几乎没有损失"的魔术全靠这个词</b>,现在先让学生见一面。</li>
+</ul>
+<p>这一节的数据来自 IEEE JSAC 2024 那篇跨域双功能 OFDM 波形设计。仿真参数在第 20 页,别改数字。</p>
+`},
+
+{s:"资源分配", t:"两份评分,在两个房间打分", e:"Two scores, graded in two rooms", n:`
+<p>这一页解释:同一张格子,<b>被两个考官用两套完全不同的标准打分</b>。</p>
+<h3>两个评分</h3>
+<ul>
+  <li><b>通信分</b>:可达速率,把所有分给通信的 RE 加起来。<b>在时间-频率域里量</b> —— 策略是"把比特放在信道好的地方"。</li>
+  <li><b>感知分</b>:RoI 内的 PSLR —— <b>真峰比杂波高出多少</b>。<b>在时延-多普勒域里量</b> —— 策略是"在目标所在的地方把自相关的形状修好"。</li>
+</ul>
+<div class="say">PSLR 用大白话说:你想找的那个目标,它的回波峰值,比周围那些乱七八糟的杂波高出多少。高得多,就容易认出来;差不多高,就淹了。<br><br>关键在于最后那两句:<b>这两个分数不在同一个域里打。</b><br><br>通信分在时间-频率域,感知分在时延-多普勒域。这不是两个人对同一份卷子给了不同分数 —— 是<b>同一张格子被翻译成两种语言,然后各自批改</b>。<br><br>所以优化难在哪?你在一个域里动一下,另一个域里所有格子都跟着变。这就是第 9 页说的"非凸"。</div>
+<p>橙框:"同一张格子被打两次分,由两个考官在两个不同的域里。" —— 这是这一页的记忆点。</p>
+`},
+
+{s:"资源分配", t:"谁先挑,谁赢", e:"Whoever picks first, wins", n:`
+<p>这一页很好讲,因为它就是个<b>先后顺序</b>问题,学生秒懂。</p>
+<h3>两种策略</h3>
+<ul>
+  <li><b>通信优先</b>:① 好格子先给比特 ② 再调剩下的功率 ③ 感知拿剩下的。<br><small style="color:#6b7280">结果:速率保持最优;PSLR 在 RoI 内"还不错"。</small></li>
+  <li><b>感知优先</b>:① 先锁死 RoI 里的自相关 ② 再调平面上其余部分 ③ 比特拿剩下的。<br><small style="color:#6b7280">结果:PSLR 局部完美;速率<b>逼近</b>但不<b>达到</b>最优。</small></li>
+</ul>
+<div class="say">这就是分蛋糕先切的人占便宜。先挑的那一方拿到最优,后挑的拿剩下的。<br><br>注意措辞的差别,这个差别是真的:通信优先时速率是"<b>保持最优</b>",感知优先时速率是"<b>逼近</b>最优"。一个是等号,一个是约等号。</div>
+<h3>下面那个问答是本节最精彩的地方,一定要讲</h3>
+<p>问:两种设计都声称"几乎没有损失",这怎么可能?</p>
+<p><b>答:因为约束只在 RoI 内部强制执行。</b>把"必须完美"的房间缩小,格子的其余部分就自由了,可以全给另一个功能。</p>
+<div class="say">这是这节课最实用的一个思维方式,我希望你们带走。<br><br>"几乎没有损失"听起来像免费的午餐,像是有人绕过了我们刚才说躲不开的权衡。但没有人绕过它。<br><br>他们做的是:<b>把要求变窄了。</b><br><br>我不要求整个时延-多普勒平面都干净,我只要求那辆车可能出现的那一小块区域干净。那一小块之外,随便。于是那一大片就都能拿去发比特。<br><br>所以每次你在论文里看到"几乎没有损失",第一个要问的问题是:<b>你把要求缩到多小了?</b></div>
+`},
+
+{s:"资源分配", t:"仿真到底显示了什么", e:"What the simulation actually showed", n:`
+<p>上一页是策略,这一页是结果。内容不多,但有两件事值得停一下。</p>
+<h3>结果本身</h3>
+<ul>
+  <li><b>通信优先</b>:保住最优可达速率,而且 RoI 内的自相关<b>依然不错</b>。</li>
+  <li><b>感知优先</b>:逼近最优速率,同时<b>保证</b>局部完美的自相关。</li>
+</ul>
+<h3>下面那行灰字才是这页的重点</h3>
+<p class="t">载波 240 GHz,子载波间隔 240 kHz,32 个连续 OFDM 符号,128 个子载波,符号长度 4.1470 μs,循环前缀 1.0368 μs。</p>
+<div class="ask">240 GHz,240 kHz 间隔 —— 这里假设的是什么样的链路?<br><br>(想引出的:240 GHz 是太赫兹频段,不是现在的 5G。这意味着<b>极短距离、几乎必须视距、大气衰减严重</b>。也就是说这个仿真描述的是一个未来场景,不是你今天手机连的那个网。)</div>
+<div class="say">我想让你们养成一个习惯:看到漂亮的结果,先翻到参数那一行。<br><br>这个结果是真的,但它是在 240 GHz 上做出来的。240 GHz 的波连一片叶子都绕不过去。所以"几乎没有损失"这个结论,成立的前提是一个非常特定的、目前还不存在的部署环境。<br><br>这不是说这篇论文有问题 —— 研究就是这么做的。但从"仿真里成立"到"你手机上成立",中间隔着很多东西。</div>
+`},
+
+{s:"资源分配", t:"多个用户,一份回波", e:"Many users, one echo", n:`
+<p>前面都是单用户。真实网络里一个基站要服务很多用户,这一页加上这一层。</p>
+<h3>图在说什么</h3>
+<p>横轴 CRLB(越右越差),纵轴 sum-rate(总速率,越高越好)。两条曲线:绿色 ODDM 在上,灰色虚线 OTFS 在下。<b>ODDM 在整个范围内都压着 OTFS</b>。</p>
+<h3>右边四点</h3>
+<ul>
+  <li>功率要在子载波之间分配;</li>
+  <li><b>其他用户就是干扰</b> —— 这是多用户带来的新问题;</li>
+  <li>CRLB 给估计精度设了界;</li>
+  <li>整个问题可以<b>拆成两个子问题</b>(这是那篇工作的方法论贡献)。</li>
+</ul>
+<div class="say">为什么 ODDM 整条线都在 OTFS 上面?回到第 13 页那两张图。<br><br>OTFS 的基是<b>泄漏</b>的,能量会跑到隔壁格子。在单用户的时候,泄漏只是让你的目标看起来糊一点。<br><br>但在多用户的时候,<b>跑到隔壁格子的能量就是别人的干扰</b>。而干扰直接吃掉速率 —— 香农公式里 SINR 的分母变大,速率就下来了。<br><br>所以橙框那句话:<b>回波越稀疏,干扰越少;干扰越少,就是你保住的速率。</b><br><br>第 13 页那个看起来纯理论的"正交性",在这里变成了实实在在的 bit/s。</div>
+<p>这是本节最好的一个闭环:一个抽象的数学性质,一路走到了可测量的系统指标。值得指出来给学生看。</p>
+`},
+
+{s:"现场", t:"一面能改写信道的墙", e:"A surface that edits the channel", n:`
+<p>这一节开始讲真实场景。第一个是 RIS,而它同时是本课<b>安全部分的引子</b>。</p>
+<h3>RIS 是什么</h3>
+<p>Reconfigurable Intelligent Surface,可重构智能表面。一面贴满可调单元的板子。基站到用户的直射路径被挡住了(图上灰虚线),信号绕道打到 RIS 上,RIS 把它反射给用户。</p>
+<div class="say">关键是图上标的两个词:<b>passive(无源)</b>、<b>no amplifier(没有功放)</b>。<br><br>它<b>不发射任何信号</b>。它只是改变打到它身上的波的相位,像一面能编程的镜子。因为不发射,它几乎不耗电,也不需要频谱牌照。</div>
+<h3>这一页的结构是"两面"</h3>
+<ul>
+  <li><b>诚实使用</b>(绿):增加覆盖、提升能效,还能给目标提供<b>第二个观察角度</b> —— 对感知是白赚的。</li>
+  <li><b>不诚实使用</b>(紫):<b>它能改变你的信道,而自己从不发出任何信号。</b></li>
+</ul>
+<div class="say">先停在这句话上想一秒。<br><br>一个东西能干扰你的通信,但它<b>从头到尾没有发射过任何东西</b>。<br><br>你们学过的所有干扰检测,思路都是"找那个发射源"。这里没有发射源。<br><br>下一页就是这件事的正式版本。</div>
+<p>注意 RIS 在这个 deck 里用<b>紫色</b>画 —— 全课的配色约定是:蓝=通信,橙=感知,紫=攻击面,绿=权衡里活下来的东西。RIS 是紫的,这个颜色选择本身就在预告它的角色。</p>
+`},
+
+{s:"现场", t:"从不发射的干扰机", e:"The jammer that never transmits", n:`
+<p><b>这是全课的安全高潮,也是学生最会记住的一页。</b>时间紧就砍 FSO 那两页,别砍这个。</p>
+<h3>图在说什么</h3>
+<p>ISAC 基站正常工作:蓝线到用户,橙线到目标。上方紫色的 <b>DISCO RIS</b>(标注写着 no transmitter)接收基站的信号,然后把它<b>乱七八糟地反射</b>给用户和目标。标注:<b>相位每一帧都重新随机化</b>。</p>
+<h3>攻击原理 —— 这里最容易讲错</h3>
+<div class="warn">DISCO RIS 是一个<b>完全无源</b>的干扰机。它<b>没有发射机</b>,也<b>不知道</b>合法链路的信道信息。<br><br><b>绝对不要说它"发射噪声"。</b>它什么都不发。这正是它的全部新意所在。</div>
+<div class="say">那没有功放、也不知道信道,怎么可能干扰一条链路?<br><br>答案是:<b>让信道自己动起来。</b><br><br>回想基站是怎么工作的。它先测信道 —— 拿到 CSI,信道状态信息。然后根据这个 CSI 算出波束该往哪打。整个流程的前提是:<b>我测完到我用的时候,信道还是那个信道。</b><br><br>现在那面墙做一件事:<b>它把自己重排的速度,调得比基站刷新 CSI 的速度更快。</b><br><br>于是基站测到的 CSI,在它拿去用的那一刻<b>已经过期了</b>。波束打偏,而基站以为自己打对了。<br><br>这个攻击有个发表过的名字:<b>active channel aging</b>,主动信道老化。让你的信道信息"变老"。</div>
+<h3>为什么这个攻击特别难防</h3>
+<p>把它和我们讲 RAN 那节课的伪基站对比一下,对比很有教学价值:</p>
+<ul>
+  <li><b>伪基站</b>:必须发射,而且要比真基站更响。所以它<b>留下证据</b> —— 你可以去找那个信号。</li>
+  <li><b>DISCO RIS</b>:什么都不发。<b>没有任何发射可以被检测</b>。</li>
+</ul>
+<p>橙框那句(第 24 页)把这个说透了:"一个无源攻击者不留下任何可检测的发射。你唯一的证据是你自己在下降的 SINR。"</p>
+`},
+
+{s:"现场", t:"这个攻击到底破坏了什么", e:"What the attack actually breaks", n:`
+<p>三栏对照,把上一页的攻击后果说清楚。这一页要讲得<b>克制</b> —— 不要变成恐吓。</p>
+<h3>三栏</h3>
+<ul>
+  <li><b>没有攻击时</b>(灰):一个设计良好的 ISAC 波形,对总速率的损失很小。<b>感知几乎是免费的。</b></li>
+  <li><b>有 DISCO RIS 时</b>(紫):<b>两个功能同时退化</b>,而且受害者<b>没有被干扰信道的知识</b>可以用来纠正。</li>
+  <li><b>什么有帮助</b>(绿):损害是<b>统计性</b>的,所以<b>可以被量化</b> —— 而能被量化的东西,就能被预算。</li>
+</ul>
+<div class="say">注意中间那栏的第二句,那是最狠的地方。<br><br>通常你被干扰了,你至少知道自己被干扰了,可以估计干扰有多强,然后补偿。<br><br>这里不行。因为让你变差的东西是<b>你自己的信道在动</b>,而你测信道的手段本身就已经被污染了。你没有一个干净的参照物。<br><br>但第三栏是这一页真正的教学点,也是为什么我们把它放在架构课里讲。</div>
+<h3>第三栏为什么重要 —— 这是本页的落点</h3>
+<div class="say">"损害是统计性的,所以可以被量化。"<br><br>这不是安慰。这是工程上唯一有用的方向。<br><br>你没法检测这个攻击者 —— 它不发射。但你可以说:在这种攻击下,我的 SINR 分布会变成什么样,我的速率期望会掉多少。<br><br>一旦你能写出这个数,你就能<b>为它留余量</b> —— 设计的时候就假设有人在这么干,然后确保系统在那个条件下还能工作。<br><br>这是安全工程里一个很常见的转向:<b>从"检测并阻止"转到"假设它存在并留出预算"。</b></div>
+<p>三个缩写:ACA = Active Channel Aging,CSI = Channel State Information,MUI = Multi-User Interference。</p>
+`},
+
+{s:"现场", t:"350 公里每小时是个恶劣的无线环境", e:"350 km/h is a hostile radio environment", n:`
+<p>换场景。左边是复兴号 CR400AF。这一页轻松一点,学生喜欢具体的东西。</p>
+<h3>四个困难</h3>
+<ul>
+  <li><b>毫米波什么都挡</b> —— 一个隧道、一片树、一堵声屏障就断。</li>
+  <li><b>多普勒又大又变</b> —— 350 km/h,而且过站时相对速度符号会翻。回到第 8 页:多普勒是感知的信号,但对通信是<b>破坏正交性的东西</b>。同一个物理量,一边是资产一边是负债。</li>
+  <li><b>每几秒切换一次</b> —— 我们讲 RAN 那节课的 handover,在这里是几秒一次。</li>
+  <li><b>轨道本身也要被监视</b> —— 有没有落石、有没有异物、路基有没有形变。</li>
+</ul>
+<div class="say">所以高铁是 ISAC 的一个天然场景:<b>一套系统,既给乘客上网,又盯着这条线</b>。<br><br>如果分成两套 —— 一套通信、一套轨道监测 —— 那就是沿着几千公里的铁路建两套基础设施。合成一套的经济动机极强,比在城市里强得多。</div>
+<h3>橙框那句要解释一下</h3>
+<p>"Rooftop relays turn one hard outdoor link into one easy link plus an indoor problem."</p>
+<div class="say">这句话的意思是:不要让车厢里每个乘客的手机<b>直接</b>去连轨旁的基站 —— 车厢是个金属盒子,信号进不去。<br><br>改成:车顶装一个中继,它负责跟外面那条又快又难的链路打交道;车厢里面用普通的 Wi-Fi。<br><br>一个很难的室外问题,被换成了<b>一个室外问题 + 一个简单的室内问题</b>。这是一个非常通用的工程手法:把难点收敛到一个你能控制的接口上。</div>
+`},
+
+{s:"现场", t:"故意留一个盲区的波束成形", e:"Beamforming with a deliberate blind spot", n:`
+<p>接着高铁场景,但加进了<b>保密</b>。</p>
+<h3>图在说什么</h3>
+<p>ISAC 基站的主瓣打向车顶的移动中继(蓝线,标注 "carriage roof to cabin Wi-Fi")。下方有个<b>窃听者</b>(紫色),基站到它的方向是灰色虚线,标注 <b>"blind region, by design"</b> —— 故意设计出来的盲区。</p>
+<div class="warn">这里学生一定会混淆两个东西,你必须主动区分:<br><br><b>盲区不是覆盖漏洞。</b>它不是因为被挡住了、信号到不了。它是<b>波束设计时故意</b>把那个区域照得很暗,作为一个<b>保密约束</b>写进了优化问题里。<br><br>覆盖漏洞是缺陷,盲区是功能。</div>
+<h3>优化问题的结构</h3>
+<ul>
+  <li><b>两个变量</b>:波束成形矩阵(能量<b>指向哪</b>)+ 波形(能量<b>说什么</b>)。</li>
+  <li><b>四个约束</b>:发射功率、恒模、感知 SINR、盲区。</li>
+</ul>
+<div class="say">"恒模"(constant modulus)这个约束值得说一句,因为它是个硬件现实:功放最省电、最线性的工作方式是<b>幅度恒定</b>。所以很多波形设计被强制要求"每个样点的幅度都一样",只能动相位。<br><br>这是一个典型的例子:优化问题里那些看起来很数学的约束,背后往往是<b>某个具体的器件不答应</b>。</div>
+<h3>落点</h3>
+<p>第 33 页那张总结表里,这一行写的是 "Secrecy is bought with coverage"(保密是用覆盖换来的)。这一页就是那句话的具体版本 —— 你为了不让窃听者听见,主动放弃了那片区域的服务能力。<b>又是一次在前沿上选点。</b></p>
+`},
+
+{s:"现场", t:"同样的论证,换成光", e:"The same argument, in light", n:`
+<p>左边是光通信终端。这一节的作用是<b>证明这套逻辑不依赖无线电</b>。</p>
+<h3>四条对照</h3>
+<ul>
+  <li>LiDAR 已经在用光测距;</li>
+  <li>光链路已经在用光传数据;</li>
+  <li>用的是<b>同一个孔径、同一个探测器、同一束光</b>;</li>
+  <li><b>而且不用跟人争射频牌照</b>。</li>
+</ul>
+<div class="say">看出来了吗,这跟第 2 页是<b>一模一样的论证</b>,只是把雷达换成了 LiDAR,把基站换成了光通信终端。<br><br>两台机器,一片天空。同样的硬件付两遍钱。<br><br>这说明 ISAC 不是"无线电领域的一个技巧",它是一个<b>更一般的想法</b>:任何一个既能传信息又能测距的物理通道,都可以问这个问题。</div>
+<h3>那个 DC 偏置的问答很值得讲</h3>
+<p>问:为什么光系统需要一个直流偏置?</p>
+<p><b>答:因为光强不能是负的。</b></p>
+<div class="say">无线电的信号可以在零上下摆动,正负都行。光不行 —— 你没法发出"负数的亮度"。<br><br>所以你必须先把整个波形<b>抬到零以上</b>,加一个直流偏置。<br><br>代价是:<b>那个偏置消耗的每一瓦功率,都不携带任何信息。</b>它纯粹是为了让波形合法而付的税。<br><br>这一句话到第 28 页会变成一条设计变量,到第 33 页会变成总结表里的一行。</div>
+<p>缩写:FSO = Free Space Optics 自由空间光通信;IM/DD = 强度调制/直接检测;DCO-OFDM = 直流偏置光 OFDM。</p>
+`},
+
+{s:"现场", t:"同一条曲线,画在光子里", e:"The same curve, drawn in photons", n:`
+<p>这一页把光的情况画成曲线,而且<b>形状比数字重要</b>。</p>
+<h3>图在说什么</h3>
+<p>横轴:测距精度(往右越好)。纵轴:频谱效率。曲线一开始<b>很平</b>(标注 "flat: cheap"),然后<b>掉下悬崖</b>(标注 "cliff")。</p>
+<h3>右边四点</h3>
+<ul>
+  <li>直流偏置和各子载波功率一起调;</li>
+  <li><b>速率是目标函数</b>;</li>
+  <li><b>精度是约束条件</b>;</li>
+  <li>两个指标<b>都会饱和</b>。</li>
+</ul>
+<div class="say">注意第二、三点的分工。速率是要最大化的东西,精度是必须满足的门槛。这是工程里常见的处理方式:<b>把两个目标里的一个降级成约束</b>,问题就从"多目标"变成了"单目标 + 约束",可解得多。<br><br>但这一页真正的价值是那个形状。</div>
+<h3>为什么"悬崖"是这一页的重点</h3>
+<div class="say">看这条曲线。左边那一段很平 —— 意思是,<b>在这一段里,你多要一点测距精度,几乎不花钱</b>。频谱效率掉一丁点而已。<br><br>然后到了某个位置,它<b>崖了</b>。再往右一点点,频谱效率断崖式下跌。<br><br>所以橙框那句话:<b>正确的问题从来不是"哪个更好",而是"悬崖在曲线的哪个位置"。</b><br><br>这是我希望你们从这节课带走的第二个思维方式。当有人问你"感知和通信哪个重要",这个问题本身就是错的。对的问法是:我要的那个精度,落在悬崖的哪一边?<br><br>如果在平的那一段,那就拿,几乎免费。如果在悬崖那边,你得非常清楚自己在买什么。</div>
+<p>两个指标都饱和,意味着<b>两头都不划算</b>:太靠左,精度白扔;太靠右,速率断崖。好点在中间。</p>
+`},
+
+{s:"台面", t:"真有人把它搭出来了", e:"Somebody actually built one", n:`
+<p>前面 40 分钟都是优化和曲线。这一节的意义是:<b>这东西真的被人做出来了。</b>左边是 USRP 软件无线电(示意图)。</p>
+<h3>那六条就是这台设备的清单</h3>
+<ul>
+  <li>一台主机 PC 驱动整个台面;</li>
+  <li>一块 FPGA 控制那面表面;</li>
+  <li>USRP 加一个变频器;</li>
+  <li><b>用表面发射</b>;</li>
+  <li><b>用喇叭天线接收</b>;</li>
+  <li>一个目标模块<b>伪造回波</b>。</li>
+</ul>
+<div class="say">这份清单我希望你们注意两件事。<br><br>第一,<b>全是买得到的东西</b>。USRP、FPGA、喇叭天线,这些都是实验室常规器材,不是台积电流片。这意味着这类研究的门槛,你们本科阶段就能碰。<br><br>第二,发射用表面、接收用另一根天线 —— 回到第 7 页,<b>发的和收的不是同一个东西,这就是 ISAC 而不只是 DFRC</b>。</div>
+<h3>橙框那句是这台设备的成果</h3>
+<p>"两个主瓣:一个瞄着用户,一个瞄着目标。<b>一个孔径,同时。</b>"</p>
+<p>"同时"这个词是重点。不是分时切换 —— 不是这一毫秒做通信、下一毫秒做雷达。是同一时刻,同一个天线面,两个波束。这才对得上第 3 页那句"同一次发射"。</p>
+<p>RHS = Reconfigurable Holographic Surface 可重构全息表面;USRP = 通用软件无线电外设;FPGA = 现场可编程门阵列。</p>
+`},
+
+{s:"台面", t:"在暗室里面", e:"Inside the chamber", n:`
+<p>左边是微波暗室(希腊 Democritus 大学的)。学生大概没见过,值得花 30 秒讲这是什么。</p>
+<h3>四条实验条件</h3>
+<ul>
+  <li>暗室约 4 米立方;</li>
+  <li>波瓣分别指向 −50°、0°、20°;</li>
+  <li><b>估出的距离能跟上真值</b>;</li>
+  <li><b>第二个波瓣同时在传真实数据</b>。</li>
+</ul>
+<h3>暗室是什么,以及为什么先在这里做</h3>
+<div class="say">墙上那些尖锥是吸波材料,把打上去的电磁波几乎全吃掉。所以这个房间里<b>几乎没有反射</b> —— 是一个人造的"电磁真空"。<br><br>为什么要先在这里证明?<br><br>因为暗室<b>把所有不是你自己造出来的回波都拿掉了</b>。<br><br>所以逻辑很干净:如果在暗室里感知就失败了,那是<b>你的波形有问题</b>。如果在暗室里成功、到室外失败,那说明<b>世界是那个变量</b> —— 是杂波、多径、别人的信号。<br><br>这是做实验的一个基本功:一次只让一个东西变。先在没有世界的地方证明原理,再把世界加回来。</div>
+<p>这个 demo 拿了 IEEE/CIC ICCC 2024 的最佳演示奖,可以顺口提一句,让学生知道这是被同行认过的工作。</p>
+`},
+
+{s:"台面", t:"实测数字要谦卑得多", e:"Measured numbers are humbler", n:`
+<p><b>这一页要老实讲,不要往好听的方向修饰。</b>这是整节课诚实度最高的一页。</p>
+<h3>实测精度</h3>
+<ul>
+  <li><b>室外测距</b>:目标是一块金属板,量程 4–21 米,<b>精度约 0.425 米</b>。</li>
+  <li><b>室内测角</b>:同一块金属板,范围 −60° 到 +60°,<b>精度约 15°</b>。</li>
+</ul>
+<div class="say">停一下,把这两个数和前面对比一下。<br><br>前面 40 分钟我们在讨论 CRLB、帕累托前沿、逼近最优速率,全是很精致的东西。<br><br>实测:<b>半米,和十五度。</b><br><br>十五度是多少?你伸直手臂,拇指的宽度大约两度。十五度是你七八个拇指并排。这个精度,拿来做自动驾驶是不够的。<br><br>我讲这个不是要否定这项工作 —— 恰恰相反。<b>仿真里的数字和台面上的数字之间有一道很宽的沟,而诚实地报出这道沟,是好研究的标志。</b><br><br>你们以后读论文,看到仿真结果漂亮但没有实测,心里要打个问号。看到实测数字比仿真差一个数量级还照实写出来的,那反而是可信的。</div>
+<h3>下面那个问题要真的让学生答</h3>
+<div class="ask">半米和十五度。<b>这个精度已经能服务哪些应用?</b><br><br>(引导方向:数房间里有几个人 —— 够了。检测有人摔倒 —— 大概够。判断路口有没有车 —— 勉强。自动驾驶避障 —— 远远不够。<br><br>这个练习的价值在于:让学生学会<b>把指标和应用对上</b>,而不是笼统地说"精度不够"。)</div>
+`},
+
+{s:"台面", t:"时钟,截至这次演讲", e:"The clock, as of this talk", n:`
+<p>时间轴,五个阶段。这一页要<b>明确标注哪部分是事实、哪部分是预测</b>。</p>
+<h3>五段</h3>
+<ul>
+  <li><b>2020–23</b>:概念和用例</li>
+  <li><b>2024–26</b>:3GPP Rel-19;试验</li>
+  <li><b>2027–28</b>:频谱政策</li>
+  <li><b>2029–30</b>(橙色):规范和认证</li>
+  <li><b>2031+</b>(绿色):商用铺开</li>
+</ul>
+<div class="warn">这条时间轴<b>不是 3GPP 或 ITU 发布的日程</b>。<br><br>真实的部分:3GPP Release 19 里确实有 ISAC 的研究项目;ITU M.2160 确实把 ISAC 列为 IMT-2030 的使用场景之一。<br><br><b>2027 年往右全是演讲者的预测。</b>幻灯片上那行灰字已经写了这一点,你要念出来。</div>
+<div class="say">我特意把这个界线说清楚,因为这是你们以后会反复遇到的情况。<br><br>技术路线图看起来都很权威 —— 有方框、有箭头、有年份。但里面往往一半是已发生的事,一半是猜的。<br><br>判断方法很简单:<b>问这个日期背后有没有一份文件</b>。Rel-19 有文件。2029 年认证没有。</div>
+<h3>橙框那句值得展开一句</h3>
+<p>"标准化就是权衡从一条曲线变成一个必须有人去认证的数字的地方。"</p>
+<div class="say">这句话把整节课收了个口。<br><br>我们花了一小时讲这是一条曲线,你只能在上面选点。<br><br>但产品不能卖一条曲线。你要卖东西,就得说"我这个的测距精度是 X 米",然后有人拿仪器来验。<br><br>那个 X,就是有人在这条曲线上<b>替所有人选了一个点</b>,然后把它写进了标准。这是这节课的技术内容和第 5 页那个"委员会"接上的地方。</div>
+`},
+
+{s:"收尾", t:"整节课浓缩成一张地图", e:"The whole lecture in one map", n:`
+<p>五行,把这节课讲过的五个场景放在一起,<b>用同一组问题去问</b>:优化了什么,代价是什么。</p>
+<table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:14px">
+<tr><th style="text-align:left;padding:5px;border-bottom:1px solid #ddd">场景</th><th style="text-align:left;padding:5px;border-bottom:1px solid #ddd;color:#2e5bba">优化什么</th><th style="text-align:left;padding:5px;border-bottom:1px solid #ddd;color:#de7a24">代价</th></tr>
+<tr><td style="padding:5px">跨域 OFDM</td><td style="padding:5px">资源元和它们的功率</td><td style="padding:5px">后挑的那方拿剩下的</td></tr>
+<tr><td style="padding:5px">多用户 ODDM</td><td style="padding:5px">每用户功率 vs CRLB</td><td style="padding:5px">复杂度,以及还不存在的硬件</td></tr>
+<tr><td style="padding:5px">RIS-ISAC</td><td style="padding:5px">波束加一面你不拥有的墙</td><td style="padding:5px">攻击者可以拥有那面墙</td></tr>
+<tr><td style="padding:5px">高铁 ISAC</td><td style="padding:5px">带故意盲区的波束成形</td><td style="padding:5px">保密是用覆盖买的</td></tr>
+<tr><td style="padding:5px">FSO-ISAC</td><td style="padding:5px">直流偏置和子载波功率</td><td style="padding:5px">偏置是不载信息的功率</td></tr>
+</table>
+<div class="say">五个完全不同的场景 —— OFDM 格子、多用户、一面墙、一列火车、一束光。<br><br>但你竖着读"代价"这一列,会发现<b>它们是同一个形状</b>。每一行都是:我得到了这个,我付出了那个。<br><br>没有哪一行写着"我们解决了这个权衡"。<b>一行都没有。</b><br><br>五个场景,一个形状。每一个都是在一条前沿上选了一个点。</div>
+<h3>教学提示</h3>
+<p>如果时间只够讲一页收尾,就讲这一页。它把整节课散落的五个案例<b>结构化</b>了 —— 而学生觉得这门课"太分裂"的感觉,恰恰是因为看不到这个共同结构。这一页就是在治那个感觉。</p>
+`},
+
+{s:"收尾", t:"什么其实还没完成", e:"What is actually unfinished", n:`
+<p>诚实地划一条线:哪些已经能建了,哪些还没解决。</p>
+<h3>两栏</h3>
+<ul>
+  <li><b>够成熟可以建了</b>(绿):权衡已经被理解;基于 OFDM 的 ISAC 确实能跑起来;台面存在,而且真的能测出数。</li>
+  <li><b>还开着</b>(橙):杀手级应用;对无源攻击者的安全;用 AI 做波形设计;空-天-地一体化的覆盖。</li>
+</ul>
+<h3>下面那个问答是这节课最后一个思想点</h3>
+<p>问:这四个里面,哪一个<b>不是</b>工程问题?</p>
+<p><b>答:第一个。</b>波形可以被优化,<b>市场不能</b>。ISAC 现在是一个技术在找那个愿意为它付钱的应用。</p>
+<div class="say">这一句我想让你们认真听。<br><br>后面三个 —— 安全、AI 波形、空天地 —— 都是难的工程问题。给足够的时间和人,会有进展。<br><br>第一个不是。"杀手级应用"不是一个能靠聪明解决的问题。<br><br>ISAC 现在的处境是:<b>一个技术上很漂亮、经济上还没找到买家的东西。</b>它能测距、能数人、能追手,但还没有哪一个场景大到能撑起在全网部署它的成本。<br><br>这跟我们讲运营商经济那节课是一回事:每一次架构变化都得有人算得过账。ISAC 的账,现在还没算清。<br><br>这不是说它会失败。5G 刚出来的时候大家也在找杀手级应用。但你们作为工程师要有这个意识:<b>技术成熟和技术被采用,是两件不同的事,后者往往由前者之外的原因决定。</b></div>
+<p>SAGIN = Space–Air–Ground Integrated Network,空天地一体化网络。</p>
+`},
+
+{s:"收尾", t:"课堂作业:在曲线上选一个点", e:"Exit ticket: pick a point on the curve", n:`
+<p>下课前收的小作业。图就是第 16 页那条前沿曲线,<b>故意画成空白的</b>,让学生自己标点。</p>
+<h3>三道题</h3>
+<ol>
+  <li>标出<b>自动驾驶汽车</b>应该坐在哪。再标出<b>车厢 Wi-Fi</b> 应该坐在哪。</li>
+  <li>说出这两个设计会<b>分配得不一样</b>的一种资源。</li>
+  <li>用一句话回答:<b>在你举的例子里,感知让比特付出了什么代价?</b></li>
+</ol>
+<div class="warn">第三题<b>不接受"两个都要"这种答案</b>。整节课的重点就是不能两个都要。如果学生写"both",那说明前沿那一页没讲透。</div>
+<h3>期待的答案大概是</h3>
+<ul>
+  <li><b>自动驾驶</b>:靠<b>左上</b> —— 必须感知优先。测错一个障碍物的后果比视频卡一下严重得多。它宁愿牺牲速率。</li>
+  <li><b>车厢 Wi-Fi</b>:靠<b>右下</b> —— 通信优先。乘客要的是带宽,车厢里没有什么需要它去感知的东西。</li>
+  <li><b>第二题</b>可以答:带宽、功率、时间(照射时长)、波束宽度、RE 分配 —— 任何一个都算对,只要说得出为什么两者会分得不一样。</li>
+</ul>
+<div class="say">交上来之前我要求两件事:<b>图上有一个标出来的点,和一句话。</b><br><br>不要给我一段论述。一个点,一句话。因为如果你真的懂了,一句话就够;如果你写了三段还说不清,那就是还没懂。</div>
+`},
+
+{s:"附录", t:"附录:缩写对照表", e:"Appendix: the acronym decoder ring", n:`
+<p><b>备用页,不在 75 分钟的计划路径里。</b>作用是学生课后复习、或者课上有人问某个缩写时直接翻到。</p>
+<h3>怎么用</h3>
+<p>不要上课念这一页。它的正确用法是:</p>
+<ul>
+  <li>课上有人问"OTFS 到底是什么的缩写",翻到这里指一下,10 秒钟;</li>
+  <li>课后告诉学生"所有缩写都在最后几页,别去网上搜"。</li>
+</ul>
+<div class="say">这门课的缩写密度确实高。我把它们都收在最后了。<br><br>但我要说一句:<b>考试不会考你缩写的全称。</b>我在意的是你知道 ODDM 和 OFDM 的区别在哪、为什么有人要造 ODDM,而不是你能不能背出那四个词。</div>
+<p>表格按 Area 分组:System(ISAC、DFRC、IMT-2030)、Waveform(OFDM、OTFS、ODDM)等等。这个分组本身就有教学价值 —— 它告诉学生这些缩写<b>属于不同的层次</b>,不是一堆平铺的名词。</p>
+`},
+
+{s:"附录", t:"附录:每张图背后的那些量", e:"Appendix: the quantities behind every plot", n:`
+<p>备用页。把这节课出现过的公式和量收在一起。</p>
+<h3>核心的几个</h3>
+<ul>
+  <li><b>时延 → 距离</b>:<code>R = cτ/2</code></li>
+  <li><b>速率</b>:<code>log₂(1 + SINR)</code>,在各 RE 上求和</li>
+  <li><b>CRLB</b>:由 Fisher 信息求逆得到</li>
+  <li><b>PSLR</b>:峰值比旁瓣高多少</li>
+</ul>
+<div class="say">如果有人问"这些是要背的吗" —— 第一个和第二个你应该认识,因为它们说明了物理在哪里。<br><br><code>R = cτ/2</code> 告诉你为什么测距就是测时间。<br><br><code>log₂(1 + SINR)</code> 告诉你为什么干扰会直接吃掉速率 —— 干扰在分母上。这就是第 21 页那个结论的数学形式。<br><br>CRLB 和 Fisher 信息的关系,知道"求逆"这个方向就够了:Fisher 信息越大,CRLB 越小,估计越准。信息多,误差小,符合直觉。</div>
+`},
+
+{s:"附录", t:"附录:什么问题该用什么波形", e:"Appendix: which waveform for which problem", n:`
+<p>备用页,也是最实用的一页 —— 三种波形的<b>选型指南</b>:什么时候用、什么时候别用、成熟度如何。</p>
+<div class="say">如果你们以后真要做这个方向,这一页比前面所有曲线都有用。<br><br>大致的判断是:<br><br><b>OFDM</b> —— 你要今天就跑起来、要和现有设备兼容、目标动得不快。绝大多数情况的正确答案。<br><br><b>OTFS</b> —— 高速移动是你的主要痛点,而且你想挂在现有 OFDM 系统上,不想重做调制器。<br><br><b>ODDM</b> —— 你在写论文,或者你的感知性能要求高到 OTFS 的泄漏无法接受。硬件还没准备好。</div>
+<p>可以顺口告诉学生:第 12 页那张"三种波形三种赌注"是理解性的,这一页是操作性的。两页配起来看。</p>
+`},
+
+{s:"附录", t:"来源与延伸阅读", e:"Sources and further reading", n:`
+<p>最后一页。这节课的内容来自 Zhu Han 教授(休斯顿大学)的 ISAC 报告,以及几篇具体论文。</p>
+<h3>这节课引用的主要工作</h3>
+<ul>
+  <li><b>跨域双功能 OFDM 波形设计</b>,IEEE JSAC 2024 —— 第 17–20 页那一节。</li>
+  <li><b>H. Huang 等,DISCO 物理层干扰下的 ISAC</b>,IEEE WCL 13(11), 2024 —— 第 23–24 页那个攻击。</li>
+  <li><b>P. Li 等,通过 ISAC 实现安全的高铁-地面通信</b>,IEEE IoT J. 11(19), 2024 —— 第 25–26 页。</li>
+  <li><b>IEEE/CIC ICCC 2024 最佳演示奖</b> —— 第 29–31 页那个台面。</li>
+  <li><b>ITU-R M.2160</b>,IMT-2030 框架 (2023) —— 第 5 页。</li>
+</ul>
+<div class="say">下课前一句话:如果这节课里有一件事让你想再往下挖,我建议是第 23 页那个不发射的干扰机。<br><br>那是一个已经被发表、已经被证明可行,而<b>现在还没有好防御手段</b>的攻击。这种题目对本科生做研究是最合适的 —— 问题是真的,而且门还开着。</div>
+<h3>给自己的备注</h3>
+<p>第 32 页那条时间轴是演讲者的预测,每学期讲之前值得重新核一遍 3GPP 的进度。第 20 页那些仿真参数和第 31 页那些实测数字<b>不要动</b>,它们是引用的原始数据。</p>
+`}
+];
+
+const img=document.getElementById('slide'), note=document.getElementById('note'),
+      sec=document.getElementById('sec'), cnt=document.getElementById('count'),
+      bar=document.querySelector('#prog>i'), right=document.getElementById('right');
+let i=0, buf='', bufT=0;
+
+function pad(n){return String(n).padStart(2,'0')}
+
+function draw(){
+  const d=S[i];
+  img.src='pages/p-'+pad(i+1)+'.png';
+  img.alt=d.t;
+  sec.textContent=d.s;
+  cnt.textContent=(i+1)+' / '+S.length;
+  bar.style.width=((i+1)/S.length*100)+'%';
+  note.innerHTML='<h2>'+d.t+'</h2><p class="en">'+d.e+'</p>'+d.n;
+  right.scrollTop=0;
+  try{localStorage.setItem('isac-note-page',i)}catch(e){}
+}
+
+function go(n){ i=Math.max(0,Math.min(S.length-1,n)); draw(); }
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){
+    e.preventDefault(); go(i+1);
+  } else if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'||e.key==='Backspace'){
+    e.preventDefault(); go(i-1);
+  } else if(e.key==='Home'){ e.preventDefault(); go(0); }
+  else if(e.key==='End'){ e.preventDefault(); go(S.length-1); }
+  else if(/^[0-9]$/.test(e.key)){
+    const now=Date.now();
+    buf = (now-bufT<1200) ? buf+e.key : e.key;
+    bufT=now;
+    const n=parseInt(buf,10);
+    if(n>=1&&n<=S.length) go(n-1);
+  }
+});
+
+// click the slide to advance
+document.getElementById('left').addEventListener('click',()=>go(i+1));
+
+let start=0;
+try{ const v=localStorage.getItem('isac-note-page'); if(v!==null) start=parseInt(v,10)||0; }catch(e){}
+go(start);
+</script>
+</body>
+</html>
