@@ -64,7 +64,7 @@
 
   \glossline{EHT = Extremely High Throughput \quad MAC data SAP = MAC data service
     access point, where $\geq$30 Gb/s is measured \quad puncturing = \emph{preamble}
-    puncturing (the IEEE term), not FEC puncturing}
+    puncturing (the IEEE term), unrelated to error-code puncturing}
   \source{https://standards.ieee.org/ieee/802.11be/7516/}{IEEE Std 802.11be-2024}
 \end{frame}
 
@@ -122,7 +122,7 @@
 % to 11a: bond channels, add MIMO (>= 20 Gb/s mode at the MAC data SAP). Then the \qa
 % and the story arc: cable replacement grew into fixed wireless access and backhaul.
 \begin{frame}{802.11ay: a wider, spatial 60 GHz system}
-  \vspace{0.3em}
+  \vspace{0.1em}
   \centering
   % SOURCE (>=20 Gb/s at the MAC data SAP, bonding + MIMO, >45 GHz license-exempt):
   % https://standards.ieee.org/ieee/802.11ay/6142/
@@ -137,19 +137,24 @@
     \draw[flow,very thick] (ad) -- (ay);
   \end{tikzpicture}
 
-  \vspace{0.8em}
-  \begin{itemize}\itemsep4pt
-    \item Bond / aggregate 2.16 GHz channels
-    \item Add MIMO and better beamforming
-    \item Target longer-range outdoor links
+  \vspace{0.4em}
+  % Bonding, MIMO, and the >=20 Gb/s mode live in the diagram boxes above;
+  % the bullets carry only what the diagram does not say.
+  \begin{itemize}\itemsep3pt
+    \item Better beamforming, longer reach
+    \item New jobs: fixed access, backhaul
   \end{itemize}
 
-  \vspace{0.4em}
+  \vspace{0.2em}
   \qa{Who buys a radio that cannot cross a wall?}
      {Anyone replacing a cable: docking, VR tethers, and --- at 11ay
       scale --- fixed wireless access and street-level backhaul.}
 
   \takeaway{60 GHz evolved from cable replacement toward\\
     high-capacity access and backhaul.}
+
+  \glossline{beamforming = shaping the beam with antenna arrays (training finds
+    the direction; beamforming makes the beam) \quad backhaul = the link that
+    carries a site's traffic back into the network}
   \source{https://standards.ieee.org/ieee/802.11ay/6142/}{IEEE Std 802.11ay-2021 (enhancements above 45 GHz); IEEE GEPS smart-cities paper}
 \end{frame}

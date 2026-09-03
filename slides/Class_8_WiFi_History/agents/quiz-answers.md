@@ -32,6 +32,9 @@ Expected: The 802.11a OFDM engine (up to 54 Mb/s) plus the popular 2.4 GHz band 
 ### [04_mimo_era.tex] 802.11n: multipath becomes an asset
 Expected: 40 MHz channel bonding, up to 4 SU-MIMO spatial streams, short guard interval, and A-MPDU aggregation (600 Mb/s = 4 streams × 40 MHz × 64-QAM 5/6 × short GI). Multipath stops being an impairment and becomes parallel spatial streams.
 
+### [04_mimo_era.tex] What "tighter modulation" means
+Expected: A constellation is the set of allowed signal points; more bits per symbol means more points packed closer together in the same space. The same amount of noise can then push a received point onto a neighbor (flip it), so denser constellations are only usable when the signal is cleaner — a higher Signal-to-Noise Ratio.
+
 ### [04_mimo_era.tex] 802.11ac: wider, tighter, more users
 Expected: Wider channels (up to 160/80+80 MHz), tighter modulation (256-QAM, 8 bits), more streams (8 max), and downlink MU-MIMO (shipped in Wave 2 gear — a product-certification wave, not a standards phase). 6.9 Gb/s is a configuration ceiling with every optimistic option at once, not expected application throughput.
 
@@ -57,7 +60,7 @@ Expected: Channel bonding/aggregation of 2.16 GHz channels and MIMO (plus better
 Expected: DSSS/CCK → 802.11b; OFDM → 802.11a/g/n/ac (and the basis of ax/be); OFDMA → the multiuser move of 802.11ax/be; 60 GHz single carrier → 802.11ad, enhanced by 802.11ay.
 
 ### [07_wrap_up.tex] The mainstream branch, b to be
-Expected: Headline maxima are comparison anchors, not promised throughput — standards allow more than typical devices implement. * = 6 GHz operation is in 802.11ax-2021 itself, with availability depending on national regulation (certified as Wi-Fi 6E); † = the ≥30 Gb/s figure is a required mode at the MAC data SAP, while the peak PHY rate is ≈46 Gb/s.
+Expected: Headline maxima are comparison anchors, not promised throughput — standards allow more than typical devices implement. * = 6 GHz operation is in 802.11ax-2021 itself, with availability depending on national regulation (certified as Wi-Fi 6E); † = the ≥30 Gb/s figure is required at the MAC data SAP — the honest counter, i.e., what survives preambles, ACKs, and retries — while the ≈46 Gb/s PHY peak counts raw on-air bits.
 
 ### [07_wrap_up.tex] A PHY rate is a product of optimism
 Expected: Rate ∝ bandwidth × bits/symbol × code rate × spatial streams. Overheads (any two): preamble + pilots (airtime), contention + ACK (MAC), retries (channel loss), TCP/app (protocol overhead).

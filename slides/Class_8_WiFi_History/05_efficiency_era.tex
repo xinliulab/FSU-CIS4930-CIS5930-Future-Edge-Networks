@@ -13,10 +13,9 @@
 % Then run quickly through the rest of the toolbox: UL+DL MU-MIMO, 1024-QAM, BSS
 % coloring (spatial reuse between neighboring cells), TWT (scheduled sleep for IoT).
 \begin{frame}{802.11ax: dense efficiency, not peak}
-  \vspace{0.05em}
   {\large\textbf{Problem:} 200 phones, one small frame at a time.\par}
 
-  \vspace{0.3em}
+  \vspace{0.2em}
   \centering
   % SOURCE (OFDMA RUs, toolbox): https://www.cisco.com/c/en/us/products/collateral/wireless/white-paper-c11-740788.html
   \begin{tikzpicture}[scale=0.9,transform shape]
@@ -37,30 +36,35 @@
       {OFDMA: resource units share one PPDU};
   \end{tikzpicture}
 
-  \vspace{0.5em}
+  \vspace{0.3em}
   \begin{columns}[T,onlytextwidth]
-    \column{0.47\textwidth}
+    \column{0.42\textwidth}
       \small
-      \begin{itemize}\itemsep3pt
+      \begin{itemize}\itemsep2pt
         \item \textbf{OFDMA:} frequency RUs
         \item \textbf{UL + DL MU-MIMO}
-        \item \textbf{1024-QAM:} 10 bits/symbol
+        \item \textbf{1024-QAM:} 10 bits
       \end{itemize}
-    \column{0.47\textwidth}
+    \column{0.53\textwidth}
       \small
-      \begin{itemize}\itemsep3pt
+      \begin{itemize}\itemsep2pt
         \item \textbf{BSS coloring:} ignore faint cells
         \item \textbf{TWT:} the AP schedules naps
       \end{itemize}
   \end{columns}
 
-  \vspace{0.25em}
-  \takeaway{The design target moved: not a bigger single-link headline,\\
-    but high efficiency when many stations share dense airspace.}
+  \vspace{0.1em}
+  % Reconciles coloring with the CSMA/CA slide's "never talk over anyone":
+  % "faint" means too weak to collide at my receiver, so deferring was needless.
+  {\scriptsize\textcolor{softgray}{No contradiction with CSMA/CA: ``faint'' = too
+    weak to collide at my receiver --- coloring skips a needless deferral.}\par}
+
+  \vspace{0.2em}
+  \takeaway{New target: dense efficiency, not a bigger single-link headline.}
 
   \glossline{HE = High Efficiency \quad RU = Resource Unit \quad BSS = Basic Service
-    Set \quad TWT = Target Wake Time \quad UL = uplink \quad coloring = a per-cell
-    tag on frames, so neighbors can talk over faint foreign traffic}
+    Set \quad cell = one AP's coverage (a BSS) \quad TWT = Target Wake Time \quad
+    UL = uplink \quad coloring = a per-cell tag on frames}
   \source{https://www.cisco.com/c/en/us/products/collateral/wireless/white-paper-c11-740788.html}{Cisco 802.11ax white paper; IEEE Std 802.11}
 \end{frame}
 

@@ -2,8 +2,9 @@
 
 \section[MIMO era]{The MIMO Era: n and ac}
 
-% SECTION TIMING: 30:00--38:00 (2 frames). No slack: if running behind, the donor is
-% the ac wider/tighter/more trio walk-through -- read the four bullets, keep the \qa.
+% SECTION TIMING: 30:00--38:00 (3 frames): 11n 240 s + constellation 90 s + ac 150 s.
+% The constellation frame's 90 s came out of the ac trio walk-through (the old donor);
+% if running behind, the remaining donor is the ac bullet walk-through -- keep the \qa.
 
 % Teaching note (240 s): 802.11n is the architectural jump of the mainstream branch.
 % The headline is philosophical: until now multipath was the enemy (see the CP slide);
@@ -60,9 +61,50 @@
   \source{https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html}{IEEE 802.11 interactive timeline; IEEE Std 802.11n-2009}
 \end{frame}
 
-% Teaching note (240 s): use Cisco's memorable trio + one -- wider (up to 160 MHz,
+% Teaching note (90 s): the deck's one stop to explain what "tighter modulation"
+% actually is -- everything else (256/1024/4096-QAM, "high SNR", the wrap-up "which
+% factor fails first?" question) leans on this picture. Point at the orange noise
+% blob: it is the SAME size in both boxes. In 4-QAM it flips nothing; in 16-QAM it
+% reaches the neighbors. That is the entire QAM-vs-SNR tradeoff. Do not derive
+% anything; let the picture do the work.
+\begin{frame}{What ``tighter modulation'' means}
+  \vspace{0.1em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    % 4-QAM: four far-apart points; the noise blob reaches no neighbor.
+    \draw[softgray,rounded corners=2pt] (0,0) rectangle (2,2);
+    \foreach \x in {0.5,1.5} \foreach \y in {0.5,1.5}
+      \fill[ranblue] (\x,\y) circle (2.6pt);
+    \draw[coreorange,dashed,thick] (1.5,0.5) circle (0.34);
+    \node[font=\small\bfseries,text=ranblue] at (1,-0.45) {4-QAM: 2 bits};
+    % 16-QAM: same box, same noise blob -- now it reaches the neighbors.
+    \draw[softgray,rounded corners=2pt] (4,0) rectangle (6,2);
+    \foreach \x in {4.25,4.75,5.25,5.75} \foreach \y in {0.25,0.75,1.25,1.75}
+      \fill[ranblue] (\x,\y) circle (2.2pt);
+    \draw[coreorange,dashed,thick] (5.25,0.75) circle (0.34);
+    \node[font=\small\bfseries,text=ranblue] at (5,-0.45) {16-QAM: 4 bits};
+    \node[font=\scriptsize,text=coreorange,align=center] at (3,-1.15)
+      {same noise blob: harmless when points are far apart,\\
+       fatal when they are dense (conceptual)};
+  \end{tikzpicture}
+
+  \vspace{0.5em}
+  {\normalsize A \textbf{constellation} = the set of allowed signal points.\\
+   More bits per symbol = more points, packed closer --- so noise flips them.\par}
+
+  \vspace{0.4em}
+  \takeaway{Denser needs cleaner: every step up the QAM ladder\\
+    (64 $\to$ 256 $\to$ 1024 $\to$ 4096) demands a higher SNR.}
+
+  \glossline{SNR = Signal-to-Noise Ratio --- how clean the signal is \quad
+    QAM points differ in amplitude and phase \quad noise blob = where the received
+    point may land}
+\end{frame}
+
+% Teaching note (150 s): use Cisco's memorable trio + one -- wider (up to 160 MHz,
 % including 80+80), tighter (256-QAM = 8 coded bits per subcarrier symbol, needs more
-% SNR), more streams (8 at the standard maximum), plus downlink MU-MIMO: the AP talks
+% SNR -- the constellation frame just made that concrete), more streams (8 at the
+% standard maximum), plus downlink MU-MIMO: the AP talks
 % to several clients at once with spatial precoding. DL MU-MIMO is in the 2013
 % standard itself; "Wave 2" is a product-certification wave, not a standards phase --
 % say that aloud so students do not treat Wave 2 as an IEEE milestone. Close with the
