@@ -1,0 +1,93 @@
+%!TEX root = ./main.tex
+
+\section[Wrap-up]{The Design Space}
+
+% SECTION TIMING: 72:00--75:00 (3 frames). Pure synthesis: no new papers, no new
+% numbers, no new claims. Everything here echoes section 01 and the three acts.
+% If Act III ran long, drop frame 2 ("How to read a paper like today's") and speak
+% its three lines over the final frame instead.
+% LAYOUT RULE: every bullet must fit on one line. Shorten the text, do not let it wrap.
+
+% TEACHING NOTE (1:15): read each row as a chant -- point left, say the assumption,
+% point right, say the move. The left column echoes, keyword for keyword, the five
+% assumptions from section 01. Students heard all five already; this frame only lines
+% them up so the pattern is visible at once. Do not re-explain any paper here.
+% Close by saying: the diagram did not change today -- what changed is how much of
+% it you take on faith.
+\begin{frame}{Five assumptions walked in. None walked out.}
+  \vspace{0.3em}
+  \centering
+  \small
+  \renewcommand{\arraystretch}{1.45}
+  \begin{tabular}{@{}l@{\hspace{0.6em}}l@{\hspace{0.6em}}l@{}}
+    \toprule
+    & \textbf{The move} & \textbf{Act} \\
+    \midrule
+    \textbf{On the ground}
+      & Earth \(\to\) orbit
+      & \textcolor{ranblue}{\textbf{I}} \\
+    \textbf{Only a radio}
+      & GPU, AI, antivirus moved in
+      & \textcolor{ranpurple}{\textbf{II}}--\textcolor{attackred}{\textbf{III}} \\
+    \textbf{Transmit, then compute}
+      & the wave computes in flight
+      & \textcolor{ranpurple}{\textbf{II}} \\
+    \textbf{Inside links trusted}
+      & fronthaul is an attack surface
+      & \textcolor{attackred}{\textbf{III}} \\
+    \textbf{Fake base station}
+      & perfect timing instead
+      & \textcolor{attackred}{\textbf{III}} \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.35em}
+  {\scriptsize\textcolor{softgray}{...and one assumption was never even a box:
+   \emph{the cache sits on the ground} (Act I).}\par}
+
+  \vspace{0.35em}
+  \normalsize
+  One synthesis: \textbf{openness} \(\to\) innovation \textbf{and} attack surface.
+
+  \vspace{0.35em}
+  \takeaway{Seven papers and one teaser, one shared trick:\\
+    find the sentence the diagram never says.}
+\end{frame}
+
+% TEACHING NOTE (0:45): deliver as three quick beats, fifteen seconds each. This is
+% the recipe students will reuse in the practicum, so say it like a recipe, not a sermon.
+\begin{frame}{How to read a paper like today's}
+  \vspace{0.8em}
+  \large
+  \begin{enumerate}\itemsep14pt
+    \item Find the \textbf{assumption} it breaks.\\
+      {\small\textcolor{softgray}{Every paper today had exactly one.}}
+    \item Ask what it \textbf{deliberately does not solve}.\\
+      {\small\textcolor{softgray}{That silence is where the next paper lives.}}
+    \item Ask what \textbf{you} would build on top of it.\\
+      {\small\textcolor{softgray}{That question is the whole practicum.}}
+  \end{enumerate}
+
+  \vspace{0.7em}
+  \normalsize
+  Steps 1 and 2 need the paper. Step 3 needs \textbf{you}.
+\end{frame}
+
+% TEACHING NOTE (1:00): let the big line sit in silence for a few seconds before
+% speaking. Then the gear-shift: Classes 2--4 taught how it works; from here the
+% course asks what the students would redesign. Name Sni5Gect last, as the bridge
+% to the practicum, and end there.
+\begin{frame}[plain]
+  \vspace{2.2em}
+  \centering
+  {\huge The 5G architecture diagram\\[0.35em] is \textbf{not the answer}.\par}
+
+  \vspace{1.1em}
+  {\huge It is \textcolor{coreorange}{\textbf{the design space}}.\par}
+
+  \vspace{2.2em}
+  \normalsize\textcolor{softgray}{%
+    Until today, this course taught you how it works.\\[0.25em]
+    From here, it asks what \textit{you} would redesign.\\[0.25em]
+    The paper practicum starts soon --- and Sni5Gect is already on the list.}
+\end{frame}

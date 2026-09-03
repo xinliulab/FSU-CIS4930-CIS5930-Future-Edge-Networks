@@ -1,0 +1,344 @@
+%!TEX root = ./main.tex
+
+\section[Act II: Compute]{Act II: The Base Station Is a Computer}
+
+% SECTION TIMING: 25:00--43:00 (8 frames). Paper C (AoRA) gets 25:00--34:00 across
+% frames 1-4; paper D (MetaAI) gets 34:00--43:00 across frames 5-8. AoRA is a SHORT
+% paper: if time slips, compress frame 2 to its last bullet and keep frame 4 -- the
+% co-scheduling question is the payoff, not the plumbing. For MetaAI, frame 5 is a
+% deliberate pause; do not rush past it to "cover material." If time slips in the
+% MetaAI half, compress frames 6-7 -- frame 8's Q/A is the keeper.
+% LAYOUT RULE: every bullet must fit on one line. Shorten the text, do not let it wrap.
+% No official SIGCOMM'25 talk videos were found for either paper as of Sept 2026;
+% the \papercard DOI links are the canonical pointers. Re-check the ACM SIGCOMM
+% YouTube channel before class -- session recordings sometimes land late.
+
+% ---------------------------------------------------------------------------
+% Paper C: AoRA (SIGCOMM'25 short paper)
+% ---------------------------------------------------------------------------
+
+% Teaching note (2 min): start with: you ask your phone's assistant something and
+% watch the spinner. That spinner is this diagram. Then trace the round trip with
+% your finger, slowly. Ask the class where the GPU is on THEIR diagram from
+% Class 3/4 -- the honest answer is "nowhere," which is exactly assumption 2.
+% Do not name AoRA yet.
+\begin{frame}{The long way to the nearest GPU}
+  \vspace{0.2em}
+  \centering
+  \begin{tikzpicture}[scale=0.88,transform shape,
+      lbl/.style={font=\scriptsize,text=softgray}]
+    \node[netnode,minimum width=1.5cm]  (ue)  at (0,0)    {Phone};
+    \node[netnode,minimum width=1.5cm]  (gnb) at (3.0,0)  {gNB};
+    \node[corenode,minimum width=1.9cm] (mec) at (6.2,0)  {MEC GPU};
+    \node[corenode,minimum width=1.9cm] (cld) at (9.3,0)  {Cloud GPU};
+    \draw[flow] (ue) -- (gnb);
+    \draw[flow] (gnb) -- (mec);
+    \draw[flow] (mec) -- (cld);
+    \node[lbl,anchor=south] at (1.5,0.20)  {air};
+    \node[lbl,anchor=south] at (4.6,0.20)  {backhaul};
+    \node[lbl,anchor=south] at (7.75,0.20) {more network};
+    \draw[flow,dashed,draw=coreorange] (mec) to[bend left=28] (ue);
+    \node[lbl,text=coreorange,anchor=north] at (3.0,-0.85) {the answer walks all the way back};
+  \end{tikzpicture}
+
+  \vspace{0.6em}
+  \normalsize
+  Nearly every network-side ``AI at the edge'' demo still rides this path.
+
+  \vspace{0.3em}
+  The gNB touches every byte --- and \textbf{forwards all of them}.
+
+  \glossline{MEC = Multi-access Edge Computing \quad gNB = the 5G base station}
+
+  \vspace{0.2em}
+  \brokenassumption{The base station is only a radio}{a gNB that moonlights as an AI server}
+\end{frame}
+
+% Teaching note (2 min): this is the Class 4 callback frame. Ask "why would a base
+% station own a GPU in the first place?" before revealing the PHY-acceleration answer.
+% The bars are ILLUSTRATIVE -- say so out loud; there are no measured numbers here.
+\begin{frame}{The accelerator was already in the building}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.52\textwidth}
+      \large\textbf{Class 4, remembered:}
+
+      \vspace{0.3em}
+      \normalsize
+      \begin{itemize}\itemsep5pt
+        \item vRAN runs the PHY as software on servers.
+        \item Those servers increasingly ship GPUs/NPUs for PHY math.
+        \item PHY load rises and falls with traffic.
+        \item The accelerator is \textbf{not always full}.
+      \end{itemize}
+    \column{0.44\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.86,transform shape]
+        \draw[draw=softgray,thick] (0,0) rectangle (1.1,3.0);
+        \fill[ranblue!75] (0,0) rectangle (1.1,0.9);
+        \draw[draw=softgray,thick] (2.0,0) rectangle (3.1,3.0);
+        \fill[ranblue!75] (2.0,0) rectangle (3.1,2.4);
+        \node[font=\scriptsize,align=center] at (0.55,-0.42) {quiet\\hour};
+        \node[font=\scriptsize,align=center] at (2.55,-0.42) {busy\\hour};
+        \node[font=\scriptsize,text=white] at (0.55,0.45) {PHY};
+        \node[font=\scriptsize,text=white] at (2.55,1.2) {PHY};
+        \node[font=\scriptsize,text=softgreen,align=center] at (0.55,1.95) {head-\\room};
+        \node[font=\scriptsize,text=softgreen] at (2.55,2.7) {\(\downarrow\)};
+        \node[font=\tiny,text=softgreen,anchor=west] at (2.75,2.7) {less headroom};
+        \node[font=\tiny,text=softgray] at (1.55,3.3) {one accelerator};
+      \end{tikzpicture}
+
+      \vspace{0.1em}
+      {\scriptsize\textcolor{softgray}{Illustrative shares, not measurements.}\par}
+  \end{columns}
+
+  \glossline{vRAN = virtualized RAN \quad NPU = Neural Processing Unit\\
+    PHY = physical layer: decoding radio waves into bits --- heavy number crunching}
+
+  \vspace{0.05em}
+  \takeaway{Spare accelerator + the best location in the network = a GPU nobody billed for.}
+\end{frame}
+
+% Teaching note (2.5 min): redraw the frame-1 path mentally, then show this one. The
+% point is what DISAPPEARED: the backhaul hop. Short paper -- resist the urge to
+% explain containers or O-RAN interfaces beyond the one bullet.
+\begin{frame}{AoRA: the gNB moonlights as an AI server}
+  \centering
+  \begin{tikzpicture}[scale=0.84,transform shape,
+      lbl/.style={font=\scriptsize,text=softgray}]
+    \node[netnode,minimum width=1.5cm] (ue) at (0,0) {Phone};
+    \node[netnode,minimum width=1.6cm] (radio) at (3.6,0.55) {Radio};
+    \node[oranode,minimum width=1.6cm] (ai) at (3.6,-0.55) {AI server};
+    \begin{scope}[on background layer]
+      \node[draw=ranblue,thick,rounded corners=4pt,fill=blue!3,
+        fit=(radio)(ai),inner sep=6pt,label={[font=\scriptsize\bfseries,
+        text=ranblue]above:base station}] (bs) {};
+    \end{scope}
+    \draw[flow] (ue) -- (bs);
+    \node[lbl,anchor=south] at (1.35,0.18) {air --- and that is it};
+    \draw[flow,dashed,draw=coreorange] (bs.south) to[bend left=25] (ue.south);
+    \node[lbl,text=coreorange,anchor=north] at (1.7,-1.15) {answer, no backhaul};
+  \end{tikzpicture}
+
+  \vspace{0.05em}
+  \normalsize
+  \begin{itemize}\itemsep3pt
+    \item Inference runs in containers on the PHY's spare headroom.
+    \item Built on standard O-RAN interfaces --- the ones you met in Class 4.
+    % SOURCE: https://doi.org/10.1145/3718958.3750517 (abstract): transport latency
+    % reduced by over 30% vs MEC and 70% vs cloud-based setups. Verify against the
+    % PDF before class; figure taken from the abstract text.
+    \item Reported: transport latency cut over 30\% vs MEC, 70\% vs cloud.
+  \end{itemize}
+
+  \glossline{transport latency = the network journey, not the model's compute time}
+
+  \papercard{AoRA: AI-on-RAN for Backhaul-free Edge Inference}
+    {S. Kholmatov, S. Cho, S. Chong, K. Lee --- KAIST and Seoul National University}
+    {ACM SIGCOMM 2025 (short paper)}
+    {https://doi.org/10.1145/3718958.3750517}
+  % SOURCE: https://nxc.snu.ac.kr/publications
+  % URL is youtube.com/watch?v=u9a0ygqsgKs&t=1927s in youtu.be form: a raw "&"
+  % cannot pass through the \watch macro argument.
+  \watch{https://youtu.be/u9a0ygqsgKs?t=1927}{AoRA session recording (SNU NXC) --- verify timestamp}
+\end{frame}
+
+% Teaching note (3 min): THE payoff frame for paper C. Pose the Q, collect answers,
+% then reveal. Most students will say "share it fairly" -- push back: PHY deadlines
+% are microseconds and missing them kills the cell, so "fair" is the wrong frame.
+% End by saying, plainly, that this seam is where course projects live.
+\begin{frame}{Busy hour: who gets the GPU?}
+  \vspace{0.3em}
+  % The answer sits on overlay 2 so the projector does not answer the question
+  % before the class has argued about it.
+  % SOURCE: https://doi.org/10.1145/3718958.3750517 (abstract): "gracefully
+  % falling back to traditional MEC or cloud nodes when local RAN resources
+  % become congested."
+  \qa{When the cell gets busy, who gets the GPU --- the physical layer or the
+      neural network?}
+     {\onslide<2->{The PHY, always. Miss its deadlines and the \textbf{cell
+      itself} fails --- no radio, no anything. AoRA plays it safe: when PHY
+      load spikes, the AI steps aside and falls back to MEC or cloud.}}
+
+  \onslide<2->{%
+  \vspace{0.5em}
+  \normalsize
+  The safe answer is not the \textbf{final} answer:
+
+  \vspace{0.3em}
+  \begin{itemize}\itemsep4pt
+    \item PHY load high \(\rightarrow\) AI gets less. PHY load low \(\rightarrow\) AI gets more.
+    \item Nobody has settled how to schedule that seam, second by second.
+  \end{itemize}
+
+  \vspace{0.4em}
+  \takeaway{Communication--compute co-scheduling is young enough that a student
+    in this room could move it.}}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+% Paper D: MetaAI (SIGCOMM'25)
+% ---------------------------------------------------------------------------
+
+% Teaching note (1.5-2 min): read the question aloud once, then STOP. Count to five
+% in your head before saying anything else. The silence is the slide.
+\begin{frame}[c]{The strangest question of the day}
+  \centering
+  {\Huge\bfseries Can the air itself\\[0.2em] be a computer?}
+
+  \vspace{1.2em}
+  % Overlay 2: the question must stand alone first. Count to five before advancing.
+  \onslide<2->{%
+  \brokenassumption{Data is transmitted first, computed later}
+    {a radio wave that arrives already half-computed}}
+\end{frame}
+
+% Teaching note (3 min): the ONE technical insight of paper D -- deliver each line
+% slowly, one build if you split overlays. The two equations are the whole trick:
+% same sum, one written by nature, one written by PyTorch.
+% Ammo for the sharp student who asks "where's the ReLU?" -- hold that: nature
+% does multiply-add free; the missing nonlinearity is exactly what makes this a
+% first step, not a full network.
+\begin{frame}{Same math, different department}
+  \vspace{0.3em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \centering
+      \large\textbf{What the channel does}
+
+      \vspace{0.6em}
+      {\Large \(y = \sum_i h_i x_i\)}
+
+      \vspace{0.5em}
+      \normalsize
+      Overlapping waves \textbf{add up},\\weighted by their paths.
+
+      \vspace{0.3em}
+      % Micro-picture: what the index i counts -- one ray per reflecting path.
+      \begin{tikzpicture}[scale=0.62,transform shape]
+        \node[netnode,minimum width=1.0cm,minimum height=0.6cm] (tx) at (0,0) {TX};
+        \node[oranode,minimum width=0.5cm,minimum height=0.42cm] (m1) at (2.3,1.0) {};
+        \node[oranode,minimum width=0.5cm,minimum height=0.42cm] (m2) at (2.3,0)   {};
+        \node[oranode,minimum width=0.5cm,minimum height=0.42cm] (m3) at (2.3,-1.0){};
+        \node[netnode,minimum width=1.0cm,minimum height=0.6cm] (rx) at (4.6,0) {RX};
+        \draw[flow] (tx) -- (m1);
+        \draw[flow] (tx) -- (m2);
+        \draw[flow] (tx) -- (m3);
+        \draw[flow] (m1) -- node[above,font=\scriptsize]{\(h_1\)} (rx);
+        \draw[flow] (m2) -- node[above,font=\scriptsize]{\(h_2\)} (rx);
+        \draw[flow] (m3) -- node[below,font=\scriptsize]{\(h_3\)} (rx);
+        \node[font=\tiny,text=softgray] at (2.3,-1.65) {metasurface tiles};
+      \end{tikzpicture}
+
+      \vspace{0.15em}
+      {\scriptsize\textcolor{softgray}{each \(x_i\) = the signal copy riding
+        one path; the tiles set its weight \(h_i\)}\par}
+
+      \vspace{0.15em}
+      \small Physics gives this away free.
+    \column{0.47\textwidth}
+      \centering
+      \large\textbf{What a linear layer does}
+
+      \vspace{0.6em}
+      {\Large \(y = \sum_i w_i x_i\)}
+
+      \vspace{0.5em}
+      \normalsize
+      Inputs \textbf{add up},\\weighted by learned weights.
+
+      \vspace{0.4em}
+      \small GPUs charge for this.
+  \end{columns}
+
+  \vspace{0.4em}
+  \centering
+  \normalsize
+  A \textbf{programmable metasurface} lets software set the \(h_i\).
+
+  \vspace{0.3em}
+  Set \(h_i = w_i\), and \textbf{propagation is the layer}.
+
+  \glossline{\plainterm{Metasurface}{a flat panel of tiny reflectors whose response software can steer}}
+\end{frame}
+
+% Teaching note (2 min): point at what VANISHED between the rows: the GPU box.
+% Communication and computation stop being sequential steps -- they are one
+% physical event. Do not open metasurface design; that is a later class.
+% The protagonist switched from Phone to Sensor on purpose: MetaAI's demo task
+% is recognizing what a sensor sees (simple classification), not chatting --
+% say that aloud so nobody thinks the phone got lost.
+\begin{frame}{MetaAI: the wave arrives partially computed}
+  \vspace{0.2em}
+  \centering
+  \begin{tikzpicture}[scale=0.82,transform shape,
+      lbl/.style={font=\scriptsize,text=softgray}]
+    % Row 1: today
+    \node[lbl,anchor=east] at (-0.4,1.4) {\textbf{Today}};
+    \node[netnode,minimum width=1.5cm]  (s1) at (0.6,1.4)  {Sensor};
+    \node[netnode,minimum width=1.5cm]  (r1) at (3.6,1.4)  {Receiver};
+    \node[corenode,minimum width=1.4cm] (g1) at (6.4,1.4)  {GPU};
+    \node[corenode,minimum width=1.4cm] (n1) at (9.0,1.4)  {NN};
+    \node[lbl,anchor=north] at (9.0,0.98) {neural network};
+    \draw[flow] (s1) -- node[lbl,above]{transmit all} (r1);
+    \draw[flow] (r1) -- (g1);
+    \draw[flow] (g1) -- (n1);
+    % Row 2: MetaAI
+    \node[lbl,anchor=east] at (-0.4,-0.4) {\textbf{MetaAI}};
+    \node[netnode,minimum width=1.5cm] (s2) at (0.6,-0.4) {Sensor};
+    \node[oranode,minimum width=2.5cm,align=center] (m2) at (4.0,-0.4)
+      {metasurface\\{\scriptsize = layer 1}};
+    \node[netnode,minimum width=1.5cm] (r2) at (7.4,-0.4) {Receiver};
+    \draw[flow] (s2) -- node[lbl,above]{wave} (m2);
+    \draw[flow] (m2) -- node[lbl,above]{computed wave} (r2);
+    \node[lbl,anchor=west] at (8.3,-0.4) {answer};
+  \end{tikzpicture}
+
+  \vspace{0.5em}
+  \normalsize
+  Communication and computation stop being \textbf{sequential} steps.
+
+  \vspace{0.2em}
+  They become the \textbf{same physical process}.
+
+  \vspace{0.2em}
+  {\small The receiver reads the summed wave as the layer's output ---
+   then finishes the (small) rest of the network.\par}
+
+  \vspace{0.3em}
+  \papercard{Enabling Over-the-Air AI for Edge Computing via Metasurface-Driven
+      Physical Neural Networks}
+    {C. Feng, S. Liang, C. Li, G. Zhao, B. Jing (Northwest Univ.),
+      Y. Xie (Univ.\ at Buffalo), X. Chen (Northwest Univ.)}
+    {ACM SIGCOMM 2025}
+    {https://doi.org/10.1145/3718958.3750474}
+\end{frame}
+
+% Teaching note (3 min): honesty frame. The wonder was frames 5-7; this one earns the
+% right to it. Students should leave knowing exactly how small the first step is --
+% and that a real SIGCOMM paper can be this small AND this strange at once.
+\begin{frame}{What they built --- honestly}
+  \large\textbf{Real hardware, modest brains:}
+
+  \vspace{0.3em}
+  \normalsize
+  \begin{itemize}\itemsep4pt
+    % SOURCE: https://doi.org/10.1145/3718958.3750474 (abstract): prototypes at
+    % dual-band 2.4/5 GHz and single-band 3.5 GHz.
+    \item Prototypes at 2.4/5 GHz and 3.5 GHz --- Wi-Fi and 5G territory.
+    % SOURCE: https://doi.org/10.1145/3718958.3750474 (abstract): average
+    % recognition accuracy 82.8%, up to 89.8%.
+    \item Average classification accuracy 82.8\%, peaking at 89.8\%.
+    \item Scope today: \textbf{linear} layers, simple recognition tasks.
+    \item This is a first step. It is not GPT-in-the-air.
+  \end{itemize}
+
+  \vspace{0.2em}
+  \qa{82.8\% would fail a Kaggle leaderboard. Why does SIGCOMM care?}
+     {Because the number is not the contribution --- the \textbf{existence proof}
+      is. A neural layer ran on real RF hardware, computed while the wave
+      traveled --- no GPU touched it. Leaderboards come later.}
+
+  \vspace{0.2em}
+  \takeaway{AoRA moved the AI \textbf{into} the box. MetaAI dissolved the box
+    \textbf{into the air}.}
+\end{frame}
