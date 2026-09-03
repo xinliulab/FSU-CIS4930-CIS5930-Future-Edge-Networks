@@ -1,0 +1,202 @@
+%!TEX root = ./main.tex
+
+\section[First speed race]{The First Speed Race: b, a, g}
+
+% SECTION TIMING: 17:00--30:00 (4 frames).
+
+% Teaching note (210 s): start the speed race with 802.11b because DSSS is the most
+% intuitive PHY idea in the deck: replace each symbol with a longer chip pattern, and
+% the receiver correlates against it. Do NOT say CCK "repeats bits" -- it selects
+% complex code words whose phase relationships carry multiple bits while keeping good
+% correlation properties. The famous three non-overlapping 2.4 GHz channels fall out
+% of the numbers on this slide: ~22 MHz occupied width on 5 MHz center spacing.
+\begin{frame}{802.11b: coded spreading at 2.4 GHz}
+  \vspace{0.2em}
+  \centering
+  % SOURCE for 11 Mb/s, ~22 MHz, 2.4 GHz:
+  % https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html
+  % https://standards.ieee.org/ieee/802.11/10548/
+  {\large\textbf{\textcolor{ranblue}{11 Mb/s}} max PHY rate \quad
+   \textbf{$\approx$22 MHz}\ channel \quad \textbf{2.4 GHz}\ band\par}
+
+  \vspace{0.6em}
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \node[netnode,minimum width=2.2cm] (sym) at (0,0) {one symbol};
+    \node[font=\large] at (1.7,0) {$\to$};
+    \foreach \i/\c in {0/+,1/+,2/$-$,3/+,4/$-$,5/$-$,6/+,7/$-$}{
+      \node[draw=ranblue,fill=blue!5,minimum width=0.55cm,minimum height=0.55cm,
+            font=\small\bfseries,inner sep=1pt] at (2.6+\i*0.62,0) {\c};
+    }
+    \node[font=\scriptsize,text=softgray] at (4.75,-0.65)
+      {a patterned chip sequence (conceptual; Barker = 11 chips, CCK = 8 complex chips)};
+  \end{tikzpicture}
+
+  \vspace{0.5em}
+  \begin{itemize}\itemsep3pt
+    % SOURCE: https://standards.ieee.org/ieee/802.11/10548/
+    \item \textbf{1 / 2 Mb/s:} Barker spreading, as in 1997
+    \item \textbf{5.5 / 11 Mb/s:} CCK --- bits live in code-word \emph{phases}
+    \item Receiver knows the pattern --- it digs the signal out of noise
+  \end{itemize}
+
+  \vspace{0.3em}
+  \takeaway{$\approx$22 MHz-wide channels on 5 MHz centers is why\\
+    North America gets only three clean 2.4 GHz channels.}
+
+  \glossline{DSSS = Direct-Sequence Spread Spectrum \quad
+    CCK = Complementary Code Keying \quad chip = one element of the spreading
+    pattern \quad processing gain = the technical name for that noise-digging}
+  \source{https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html}{IEEE 802.11 interactive timeline; IEEE Std 802.11}
+\end{frame}
+
+% Teaching note (210 s): the conceptual jump of the lecture. Explain orthogonality
+% operationally, not mystically, and point at the diagram while doing it: at each
+% dashed sampling line the green dot is the sampled carrier's peak and the gray circle
+% on the axis is where every neighbor sits at exactly zero -- overlap without ideal
+% inter-carrier interference. The comb drawing is conceptual, not a spectrum mask.
+% Mention why 11a still lost the market race to 11b at first: silicon two years late,
+% higher cost, shorter reach, no 11b interoperability.
+\begin{frame}{802.11a: many orthogonal subcarriers}
+  \centering
+  % SOURCE for 54 Mb/s, 20 MHz, 5 GHz, 64-pt FFT, 48+4 subcarriers:
+  % https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html
+  % https://standards.ieee.org/ieee/802.11/10548/
+  {\large\textbf{\textcolor{ranblue}{54 Mb/s}} max rate \quad
+   \textbf{20 MHz}\ channel \quad \textbf{5 GHz}\ band\par}
+
+  \vspace{0.15em}
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \draw[flow] (-1.1,0) -- (4.6,0) node[right,font=\scriptsize]{frequency};
+    % Dashed sampling lines: the sampled carrier peaks (green dot) exactly where
+    % every neighbor crosses zero (gray circle on the axis) -- that is orthogonality.
+    \foreach \s in {1.4,2.1}{
+      \draw[dashed,softgray] (\s,-0.1) -- (\s,0.95);
+      \fill[softgreen] (\s,0.75) circle (2pt);
+      \draw[softgray,thick] (\s,0) circle (1.7pt);
+    }
+    \foreach \c in {0,0.7,1.4,2.1,2.8,3.5}{
+      \draw[ranblue,thick] (\c-0.62,0) .. controls (\c-0.18,1.0)
+        and (\c+0.18,1.0) .. (\c+0.62,0);
+    }
+    \node[font=\scriptsize,text=softgray,align=center] at (1.75,-0.55)
+      {at each dashed sampling line, every neighbor is exactly zero (conceptual)};
+  \end{tikzpicture}
+
+  \vspace{0.1em}
+  {\scriptsize\textcolor{softgray}{You met OFDM in Class 3 (LTE). Wi-Fi got there
+    in 1999 --- same idea, 20 MHz at a time.}\par}
+
+  \vspace{0.1em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \small
+      \begin{itemize}\itemsep2pt
+        \item 64-point FFT
+        \item 48 data + 4 pilot subcarriers
+      \end{itemize}
+    \column{0.47\textwidth}
+      \small
+      \begin{itemize}\itemsep2pt
+        \item BPSK up to 64-QAM
+        \item 6--54 Mb/s rate set
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.1em}
+  % SOURCE (first 802.11a products / Atheros silicon arrived ~2 years after 11b, late 2001):
+  % https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html
+  \qa{If OFDM was better, why did 802.11b win the first round?}
+     {11a silicon shipped $\sim$2 years later (Atheros, late 2001), cost more,
+      crossed walls worse at 5 GHz, and could not talk to the installed 11b
+      base. A great waveform loses to a cheap, entrenched ecosystem --- for
+      a while.}
+
+  \glossline{OFDM = Orthogonal Frequency-Division Multiplexing \quad
+    FFT = Fast Fourier Transform \quad BPSK = Binary Phase-Shift Keying}
+  \source{https://standards.ieee.org/ieee/802.11/10548/}{IEEE Std 802.11 (OFDM PHY); IEEE 802.11 timeline}
+\end{frame}
+
+% Teaching note (150 s): problem first -- indoors, the signal arrives several times
+% (wall echoes), so the tail of one symbol smears into the head of the next. The cyclic
+% prefix copies the symbol's tail in front of it, so echoes land in a region the
+% receiver can discard, and the channel becomes a simple per-subcarrier multiplication
+% (one-tap frequency-domain equalization). This intuition is reused by every OFDM
+% generation after 11a, so spend the minutes here.
+\begin{frame}{Why OFDM needs a cyclic prefix}
+  \vspace{0.1em}
+  {\large\textbf{Problem:} indoor echoes smear one symbol into the next.\par}
+
+  \vspace{0.3em}
+  \centering
+  % SOURCE (CP role, guard interval intuition): https://standards.ieee.org/ieee/802.11/10548/
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \node[draw=softgreen,fill=green!8,minimum width=1.5cm,minimum height=0.8cm,
+          font=\small\bfseries] (cp) at (0,0) {CP};
+    \node[netnode,minimum width=5.6cm,minimum height=0.8cm] (sym) at (3.6,0) {};
+    \node[font=\bfseries] at (2.9,0) {useful OFDM symbol};
+    \node[draw=ranblue,fill=blue!14,minimum width=1.2cm,minimum height=0.8cm,
+          font=\small\bfseries] (tail) at (5.8,0) {tail};
+    \draw[flow,draw=softgreen,very thick] (tail.north)
+      to[bend right=35] node[above,font=\scriptsize,text=softgreen]
+      {copy the tail to the front} (cp.north);
+    \node[font=\scriptsize,text=softgray] at (2.9,-0.75)
+      {echoes land inside the CP, which the receiver discards (conceptual)};
+  \end{tikzpicture}
+
+  \vspace{0.3em}
+  \begin{itemize}\itemsep2pt
+    \item Delay spread becomes a bounded guard region
+    \item Each subcarrier sees one complex gain
+    \item Equalization = one multiply per subcarrier
+  \end{itemize}
+
+  \vspace{0.1em}
+  \takeaway{The cyclic prefix turns multipath smearing into a fixed,\\
+    budgeted overhead --- paid by every OFDM Wi-Fi since 11a.}
+
+  % The alias matters: 802.11n's "short GI" lands cold unless GI is named here first.
+  \glossline{CP = Cyclic Prefix --- Wi-Fi calls this the guard interval (GI) \quad
+    delay spread = arrival-time spread of echoes}
+  \source{https://standards.ieee.org/ieee/802.11/10548/}{IEEE Std 802.11 (OFDM PHY, guard interval)}
+\end{frame}
+
+% Teaching note (150 s): 802.11g is a strategy lesson, not a waveform lesson: take the
+% proven 11a OFDM engine and drop it into the 2.4 GHz band where all the 11b devices
+% already live. Backward compatibility made adoption fast -- and made mixed networks
+% slow, because OFDM stations must send protection frames legacy DSSS stations can
+% hear before using the channel. Good discussion: compatibility always costs airtime.
+% Classroom question worth 60 s: "Where else in computing do you pay rent to an
+% installed base?" (x86, IPv4, USB-A -- take two answers and move on.)
+\begin{frame}{802.11g: the OFDM engine comes home}
+  \vspace{0.3em}
+  \centering
+  % SOURCE: https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html
+  % SOURCE: https://standards.ieee.org/ieee/802.11/10548/
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \node[netnode,minimum width=3.5cm,minimum height=1.15cm] (a) at (0,0)
+      {802.11a engine\\[-2pt]{\scriptsize\mdseries OFDM, up to 54 Mb/s}};
+    \node[font=\Large\bfseries] at (2.45,0) {$+$};
+    \node[netnode,minimum width=3.6cm,minimum height=1.15cm] (b) at (4.9,0)
+      {2.4 GHz neighborhood\\[-2pt]{\scriptsize\mdseries the 802.11b installed base}};
+    \node[draw=softgreen,fill=green!8,rounded corners=3pt,minimum width=3.4cm,
+          minimum height=1.0cm,align=center,font=\bfseries] (g) at (2.45,-1.9)
+      {802.11g (2003)\\[-2pt]{\scriptsize\mdseries 54 Mb/s at 2.4 GHz}};
+    \draw[flow] (a.south) -- (g.west);
+    \draw[flow] (b.south) -- (g.east);
+  \end{tikzpicture}
+
+  \vspace{0.7em}
+  \begin{itemize}\itemsep4pt
+    \item Same OFDM waveform, more popular band
+    \item Legacy 11b stations cannot decode OFDM
+    \item So mixed networks send protection frames first
+  \end{itemize}
+
+  \vspace{0.3em}
+  \takeaway{Backward compatibility bought adoption and cost airtime:\\
+    protection overhead is the rent paid to the installed base.}
+
+  \glossline{protection frame = a short legacy-format announcement that reserves
+    the channel before OFDM speaks}
+  \source{https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html}{IEEE 802.11 interactive timeline; IEEE Std 802.11}
+\end{frame}

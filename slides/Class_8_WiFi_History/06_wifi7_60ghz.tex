@@ -1,0 +1,155 @@
+%!TEX root = ./main.tex
+
+\section[Wi-Fi 7 + 60 GHz]{Wi-Fi 7 and the 60 GHz Branch}
+
+% SECTION TIMING: 48:00--58:00 (3 frames): be 240 s + ad 240 s + ay 120 s = 600 s.
+
+% Teaching note (240 s): 802.11be finally spends the last dimension from the opening
+% table: links. MLO lets one device hold coordinated links on 2.4, 5, and 6 GHz and use
+% them for throughput, load balancing, redundancy, or latency (a retry can jump bands).
+% The rest is the familiar recipe pushed harder: 320 MHz channels (6 GHz band only --
+% nowhere else has the room), 4096-QAM (12 bits, needs pristine SNR), and puncturing --
+% transmit around an occupied subchannel instead of abandoning the whole wide channel.
+% The 30 Gb/s figure is a requirement: at least one mode with >= 30 Gb/s measured at
+% the MAC data service access point (the exact IEEE term; 802.11be-2024).
+\begin{frame}{802.11be: several links act as one}
+  % Keep the \vspace before the brace group: a group directly after {title}
+  % would be eaten as beamer's (undisplayed) subtitle argument.
+  \vspace{0.05em}
+  {\normalsize\textbf{Problem:} one association = one band; a busy band jails
+    every retry.\par}
+
+  \vspace{0.2em}
+  \centering
+  % SOURCE (MLO, 320 MHz, 4096-QAM, puncturing, >=30 Gb/s at the MAC data SAP):
+  % https://standards.ieee.org/ieee/802.11be/7516/
+  \begin{tikzpicture}[scale=0.88,transform shape]
+    \node[netnode,minimum width=1.6cm,minimum height=1.35cm] (ap) at (0,0) {AP};
+    \node[netnode,minimum width=1.6cm,minimum height=1.35cm] (sta) at (6.2,0) {STA};
+    \draw[flow,{Latex[length=2.4mm]}-{Latex[length=2.4mm]},draw=ranblue,very thick]
+      ([yshift=14pt]ap.east) -- node[above,font=\scriptsize,text=ranblue]{2.4 GHz link}
+      ([yshift=14pt]sta.west);
+    \draw[flow,{Latex[length=2.4mm]}-{Latex[length=2.4mm]},draw=ranblue,very thick]
+      (ap.east) -- node[above,font=\scriptsize,text=ranblue]{5 GHz link} (sta.west);
+    \draw[flow,{Latex[length=2.4mm]}-{Latex[length=2.4mm]},draw=softgreen,very thick]
+      ([yshift=-14pt]ap.east) -- node[below,font=\scriptsize,text=softgreen]{6 GHz link}
+      ([yshift=-14pt]sta.west);
+    \node[font=\scriptsize,text=softgray] at (3.1,-1.3)
+      {multi-link operation: one association, several coordinated radios};
+  \end{tikzpicture}
+
+  \vspace{0.25em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \small
+      \begin{itemize}\itemsep3pt
+        \item \textbf{320 MHz} (6 GHz only)
+        \item \textbf{$\geq$30 Gb/s} required mode
+      \end{itemize}
+    \column{0.47\textwidth}
+      \small
+      \begin{itemize}\itemsep3pt
+        % "High SNR" is load-bearing: the wrap-up \ask ("which factor fails
+        % first walking away?") relies on QAM's SNR cost being on a slide.
+        \item \textbf{4096-QAM:} 12 bits, high SNR
+        % Full IEEE term ("preamble puncturing") is in the glossline: the bold
+        % two-word label does not fit a half-width one-line bullet.
+        \item \textbf{Puncturing:} skip busy MHz
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.3em}
+  \takeaway{MLO spends the last resource dimension: links themselves ---\\
+    throughput, balancing, redundancy, or latency, per traffic.}
+
+  \glossline{EHT = Extremely High Throughput \quad MAC data SAP = MAC data service
+    access point, where $\geq$30 Gb/s is measured \quad puncturing = \emph{preamble}
+    puncturing (the IEEE term), not FEC puncturing}
+  \source{https://standards.ieee.org/ieee/802.11be/7516/}{IEEE Std 802.11be-2024}
+\end{frame}
+
+% Teaching note (240 s): switch color: everything 60 GHz is coreorange. Problem first:
+% below 7 GHz, spectrum is crowded and channels top out at 320 MHz. At 60 GHz there is
+% room for 2.16 GHz-wide channels -- an entire order of magnitude -- so multi-gigabit
+% rates come from raw bandwidth, not dense modulation. The price: severe path and
+% penetration loss; walls end the link; range is a room. Antenna gain must be aimed,
+% so transmit and receive sectors are found by beam training. Three PHY modes: control
+% (robust spread BPSK), single-carrier (the practical workhorse, max 4.62 Gb/s), OFDM
+% (optional, ~6.8 Gb/s on paper -- declared obsolete in 802.11-2016, so no shipping
+% WiGig device ever reached 6.8; quote 4.62 as the practical ceiling).
+\begin{frame}{802.11ad: enormous bandwidth at 60 GHz}
+  \vspace{0.2em}
+  \centering
+  % SOURCE for 2.16 GHz channels, three PHY modes, beam training:
+  % https://helpfiles.keysight.com/csg/n7637/Content/Main/802.11ad%20Concepts.htm
+  % https://www.keysight.com/us/en/assets/7018-03292/application-notes/5990-9697.pdf
+  % SOURCE for SC PHY max 4.62 Gb/s and OFDM PHY ~6.8 Gb/s (obsoleted in 802.11-2016):
+  % https://devopedia.org/ieee-802-11ad
+  % https://www.cwnp.com/uploads/802-11alternatephyswhitepaper.pdf
+  {\large\textbf{\textcolor{coreorange}{2.16 GHz}} channel \enspace
+   \textbf{\textcolor{coreorange}{4.62 Gb/s}} SC max rate \enspace
+   \textbf{room-scale} range\par}
+
+  \vspace{0.35em}
+  \begin{tikzpicture}[scale=0.85,transform shape]
+    \node[corenode,minimum width=1.5cm,minimum height=1.0cm] (ap) at (0,0) {AP};
+    \fill[orange!14] (ap.east) -- ++(33:1.8) arc (33:55:1.8) -- cycle;
+    \fill[orange!14] (ap.east) -- ++(-55:1.8) arc (-55:-33:1.8) -- cycle;
+    \fill[orange!45] (ap.east) -- ++(-12:2.1) arc (-12:12:2.1) -- cycle;
+    \node[corenode,minimum width=1.5cm,minimum height=1.0cm] (sta) at (4.0,0) {STA};
+    \node[font=\scriptsize,text=coreorange] at (2.1,1.1) {tried};
+    \node[font=\scriptsize,text=coreorange] at (2.1,-1.1) {tried};
+    \node[font=\scriptsize\bfseries,text=coreorange] at (2.0,0.45) {chosen beam};
+    \node[font=\scriptsize,text=softgray,align=center] at (2.0,-1.75)
+      {severe path loss $\to$ the link closes only with aimed antenna gain\\
+       beam training: sweep sectors, keep the winner (conceptual)};
+  \end{tikzpicture}
+
+  \vspace{0.3em}
+  \begin{itemize}\itemsep2pt
+    \item \textbf{Control PHY:} robust spread BPSK
+    \item \textbf{Single-carrier PHY:} 4.62 Gb/s workhorse
+    \item \textbf{OFDM PHY:} $\approx$6.8 Gb/s option, later obsoleted
+  \end{itemize}
+
+  \vspace{0.2em}
+  \takeaway{Rate from raw bandwidth, not dense modulation. The price:\\
+    walls end the link, and every link must first be aimed.}
+  \source{https://helpfiles.keysight.com/csg/n7637/Content/Main/802.11ad\%20Concepts.htm}{Keysight 802.11ad concepts; CWNP 802.11 alternate PHYs white paper; IEEE Std 802.11}
+\end{frame}
+
+% Teaching note (120 s): one sentence of framing -- 802.11ay is to 11ad what 11n was
+% to 11a: bond channels, add MIMO (>= 20 Gb/s mode at the MAC data SAP). Then the \qa
+% and the story arc: cable replacement grew into fixed wireless access and backhaul.
+\begin{frame}{802.11ay: a wider, spatial 60 GHz system}
+  \vspace{0.3em}
+  \centering
+  % SOURCE (>=20 Gb/s at the MAC data SAP, bonding + MIMO, >45 GHz license-exempt):
+  % https://standards.ieee.org/ieee/802.11ay/6142/
+  % https://standards.ieee.org/wp-content/uploads/import/documents/other/geps_07-iot_smart_cities.pdf
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \node[corenode,minimum width=4.0cm,minimum height=1.3cm] (ad) at (0,0)
+      {802.11ad\\[-2pt]{\scriptsize\mdseries one 2.16 GHz channel}\\[-2pt]
+       {\scriptsize\mdseries directional single link}};
+    \node[corenode,minimum width=4.3cm,minimum height=1.3cm] (ay) at (5.7,0)
+      {802.11ay\\[-2pt]{\scriptsize\mdseries channel bonding + MIMO}\\[-2pt]
+       {\scriptsize\mdseries $\geq$20 Gb/s required mode}};
+    \draw[flow,very thick] (ad) -- (ay);
+  \end{tikzpicture}
+
+  \vspace{0.8em}
+  \begin{itemize}\itemsep4pt
+    \item Bond / aggregate 2.16 GHz channels
+    \item Add MIMO and better beamforming
+    \item Target longer-range outdoor links
+  \end{itemize}
+
+  \vspace{0.4em}
+  \qa{Who buys a radio that cannot cross a wall?}
+     {Anyone replacing a cable: docking, VR tethers, and --- at 11ay
+      scale --- fixed wireless access and street-level backhaul.}
+
+  \takeaway{60 GHz evolved from cable replacement toward\\
+    high-capacity access and backhaul.}
+  \source{https://standards.ieee.org/ieee/802.11ay/6142/}{IEEE Std 802.11ay-2021 (enhancements above 45 GHz); IEEE GEPS smart-cities paper}
+\end{frame}

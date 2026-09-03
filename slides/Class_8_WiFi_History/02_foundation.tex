@@ -1,0 +1,108 @@
+%!TEX root = ./main.tex
+
+\section[Foundation]{The 802.11 Foundation}
+
+% SECTION TIMING: 9:00--17:00 (2 frames). No slack: if running behind, the donor is
+% the "Original PHY choices" column on the 1997 frame -- name the three PHYs and move on.
+
+% Teaching note (240 s): this is the deck's load-bearing diagram. The MAC students
+% recognize -- association, ACKs, CSMA/CA -- has survived since 1997; everything below
+% it has been rewritten repeatedly. Define the PPDU here, once, because every later
+% slide quietly assumes it: the PHY-layer unit actually placed on air. When a later
+% slide says "OFDMA packs four users into one PPDU", this is the box it means.
+\begin{frame}{The 802.11 stack: stable MAC, moving PHY}
+  \centering
+  % SOURCE: https://standards.ieee.org/ieee/802.11/10548/
+  \begin{tikzpicture}[scale=0.84,transform shape]
+    \node[draw=softgray,fill=gray!8,rounded corners=3pt,minimum width=8.2cm,
+          minimum height=0.85cm,align=center] (llc) at (0,0)
+      {\textbf{LLC / IP / applications}\\[-2pt]{\scriptsize outside 802.11}};
+    \node[netnode,minimum width=8.2cm,minimum height=0.95cm,below=0.25cm of llc] (mac)
+      {802.11 MAC\\[-2pt]{\scriptsize\mdseries association \,\textperiodcentered\,
+        framing \,\textperiodcentered\, ACK \,\textperiodcentered\, security
+        \,\textperiodcentered\, CSMA/CA}};
+    \node[netnode,minimum width=8.2cm,minimum height=0.95cm,below=0.25cm of mac] (plcp)
+      {PLCP\\[-2pt]{\scriptsize\mdseries preamble \,\textperiodcentered\, header
+        \,\textperiodcentered\, rate signaling \,\textperiodcentered\, PPDU format}};
+    \node[netnode,minimum width=8.2cm,minimum height=0.95cm,below=0.25cm of plcp] (pmd)
+      {PMD / waveform\\[-2pt]{\scriptsize\mdseries DSSS \,\textperiodcentered\, OFDM
+        \,\textperiodcentered\, MIMO \,\textperiodcentered\, OFDMA
+        \,\textperiodcentered\, single carrier}};
+    \draw[decorate,decoration={brace,amplitude=6pt},thick,softgray]
+      ([xshift=10pt]plcp.north east) -- ([xshift=10pt]pmd.south east)
+      node[midway,right=9pt,align=left,font=\small,text=coreorange]
+      {\textbf{PHY: rebuilt}\\\textbf{every generation}};
+  \end{tikzpicture}
+
+  \vspace{0.4em}
+  \plainterm{PPDU}{= the PHY-layer transmission unit placed on air:
+    preamble + header + payload.}
+
+  \vspace{0.25em}
+  \takeaway{Same family behavior above, different ways to turn\\
+    bits into radio energy below. That split is Wi-Fi's longevity.}
+
+  % PLCP/PMD is the classic 1997-era split; 802.11-2016+ folds both into a unified
+  % PHY clause, and PPDU now expands to "PHY protocol data unit".
+  \glossline{MAC = Medium Access Control \quad PLCP = Physical Layer Convergence
+    Procedure \quad PMD = Physical Medium Dependent \quad (1997 split; later
+    revisions fold PLCP/PMD into one PHY)}
+  \source{https://standards.ieee.org/ieee/802.11/10548/}{IEEE Std 802.11 (MAC and PHY specifications)}
+\end{frame}
+
+% Teaching note (240 s): problem first. Ethernet detects collisions mid-transmission;
+% ask why a radio cannot. Two answers: your own transmitter drowns your receiver, and
+% you cannot hear every station anyway (hidden terminals). So 802.11 avoids instead of
+% detecting: sense, wait DIFS, random backoff, transmit, and demand a positive ACK
+% because silence proves nothing. Optional RTS/CTS handles the hidden-station case.
+% The 1997 rates (1-2 Mb/s) look quaint; the access discipline is still in Wi-Fi 7.
+\begin{frame}{1997 solved shared access before speed}
+  \ask{Ethernet detects collisions mid-send. Why can't a radio?}
+
+  \vspace{0.1em}
+  \centering
+  % SOURCE: https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html
+  % SOURCE: https://standards.ieee.org/ieee/802.11/10548/
+  \begin{tikzpicture}[scale=0.88,transform shape]
+    \node[netnode,minimum width=1.35cm] (s) at (0,0) {sense};
+    \node[netnode,minimum width=1.35cm] (d) at (1.95,0) {DIFS};
+    \node[netnode,minimum width=1.5cm] (b) at (3.95,0) {backoff};
+    \node[netnode,minimum width=1.35cm] (t) at (5.95,0) {DATA};
+    \node[netnode,minimum width=1.35cm,draw=softgreen,fill=green!7] (a) at (7.9,0) {ACK};
+    \draw[flow] (s) -- (d); \draw[flow] (d) -- (b);
+    \draw[flow] (b) -- (t); \draw[flow] (t) -- (a);
+    \node[font=\scriptsize,text=softgray] at (3.95,-0.72)
+      {DIFS (Distributed Inter-Frame Space) = a fixed polite pause after the channel goes quiet};
+  \end{tikzpicture}
+
+  \vspace{0.15em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.42\textwidth}
+      \textbf{Original PHY choices}
+      \vspace{0.2em}
+      \small
+      \begin{itemize}\itemsep2pt
+        % SOURCE: https://standards.ieee.org/ieee/802.11/10548/ (802.11-1997 base standard)
+        \item 1 or 2 Mb/s
+        \item FHSS or DSSS at 2.4 GHz
+        \item Infrared (never shipped)
+      \end{itemize}
+    \column{0.54\textwidth}
+      \textbf{Because a radio\ldots}
+      \vspace{0.2em}
+      \small
+      \begin{itemize}\itemsep2pt
+        \item Own TX deafens own RX
+        \item Not every station is audible
+        \item So: back off, then demand ACK
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.1em}
+  \takeaway{CSMA/CA avoids collisions; it cannot detect them\\
+    while transmitting. Silence proves nothing --- only an ACK does.}
+
+  \glossline{CSMA/CA = Carrier Sense Multiple Access / Collision Avoidance \quad
+    FHSS/DSSS = Frequency-Hopping / Direct-Sequence Spread Spectrum}
+  \source{https://standards.ieee.org/ieee/802.11/10548/}{IEEE Std 802.11-1997 baseline}
+\end{frame}

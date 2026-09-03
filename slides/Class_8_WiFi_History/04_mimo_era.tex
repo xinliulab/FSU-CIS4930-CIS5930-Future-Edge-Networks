@@ -1,0 +1,112 @@
+%!TEX root = ./main.tex
+
+\section[MIMO era]{The MIMO Era: n and ac}
+
+% SECTION TIMING: 30:00--38:00 (2 frames). No slack: if running behind, the donor is
+% the ac wider/tighter/more trio walk-through -- read the four bullets, keep the \qa.
+
+% Teaching note (240 s): 802.11n is the architectural jump of the mainstream branch.
+% The headline is philosophical: until now multipath was the enemy (see the CP slide);
+% with antenna arrays it becomes parallel spatial channels. Walk the four levers in
+% order -- bandwidth (40 MHz bonding), space (up to 4 SU-MIMO streams), symbol time
+% (short guard interval), and MAC efficiency (A-MPDU aggregation, without which the
+% faster PHY just exposes fixed per-frame overhead). The 600 Mb/s ceiling needs all
+% four levers at once; typical clients shipped 1-2 streams.
+\begin{frame}{802.11n: multipath becomes an asset}
+  \vspace{0.2em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \node[netnode,minimum width=1.5cm,minimum height=1.0cm] (ap) at (0,0) {AP};
+    \node[netnode,minimum width=1.5cm,minimum height=1.0cm] (sta) at (5.6,0) {STA};
+    \draw[flow,draw=ranblue,very thick] (ap.east)
+      to[bend left=30] node[above,font=\scriptsize,text=ranblue]{path A: direct} (sta.west);
+    \draw[flow,draw=softgreen,very thick] (ap.east)
+      to[bend right=30] node[below,font=\scriptsize,text=softgreen]{path B: wall echo} (sta.west);
+    \node[font=\scriptsize,text=softgray] at (2.8,-1.35)
+      {more independent paths $\to$ more solvable equations $\to$ more streams (conceptual)};
+  \end{tikzpicture}
+
+  \vspace{0.1em}
+  \plainterm{stream}{= an extra simultaneous data lane through the same channel
+    and band.}
+
+  \vspace{0.6em}
+  % SOURCE for 40 MHz, 4 streams, 600 Mb/s, A-MPDU:
+  % https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html
+  % https://standards.ieee.org/ieee/802.11n/3510/ (IEEE Std 802.11n-2009)
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \small
+      \begin{itemize}\itemsep3pt
+        \item \textbf{40 MHz} channel bonding
+        \item Up to \textbf{4 SU-MIMO} streams
+      \end{itemize}
+    \column{0.47\textwidth}
+      \small
+      \begin{itemize}\itemsep3pt
+        \item Short guard interval
+        \item \textbf{A-MPDU} frame aggregation
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.5em}
+  \takeaway{600 Mb/s ceiling = 4 streams $\times$ 40 MHz $\times$ 64-QAM 5/6\\
+    $\times$ short GI. Typical clients implemented far fewer streams.}
+
+  % GI was expanded on the cyclic-prefix frame; 5/6 is the new symbol needing a gloss.
+  \glossline{SU-MIMO = Single-User MIMO \quad A-MPDU = Aggregated MAC Protocol
+    Data Unit \quad STA = station (client) \quad 5/6 = coding rate --- the data
+    fraction; the rest is error protection}
+  \source{https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html}{IEEE 802.11 interactive timeline; IEEE Std 802.11n-2009}
+\end{frame}
+
+% Teaching note (240 s): use Cisco's memorable trio + one -- wider (up to 160 MHz,
+% including 80+80), tighter (256-QAM = 8 coded bits per subcarrier symbol, needs more
+% SNR), more streams (8 at the standard maximum), plus downlink MU-MIMO: the AP talks
+% to several clients at once with spatial precoding. DL MU-MIMO is in the 2013
+% standard itself; "Wave 2" is a product-certification wave, not a standards phase --
+% say that aloud so students do not treat Wave 2 as an IEEE milestone. Close with the
+% honesty box: 6.9 Gb/s is a configuration ceiling; real laptops on real channels see
+% far less. That caveat gets its own wrap-up slide later.
+\begin{frame}{802.11ac: wider, tighter, more users}
+  \centering
+  % SOURCE for 160 MHz / 80+80, 256-QAM, 8 streams, DL MU-MIMO (Wave 2):
+  % https://www.cisco.com/c/en/us/td/docs/wireless/controller/technotes/8-4/b_cisco_aironet_series_migrating_to802_11_ac.html
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \small
+      \begin{itemize}\itemsep3pt
+        \item \textbf{Wider:} up to 160 (80+80) MHz
+        \item \textbf{Tighter:} 256-QAM (8 bits)
+      \end{itemize}
+    \column{0.47\textwidth}
+      \small
+      \begin{itemize}\itemsep3pt
+        \item \textbf{More streams:} 8 maximum
+        % In the 2013 standard; "Wave 2" is a product-certification wave.
+        \item \textbf{DL MU-MIMO:} Wave 2 gear
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.2em}
+  \begin{tikzpicture}[scale=0.82,transform shape]
+    \node[netnode,minimum width=1.5cm,minimum height=1.0cm] (ap) at (0,0) {AP};
+    \node[netnode,minimum width=1.1cm] (u1) at (4.4,0.95) {U1};
+    \node[netnode,minimum width=1.1cm] (u2) at (4.4,0)   {U2};
+    \node[netnode,minimum width=1.1cm] (u3) at (4.4,-0.95){U3};
+    \draw[flow,draw=ranblue,very thick] (ap) -- (u1);
+    \draw[flow,draw=ranblue,very thick] (ap) -- (u2);
+    \draw[flow,draw=ranblue,very thick] (ap) -- (u3);
+    \node[font=\scriptsize,text=softgray] at (2.2,-1.55)
+      {downlink MU-MIMO: one transmission, several spatially separated users};
+  \end{tikzpicture}
+
+  \vspace{0.1em}
+  \qa{Will any laptop ever see the 6.9 Gb/s on the box?}
+     {No. A maximum PHY rate is a configuration ceiling --- every optimistic
+      option at once --- not expected application throughput.}
+
+  \glossline{MU-MIMO = Multi-User MIMO \quad DL = downlink \quad
+    ``Wave 2'' = a product-certification wave, not a standards phase}
+  \source{https://www.cisco.com/c/en/us/td/docs/wireless/controller/technotes/8-4/b_cisco_aironet_series_migrating_to802_11_ac.html}{Cisco, Migrating to 802.11ac; Cisco 802.11ac throughput testing note}
+\end{frame}

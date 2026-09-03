@@ -1,0 +1,261 @@
+%!TEX root = ./main.tex
+
+\section[Wrap-up]{Wrap-Up: Patterns and Perspective}
+
+% SECTION TIMING: 58:00--75:00 (6 frames). Budget is exact (1020 s) and includes the
+% matching activity on the waveform grid. Designated flex frame: "MAC and security
+% evolved alongside" compresses to 120 s (walk the purple nodes, skip the blue ones).
+% Do NOT cut "Wi-Fi and cellular" -- it is the bridge back to the course.
+
+% Teaching note (180 s): retrieval practice. The gray standard labels are hidden on
+% the first overlay (visible on=<2->), so ask students to match standards to waveform
+% families, THEN advance to reveal: DSSS/CCK -> 11b; OFDM -> 11a/g/n/ac and the basis
+% of ax/be; OFDMA -> the multiuser move of ax/be; 60 GHz single carrier -> 11ad
+% workhorse, enhanced by 11ay. Close on the design lesson: waveform choice follows
+% the channel -- interference, delay spread, available bandwidth, mobility, hardware.
+\begin{frame}{Four waveform ideas explain the PHY story}
+  \vspace{0.2em}
+  \centering
+  % SOURCES: https://standards.ieee.org/ieee/802.11/10548/
+  % https://www.cisco.com/c/en/us/products/collateral/wireless/white-paper-c11-740788.html
+  % https://helpfiles.keysight.com/csg/n7637/Content/Main/802.11ad%20Concepts.htm
+  \begin{tikzpicture}[scale=0.88,transform shape]
+    % DSSS/CCK: chip squares
+    \node[font=\small\bfseries,text=ranblue] at (1.5,2.9) {DSSS / CCK};
+    \foreach \i/\c in {0/+,1/$-$,2/+,3/+,4/$-$}{
+      \node[draw=ranblue,fill=blue!5,minimum width=0.42cm,minimum height=0.42cm,
+            font=\scriptsize,inner sep=0.5pt] at (0.6+\i*0.47,2.2) {\c};
+    }
+    \node[font=\scriptsize,text=softgray] at (1.5,1.6) {spread symbols across chips};
+    \node[font=\tiny,text=softgray,visible on=<2->] at (1.5,1.25) {802.11b};
+    % OFDM comb
+    \node[font=\small\bfseries,text=ranblue] at (6.7,2.9) {OFDM};
+    \foreach \c in {5.6,6.15,6.7,7.25,7.8}{
+      \draw[ranblue,thick] (\c-0.48,2.0) .. controls (\c-0.14,2.55)
+        and (\c+0.14,2.55) .. (\c+0.48,2.0);
+    }
+    \node[font=\scriptsize,text=softgray] at (6.7,1.6) {parallel orthogonal tones};
+    \node[font=\tiny,text=softgray,visible on=<2->] at (6.7,1.25) {802.11a/g/n/ac};
+    % OFDMA grid
+    \node[font=\small\bfseries,text=ranblue] at (1.5,0.4) {OFDMA};
+    \draw[draw=ranblue,fill=blue!12]     (0.35,-0.7) rectangle (1.05,-0.25);
+    \draw[draw=coreorange,fill=orange!14](1.05,-0.7) rectangle (1.95,-0.25);
+    \draw[draw=softgreen,fill=green!10]  (1.95,-0.7) rectangle (2.65,-0.25);
+    \node[font=\scriptsize,text=softgray] at (1.5,-1.15) {assign tone groups to users};
+    \node[font=\tiny,text=softgray,visible on=<2->] at (1.5,-1.5) {802.11ax/be};
+    % 60 GHz single carrier: one very wide band
+    \node[font=\small\bfseries,text=coreorange] at (6.7,0.4) {60 GHz SC};
+    \draw[draw=coreorange,fill=orange!14] (5.15,-0.7) rectangle (8.25,-0.25);
+    \node[font=\scriptsize,text=coreorange] at (6.7,-0.475) {2.16 GHz};
+    \node[font=\scriptsize,text=softgray] at (6.7,-1.15) {very wide directional carrier};
+    \node[font=\tiny,text=softgray,visible on=<2->] at (6.7,-1.5) {802.11ad/ay};
+  \end{tikzpicture}
+
+  \vspace{0.4em}
+  {\scriptsize\textcolor{softgray}{Sketches are conceptual, not calibrated
+    time-domain or spectrum plots.}\par}
+
+  \vspace{0.3em}
+  \takeaway{Waveform choice follows the channel: interference, delay\\
+    spread, bandwidth, mobility, and hardware constraints.}
+  \source{https://standards.ieee.org/ieee/802.11/10548/}{IEEE Std 802.11; Cisco 802.11ax white paper; Keysight 802.11ad concepts}
+\end{frame}
+
+% Teaching note (150 s): treat the maxima as comparison anchors, not promises. The
+% years are standard milestones; certification and shipping dates differ. Standards
+% allow configurations beyond what typical phones and APs implement. Point at how each
+% row's "key PHY idea" maps back to the resource-dimension table from slide one.
+\begin{frame}{The mainstream branch, b to be}
+  \centering
+  % SOURCES for years, bands, widths, and headline maxima:
+  % https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html
+  % https://standards.ieee.org/ieee/802.11/10548/
+  % https://standards.ieee.org/ieee/802.11be/7516/
+  % https://www.cisco.com/c/en/us/support/docs/wireless-mobility/wireless-lan-wlan/212892-802-11ac-wireless-throughput-testing-and.html
+  \small
+  \setlength{\tabcolsep}{4pt}%
+  \begin{tabular}{@{}llllll@{}}
+    \toprule
+    \textbf{802.11} & \textbf{year} & \textbf{GHz} & \textbf{MHz} &
+      \textbf{key PHY idea} & \textbf{headline max} \\
+    \midrule
+    % The "key PHY idea" column is ranblue on purpose: it is the reading path.
+    b  & 1999 & 2.4     & $\approx$22 & \textcolor{ranblue}{CCK}             & 11 Mb/s \\
+    a  & 1999 & 5       & 20          & \textcolor{ranblue}{OFDM}            & 54 Mb/s \\
+    g  & 2003 & 2.4     & 20          & \textcolor{ranblue}{OFDM}            & 54 Mb/s \\
+    n  & 2009 & 2.4/5   & 20/40       & \textcolor{ranblue}{OFDM + MIMO}     & 600 Mb/s \\
+    ac & 2013 & 5       & 20--160     & \textcolor{ranblue}{OFDM + MU-MIMO}  & 6.9 Gb/s \\
+    ax & 2021 & 2.4/5/6* & 20--160    & \textcolor{ranblue}{OFDMA + MU-MIMO} & 9.6 Gb/s \\
+    be & 2024 & 2.4/5/6 & 20--320     & \textcolor{ranblue}{EHT + MLO}       & $\geq$30 Gb/s$^\dagger$ \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.4em}
+  % SOURCE (EHT peak PHY rate ~46 Gb/s at 16 streams x 320 MHz x 4096-QAM):
+  % https://standards.ieee.org/ieee/802.11be/7516/
+  % NOTE: years are amendment approval years; 802.11be was published July 2025.
+  {\scriptsize\textcolor{softgray}{Years are amendment approval; 802.11be published
+    July 2025. \enspace * 6 GHz operation is in 802.11ax-2021; availability depends
+    on national regulation (Wi-Fi 6E). \enspace $\dagger$ Required mode at the MAC
+    data SAP; peak PHY rate $\approx$46 Gb/s.}\par}
+
+  \vspace{0.5em}
+  \takeaway{Maxima are comparison anchors, not promised throughput.\\
+    Standards allow more than typical devices ever implement.}
+  \source{https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html}{IEEE 802.11 timeline; IEEE Std 802.11; IEEE Std 802.11be-2024; Cisco}
+\end{frame}
+
+% Teaching note (180 s): inoculation slide. Every marketing number students will ever
+% read is the product on the top line with every factor at maximum. Walk the factors:
+% wide bandwidth needs available spectrum; high QAM needs high SNR; many streams need
+% antennas and a rich channel; then subtract the overhead column. Ask the closing
+% question live: walking away from the AP, which factor fails first? (Bits/symbol:
+% the constellation backs off as SNR drops.)
+\begin{frame}{A PHY rate is a product of optimism}
+  \vspace{0.3em}
+  \centering
+  % SOURCE (rate factors vs real throughput):
+  % https://www.cisco.com/c/en/us/support/docs/wireless-mobility/wireless-lan-wlan/212892-802-11ac-wireless-throughput-testing-and.html
+  {\large Rate $\propto$
+    \colorbox{blue!8}{\strut bandwidth} $\times$
+    \colorbox{blue!8}{\strut bits/symbol} $\times$
+    \colorbox{blue!8}{\strut code rate} $\times$
+    \colorbox{blue!8}{\strut streams}\par}
+
+  \vspace{0.8em}
+  {\normalsize then subtract, from radio up to application:\par}
+  \vspace{0.4em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.24\textwidth}\centering
+      \textbf{\small preamble + pilots}\\{\scriptsize\color{softgray} airtime overhead}
+    \column{0.24\textwidth}\centering
+      \textbf{\small contention + ACK}\\{\scriptsize\color{softgray} MAC overhead}
+    \column{0.24\textwidth}\centering
+      \textbf{\small retries}\\{\scriptsize\color{softgray} channel loss}
+    \column{0.24\textwidth}\centering
+      \textbf{\small TCP / app}\\{\scriptsize\color{softgray} protocol overhead}
+  \end{columns}
+
+  \vspace{0.9em}
+  \ask{Walking away from the AP, which factor on the top line fails first?}
+
+  \vspace{0.3em}
+  \takeaway{Application throughput is always lower --- and depends on\\
+    distance, interference, client count, and scheduler behavior.}
+  \source{https://www.cisco.com/c/en/us/support/docs/wireless-mobility/wireless-lan-wlan/212892-802-11ac-wireless-throughput-testing-and.html}{Cisco, 802.11ac wireless throughput testing and validation}
+\end{frame}
+
+% Teaching note (180 s): the parallel story the PHY slides skipped. Keep security
+% chronology high-level: WEP was defined in IEEE 802.11-1997 itself (Clause 8) and
+% became widespread with 802.11b-era gear from 1999 -- hence "WEP era" on the 1999
+% tick, not "WEP invented in 1999". It aimed at privacy and was later broken; WPA
+% bridged; 802.11i/WPA2 (CCMP) was the durable redesign; WPA3 (a Wi-Fi Alliance
+% certification, 2018) strengthened authentication with SAE.
+% SOURCE (WEP in 802.11-1997): https://standards.ieee.org/ieee/802.11/1163/
+% Aggregation belongs on this timeline because faster PHYs otherwise expose fixed
+% per-frame overhead. MLO is a MAC coordination story as much as a PHY one: links must
+% be discovered, negotiated, and scheduled. Purple = security, per the deck convention.
+\begin{frame}{MAC and security evolved alongside}
+  \vspace{0.3em}
+  \centering
+  % SOURCES: https://standards.ieee.org/ieee/802.11/10548/
+  % https://www.wi-fi.org/discover-wi-fi/security (WPA/WPA2/WPA3 chronology)
+  % https://standards.ieee.org/ieee/802.11be/7516/
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \draw[flow,very thick] (-0.5,0) -- (10.5,0);
+    \foreach \x/\yr/\name/\what/\col/\side in {
+      0/1997/{CSMA/CA}/{DCF, ACK, RTS/CTS}/ranblue/1,
+      2/1999/{WEP era}/{defined 1997; later broken}/ranpurple/-1,
+      4/2004/{WPA2}/{802.11i / CCMP}/ranpurple/1,
+      6/2009/{aggregation}/{A-MPDU / A-MSDU}/ranblue/-1,
+      8/2018+/{WPA3}/{Wi-Fi Alliance; SAE}/ranpurple/1,
+      10/2024/{MLO}/{coordinate links}/ranblue/-1}{
+      \fill[\col] (\x,0) circle (2.2pt);
+      \node[font=\scriptsize\bfseries,text=\col] at (\x,{0.42*\side}) {\yr};
+      \node[font=\small\bfseries,text=\col] at (\x,{0.95*\side}) {\name};
+      \node[font=\tiny,text=softgray,align=center,text width=1.7cm]
+        at (\x,{1.55*\side}) {\what};
+    }
+  \end{tikzpicture}
+
+  \vspace{0.9em}
+  \takeaway{PHY innovation changes what is possible; MAC innovation\\
+    decides who gets airtime --- and how safely.}
+
+  \glossline{DCF = Distributed Coordination Function \quad WEP/WPA = Wired Equivalent
+    Privacy / Wi-Fi Protected Access \quad CCMP = AES-based encryption of 802.11i \quad
+    SAE = Simultaneous Authentication of Equals}
+  \source{https://standards.ieee.org/ieee/802.11/10548/}{IEEE Std 802.11; Wi-Fi Alliance security overview; IEEE Std 802.11be}
+\end{frame}
+
+% Teaching note (150 s): relate the hour back to Future Edge Networks. Refuse the
+% winner/loser framing out loud: Wi-Fi excels at locally owned, high-capacity access;
+% cellular excels at managed wide-area mobility. Invite student examples: campus
+% offload, AR/VR, industrial links, fixed wireless access, multi-access edge computing.
+\begin{frame}{Wi-Fi and cellular optimize different edges}
+  \vspace{0.3em}
+  % SOURCE: https://standards.ieee.org/wp-content/uploads/import/documents/other/geps_07-iot_smart_cities.pdf
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      {\large\textbf{\textcolor{ranblue}{Wi-Fi}}\par}
+      \vspace{0.4em}
+      \small
+      \begin{itemize}\itemsep4pt
+        \item Unlicensed spectrum
+        \item You own the AP
+        \item Contention-based access
+        \item Very wide local channels
+        \item Rapid device ecosystem
+      \end{itemize}
+    \column{0.47\textwidth}
+      {\large\textbf{\textcolor{coreorange}{Cellular}}\par}
+      \vspace{0.4em}
+      \small
+      \begin{itemize}\itemsep4pt
+        \item Licensed, managed spectrum
+        \item Operator control
+        \item Scheduled access
+        \item Wide-area mobility
+        \item Integrated service guarantees
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.7em}
+  \qa{So which one wins?}
+     {Wrong question. Future edge systems choose, combine, and hand off
+      across both --- campus offload, AR/VR, industrial links, fixed
+      wireless access, and edge computing already do.}
+  \source{https://standards.ieee.org/wp-content/uploads/import/documents/other/geps_07-iot_smart_cities.pdf}{IEEE GEPS, IoT and smart cities perspective}
+\end{frame}
+
+% Teaching note (180 s): the durable takeaway is a reading method, not a letter table.
+% Close by assigning the method: apply the five questions to an amendment we skipped
+% (802.11ah HaLow) or to the one being written now (802.11bn). Suggested oral checks:
+% why can 4096-QAM raise peak rate but reduce robustness? Why can OFDMA improve
+% efficiency without adding bandwidth? Why must 60 GHz be directional?
+\begin{frame}{Read any generation in five questions}
+  \vspace{0.4em}
+  % SOURCES: https://standards.ieee.org/ieee/802.11/10548/
+  % https://standards.ieee.org/ieee/802.11be/7516/
+  \begin{enumerate}\itemsep6pt\large
+    \item What spectrum does it use?
+    \item What does one PPDU look like?
+    \item How are users separated?
+    \item What channel conditions does it assume?
+    \item Which bottleneck moved next?
+  \end{enumerate}
+
+  \vspace{0.6em}
+  \centering
+  {\large\textcolor{ranblue}{b $\to$ a/g $\to$ n $\to$ ac $\to$ ax $\to$ be}
+   \quad\textcolor{coreorange}{(and ad $\to$ ay, off to the side)}\par}
+
+  \vspace{0.4em}
+  % Cashes the tally planted on the opening resource table.
+  {\small\textcolor{softgray}{Question 5's answers were the six rows of our opening
+    table --- each generation spent the next dimension.}\par}
+
+  \vspace{0.4em}
+  \ask{Homework for your intuition: run the five questions\\
+    on 802.11bn, the amendment being written right now.}
+\end{frame}
