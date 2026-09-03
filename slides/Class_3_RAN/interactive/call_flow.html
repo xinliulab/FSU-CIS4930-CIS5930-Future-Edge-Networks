@@ -1,0 +1,653 @@
+<meta charset="utf-8">
+<title>The Call Ladder 1G to 5G</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#FBF8F7; --panel:#FFFFFF; --sunk:#F3EFEE;
+  --ink:#1A1416; --muted:#6B6165; --hair:#E2DAD8;
+  --ran:#2E5BBA; --core:#C56A1D; --garnet:#782F40; --gold:#8A6C38;
+  --warn:#A93B2B; --warnbg:#FBEFEC; --notebg:#F7F1E6;
+  --ranbg:#EDF1FA; --corebg:#FBF0E4;
+  --selbg:#782F40; --selfg:#FFF7F3; --selmuted:#E9C3CC;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#141011; --panel:#1C1719; --sunk:#241D1F;
+    --ink:#F1E9E7; --muted:#A2969A; --hair:#352C2F;
+    --ran:#7CA0EA; --core:#F0973F; --garnet:#E693A6; --gold:#CEB888;
+    --warn:#EE8368; --warnbg:#2E1B18; --notebg:#2A2118;
+    --ranbg:#1B2134; --corebg:#2C1E12;
+    --selbg:#E693A6; --selfg:#261015; --selmuted:#6E2C3B;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#141011; --panel:#1C1719; --sunk:#241D1F;
+  --ink:#F1E9E7; --muted:#A2969A; --hair:#352C2F;
+  --ran:#7CA0EA; --core:#F0973F; --garnet:#E693A6; --gold:#CEB888;
+  --warn:#EE8368; --warnbg:#2E1B18; --notebg:#2A2118;
+  --ranbg:#1B2134; --corebg:#2C1E12;
+  --selbg:#E693A6; --selfg:#261015; --selmuted:#6E2C3B;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px; margin:0 auto; padding:40px 22px 72px}
+
+/* masthead */
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--garnet); margin:0 0 10px;
+}
+h1{
+  font-family:Archivo,sans-serif; font-weight:700; font-size:clamp(34px,5.2vw,52px);
+  line-height:1.02; letter-spacing:-.022em; margin:0; text-wrap:balance;
+}
+h1 em{font-style:normal; color:var(--muted)}
+.standfirst{max-width:62ch; margin:16px 0 0; color:var(--muted); font-size:16.5px}
+.rule{height:2px; background:var(--garnet); margin:26px 0 0; width:72px}
+
+/* generation rail */
+.rail{display:flex; flex-wrap:wrap; gap:8px; margin:30px 0 0}
+.gen{
+  appearance:none; cursor:pointer; background:var(--panel); color:var(--ink);
+  border:1px solid var(--hair); border-radius:2px; padding:9px 15px 10px;
+  font-family:Archivo,sans-serif; font-weight:600; font-size:15px;
+  display:flex; align-items:baseline; gap:9px; transition:border-color .12s,background .12s;
+}
+.gen span{font-family:"IBM Plex Mono",monospace; font-weight:400; font-size:11.5px; color:var(--muted)}
+.gen:hover{border-color:var(--garnet)}
+.gen:focus-visible{outline:2px solid var(--garnet); outline-offset:2px}
+.gen[aria-pressed="true"]{background:var(--selbg); border-color:var(--selbg); color:var(--selfg)}
+.gen[aria-pressed="true"] span{color:var(--selmuted)}
+
+/* panel */
+.panel{margin:26px 0 0}
+.thesis{
+  font-family:Archivo,sans-serif; font-weight:600; font-size:clamp(21px,2.7vw,27px);
+  line-height:1.24; letter-spacing:-.012em; margin:0 0 24px; max-width:28ch; text-wrap:balance;
+}
+.facts{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(232px,1fr));
+  gap:1px; background:var(--hair); border:1px solid var(--hair); margin:0 0 26px;
+}
+.facts>div{background:var(--panel); padding:13px 16px 15px}
+.facts>div.span{grid-column:1/-1}
+.facts dt{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); margin:0 0 5px;
+}
+.facts dd{margin:0; font-size:14.5px}
+.path{font-family:"IBM Plex Mono",monospace; font-size:13px; line-height:2}
+.path b{font-weight:500; padding:3px 7px; border-radius:2px; white-space:nowrap}
+.path .r{color:var(--ran); background:var(--ranbg)}
+.path .c{color:var(--core); background:var(--corebg)}
+.path i{font-style:normal; color:var(--muted); padding:0 3px}
+.path .none{color:var(--muted); font-style:italic; font-family:"IBM Plex Sans",sans-serif}
+
+/* ladder */
+.ladderhead{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  gap:14px; border-top:1px solid var(--hair); padding:18px 0 12px;
+}
+.legend{display:flex; flex-wrap:wrap; gap:16px; font-size:12.5px; color:var(--muted); align-items:center}
+.legend i{display:inline-block; width:22px; height:0; border-top-style:solid; margin-right:7px; vertical-align:middle}
+.legend .sg{border-top-width:1.4px; border-top-color:var(--garnet)}
+.legend .dt{border-top-width:3.4px; border-top-color:var(--ran)}
+.legend .ai{border-top:none; width:14px; height:12px; background:var(--ranbg); border:1px solid var(--hair)}
+.walker{display:flex; gap:6px}
+.walker button{
+  appearance:none; cursor:pointer; background:var(--panel); color:var(--ink);
+  border:1px solid var(--hair); border-radius:2px; padding:6px 12px;
+  font-family:"IBM Plex Mono",monospace; font-size:12px;
+}
+.walker button:hover{border-color:var(--garnet)}
+.walker button:focus-visible{outline:2px solid var(--garnet); outline-offset:2px}
+.walker button[disabled]{opacity:.4; cursor:default}
+
+.scroller{overflow-x:auto; background:var(--panel); border:1px solid var(--hair)}
+svg.ladder{display:block; min-width:840px; width:100%; height:auto}
+svg.ladder text{font-family:"IBM Plex Sans",sans-serif}
+.nodebox{fill:var(--sunk); stroke:var(--hair)}
+.nodebox.ran{fill:var(--ranbg); stroke:var(--ran); stroke-opacity:.45}
+.nodebox.core{fill:var(--corebg); stroke:var(--core); stroke-opacity:.45}
+.nodelabel{font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:500; fill:var(--ink); text-anchor:middle}
+.nodesub{font-size:10px; fill:var(--muted); text-anchor:middle}
+.lifeline{stroke:var(--hair); stroke-width:1}
+.airband{fill:var(--ranbg)}
+.airlabel{font-family:"IBM Plex Mono",monospace; font-size:9.5px; letter-spacing:.1em; fill:var(--ran); text-anchor:middle}
+.phasebar{fill:var(--sunk)}
+.phasetext{font-family:Archivo,sans-serif; font-size:12px; font-weight:600; fill:var(--garnet); letter-spacing:.04em}
+.phasenum{font-family:"IBM Plex Mono",monospace; font-size:11px; fill:var(--muted)}
+.arrow-sig{stroke:var(--garnet); stroke-width:1.4; fill:none}
+.arrow-data{stroke:var(--ran); stroke-width:3.4; fill:none; stroke-linecap:round}
+.head-sig{fill:var(--garnet)}
+.head-data{fill:var(--ran)}
+.msg{font-family:"IBM Plex Mono",monospace; font-size:11.5px; fill:var(--ink); text-anchor:middle}
+.msg.d{fill:var(--ran)}
+.note{font-size:10.5px; fill:var(--muted); text-anchor:middle}
+.selfbox{fill:none; stroke:var(--muted); stroke-width:1; stroke-dasharray:3 2.5}
+.selftext{font-size:11px; fill:var(--muted); font-style:italic}
+.callbg{fill:var(--warnbg)}
+.callbg.n{fill:var(--notebg)}
+.callbar{fill:var(--warn)}
+.callbar.n{fill:var(--gold)}
+.calltitle{font-family:Archivo,sans-serif; font-size:12.5px; font-weight:600; fill:var(--warn)}
+.calltitle.n{fill:var(--gold)}
+.callnote{font-size:11px; fill:var(--muted)}
+.step{cursor:pointer}
+.ladder.walking .step{opacity:.16}
+.ladder.walking .step.active{opacity:1}
+.focusring{fill:none; stroke:var(--garnet); stroke-width:1.5; stroke-dasharray:4 3; opacity:0}
+.step.active .focusring{opacity:.7}
+
+.readout{
+  border:1px solid var(--hair); border-top:none; background:var(--sunk);
+  padding:14px 18px; font-size:13.5px; min-height:70px;
+}
+.readout .k{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+.readout .m{font-family:"IBM Plex Mono",monospace; font-size:14px; margin-top:3px}
+.readout .n{color:var(--muted); margin-top:3px; max-width:80ch}
+
+/* closing */
+.close{margin:56px 0 0; border-top:1px solid var(--hair); padding-top:34px}
+h2{font-family:Archivo,sans-serif; font-weight:700; font-size:26px; letter-spacing:-.015em; margin:0 0 6px}
+.close p.lede{color:var(--muted); max-width:58ch; margin:0 0 24px}
+.splits{display:grid; gap:1px; background:var(--hair); border:1px solid var(--hair)}
+.split{
+  background:var(--panel); display:grid; gap:4px 18px; padding:14px 18px;
+  grid-template-columns:58px minmax(0,1fr);
+}
+.split .when{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--muted); padding-top:3px}
+.split .body{display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 10px}
+.split .one{font-family:Archivo,sans-serif; font-weight:600; font-size:15px}
+.split .to{color:var(--garnet); font-family:"IBM Plex Mono",monospace}
+.split .two{font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--muted)}
+.split .two b{color:var(--ink); font-weight:500}
+.kicker{
+  margin:24px 0 0; font-family:Archivo,sans-serif; font-weight:600;
+  font-size:clamp(19px,2.4vw,24px); line-height:1.3; max-width:26ch; text-wrap:balance;
+}
+.kicker b{color:var(--garnet); font-weight:600}
+footer{margin:44px 0 0; padding-top:18px; border-top:1px solid var(--hair); font-size:12.5px; color:var(--muted); max-width:70ch}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">CIS4930 / CIS5930 &middot; Future Edge Networks &middot; Class 3/4</p>
+  <h1>The Call Ladder<br><em>1G to 5G</em></h1>
+  <p class="standfirst">Every generation answers the same six questions: find a cell, ask for access,
+    prove identity, get radio resources, carry the traffic, and move without dropping. What changes is
+    which box answers which question. Pick a generation and walk the messages one at a time.</p>
+  <div class="rule"></div>
+
+  <div class="rail" id="rail" role="group" aria-label="Choose a generation"></div>
+
+  <div class="panel">
+    <p class="thesis" id="thesis"></p>
+    <dl class="facts" id="facts"></dl>
+
+    <div class="ladderhead">
+      <div class="legend">
+        <span><i class="sg"></i>signalling &mdash; control plane</span>
+        <span><i class="dt"></i>traffic &mdash; user plane</span>
+        <span><i class="ai"></i>over the air</span>
+      </div>
+      <div class="walker">
+        <button id="prev" type="button">&larr; back</button>
+        <button id="next" type="button">step &rarr;</button>
+        <button id="all" type="button">show all</button>
+      </div>
+    </div>
+
+    <div class="scroller"><svg class="ladder" id="ladder" role="img" aria-label="Sequence of signalling and traffic messages between the phone, the base station and the core network"></svg></div>
+    <div class="readout" id="readout"></div>
+  </div>
+
+  <section class="close">
+    <h2>One rule, four times</h2>
+    <p class="lede">The node names look like unrelated trivia until you notice that every
+      architectural change since 1991 cuts along the same seam.</p>
+    <div class="splits">
+      <div class="split"><div class="when">2G</div><div class="body">
+        <span class="one">Base station</span><span class="to">&rarr;</span>
+        <span class="two"><b>BTS</b> holds the radio &nbsp;+&nbsp; <b>BSC</b> decides which channel</span></div></div>
+      <div class="split"><div class="when">2001</div><div class="body">
+        <span class="one">MSC</span><span class="to">&rarr;</span>
+        <span class="two"><b>MSC Server</b> decides &nbsp;+&nbsp; <b>Media Gateway</b> carries the voice</span></div></div>
+      <div class="split"><div class="when">4G</div><div class="body">
+        <span class="one">Packet core</span><span class="to">&rarr;</span>
+        <span class="two"><b>MME</b> decides &nbsp;+&nbsp; <b>S-GW / P-GW</b> carry the packets</span></div></div>
+      <div class="split"><div class="when">5G</div><div class="body">
+        <span class="one">Control plane</span><span class="to">&rarr;</span>
+        <span class="two"><b>AMF</b> for access and mobility &nbsp;+&nbsp; <b>SMF</b> for sessions</span></div></div>
+      <div class="split"><div class="when">5G</div><div class="body">
+        <span class="one">gNodeB</span><span class="to">&rarr;</span>
+        <span class="two"><b>RU</b> on the tower &nbsp;+&nbsp; <b>DU</b> in the cabinet &nbsp;+&nbsp; <b>CU</b> in a data centre</span></div></div>
+    </div>
+    <p class="kicker">Each split separates <b>what decides</b> from <b>what carries</b>.
+      Learn that seam and the acronyms stop being a vocabulary test.</p>
+  </section>
+
+  <footer>Node and message names follow 3GPP terminology for each generation. Simplified for
+    teaching: paging, retransmissions, roaming interfaces and most optional steps are left out.</footer>
+</div>
+
+<script>
+var GENS = [
+{
+  id:"1g", name:"1G", years:"1983",
+  thesis:"A radio channel, welded to the telephone network.",
+  facts:[
+    ["Era","1983 to the mid 1990s (AMPS)"],
+    ["Radio","Analog FM, one 30 kHz channel per call"],
+    ["Identity","A phone number and a serial number, claimed but never checked"],
+    ["The new idea","Cells and handoff: the switch follows you between towers"]
+  ],
+  voice:[["Phone",""],["Cell site","r"],["MTSO","c"],["PSTN",""]],
+  data:null,
+  lanes:[{id:"ue",l:"Phone",s:"the handset"},{id:"bs",l:"Cell site",s:"radio",k:"ran"},
+         {id:"mtso",l:"MTSO",s:"the switch",k:"core"},{id:"pstn",l:"PSTN",s:"landline network"}],
+  steps:[
+    {p:"Find a cell"},
+    {f:"ue",t:"ue",k:"self",m:"scan the control channels, camp on the strongest"},
+    {f:"ue",t:"bs",k:"sig",m:"Registration (MIN + ESN)",n:"your number and your serial number, in the clear"},
+    {f:"bs",t:"mtso",k:"sig",m:"forward the registration"},
+    {p:"Prove identity"},
+    {k:"gap",m:"There is nothing to prove.",n:"The MTSO compares MIN and ESN against a list. Transmit the right pair and you are that subscriber, which is why cloning became an industry."},
+    {p:"Set up the path"},
+    {f:"ue",t:"bs",k:"sig",m:"Origination (MIN, ESN, dialled digits)"},
+    {f:"bs",t:"mtso",k:"sig",m:"call request"},
+    {f:"mtso",t:"pstn",k:"sig",m:"seize a trunk, dial out"},
+    {f:"mtso",t:"bs",k:"sig",m:"assign a voice channel"},
+    {f:"bs",t:"ue",k:"sig",m:"Channel Designation",n:"the phone retunes to an FM pair and keeps it"},
+    {p:"Carry the call"},
+    {f:"ue",t:"bs",k:"data",m:"analog FM voice",n:"the channel is yours for the whole call, talking or not"},
+    {f:"bs",t:"mtso",k:"data",m:"voice trunk"},
+    {f:"mtso",t:"pstn",k:"data",m:"through to the called party"},
+    {p:"Move"},
+    {f:"bs",t:"mtso",k:"sig",m:"signal strength measurements"},
+    {f:"mtso",t:"ue",k:"sig",m:"handoff: retune now",n:"a burst that interrupts the audio, which is the click you used to hear"},
+    {p:"Send data"},
+    {k:"gap",m:"There is no data path at all.",n:"Everything you can do is a voice channel. A modem could ride on top of it, badly."}
+  ]
+},
+{
+  id:"2g", name:"2G", years:"1991",
+  thesis:"Digital voice, a card that proves who you are, and data bolted on the side.",
+  facts:[
+    ["Era","1991 onward (GSM); GPRS data from about 2000"],
+    ["Radio","Digital TDMA, eight calls per 200 kHz carrier"],
+    ["Identity","The SIM proves itself to the network. The network proves nothing back."],
+    ["The new idea","Identity lives on a removable card, not in the handset"]
+  ],
+  voice:[["Phone",""],["BTS / BSC","r"],["MSC","c"],["PSTN",""]],
+  data:[["Phone",""],["BSS","r"],["SGSN","c"],["GGSN","c"],["Internet",""]],
+  lanes:[{id:"ms",l:"Phone",s:"+ SIM"},{id:"bss",l:"BTS / BSC",s:"radio + control",k:"ran"},
+         {id:"msc",l:"MSC / VLR",s:"voice switch",k:"core"},{id:"hlr",l:"HLR / AuC",s:"the key vault",k:"core"},
+         {id:"gprs",l:"SGSN / GGSN",s:"packet sidecar",k:"core"},{id:"ext",l:"PSTN / Internet",s:"destination"}],
+  steps:[
+    {p:"Find a cell"},
+    {f:"ms",t:"ms",k:"self",m:"read the broadcast channel, pick a cell"},
+    {f:"ms",t:"bss",k:"sig",m:"Channel Request (RACH)"},
+    {f:"bss",t:"ms",k:"sig",m:"Immediate Assignment (a signalling channel)"},
+    {f:"ms",t:"msc",k:"sig",m:"Location Update (TMSI, or IMSI)",n:"with no temporary identity yet, the permanent IMSI goes out in the clear"},
+    {p:"Prove identity"},
+    {f:"msc",t:"hlr",k:"sig",m:"send authentication triplets"},
+    {f:"hlr",t:"msc",k:"sig",m:"RAND, SRES, Kc",n:"the subscriber key Ki never leaves the AuC or the SIM"},
+    {f:"msc",t:"ms",k:"sig",m:"Authentication Request (RAND)"},
+    {f:"ms",t:"ms",k:"self",m:"the SIM computes SRES and the cipher key Kc from Ki"},
+    {f:"ms",t:"msc",k:"sig",m:"Authentication Response (SRES)"},
+    {f:"msc",t:"ms",k:"sig",m:"Cipher Mode Command (A5, key Kc)"},
+    {k:"gap",m:"One direction only.",n:"The phone proved itself; the network proved nothing. A fake tower can ask for your IMSI and then tell you to switch ciphering off."},
+    {p:"Set up the call"},
+    {f:"ms",t:"msc",k:"sig",m:"Setup (dialled digits)"},
+    {f:"msc",t:"bss",k:"sig",m:"Assignment Request"},
+    {f:"bss",t:"ms",k:"sig",m:"Assignment Command (traffic channel)"},
+    {f:"msc",t:"ext",k:"sig",m:"call setup over SS7"},
+    {f:"msc",t:"ms",k:"sig",m:"Connect"},
+    {p:"Carry the call"},
+    {f:"ms",t:"bss",k:"data",m:"13 kbit/s coded voice, ciphered"},
+    {f:"bss",t:"msc",k:"data",m:"a circuit, held for the whole call"},
+    {f:"msc",t:"ext",k:"data",m:"through to the called party"},
+    {p:"Send data (GPRS)"},
+    {f:"ms",t:"gprs",k:"sig",m:"GPRS Attach",n:"a second attach, to a second set of boxes, with its own state"},
+    {f:"ms",t:"gprs",k:"sig",m:"Activate PDP Context"},
+    {f:"gprs",t:"ms",k:"sig",m:"IP address, allocated by the GGSN"},
+    {f:"ms",t:"bss",k:"data",m:"IP packets"},
+    {f:"bss",t:"gprs",k:"data",m:"tunnelled to the SGSN, then the GGSN"},
+    {f:"gprs",t:"ext",k:"data",m:"out to the Internet"},
+    {k:"note",m:"Voice and data are now two different networks.",n:"Different boxes, different state, different billing. Everything after this is an attempt to merge them again."},
+    {p:"Move"},
+    {f:"ms",t:"bss",k:"sig",m:"measurement reports"},
+    {f:"bss",t:"ms",k:"sig",m:"Handover Command",n:"the network decides; the phone only reports what it hears"}
+  ]
+},
+{
+  id:"3g", name:"3G", years:"2001",
+  thesis:"The phone finally gets to check the network back.",
+  facts:[
+    ["Era","2001 onward (UMTS / WCDMA)"],
+    ["Radio","WCDMA: everyone shares 5 MHz, separated by codes"],
+    ["Identity","Mutual authentication, plus integrity protection on signalling"],
+    ["The new idea","The USIM verifies the network before it answers"]
+  ],
+  voice:[["UE",""],["NodeB / RNC","r"],["MSC","c"],["PSTN",""]],
+  data:[["UE",""],["NodeB / RNC","r"],["SGSN","c"],["GGSN","c"],["Internet",""]],
+  lanes:[{id:"ue",l:"UE",s:"+ USIM"},{id:"ran",l:"NodeB / RNC",s:"radio + control",k:"ran"},
+         {id:"msc",l:"MSC",s:"voice domain",k:"core"},{id:"hlr",l:"HLR / AuC",s:"the key vault",k:"core"},
+         {id:"ps",l:"SGSN / GGSN",s:"packet domain",k:"core"},{id:"ext",l:"PSTN / Internet",s:"destination"}],
+  steps:[
+    {p:"Find a cell"},
+    {f:"ue",t:"ue",k:"self",m:"read system information, pick a cell"},
+    {f:"ue",t:"ran",k:"sig",m:"RRC Connection Request"},
+    {f:"ran",t:"ue",k:"sig",m:"RRC Connection Setup"},
+    {p:"Prove identity, both ways"},
+    {f:"msc",t:"hlr",k:"sig",m:"request authentication vectors"},
+    {f:"hlr",t:"msc",k:"sig",m:"RAND, XRES, CK, IK, AUTN",n:"five values now instead of three, and AUTN is the network's own proof"},
+    {f:"msc",t:"ue",k:"sig",m:"Authentication Request (RAND, AUTN)"},
+    {f:"ue",t:"ue",k:"self",m:"the USIM checks AUTN: is this network real, and is this challenge fresh?"},
+    {f:"ue",t:"msc",k:"sig",m:"Authentication Response (RES)"},
+    {f:"msc",t:"ue",k:"sig",m:"Security Mode Command (ciphering + integrity)"},
+    {k:"note",m:"The phone can now refuse a fake network.",n:"Integrity protection also means a signalling message cannot be quietly rewritten in flight."},
+    {k:"gap",m:"First contact is still unprotected.",n:"Broadcasts are unauthenticated, and the network can still ask for the permanent identity in the clear."},
+    {p:"Make a call (still circuit switched)"},
+    {f:"ue",t:"ran",k:"sig",m:"call setup"},
+    {f:"ran",t:"msc",k:"sig",m:"through to the voice switch"},
+    {f:"msc",t:"ext",k:"sig",m:"trunk to the PSTN"},
+    {f:"ue",t:"ran",k:"data",m:"AMR voice on a dedicated channel"},
+    {f:"ran",t:"msc",k:"data",m:"a circuit, exactly as in 2G"},
+    {f:"msc",t:"ext",k:"data",m:"through to the called party"},
+    {p:"Send data (packet switched)"},
+    {f:"ue",t:"ps",k:"sig",m:"Activate PDP Context"},
+    {f:"ps",t:"ue",k:"sig",m:"IP address, allocated by the GGSN"},
+    {f:"ue",t:"ran",k:"data",m:"IP packets"},
+    {f:"ran",t:"ps",k:"data",m:"tunnelled through the core"},
+    {f:"ps",t:"ext",k:"data",m:"out to the Internet"},
+    {k:"note",m:"Two networks in one trench coat.",n:"The circuit domain and the packet domain run side by side on the same radio, with separate boxes and separate state."},
+    {p:"Move"},
+    {f:"ue",t:"ran",k:"sig",m:"soft handover: two NodeBs at once",n:"the RNC combines both copies, so there is no break in the call"}
+  ]
+},
+{
+  id:"4g", name:"4G", years:"2009",
+  thesis:"One IP network, and the box that decides stops touching your packets.",
+  facts:[
+    ["Era","2009 onward (LTE / EPS)"],
+    ["Radio","OFDMA, scheduled every millisecond"],
+    ["Identity","EPS-AKA; the keys are bound to the network you are standing in"],
+    ["The new idea","Control plane and user plane become different boxes"]
+  ],
+  voice:[["UE",""],["eNodeB","r"],["S-GW / P-GW","c"],["IMS","c"],["far end",""]],
+  data:[["UE",""],["eNodeB","r"],["S-GW","c"],["P-GW","c"],["Internet",""]],
+  lanes:[{id:"ue",l:"UE",s:"your phone"},{id:"enb",l:"eNodeB",s:"one box now",k:"ran"},
+         {id:"mme",l:"MME",s:"control only",k:"core"},{id:"hss",l:"HSS",s:"subscriber data",k:"core"},
+         {id:"gw",l:"S-GW / P-GW",s:"user plane",k:"core"},{id:"ims",l:"IMS",s:"voice as a service",k:"core"},
+         {id:"net",l:"Internet",s:"destination"}],
+  steps:[
+    {p:"Find a cell"},
+    {f:"ue",t:"ue",k:"self",m:"sync on the sync signals, read the broadcast"},
+    {f:"ue",t:"enb",k:"sig",m:"RACH preamble, then RRC Connection Setup"},
+    {f:"ue",t:"mme",k:"sig",m:"Attach Request",n:"carried inside RRC and then over S1; the eNodeB only relays it"},
+    {p:"Prove identity"},
+    {f:"mme",t:"hss",k:"sig",m:"Authentication Information Request"},
+    {f:"hss",t:"mme",k:"sig",m:"RAND, AUTN, XRES, K_ASME"},
+    {f:"mme",t:"ue",k:"sig",m:"Authentication Request (RAND, AUTN)"},
+    {f:"ue",t:"mme",k:"sig",m:"Authentication Response (RES)"},
+    {f:"mme",t:"ue",k:"sig",m:"NAS Security Mode Command",n:"the keys are tied to this serving network, so they cannot be replayed elsewhere"},
+    {f:"mme",t:"enb",k:"sig",m:"turn on ciphering for the radio bearers"},
+    {p:"Set up the path"},
+    {f:"mme",t:"hss",k:"sig",m:"Update Location"},
+    {f:"hss",t:"mme",k:"sig",m:"subscription profile"},
+    {f:"mme",t:"gw",k:"sig",m:"Create Session Request",n:"the S-GW passes it on to the P-GW"},
+    {f:"gw",t:"mme",k:"sig",m:"your IP address + tunnel endpoints",n:"the P-GW allocates the address and applies the policy rules"},
+    {f:"mme",t:"enb",k:"sig",m:"Initial Context Setup",n:"the MME hands the tunnel IDs to the base station and steps out of the way"},
+    {f:"enb",t:"ue",k:"sig",m:"RRC Reconfiguration: your data bearer is up"},
+    {k:"note",m:"The MME never touches a user packet.",n:"That is the whole point of 4G. Decisions go one way, packets go another, and each side scales on its own."},
+    {p:"Send data"},
+    {f:"ue",t:"enb",k:"data",m:"IP packets on the radio bearer"},
+    {f:"enb",t:"gw",k:"data",m:"GTP tunnel to the S-GW"},
+    {f:"gw",t:"net",k:"data",m:"out through the P-GW"},
+    {p:"Make a call"},
+    {f:"ue",t:"ims",k:"sig",m:"SIP INVITE on a guaranteed bearer",n:"VoLTE: a phone call is now an IP session with a reserved lane"},
+    {f:"ims",t:"ue",k:"sig",m:"session established"},
+    {f:"ue",t:"gw",k:"data",m:"voice packets, through the same gateways"},
+    {f:"gw",t:"ims",k:"data",m:"on towards the far end"},
+    {k:"gap",m:"Early LTE could not carry a call at all.",n:"The phone dropped down to 2G or 3G to dial, then climbed back. That fallback is part of why the old generations stayed switched on for years."},
+    {p:"Move"},
+    {f:"enb",t:"ue",k:"sig",m:"Handover Command",n:"two eNodeBs can hand you over directly and tell the MME afterwards"}
+  ]
+},
+{
+  id:"5g", name:"5G", years:"2019",
+  thesis:"The core becomes software services, and the base station becomes three boxes.",
+  facts:[
+    ["Era","2019 onward (5G standalone)"],
+    ["Radio","NR: flexible spacing, steerable beams, 600 MHz up to mmWave"],
+    ["Identity","5G-AKA with a concealed identity; the home network gets the final say"],
+    ["The new idea","The control plane splits again, and the user plane can move to the edge"]
+  ],
+  voice:[["UE",""],["gNB","r"],["UPF","c"],["IMS","c"],["far end",""]],
+  data:[["UE",""],["gNB","r"],["UPF","c"],["data network",""]],
+  lanes:[{id:"ue",l:"UE",s:"your phone"},{id:"gnb",l:"gNB",s:"RU + DU + CU",k:"ran"},
+         {id:"amf",l:"AMF",s:"access + mobility",k:"core"},{id:"ausf",l:"AUSF / UDM",s:"identity",k:"core"},
+         {id:"smf",l:"SMF",s:"sessions",k:"core"},{id:"upf",l:"UPF",s:"carries packets",k:"core"},
+         {id:"dn",l:"Data network",s:"destination"}],
+  steps:[
+    {p:"Find a cell"},
+    {f:"gnb",t:"gnb",k:"self",m:"sweep the sync beams across the sector"},
+    {f:"ue",t:"gnb",k:"sig",m:"RACH on the best beam, then RRC Setup"},
+    {f:"ue",t:"amf",k:"sig",m:"Registration Request (SUCI)",n:"the permanent identity, encrypted with the home network public key"},
+    {p:"Prove identity"},
+    {f:"amf",t:"ausf",k:"sig",m:"start authentication"},
+    {f:"ausf",t:"ausf",k:"self",m:"the UDM unwraps SUCI back to the real identity and builds a vector"},
+    {f:"amf",t:"ue",k:"sig",m:"Authentication Request (RAND, AUTN)"},
+    {f:"ue",t:"amf",k:"sig",m:"Authentication Response (RES*)"},
+    {f:"amf",t:"ausf",k:"sig",m:"confirm the response",n:"the home network decides, not just the network you happen to be standing in"},
+    {f:"amf",t:"ue",k:"sig",m:"NAS security up, temporary identity assigned"},
+    {k:"note",m:"This is the IMSI catcher fix.",n:"The permanent identity never crosses the air unencrypted. Forcing the phone down to an older generation still works."},
+    {p:"Set up the path"},
+    {f:"ue",t:"amf",k:"sig",m:"PDU Session Establishment Request"},
+    {f:"amf",t:"smf",k:"sig",m:"forward it to the session manager",n:"the AMF does not manage sessions any more, it only forwards"},
+    {f:"smf",t:"upf",k:"sig",m:"install the forwarding rules (N4)",n:"the SMF decides where packets go, the UPF is what actually moves them"},
+    {f:"smf",t:"ue",k:"sig",m:"your IP address"},
+    {f:"amf",t:"gnb",k:"sig",m:"set up the radio bearer and the N3 tunnel"},
+    {p:"Send data"},
+    {f:"ue",t:"gnb",k:"data",m:"IP packets"},
+    {f:"gnb",t:"upf",k:"data",m:"N3 tunnel"},
+    {f:"upf",t:"dn",k:"data",m:"out through N6"},
+    {k:"note",m:"This is where the word edge earns its keep.",n:"Nothing says the UPF sits in a central data centre. Put it beside the tower and the round trip collapses."},
+    {p:"Make a call"},
+    {f:"ue",t:"upf",k:"data",m:"voice over NR, to the IMS behind the UPF",n:"where the operator has not deployed it, the phone falls back to LTE just to make the call"},
+    {p:"The catch"},
+    {k:"gap",m:"On a non-standalone network none of this runs.",n:"NSA keeps LTE and the 4G core for control and bolts the 5G radio on for extra capacity. The icon still says 5G."}
+  ]
+}
+];
+
+var W=980, PAD=56, HDR_H=46, ROW=32, ROW_N=46, PH=30, CALL=50, CALL_N=64;
+var cur=0, walk=-1, stepEls=[], stepData=[];
+
+function el(n,a,txt){
+  var e=document.createElementNS("http://www.w3.org/2000/svg",n);
+  for(var k in a) e.setAttribute(k,a[k]);
+  if(txt!=null) e.textContent=txt;
+  return e;
+}
+
+function buildRail(){
+  var rail=document.getElementById("rail");
+  GENS.forEach(function(g,i){
+    var b=document.createElement("button");
+    b.className="gen"; b.type="button";
+    b.innerHTML=g.name+" <span>"+g.years+"</span>";
+    b.onclick=function(){ cur=i; walk=-1; render(); };
+    rail.appendChild(b);
+  });
+}
+
+function pathHtml(rows){
+  if(!rows) return "<span class=\"none\">no data path exists in this generation</span>";
+  return rows.map(function(r,i){
+    var cls=r[1]==="r"?" class=\"r\"":(r[1]==="c"?" class=\"c\"":"");
+    return (i?"<i>&rarr;</i>":"")+"<b"+cls+">"+r[0]+"</b>";
+  }).join("");
+}
+
+function render(){
+  var g=GENS[cur];
+  var btns=document.querySelectorAll(".gen");
+  for(var i=0;i<btns.length;i++) btns[i].setAttribute("aria-pressed", i===cur?"true":"false");
+  document.getElementById("thesis").textContent=g.thesis;
+
+  var f=document.getElementById("facts");
+  f.innerHTML="";
+  g.facts.forEach(function(row){
+    var d=document.createElement("div");
+    d.innerHTML="<dt>"+row[0]+"</dt><dd>"+row[1]+"</dd>";
+    f.appendChild(d);
+  });
+  var vp=document.createElement("div"); vp.className="span";
+  vp.innerHTML="<dt>Where your voice goes</dt><dd class=\"path\">"+pathHtml(g.voice)+"</dd>";
+  f.appendChild(vp);
+  var dp=document.createElement("div"); dp.className="span";
+  dp.innerHTML="<dt>Where your data goes</dt><dd class=\"path\">"+pathHtml(g.data)+"</dd>";
+  f.appendChild(dp);
+
+  drawLadder(g);
+}
+
+function drawLadder(g){
+  var svg=document.getElementById("ladder");
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+  stepEls=[]; stepData=[];
+
+  var n=g.lanes.length, span=(W-2*PAD)/(n-1), X={};
+  g.lanes.forEach(function(L,i){ X[L.id]=PAD+i*span; });
+
+  var y=HDR_H+18, ys=[];
+  g.steps.forEach(function(s){
+    ys.push(y);
+    if(s.p) y+=PH+8;
+    else if(s.k==="gap"||s.k==="note") y+=(s.n?CALL_N:CALL)+8;
+    else y+=(s.n?ROW_N:ROW);
+  });
+  var H=y+20;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);
+
+  var defs=el("defs");
+  ["sig","data"].forEach(function(k){
+    var m=el("marker",{id:"h-"+k,viewBox:"0 0 8 8",refX:"7",refY:"4",
+      markerWidth:"7",markerHeight:"7",orient:"auto"});
+    m.appendChild(el("polygon",{points:"0,0.6 8,4 0,7.4","class":"head-"+k}));
+    defs.appendChild(m);
+  });
+  svg.appendChild(defs);
+
+  var x0=X[g.lanes[0].id], x1=X[g.lanes[1].id];
+  svg.appendChild(el("rect",{x:x0,y:HDR_H+4,width:x1-x0,height:H-HDR_H-12,"class":"airband"}));
+  svg.appendChild(el("text",{x:(x0+x1)/2,y:HDR_H+15,"class":"airlabel"},"OVER THE AIR"));
+
+  g.lanes.forEach(function(L){
+    var x=X[L.id], bw=Math.min(span-8,136);
+    svg.appendChild(el("rect",{x:x-bw/2,y:4,width:bw,height:HDR_H-12,rx:2,
+      "class":"nodebox"+(L.k?" "+L.k:"")}));
+    svg.appendChild(el("text",{x:x,y:21,"class":"nodelabel"},L.l));
+    svg.appendChild(el("text",{x:x,y:32,"class":"nodesub"},L.s));
+    svg.appendChild(el("line",{x1:x,y1:HDR_H+4,x2:x,y2:H-8,"class":"lifeline"}));
+  });
+
+  var pn=0, sn=0;
+  g.steps.forEach(function(s,i){
+    var top=ys[i], grp=el("g");
+
+    if(s.p){
+      pn++;
+      grp.appendChild(el("rect",{x:14,y:top,width:W-28,height:PH,rx:2,"class":"phasebar"}));
+      grp.appendChild(el("text",{x:26,y:top+19,"class":"phasenum"},String(pn)));
+      grp.appendChild(el("text",{x:46,y:top+19,"class":"phasetext"},s.p.toUpperCase()));
+      svg.appendChild(grp);
+      return;
+    }
+
+    if(s.k==="gap"||s.k==="note"){
+      var h=s.n?CALL_N:CALL, nn=(s.k==="note"?" n":"");
+      grp.appendChild(el("rect",{x:14,y:top,width:W-28,height:h,rx:2,"class":"callbg"+nn}));
+      grp.appendChild(el("rect",{x:14,y:top,width:3.5,height:h,"class":"callbar"+nn}));
+      grp.appendChild(el("text",{x:30,y:top+21,"class":"calltitle"+nn},s.m));
+      if(s.n) grp.appendChild(el("text",{x:30,y:top+41,"class":"callnote"},s.n));
+      grp.appendChild(el("rect",{x:11,y:top-3,width:W-22,height:h+6,rx:3,"class":"focusring"}));
+    }
+    else if(s.k==="self"){
+      var xs=X[s.f], yb=top+(s.n?24:17);
+      grp.appendChild(el("path",{d:"M"+xs+" "+(yb-10)+" h22 v20 h-22","class":"selfbox"}));
+      grp.appendChild(el("text",{x:xs+30,y:yb+5,"class":"selftext"},s.m));
+      grp.appendChild(el("rect",{x:xs-7,y:top-3,width:W-xs-8,height:(s.n?ROW_N:ROW)+2,rx:3,"class":"focusring"}));
+    }
+    else{
+      var xa=X[s.f], xb=X[s.t], mid=(xa+xb)/2;
+      var yl=top+(s.n?24:20), dir=xb>xa?1:-1;
+      grp.appendChild(el("text",{x:mid,y:yl-7,"class":"msg"+(s.k==="data"?" d":"")},s.m));
+      grp.appendChild(el("line",{x1:xa,y1:yl,x2:xb-dir*8,y2:yl,
+        "class":"arrow-"+s.k,"marker-end":"url(#h-"+s.k+")"}));
+      if(s.n) grp.appendChild(el("text",{x:mid,y:yl+15,"class":"note"},s.n));
+      var lo=Math.min(xa,xb)-12, hi=Math.max(xa,xb)+12;
+      grp.appendChild(el("rect",{x:lo,y:top-3,width:hi-lo,height:(s.n?ROW_N:ROW)+2,rx:3,"class":"focusring"}));
+    }
+
+    sn++;
+    grp.setAttribute("class","step");
+    var idx=stepEls.length;
+    grp.addEventListener("click",function(){ walk=idx; paint(); });
+    stepEls.push(grp); stepData.push({s:s,n:sn});
+    svg.appendChild(grp);
+  });
+  paint();
+}
+
+function paint(){
+  var svg=document.getElementById("ladder");
+  if(walk>=0) svg.classList.add("walking"); else svg.classList.remove("walking");
+  stepEls.forEach(function(e,i){
+    if(i===walk) e.setAttribute("class","step active"); else e.setAttribute("class","step");
+  });
+  document.getElementById("prev").disabled = walk<=0;
+  document.getElementById("next").disabled = walk>=stepEls.length-1;
+  showReadout();
+}
+
+function showReadout(){
+  var r=document.getElementById("readout");
+  if(walk<0){
+    r.innerHTML="<div class=\"k\">"+stepEls.length+" messages in this exchange</div>"+
+      "<div class=\"n\">Click any arrow to isolate it, or press <b>step</b> to walk the whole "+
+      "exchange one message at a time. The left and right arrow keys work too.</div>";
+    return;
+  }
+  var d=stepData[walk], s=d.s;
+  var kind = s.k==="data" ? "user plane, your traffic"
+           : s.k==="sig"  ? "control plane, signalling"
+           : s.k==="self" ? "inside one box, nothing on the wire"
+           : s.k==="gap"  ? "what is missing"
+           : "what it means";
+  r.innerHTML="<div class=\"k\">step "+d.n+" of "+stepEls.length+" &middot; "+kind+"</div>"+
+    "<div class=\"m\">"+s.m+"</div>"+(s.n?"<div class=\"n\">"+s.n+"</div>":"");
+}
+
+document.getElementById("next").onclick=function(){ walk=Math.min(walk+1,stepEls.length-1); paint(); };
+document.getElementById("prev").onclick=function(){ walk=Math.max(walk-1,0); paint(); };
+document.getElementById("all").onclick=function(){ walk=-1; paint(); };
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"){ walk=Math.min(walk+1,stepEls.length-1); paint(); e.preventDefault(); }
+  else if(e.key==="ArrowLeft"){ walk=Math.max(walk-1,0); paint(); e.preventDefault(); }
+  else if(e.key==="Escape"){ walk=-1; paint(); }
+});
+
+buildRail();
+render();
+</script>
