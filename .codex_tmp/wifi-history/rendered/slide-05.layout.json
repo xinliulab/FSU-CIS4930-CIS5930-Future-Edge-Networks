@@ -1,0 +1,1094 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/of8won",
+    "id": "of8won",
+    "slide": 5,
+    "layoutId": "88355e5f-2091-40c9-9c71-1ce016e1609f",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "7438c458-da20-4728-8c64-7b980c5f62a5",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#FFFFFF",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "+mn-lt"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "88355e5f-2091-40c9-9c71-1ce016e1609f",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "7438c458-da20-4728-8c64-7b980c5f62a5",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "7438c458-da20-4728-8c64-7b980c5f62a5",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/xs3m1cfm",
+      "id": "1",
+      "name": "kicker",
+      "bbox": [
+        54,
+        30,
+        500,
+        24
+      ],
+      "geometry": "rect",
+      "text": "WI-FI HISTORY",
+      "textPreview": "WI-FI HISTORY",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 13,
+        "typeface": "+mn-lt",
+        "color": "#5D6470",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "WI-FI HISTORY"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "WI-FI HISTORY",
+          "resolvedTextStyle": {
+            "fontSize": 13,
+            "color": "#5D6470",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "WI-FI HISTORY",
+              "fontSize": 13,
+              "color": "#5D6470",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/apc36xwv",
+      "id": "2",
+      "name": "slide-title",
+      "bbox": [
+        54,
+        61,
+        1172,
+        56
+      ],
+      "geometry": "rect",
+      "text": "The recognizable 802.11 protocol lives above changing PHYs",
+      "textPreview": "The recognizable 802.11 protocol lives above changing PHYs",
+      "resolvedFontSize": 35,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 35,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The recognizable 802.11 protocol lives above changing PHYs"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The recognizable 802.11 protocol lives above changing PHYs",
+          "resolvedTextStyle": {
+            "fontSize": 35,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The recognizable 802.11 protocol lives above changing PHYs",
+              "fontSize": 35,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/vql4z2xg",
+      "id": "3",
+      "name": "rule",
+      "bbox": [
+        54,
+        126,
+        1172,
+        2
+      ],
+      "geometry": "rect",
+      "fillColor": "#B8BCC4",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/kve5c7ed",
+      "id": "4",
+      "name": "page",
+      "bbox": [
+        1170,
+        684,
+        52,
+        18
+      ],
+      "geometry": "rect",
+      "text": "05",
+      "textPreview": "05",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 12,
+        "typeface": "+mn-lt",
+        "color": "#5D6470",
+        "alignment": "right",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "05"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "05",
+          "resolvedTextStyle": {
+            "fontSize": 12,
+            "color": "#5D6470",
+            "alignment": "right"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "05",
+              "fontSize": 12,
+              "color": "#5D6470",
+              "alignment": "right"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/5wnm5cfi",
+      "id": "5",
+      "name": "box",
+      "bbox": [
+        90,
+        170,
+        700,
+        78
+      ],
+      "geometry": "rect",
+      "fillColor": "#F5F5F5",
+      "lineColor": "#FFFFFF",
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/itcnahw7",
+      "id": "6",
+      "name": "text",
+      "bbox": [
+        116,
+        178,
+        250,
+        62
+      ],
+      "geometry": "rect",
+      "text": "LLC / IP / applications",
+      "textPreview": "LLC / IP / applications",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 25,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "LLC / IP / applications"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "LLC / IP / applications",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "LLC / IP / applications",
+              "fontSize": 25,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ju543mxs",
+      "id": "7",
+      "name": "text",
+      "bbox": [
+        380,
+        178,
+        380,
+        62
+      ],
+      "geometry": "rect",
+      "text": "Outside 802.11",
+      "textPreview": "Outside 802.11",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 18,
+        "typeface": "+mn-lt",
+        "color": "#5D6470",
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Outside 802.11"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Outside 802.11",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "color": "#5D6470",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Outside 802.11",
+              "fontSize": 18,
+              "color": "#5D6470",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/sze5gre9",
+      "id": "8",
+      "name": "box",
+      "bbox": [
+        90,
+        260,
+        700,
+        115
+      ],
+      "geometry": "rect",
+      "fillColor": "#DDF2FC",
+      "lineColor": "#FFFFFF",
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/t0nm9wvu",
+      "id": "9",
+      "name": "text",
+      "bbox": [
+        116,
+        268,
+        250,
+        99
+      ],
+      "geometry": "rect",
+      "text": "802.11 MAC",
+      "textPreview": "802.11 MAC",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 25,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "802.11 MAC"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "802.11 MAC",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "802.11 MAC",
+              "fontSize": 25,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/pcfmtkry",
+      "id": "10",
+      "name": "text",
+      "bbox": [
+        380,
+        268,
+        380,
+        99
+      ],
+      "geometry": "rect",
+      "text": "Association • framing • ACK • security • CSMA/CA",
+      "textPreview": "Association • framing • ACK • security • CSMA/CA",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 18,
+        "typeface": "+mn-lt",
+        "color": "#5D6470",
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Association • framing • ACK • security •"
+          },
+          {
+            "index": 2,
+            "text": "CSMA/CA"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Association • framing • ACK • security • CSMA/CA",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "color": "#5D6470",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Association • framing • ACK • security • CSMA/CA",
+              "fontSize": 18,
+              "color": "#5D6470",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/4b650fad",
+      "id": "11",
+      "name": "box",
+      "bbox": [
+        90,
+        387,
+        700,
+        115
+      ],
+      "geometry": "rect",
+      "fillColor": "#D8E7FF",
+      "lineColor": "#FFFFFF",
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/3ax4ra9s",
+      "id": "12",
+      "name": "text",
+      "bbox": [
+        116,
+        395,
+        250,
+        99
+      ],
+      "geometry": "rect",
+      "text": "PLCP",
+      "textPreview": "PLCP",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 25,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "PLCP"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "PLCP",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "PLCP",
+              "fontSize": 25,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/i9ony5s7",
+      "id": "13",
+      "name": "text",
+      "bbox": [
+        380,
+        395,
+        380,
+        99
+      ],
+      "geometry": "rect",
+      "text": "Preamble • header • rate signaling • PPDU format",
+      "textPreview": "Preamble • header • rate signaling • PPDU format",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 18,
+        "typeface": "+mn-lt",
+        "color": "#5D6470",
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Preamble • header • rate signaling • PPDU"
+          },
+          {
+            "index": 2,
+            "text": "format"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Preamble • header • rate signaling • PPDU format",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "color": "#5D6470",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Preamble • header • rate signaling • PPDU format",
+              "fontSize": 18,
+              "color": "#5D6470",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 14,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/dgzmxkru",
+      "id": "14",
+      "name": "box",
+      "bbox": [
+        90,
+        514,
+        700,
+        90
+      ],
+      "geometry": "rect",
+      "fillColor": "#20242A",
+      "lineColor": "#FFFFFF",
+      "lineWidth": 0
+    },
+    {
+      "order": 15,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/cfq54za9",
+      "id": "15",
+      "name": "text",
+      "bbox": [
+        116,
+        522,
+        250,
+        74
+      ],
+      "geometry": "rect",
+      "text": "PMD / waveform",
+      "textPreview": "PMD / waveform",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 25,
+        "typeface": "+mn-lt",
+        "color": "#FFFFFF",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "PMD / waveform"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "PMD / waveform",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "color": "#FFFFFF",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "PMD / waveform",
+              "fontSize": 25,
+              "color": "#FFFFFF",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 16,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/reh4vu9o",
+      "id": "16",
+      "name": "text",
+      "bbox": [
+        380,
+        522,
+        380,
+        74
+      ],
+      "geometry": "rect",
+      "text": "DSSS • OFDM • MIMO • OFDMA • single carrier",
+      "textPreview": "DSSS • OFDM • MIMO • OFDMA • single carrier",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 18,
+        "typeface": "+mn-lt",
+        "color": "#FFFFFF",
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "DSSS • OFDM • MIMO • OFDMA • single carrier"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "DSSS • OFDM • MIMO • OFDMA • single carrier",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "color": "#FFFFFF",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "DSSS • OFDM • MIMO • OFDMA • single carrier",
+              "fontSize": 18,
+              "color": "#FFFFFF",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 17,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/qd8n2psj",
+      "id": "17",
+      "name": "text",
+      "bbox": [
+        870,
+        220,
+        280,
+        36
+      ],
+      "geometry": "rect",
+      "text": "Same family",
+      "textPreview": "Same family",
+      "resolvedFontSize": 28,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 28,
+        "typeface": "+mn-lt",
+        "color": "#3D8DFF",
+        "bold": true,
+        "alignment": "center",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Same family"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Same family",
+          "resolvedTextStyle": {
+            "fontSize": 28,
+            "color": "#3D8DFF",
+            "bold": true,
+            "alignment": "center"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Same family",
+              "fontSize": 28,
+              "color": "#3D8DFF",
+              "bold": true,
+              "alignment": "center"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 18,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/tkvml0rq",
+      "id": "18",
+      "name": "text",
+      "bbox": [
+        850,
+        315,
+        320,
+        120
+      ],
+      "geometry": "rect",
+      "text": "Different ways to turn bits into radio energy",
+      "textPreview": "Different ways to turn bits into radio energy",
+      "resolvedFontSize": 26,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 26,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "center",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Different ways to turn bits"
+          },
+          {
+            "index": 2,
+            "text": "into radio energy"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Different ways to turn bits into radio energy",
+          "resolvedTextStyle": {
+            "fontSize": 26,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "center"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Different ways to turn bits into radio energy",
+              "fontSize": 26,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "center"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 19,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/8jmlsva5",
+      "id": "19",
+      "name": "rule",
+      "bbox": [
+        1004,
+        448,
+        4,
+        122
+      ],
+      "geometry": "rect",
+      "fillColor": "#FF8A3D",
+      "lineColor": "#FF8A3D",
+      "lineWidth": 0
+    },
+    {
+      "order": 20,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/kzadozmd",
+      "id": "20",
+      "name": "text",
+      "bbox": [
+        884,
+        580,
+        244,
+        30
+      ],
+      "geometry": "rect",
+      "text": "PHY evolution",
+      "textPreview": "PHY evolution",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 18,
+        "typeface": "+mn-lt",
+        "color": "#FF8A3D",
+        "bold": true,
+        "alignment": "center",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "PHY evolution"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "PHY evolution",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "color": "#FF8A3D",
+            "bold": true,
+            "alignment": "center"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "PHY evolution",
+              "fontSize": 18,
+              "color": "#FF8A3D",
+              "bold": true,
+              "alignment": "center"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

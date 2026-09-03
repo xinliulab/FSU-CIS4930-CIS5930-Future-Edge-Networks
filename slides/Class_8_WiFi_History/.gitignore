@@ -1,0 +1,19 @@
+build/
+build2/
+build3/
+
+# Source material read while writing this deck: other instructors' lecture
+# slides, vendor whitepapers, papers. Not ours to republish, and the build
+# does not reference any of it. Keep it local.
+reference/
+
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.toc
+*.vrb

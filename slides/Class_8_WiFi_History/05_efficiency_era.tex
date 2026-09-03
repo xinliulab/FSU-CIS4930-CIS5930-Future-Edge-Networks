@@ -1,0 +1,149 @@
+%!TEX root = ./main.tex
+
+\section[Efficiency era]{The Efficiency Era: ax and 6E}
+
+% SECTION TIMING: 38:00--48:00 (3 frames).
+
+% Teaching note (240 s): problem before solution. In 11a through 11ac, one PPDU serves
+% one user's data (11ac DL MU-MIMO separates users in space, not frequency). In a dense
+% room -- stadium, lecture hall -- most frames are small, so a very fast channel serving
+% one small frame at a time wastes airtime on contention and preambles. OFDMA is the
+% conceptual center of 11ax: the AP partitions the subcarriers of ONE PPDU into resource
+% units for several stations. Frequency joins time and space as a multiuser dimension.
+% Then run quickly through the rest of the toolbox: UL+DL MU-MIMO, 1024-QAM, BSS
+% coloring (spatial reuse between neighboring cells), TWT (scheduled sleep for IoT).
+\begin{frame}{802.11ax: dense efficiency, not peak}
+  \vspace{0.05em}
+  {\large\textbf{Problem:} 200 phones, one small frame at a time.\par}
+
+  \vspace{0.3em}
+  \centering
+  % SOURCE (OFDMA RUs, toolbox): https://www.cisco.com/c/en/us/products/collateral/wireless/white-paper-c11-740788.html
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \draw[draw=ranblue,fill=blue!10] (0,0.9) rectangle (7.2,1.5);
+    \node[font=\scriptsize\bfseries,text=ranblue] at (3.6,1.2) {before: one scheduled user};
+    \draw[draw=ranblue,fill=blue!12]    (0,0)    rectangle (1.8,0.6);
+    \draw[draw=coreorange,fill=orange!14](1.8,0) rectangle (4.4,0.6);
+    \draw[draw=softgreen,fill=green!10] (4.4,0)  rectangle (5.6,0.6);
+    \draw[draw=ranpurple,fill=purple!8] (5.6,0)  rectangle (7.2,0.6);
+    \node[font=\scriptsize\bfseries] at (0.9,0.3) {U1};
+    \node[font=\scriptsize\bfseries] at (3.1,0.3) {U2};
+    \node[font=\scriptsize\bfseries] at (5.0,0.3) {U3};
+    \node[font=\scriptsize\bfseries] at (6.4,0.3) {U4};
+    % The axis is frequency, not time -- the arrow prevents a time-slot misreading.
+    \draw[flow] (0,-0.42) -- (1.3,-0.42)
+      node[right,font=\scriptsize,text=softgray]{frequency};
+    \node[font=\scriptsize,text=softgray,anchor=west] at (2.7,-0.42)
+      {OFDMA: resource units share one PPDU};
+  \end{tikzpicture}
+
+  \vspace{0.5em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \small
+      \begin{itemize}\itemsep3pt
+        \item \textbf{OFDMA:} frequency RUs
+        \item \textbf{UL + DL MU-MIMO}
+        \item \textbf{1024-QAM:} 10 bits/symbol
+      \end{itemize}
+    \column{0.47\textwidth}
+      \small
+      \begin{itemize}\itemsep3pt
+        \item \textbf{BSS coloring:} ignore faint cells
+        \item \textbf{TWT:} the AP schedules naps
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.25em}
+  \takeaway{The design target moved: not a bigger single-link headline,\\
+    but high efficiency when many stations share dense airspace.}
+
+  \glossline{HE = High Efficiency \quad RU = Resource Unit \quad BSS = Basic Service
+    Set \quad TWT = Target Wake Time \quad UL = uplink \quad coloring = a per-cell
+    tag on frames, so neighbors can talk over faint foreign traffic}
+  \source{https://www.cisco.com/c/en/us/products/collateral/wireless/white-paper-c11-740788.html}{Cisco 802.11ax white paper; IEEE Std 802.11}
+\end{frame}
+
+% Teaching note (180 s): the quiet enabler under OFDMA. Same 20 MHz channel, 4x more
+% FFT points: subcarrier spacing drops 312.5 kHz -> 78.125 kHz, so the useful symbol
+% stretches 3.2 us -> 12.8 us. Two payoffs: a longer symbol makes the guard interval
+% relatively cheaper (and more tolerant of outdoor delay spread), and more subcarriers
+% give finer-grained resource units to schedule. Stress the drawing is conceptual,
+% not a spectrum mask.
+\begin{frame}{HE OFDM: four times narrower subcarriers}
+  \vspace{0.3em}
+  \centering
+  % SOURCE for 312.5 kHz / 3.2 us and 78.125 kHz / 12.8 us:
+  % https://www.cisco.com/c/en/us/products/collateral/wireless/white-paper-c11-740788.html
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \node[font=\small\bfseries,text=ranblue,anchor=west] at (-1.2,2.6) {802.11a/g/n/ac};
+    \node[font=\scriptsize,text=softgray,anchor=west] at (3.0,2.6)
+      {312.5 kHz spacing \,\textperiodcentered\, 3.2 $\mu$s useful symbol};
+    \draw[flow] (-1.2,1.6) -- (7.4,1.6);
+    \foreach \c in {0,1.6,3.2,4.8,6.4}{
+      \draw[ranblue,thick] (\c-0.75,1.6) .. controls (\c-0.22,2.35)
+        and (\c+0.22,2.35) .. (\c+0.75,1.6);
+    }
+    \node[font=\small\bfseries,text=softgreen,anchor=west] at (-1.2,0.9) {802.11ax HE};
+    \node[font=\scriptsize,text=softgray,anchor=west] at (3.0,0.9)
+      {78.125 kHz spacing \,\textperiodcentered\, 12.8 $\mu$s useful symbol};
+    \draw[flow] (-1.2,0) -- (7.4,0);
+    \foreach \c in {0,0.4,0.8,1.2,1.6,2.0,2.4,2.8,3.2,3.6,4.0,4.4,4.8,5.2,5.6,6.0,6.4}{
+      \draw[softgreen,thick] (\c-0.28,0) .. controls (\c-0.09,0.62)
+        and (\c+0.09,0.62) .. (\c+0.28,0);
+    }
+    \node[font=\scriptsize,text=softgray] at (3.1,-0.5)
+      {same 20 MHz channel, $4\times$ more FFT points (conceptual, not a mask)};
+  \end{tikzpicture}
+
+  \vspace{0.7em}
+  \begin{itemize}\itemsep4pt
+    \item Longer symbol $\to$ guard interval is relatively cheaper
+    \item More subcarriers $\to$ finer-grained resource units
+    % SOURCE (HE GI options 0.8/1.6/3.2 us):
+    % https://www.cisco.com/c/en/us/products/collateral/wireless/white-paper-c11-740788.html
+    \item Guard interval adapts: 0.8 / 1.6 / 3.2 $\mu$s options
+  \end{itemize}
+
+  \vspace{0.3em}
+  \takeaway{Narrower subcarriers are what make small OFDMA resource\\
+    units --- and outdoor-tolerant symbols --- possible at all.}
+  \source{https://www.cisco.com/c/en/us/products/collateral/wireless/white-paper-c11-740788.html}{Cisco 802.11ax white paper (HE OFDM numerology)}
+\end{frame}
+
+% Teaching note (150 s): the naming trap. Wi-Fi 6E is Wi-Fi 6 -- same 802.11ax HE
+% PHY/MAC toolbox -- extended into the 6 GHz band. It is a spectrum grant, not a new
+% waveform and not a new IEEE amendment. Caution students that 6 GHz regulation varies
+% by country; do not imply identical worldwide allocations. Ask why clean spectrum
+% matters more than any single PHY trick: no legacy stations means no protection
+% overhead (callback to the 11g slide).
+\begin{frame}{Wi-Fi 6E adds spectrum, not a waveform}
+  \vspace{0.3em}
+  \centering
+  % SOURCE: https://standards.ieee.org/ieee/802.11/10548/
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \node[netnode,minimum width=2.8cm,minimum height=1.15cm] (b24) at (0,0)
+      {2.4 GHz\\[-2pt]{\scriptsize\mdseries range + legacy}};
+    \node[netnode,minimum width=2.8cm,minimum height=1.15cm] (b5) at (3.2,0)
+      {5 GHz\\[-2pt]{\scriptsize\mdseries capacity, mature}};
+    \node[draw=softgreen,fill=green!8,rounded corners=3pt,minimum width=2.8cm,
+          minimum height=1.15cm,align=center,font=\bfseries] (b6) at (6.4,0)
+      {6 GHz\\[-2pt]{\scriptsize\mdseries clean wide channels}};
+    \node[font=\scriptsize,text=softgray] at (3.2,-1.0)
+      {same HE PHY/MAC toolbox --- new operating spectrum and channel plan};
+  \end{tikzpicture}
+
+  \vspace{0.7em}
+  \begin{itemize}\itemsep4pt
+    % "Rent to the installed base" deliberately echoes the 11g takeaway.
+    \item 6E = 802.11ax certified into 6 GHz
+    \item No legacy stations $\to$ no rent to the installed base
+    \item Channel availability varies by country
+  \end{itemize}
+
+  \vspace{0.4em}
+  \qa{Is Wi-Fi 6E a new generation?}
+     {No. A band extension is not a new IEEE amendment. The waveform is
+      Wi-Fi 6's; the gift is clean, wide, uncontested spectrum.}
+  \source{https://standards.ieee.org/ieee/802.11/10548/}{IEEE Std 802.11; Cisco Wi-Fi 6/6E materials}
+\end{frame}

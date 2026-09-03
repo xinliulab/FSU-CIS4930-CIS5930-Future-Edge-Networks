@@ -1,0 +1,1018 @@
+{"kind":"deck","id":"pr/htr2ce","name":"Deck"}
+{"kind":"layout","layoutId":"7438c458-da20-4728-8c64-7b980c5f62a5","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"88355e5f-2091-40c9-9c71-1ce016e1609f","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/ihr6tq","slide":1,"title":"01","textShapes":6}
+{"kind":"textbox","id":"sh/0z2tgvex","slide":1,"name":"page","text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"textbox","id":"sh/zytc7qdc","slide":1,"name":"text","text":"FUTURE EDGE NETWORKS","textPreview":"FUTURE EDGE NETWORKS","textChars":20,"textLines":1,"bbox":[54,38,600,24]}
+{"kind":"textbox","id":"sh/yxkbelwr","slide":1,"name":"text","text":"A Brief History\nof Wi‑Fi","textPreview":"A Brief History | of Wi‑Fi","textChars":24,"textLines":2,"bbox":[54,154,650,152]}
+{"kind":"textbox","id":"sh/9ovud0ve","slide":1,"name":"text","text":"Protocols, PHY waveforms, and the design choices behind 802.11b → be — plus the 60 GHz ad/ay branch","textPreview":"Protocols, PHY waveforms, and the design choices behind 802.11b → be — plus the 60 GHz ad/ay branch","textChars":99,"textLines":1,"bbox":[58,338,650,112]}
+{"kind":"shape","id":"sh/8nmtkvet","slide":1,"name":"box","bbox":[790,118,360,410]}
+{"kind":"shape","id":"sh/nmdcbqd8","slide":1,"name":"box","bbox":[825,217,13,128]}
+{"kind":"shape","id":"sh/ml4bilwn","slide":1,"name":"box","bbox":[858,239,13,106]}
+{"kind":"shape","id":"sh/psba1wva","slide":1,"name":"box","bbox":[891,261,13,84]}
+{"kind":"shape","id":"sh/orit8bep","slide":1,"name":"box","bbox":[924,283,13,62]}
+{"kind":"shape","id":"sh/mlkb25w3","slide":1,"name":"box","bbox":[957,305,13,40]}
+{"kind":"shape","id":"sh/nmtcvaxo","slide":1,"name":"box","bbox":[990,283,13,62]}
+{"kind":"shape","id":"sh/on2d4fe9","slide":1,"name":"box","bbox":[1023,261,13,84]}
+{"kind":"shape","id":"sh/9ovuxkfu","slide":1,"name":"box","bbox":[1056,239,13,106]}
+{"kind":"shape","id":"sh/a94v65wz","slide":1,"name":"box","bbox":[1089,217,13,128]}
+{"kind":"textbox","id":"sh/badczadk","slide":1,"name":"text","text":"frequency","textPreview":"frequency","textChars":9,"textLines":1,"bbox":[808,377,318,28]}
+{"kind":"shape","id":"sh/wbmd8fe5","slide":1,"name":"rule","bbox":[832,450,275,3]}
+{"kind":"shape","id":"sh/xcvu1kvq","slide":1,"name":"rule","bbox":[832,468,239,3]}
+{"kind":"shape","id":"sh/id4vapwb","slide":1,"name":"rule","bbox":[832,486,203,3]}
+{"kind":"shape","id":"sh/jedc3udw","slide":1,"name":"rule","bbox":[832,504,167,3]}
+{"kind":"textbox","id":"sh/fixcrut4","slide":1,"name":"text","text":"CIS4930 / CIS5930","textPreview":"CIS4930 / CIS5930","textChars":17,"textLines":1,"bbox":[54,638,420,28]}
+{"kind":"notes","id":"nt/ihr6tq","slide":1,"text":"• Open with a familiar question: why does the Wi‑Fi icon look unchanged while the radio underneath has changed repeatedly?\n• The lecture follows two threads: historical standardization and the PHY resource dimensions used to gain capacity.\n\n[Sources]\n- https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html\n- https://extr-p-001.sitecorecontenthub.cloud/api/public/content/3f5d887b048d49cba95392b829960d1b?download=true&v=564c5124"}
+{"kind":"slide","id":"sl/ukhft1","slide":2,"title":"WI-FI HISTORY","textShapes":15}
+{"kind":"textbox","id":"sh/9gz25o3a","slide":2,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/mdoja94j","slide":2,"name":"slide-title","text":"Wi‑Fi improved by spending new resource dimensions","textPreview":"Wi‑Fi improved by spending new resource dimensions","textChars":50,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/nehk3el4","slide":2,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/w3qlg3ml","slide":2,"name":"page","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"textbox","id":"sh/x4z29836","slide":2,"name":"text","text":"SPECTRUM","textPreview":"SPECTRUM","textChars":8,"textLines":1,"bbox":[54,170,340,24]}
+{"kind":"textbox","id":"sh/ah83et4v","slide":2,"name":"text","text":"2.4 → 5 → 6 → 60 GHz","textPreview":"2.4 → 5 → 6 → 60 GHz","textChars":20,"textLines":1,"bbox":[54,208,340,78]}
+{"kind":"shape","id":"sh/vihk7yl0","slide":2,"name":"rule","bbox":[54,302,340,2]}
+{"kind":"textbox","id":"sh/k7alk3mx","slide":2,"name":"text","text":"BANDWIDTH","textPreview":"BANDWIDTH","textChars":9,"textLines":1,"bbox":[442,170,340,24]}
+{"kind":"textbox","id":"sh/58j2d83i","slide":2,"name":"text","text":"20 → 40 → 80 → 160 → 320 MHz","textPreview":"20 → 40 → 80 → 160 → 320 MHz","textChars":28,"textLines":1,"bbox":[442,208,340,78]}
+{"kind":"shape","id":"sh/xcnml4ri","slide":2,"name":"rule","bbox":[442,302,340,2]}
+{"kind":"textbox","id":"sh/cbelszqx","slide":2,"name":"text","text":"CONSTELLATION","textPreview":"CONSTELLATION","textChars":13,"textLines":1,"bbox":[830,170,340,24]}
+{"kind":"textbox","id":"sh/ba54ju9c","slide":2,"name":"text","text":"BPSK → 64/256/1024/4096‑QAM","textPreview":"BPSK → 64/256/1024/4096‑QAM","textChars":27,"textLines":1,"bbox":[830,208,340,78]}
+{"kind":"shape","id":"sh/q9w3qp8r","slide":2,"name":"rule","bbox":[830,302,340,2]}
+{"kind":"textbox","id":"sh/lg7mp4re","slide":2,"name":"text","text":"SPACE","textPreview":"SPACE","textChars":5,"textLines":1,"bbox":[54,375,340,24]}
+{"kind":"textbox","id":"sh/kfelwzqt","slide":2,"name":"text","text":"SISO → SU‑MIMO → MU‑MIMO","textPreview":"SISO → SU‑MIMO → MU‑MIMO","textChars":24,"textLines":1,"bbox":[54,413,340,78]}
+{"kind":"shape","id":"sh/ze54nu98","slide":2,"name":"rule","bbox":[54,507,340,2]}
+{"kind":"textbox","id":"sh/ydw3u98n","slide":2,"name":"text","text":"SCHEDULING","textPreview":"SCHEDULING","textChars":10,"textLines":1,"bbox":[442,375,340,24]}
+{"kind":"textbox","id":"sh/1k3mdkra","slide":2,"name":"text","text":"one user → OFDMA resource units","textPreview":"one user → OFDMA resource units","textChars":31,"textLines":1,"bbox":[442,413,340,78]}
+{"kind":"shape","id":"sh/gjulkfqp","slide":2,"name":"rule","bbox":[442,507,340,2]}
+{"kind":"textbox","id":"sh/szidgjmh","slide":2,"name":"text","text":"LINKS","textPreview":"LINKS","textChars":5,"textLines":1,"bbox":[830,375,340,24]}
+{"kind":"textbox","id":"sh/t0rup432","slide":2,"name":"text","text":"one band → multi‑link operation","textPreview":"one band → multi‑link operation","textChars":31,"textLines":1,"bbox":[830,413,340,78]}
+{"kind":"shape","id":"sh/6xgve94r","slide":2,"name":"rule","bbox":[830,507,340,2]}
+{"kind":"notes","id":"nt/ukhft1","slide":2,"text":"• Use this as the organizing framework for the whole lecture.\n• Every later amendment keeps the core 802.11 family identity but adds one or more dimensions for peak rate, capacity, reliability, or latency.\n\n[Sources]\n- https://standards.ieee.org/ieee/802.11/10548/\n- https://standards.ieee.org/ieee/802.11be/7516/\n- https://www.cisco.com/c/en/us/products/collateral/wireless/white-paper-c11-740788.html"}
+{"kind":"slide","id":"sl/05f0k4","slide":3,"title":"WI-FI HISTORY","textShapes":30}
+{"kind":"textbox","id":"sh/03mpov6x","slide":3,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/f2dofq5c","slide":3,"name":"slide-title","text":"An amendment name and a Wi‑Fi generation are not the same thing","textPreview":"An amendment name and a Wi‑Fi generation are not the same thing","textChars":63,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/e147mlor","slide":3,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/p8fql0ne","slide":3,"name":"page","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"textbox","id":"sh/o7mpsv6t","slide":3,"name":"text","text":"IEEE amendment","textPreview":"IEEE amendment","textChars":14,"textLines":1,"bbox":[64,158,230,34]}
+{"kind":"textbox","id":"sh/n6d8jq5o","slide":3,"name":"text","text":"Market name","textPreview":"Market name","textChars":11,"textLines":1,"bbox":[324,158,220,34]}
+{"kind":"textbox","id":"sh/2547qlo3","slide":3,"name":"text","text":"PHY shorthand","textPreview":"PHY shorthand","textChars":13,"textLines":1,"bbox":[574,158,590,34]}
+{"kind":"shape","id":"sh/5cb69gna","slide":3,"name":"box","bbox":[54,196,1172,48]}
+{"kind":"textbox","id":"sh/4b2pgb6p","slide":3,"name":"text","text":"802.11b","textPreview":"802.11b","textChars":7,"textLines":1,"bbox":[66,200,220,38]}
+{"kind":"textbox","id":"sh/mxc3axcf","slide":3,"name":"text","text":"Wi‑Fi 1","textPreview":"Wi‑Fi 1","textChars":7,"textLines":1,"bbox":[324,200,210,38]}
+{"kind":"textbox","id":"sh/nilkj2t0","slide":3,"name":"text","text":"HR‑DSSS / CCK","textPreview":"HR‑DSSS / CCK","textChars":13,"textLines":1,"bbox":[574,200,620,38]}
+{"kind":"textbox","id":"sh/ojulc7ul","slide":3,"name":"text","text":"802.11a","textPreview":"802.11a","textChars":7,"textLines":1,"bbox":[66,253,220,38]}
+{"kind":"textbox","id":"sh/9k3mlcb6","slide":3,"name":"text","text":"Wi‑Fi 2","textPreview":"Wi‑Fi 2","textChars":7,"textLines":1,"bbox":[324,253,210,38]}
+{"kind":"textbox","id":"sh/alc3ehcb","slide":3,"name":"text","text":"OFDM at 5 GHz","textPreview":"OFDM at 5 GHz","textChars":13,"textLines":1,"bbox":[574,253,620,38]}
+{"kind":"shape","id":"sh/bml4nmtw","slide":3,"name":"box","bbox":[54,302,1172,48]}
+{"kind":"textbox","id":"sh/wnelgruh","slide":3,"name":"text","text":"802.11g","textPreview":"802.11g","textChars":7,"textLines":1,"bbox":[66,306,220,38]}
+{"kind":"textbox","id":"sh/xonmpcb2","slide":3,"name":"text","text":"Wi‑Fi 3","textPreview":"Wi‑Fi 3","textChars":7,"textLines":1,"bbox":[324,306,210,38]}
+{"kind":"textbox","id":"sh/ypw3ihcn","slide":3,"name":"text","text":"OFDM at 2.4 GHz","textPreview":"OFDM at 2.4 GHz","textChars":15,"textLines":1,"bbox":[574,306,620,38]}
+{"kind":"textbox","id":"sh/jq54rmt8","slide":3,"name":"text","text":"802.11n","textPreview":"802.11n","textChars":7,"textLines":1,"bbox":[66,359,220,38]}
+{"kind":"textbox","id":"sh/vupkfm9g","slide":3,"name":"text","text":"Wi‑Fi 4","textPreview":"Wi‑Fi 4","textChars":7,"textLines":1,"bbox":[324,359,210,38]}
+{"kind":"textbox","id":"sh/utwj6h8v","slide":3,"name":"text","text":"HT: MIMO + 40 MHz","textPreview":"HT: MIMO + 40 MHz","textChars":17,"textLines":1,"bbox":[574,359,620,38]}
+{"kind":"shape","id":"sh/hg72hwr6","slide":3,"name":"box","bbox":[54,408,1172,48]}
+{"kind":"textbox","id":"sh/gvyl8rql","slide":3,"name":"text","text":"802.11ac","textPreview":"802.11ac","textChars":8,"textLines":1,"bbox":[66,412,220,38]}
+{"kind":"textbox","id":"sh/7q5kbm94","slide":3,"name":"text","text":"Wi‑Fi 5","textPreview":"Wi‑Fi 5","textChars":7,"textLines":1,"bbox":[324,412,210,38]}
+{"kind":"textbox","id":"sh/6pwj2h8j","slide":3,"name":"text","text":"VHT: wider + 256‑QAM","textPreview":"VHT: wider + 256‑QAM","textChars":20,"textLines":1,"bbox":[574,412,620,38]}
+{"kind":"textbox","id":"sh/tsn2dwra","slide":3,"name":"text","text":"802.11ax","textPreview":"802.11ax","textChars":8,"textLines":1,"bbox":[66,465,220,38]}
+{"kind":"textbox","id":"sh/8re14rqp","slide":3,"name":"text","text":"Wi‑Fi 6 / 6E","textPreview":"Wi‑Fi 6 / 6E","textChars":12,"textLines":1,"bbox":[324,465,210,38]}
+{"kind":"textbox","id":"sh/jm5k7298","slide":3,"name":"text","text":"HE: OFDMA + 1024‑QAM","textPreview":"HE: OFDMA + 1024‑QAM","textChars":20,"textLines":1,"bbox":[574,465,620,38]}
+{"kind":"shape","id":"sh/ylcjyxsn","slide":3,"name":"box","bbox":[54,514,1172,48]}
+{"kind":"textbox","id":"sh/orah8365","slide":3,"name":"text","text":"802.11be","textPreview":"802.11be","textChars":8,"textLines":1,"bbox":[66,518,220,38]}
+{"kind":"textbox","id":"sh/9sji187q","slide":3,"name":"text","text":"Wi‑Fi 7","textPreview":"Wi‑Fi 7","textChars":7,"textLines":1,"bbox":[324,518,210,38]}
+{"kind":"textbox","id":"sh/m5sz6d8f","slide":3,"name":"text","text":"EHT: MLO + 320 MHz","textPreview":"EHT: MLO + 320 MHz","textChars":18,"textLines":1,"bbox":[574,518,620,38]}
+{"kind":"textbox","id":"sh/nq10zyp0","slide":3,"name":"text","text":"802.11ad / ay","textPreview":"802.11ad / ay","textChars":13,"textLines":1,"bbox":[66,571,220,38]}
+{"kind":"textbox","id":"sh/wvuhcn6h","slide":3,"name":"text","text":"WiGig","textPreview":"WiGig","textChars":5,"textLines":1,"bbox":[324,571,210,38]}
+{"kind":"textbox","id":"sh/xw3i5s72","slide":3,"name":"text","text":"Directional 60 GHz","textPreview":"Directional 60 GHz","textChars":18,"textLines":1,"bbox":[574,571,620,38]}
+{"kind":"notes","id":"nt/05f0k4","slide":3,"text":"• Explain that IEEE names technical amendments; the Wi‑Fi Alliance later introduced simpler generation names.\n• 802.11ad and 802.11ay are a parallel 60 GHz branch commonly associated with WiGig rather than the numbered Wi‑Fi 1–7 sequence.\n\n[Sources]\n- https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html\n- https://standards.ieee.org/ieee/802.11/10548/\n- https://helpfiles.keysight.com/csg/n7637/Content/Main/802.11ad%20Concepts.htm"}
+{"kind":"slide","id":"sl/mc3mgk","slide":4,"title":"WI-FI HISTORY","textShapes":15}
+{"kind":"textbox","id":"sh/kb6d0jul","slide":4,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/jadcret0","slide":4,"name":"slide-title","text":"Four milestones made consumer Wi‑Fi possible by 1999","textPreview":"Four milestones made consumer Wi‑Fi possible by 1999","textChars":52,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/y94vy9cf","slide":4,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/x8vup4bu","slide":4,"name":"page","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"shape","id":"sh/w7mtwju9","slide":4,"name":"rule","bbox":[100,350,1060,4]}
+{"kind":"shape","id":"sh/b6dcneto","slide":4,"bbox":[118,338,28,28]}
+{"kind":"shape","id":"sh/a54bu9c3","slide":4,"name":"circle-label","bbox":[118,338,28,28]}
+{"kind":"textbox","id":"sh/94vul4by","slide":4,"name":"text","text":"1971","textPreview":"1971","textChars":4,"textLines":1,"bbox":[60,278,140,34]}
+{"kind":"textbox","id":"sh/o32tszud","slide":4,"name":"text","text":"ALOHAnet","textPreview":"ALOHAnet","textChars":8,"textLines":1,"bbox":[18,395,224,34]}
+{"kind":"textbox","id":"sh/q1o3idwr","slide":4,"name":"text","text":"Wireless packet networking proves shared radio access.","textPreview":"Wireless packet networking proves shared radio access.","textChars":54,"textLines":1,"bbox":[12,442,236,94]}
+{"kind":"shape","id":"sh/r2h4bixw","slide":4,"bbox":[458,338,28,28]}
+{"kind":"shape","id":"sh/c3qlk3eh","slide":4,"name":"circle-label","bbox":[458,338,28,28]}
+{"kind":"textbox","id":"sh/d4zmd8f2","slide":4,"name":"text","text":"1985","textPreview":"1985","textChars":4,"textLines":1,"bbox":[400,278,140,34]}
+{"kind":"textbox","id":"sh/2do3etwf","slide":4,"name":"text","text":"Unlicensed ISM","textPreview":"Unlicensed ISM","textChars":14,"textLines":1,"bbox":[358,395,224,34]}
+{"kind":"textbox","id":"sh/3ex47yx0","slide":4,"name":"text","text":"FCC opens spectrum for spread-spectrum systems.","textPreview":"FCC opens spectrum for spread-spectrum systems.","textChars":47,"textLines":1,"bbox":[352,442,236,94]}
+{"kind":"shape","id":"sh/4f6lg3el","slide":4,"bbox":[798,338,28,28]}
+{"kind":"shape","id":"sh/p0fm98f6","slide":4,"name":"circle-label","bbox":[798,338,28,28]}
+{"kind":"textbox","id":"sh/u943atwj","slide":4,"name":"text","text":"1990–97","textPreview":"1990–97","textChars":7,"textLines":1,"bbox":[740,278,140,34]}
+{"kind":"textbox","id":"sh/vadk3yxo","slide":4,"name":"text","text":"IEEE 802.11","textPreview":"IEEE 802.11","textChars":11,"textLines":1,"bbox":[698,395,224,34]}
+{"kind":"textbox","id":"sh/jet0budg","slide":4,"name":"text","text":"A common MAC/PHY standard replaces vendor islands.","textPreview":"A common MAC/PHY standard replaces vendor islands.","textChars":50,"textLines":1,"bbox":[692,442,236,94]}
+{"kind":"shape","id":"sh/ydkjipcb","slide":4,"bbox":[1088,338,28,28]}
+{"kind":"shape","id":"sh/lgbidkvm","slide":4,"name":"circle-label","bbox":[1088,338,28,28]}
+{"kind":"textbox","id":"sh/kf21kzu1","slide":4,"name":"text","text":"1999","textPreview":"1999","textChars":4,"textLines":1,"bbox":[1030,278,140,34]}
+{"kind":"textbox","id":"sh/7it0fuds","slide":4,"name":"text","text":"Wi‑Fi","textPreview":"Wi‑Fi","textChars":5,"textLines":1,"bbox":[988,395,224,34]}
+{"kind":"textbox","id":"sh/6hkjmpc7","slide":4,"name":"text","text":"802.11a/b and interoperability certification arrive.","textPreview":"802.11a/b and interoperability certification arrive.","textChars":52,"textLines":1,"bbox":[982,442,236,94]}
+{"kind":"notes","id":"nt/mc3mgk","slide":4,"text":"• Connect ALOHAnet to random access, then connect unlicensed spectrum to permissionless innovation.\n• The 1997 base standard existed before the Wi‑Fi brand; 1999 is the commercial inflection point with 802.11a/b and interoperability certification.\n\n[Sources]\n- https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html\n- https://extr-p-001.sitecorecontenthub.cloud/api/public/content/3f5d887b048d49cba95392b829960d1b?download=true&v=564c5124"}
+{"kind":"slide","id":"sl/of8won","slide":5,"title":"WI-FI HISTORY","textShapes":14}
+{"kind":"textbox","id":"sh/xs3m1cfm","slide":5,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/apc36xwv","slide":5,"name":"slide-title","text":"The recognizable 802.11 protocol lives above changing PHYs","textPreview":"The recognizable 802.11 protocol lives above changing PHYs","textChars":58,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/vql4z2xg","slide":5,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/kve5c7ed","slide":5,"name":"page","text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"shape","id":"sh/5wnm5cfi","slide":5,"name":"box","bbox":[90,170,700,78]}
+{"kind":"textbox","id":"sh/itcnahw7","slide":5,"name":"text","text":"LLC / IP / applications","textPreview":"LLC / IP / applications","textChars":23,"textLines":1,"bbox":[116,178,250,62]}
+{"kind":"textbox","id":"sh/ju543mxs","slide":5,"name":"text","text":"Outside 802.11","textPreview":"Outside 802.11","textChars":14,"textLines":1,"bbox":[380,178,380,62]}
+{"kind":"shape","id":"sh/sze5gre9","slide":5,"name":"box","bbox":[90,260,700,115]}
+{"kind":"textbox","id":"sh/t0nm9wvu","slide":5,"name":"text","text":"802.11 MAC","textPreview":"802.11 MAC","textChars":10,"textLines":1,"bbox":[116,268,250,99]}
+{"kind":"textbox","id":"sh/pcfmtkry","slide":5,"name":"text","text":"Association • framing • ACK • security • CSMA/CA","textPreview":"Association • framing • ACK • security • CSMA/CA","textChars":48,"textLines":1,"bbox":[380,268,380,99]}
+{"kind":"shape","id":"sh/4b650fad","slide":5,"name":"box","bbox":[90,387,700,115]}
+{"kind":"textbox","id":"sh/3ax4ra9s","slide":5,"name":"text","text":"PLCP","textPreview":"PLCP","textChars":4,"textLines":1,"bbox":[116,395,250,99]}
+{"kind":"textbox","id":"sh/i9ony5s7","slide":5,"name":"text","text":"Preamble • header • rate signaling • PPDU format","textPreview":"Preamble • header • rate signaling • PPDU format","textChars":48,"textLines":1,"bbox":[380,395,380,99]}
+{"kind":"shape","id":"sh/dgzmxkru","slide":5,"name":"box","bbox":[90,514,700,90]}
+{"kind":"textbox","id":"sh/cfq54za9","slide":5,"name":"text","text":"PMD / waveform","textPreview":"PMD / waveform","textChars":14,"textLines":1,"bbox":[116,522,250,74]}
+{"kind":"textbox","id":"sh/reh4vu9o","slide":5,"name":"text","text":"DSSS • OFDM • MIMO • OFDMA • single carrier","textPreview":"DSSS • OFDM • MIMO • OFDMA • single carrier","textChars":43,"textLines":1,"bbox":[380,522,380,74]}
+{"kind":"textbox","id":"sh/qd8n2psj","slide":5,"name":"text","text":"Same family","textPreview":"Same family","textChars":11,"textLines":1,"bbox":[870,220,280,36]}
+{"kind":"textbox","id":"sh/tkvml0rq","slide":5,"name":"text","text":"Different ways to turn bits into radio energy","textPreview":"Different ways to turn bits into radio energy","textChars":45,"textLines":1,"bbox":[850,315,320,120]}
+{"kind":"shape","id":"sh/8jmlsva5","slide":5,"name":"rule","bbox":[1004,448,4,122]}
+{"kind":"textbox","id":"sh/kzadozmd","slide":5,"name":"text","text":"PHY evolution","textPreview":"PHY evolution","textChars":13,"textLines":1,"bbox":[884,580,244,30]}
+{"kind":"notes","id":"nt/of8won","slide":5,"text":"• Define a PPDU as the PHY-layer transmission unit placed on air.\n• The MAC delivers familiar behaviors across generations, while PLCP/PMD details define the preamble, coding, modulation, channel width, and spatial streams.\n\n[Sources]\n- https://standards.ieee.org/ieee/802.11/10548/"}
+{"kind":"slide","id":"sl/wubhiy","slide":6,"title":"WI-FI HISTORY","textShapes":21}
+{"kind":"textbox","id":"sh/itwvelg7","slide":6,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/5wnep0fy","slide":6,"name":"slide-title","text":"The 1997 baseline solved shared access before it solved speed","textPreview":"The 1997 baseline solved shared access before it solved speed","textChars":61,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/4vedgvyd","slide":6,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/ry5wrqx4","slide":6,"name":"page","text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"shape","id":"sh/qxwvilgj","slide":6,"name":"rule","bbox":[54,169,18,3]}
+{"kind":"textbox","id":"sh/dk7et0fu","slide":6,"name":"section-label","text":"COMMON MAC IDEA","textPreview":"COMMON MAC IDEA","textChars":15,"textLines":1,"bbox":[84,157,260,28]}
+{"kind":"textbox","id":"sh/szydkvy9","slide":6,"name":"text","text":"Listen → wait → random backoff → transmit → ACK","textPreview":"Listen → wait → random backoff → transmit → ACK","textChars":47,"textLines":1,"bbox":[54,196,720,52]}
+{"kind":"shape","id":"sh/72lcf6hk","slide":6,"name":"box","bbox":[60,300,118,58]}
+{"kind":"textbox","id":"sh/61cv61gz","slide":6,"name":"text","text":"sense","textPreview":"sense","textChars":5,"textLines":1,"bbox":[60,300,118,58]}
+{"kind":"textbox","id":"sh/cf61oza5","slide":6,"name":"text","text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[179,309,23,40]}
+{"kind":"shape","id":"sh/dgf2x4bq","slide":6,"name":"box","bbox":[203,300,118,58]}
+{"kind":"textbox","id":"sh/qdojmpsf","slide":6,"name":"text","text":"DIFS","textPreview":"DIFS","textChars":4,"textLines":1,"bbox":[203,300,118,58]}
+{"kind":"textbox","id":"sh/bex0vutk","slide":6,"name":"text","text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[322,309,23,40]}
+{"kind":"shape","id":"sh/0361szah","slide":6,"name":"box","bbox":[346,300,118,58]}
+{"kind":"textbox","id":"sh/l4z214b2","slide":6,"name":"text","text":"backoff","textPreview":"backoff","textChars":7,"textLines":1,"bbox":[346,300,118,58]}
+{"kind":"textbox","id":"sh/y1ojq9sb","slide":6,"name":"text","text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[465,309,23,40]}
+{"kind":"shape","id":"sh/z2xkzetw","slide":6,"name":"box","bbox":[489,300,118,58]}
+{"kind":"textbox","id":"sh/g7m1gfux","slide":6,"name":"text","text":"DATA","textPreview":"DATA","textChars":4,"textLines":1,"bbox":[489,300,118,58]}
+{"kind":"textbox","id":"sh/18vipkbi","slide":6,"name":"text","text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[608,309,23,40]}
+{"kind":"shape","id":"sh/hs3qxcza","slide":6,"name":"box","bbox":[632,300,118,58]}
+{"kind":"textbox","id":"sh/wrup47ip","slide":6,"name":"text","text":"ACK","textPreview":"ACK","textChars":3,"textLines":1,"bbox":[632,300,118,58]}
+{"kind":"shape","id":"sh/vql8v2h4","slide":6,"name":"box","bbox":[840,168,330,390]}
+{"kind":"textbox","id":"sh/upc72x0j","slide":6,"name":"text","text":"Original PHY choices","textPreview":"Original PHY choices","textChars":20,"textLines":1,"bbox":[870,198,270,34]}
+{"kind":"shape","id":"sh/5wnq1cz6","slide":6,"bbox":[880,266,14,14]}
+{"kind":"shape","id":"sh/4vup8ril","slide":6,"name":"circle-label","bbox":[880,266,14,14]}
+{"kind":"textbox","id":"sh/jul8zmhg","slide":6,"name":"bullet","text":"2.4 GHz","textPreview":"2.4 GHz","textChars":7,"textLines":1,"bbox":[908,260,222,38]}
+{"kind":"shape","id":"sh/itc76h0v","slide":6,"bbox":[880,318,14,14]}
+{"kind":"shape","id":"sh/tknq5wzi","slide":6,"name":"circle-label","bbox":[880,318,14,14]}
+{"kind":"textbox","id":"sh/sje9crix","slide":6,"name":"bullet","text":"1 or 2 Mb/s","textPreview":"1 or 2 Mb/s","textChars":11,"textLines":1,"bbox":[908,312,222,38]}
+{"kind":"shape","id":"sh/q58n6tgf","slide":6,"bbox":[880,370,14,14]}
+{"kind":"shape","id":"sh/b6h4zyx0","slide":6,"name":"circle-label","bbox":[880,370,14,14]}
+{"kind":"textbox","id":"sh/c7q583yl","slide":6,"name":"bullet","text":"FHSS","textPreview":"FHSS","textChars":4,"textLines":1,"bbox":[908,364,222,38]}
+{"kind":"shape","id":"sh/d8zm18fq","slide":6,"bbox":[880,422,14,14]}
+{"kind":"shape","id":"sh/yt8natgb","slide":6,"name":"circle-label","bbox":[880,422,14,14]}
+{"kind":"textbox","id":"sh/zuho3yxw","slide":6,"name":"bullet","text":"DSSS","textPreview":"DSSS","textChars":4,"textLines":1,"bbox":[908,416,222,38]}
+{"kind":"shape","id":"sh/0vq5c3yh","slide":6,"bbox":[880,474,14,14]}
+{"kind":"shape","id":"sh/lwj658f2","slide":6,"name":"circle-label","bbox":[880,474,14,14]}
+{"kind":"textbox","id":"sh/mxsnedgn","slide":6,"name":"bullet","text":"Infrared option","textPreview":"Infrared option","textChars":15,"textLines":1,"bbox":[908,468,222,38]}
+{"kind":"textbox","id":"sh/ny1o7ix8","slide":6,"name":"text","text":"CSMA/CA avoids collisions; it cannot detect them while transmitting.","textPreview":"CSMA/CA avoids collisions; it cannot detect them while transmitting.","textChars":68,"textLines":1,"bbox":[54,480,700,76]}
+{"kind":"notes","id":"nt/wubhiy","slide":6,"text":"• Contrast Ethernet collision detection with wireless collision avoidance.\n• A station may not hear every other station, and its own transmission overwhelms the receiver; hence carrier sense, random backoff, positive ACK, and optional RTS/CTS.\n\n[Sources]\n- https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html\n- https://standards.ieee.org/ieee/802.11/10548/"}
+{"kind":"slide","id":"sl/4wce08","slide":7,"title":"WI-FI HISTORY","textShapes":26}
+{"kind":"textbox","id":"sh/d8zi9gvi","slide":7,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/q58ze1cr","slide":7,"name":"slide-title","text":"802.11b made 2.4 GHz practical with coded spreading","textPreview":"802.11b made 2.4 GHz practical with coded spreading","textChars":51,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/r6h076dc","slide":7,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/436hcbul","slide":7,"name":"page","text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"textbox","id":"sh/54fi5wv6","slide":7,"name":"metric-value","text":"11 Mb/s","textPreview":"11 Mb/s","textChars":7,"textLines":1,"bbox":[54,162,230,68]}
+{"kind":"textbox","id":"sh/i1oza1cv","slide":7,"name":"metric-label","text":"maximum PHY rate","textPreview":"maximum PHY rate","textChars":16,"textLines":1,"bbox":[54,232,230,46]}
+{"kind":"textbox","id":"sh/32x036dg","slide":7,"name":"metric-value","text":"≈22 MHz","textPreview":"≈22 MHz","textChars":7,"textLines":1,"bbox":[304,162,230,68]}
+{"kind":"textbox","id":"sh/oza1ovu5","slide":7,"name":"metric-label","text":"channel width","textPreview":"channel width","textChars":13,"textLines":1,"bbox":[304,232,230,46]}
+{"kind":"textbox","id":"sh/90jih0vq","slide":7,"name":"metric-value","text":"2.4 GHz","textPreview":"2.4 GHz","textChars":7,"textLines":1,"bbox":[554,162,230,68]}
+{"kind":"textbox","id":"sh/hwfeh4fu","slide":7,"name":"metric-label","text":"band","textPreview":"band","textChars":4,"textLines":1,"bbox":[554,232,230,46]}
+{"kind":"textbox","id":"sh/wvmdoze9","slide":7,"name":"text","text":"One symbol becomes a patterned chip sequence","textPreview":"One symbol becomes a patterned chip sequence","textChars":44,"textLines":1,"bbox":[54,310,620,34]}
+{"kind":"shape","id":"sh/vudwfuxo","slide":7,"name":"box","bbox":[64,390,54,68]}
+{"kind":"textbox","id":"sh/ut4vmpw3","slide":7,"name":"text","text":"+","textPreview":"+","textChars":1,"textLines":1,"bbox":[64,390,54,68]}
+{"kind":"shape","id":"sh/9svudkfi","slide":7,"name":"box","bbox":[130,390,54,68]}
+{"kind":"textbox","id":"sh/8rmdkzex","slide":7,"name":"text","text":"+","textPreview":"+","textChars":1,"textLines":1,"bbox":[130,390,54,68]}
+{"kind":"shape","id":"sh/7qdcbuxs","slide":7,"name":"box","bbox":[196,390,54,68]}
+{"kind":"textbox","id":"sh/m54vipw7","slide":7,"name":"text","text":"−","textPreview":"−","textChars":1,"textLines":1,"bbox":[196,390,54,68]}
+{"kind":"shape","id":"sh/tozepof2","slide":7,"name":"box","bbox":[262,390,54,68]}
+{"kind":"textbox","id":"sh/sn6dwjeh","slide":7,"name":"text","text":"+","textPreview":"+","textChars":1,"textLines":1,"bbox":[262,390,54,68]}
+{"kind":"shape","id":"sh/cjyp8rqp","slide":7,"name":"box","bbox":[328,390,54,68]}
+{"kind":"textbox","id":"sh/x476hw7a","slide":7,"name":"text","text":"−","textPreview":"−","textChars":1,"textLines":1,"bbox":[328,390,54,68]}
+{"kind":"shape","id":"sh/ahg76h8j","slide":7,"name":"box","bbox":[394,390,54,68]}
+{"kind":"textbox","id":"sh/bipofmp4","slide":7,"name":"text","text":"−","textPreview":"−","textChars":1,"textLines":1,"bbox":[394,390,54,68]}
+{"kind":"shape","id":"sh/ofyp47qt","slide":7,"name":"box","bbox":[460,390,54,68]}
+{"kind":"textbox","id":"sh/pg76dc7e","slide":7,"name":"text","text":"+","textPreview":"+","textChars":1,"textLines":1,"bbox":[460,390,54,68]}
+{"kind":"shape","id":"sh/2dw72h8n","slide":7,"name":"box","bbox":[526,390,54,68]}
+{"kind":"textbox","id":"sh/nepobmp8","slide":7,"name":"text","text":"−","textPreview":"−","textChars":1,"textLines":1,"bbox":[526,390,54,68]}
+{"kind":"textbox","id":"sh/0be507qh","slide":7,"name":"text","text":"CCK encodes information in the phase relationships of code words; spreading provides processing gain and robustness.","textPreview":"CCK encodes information in the phase relationships of code words; spreading provides processing gain and robustness.","textChars":116,"textLines":1,"bbox":[54,490,600,94]}
+{"kind":"shape","id":"sh/1cn69c72","slide":7,"name":"box","bbox":[770,174,400,390]}
+{"kind":"textbox","id":"sh/3658j2t4","slide":7,"name":"text","text":"PHY path","textPreview":"PHY path","textChars":8,"textLines":1,"bbox":[808,204,324,30]}
+{"kind":"textbox","id":"sh/ilc7axsj","slide":7,"name":"text","text":"bits","textPreview":"bits","textChars":4,"textLines":1,"bbox":[808,274,82,40]}
+{"kind":"textbox","id":"sh/58nqlcbu","slide":7,"name":"text","text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[896,274,42,40]}
+{"kind":"textbox","id":"sh/47epc7a9","slide":7,"name":"text","text":"CCK code","textPreview":"CCK code","textChars":8,"textLines":1,"bbox":[944,274,150,40]}
+{"kind":"textbox","id":"sh/ra58n2t0","slide":7,"name":"text","text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[1095,274,42,40]}
+{"kind":"textbox","id":"sh/q9w7ehsf","slide":7,"name":"text","text":"DSSS","textPreview":"DSSS","textChars":4,"textLines":1,"bbox":[950,345,150,48]}
+{"kind":"textbox","id":"sh/dcnqpcb6","slide":7,"name":"text","text":"1 / 2 Mb/s: Barker coding\n5.5 / 11 Mb/s: CCK","textPreview":"1 / 2 Mb/s: Barker coding | 5.5 / 11 Mb/s: CCK","textChars":44,"textLines":2,"bbox":[828,430,284,72]}
+{"kind":"notes","id":"nt/4wce08","slide":7,"text":"• Start with 802.11b because DSSS is intuitive: replace each symbol with a longer chip pattern.\n• Avoid saying that CCK merely repeats bits. It selects complex code words whose phases carry multiple bits while preserving useful correlation properties.\n• The familiar three non-overlapping 2.4 GHz channels in North America arise because the occupied channels are much wider than their 5 MHz center spacing.\n\n[Sources]\n- https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html\n- https://standards.ieee.org/ieee/802.11/10548/"}
+{"kind":"slide","id":"sl/erjny9","slide":8,"title":"WI-FI HISTORY","textShapes":17}
+{"kind":"textbox","id":"sh/dk7atw7y","slide":8,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/qhgri1on","slide":8,"name":"slide-title","text":"802.11a replaced spreading with many orthogonal subcarriers","textPreview":"802.11a replaced spreading with many orthogonal subcarriers","textChars":59,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/ripsrmp8","slide":8,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/0ni9ob6p","slide":8,"name":"page","text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"textbox","id":"sh/18raxg7a","slide":8,"name":"metric-value","text":"54 Mb/s","textPreview":"54 Mb/s","textChars":7,"textLines":1,"bbox":[54,158,200,68]}
+{"kind":"textbox","id":"sh/el0rm1oj","slide":8,"name":"metric-label","text":"maximum rate","textPreview":"maximum rate","textChars":12,"textLines":1,"bbox":[54,228,200,46]}
+{"kind":"textbox","id":"sh/zm9sv6p4","slide":8,"name":"metric-value","text":"20 MHz","textPreview":"20 MHz","textChars":6,"textLines":1,"bbox":[280,158,200,68]}
+{"kind":"textbox","id":"sh/gre9c76l","slide":8,"name":"metric-label","text":"channel","textPreview":"channel","textChars":7,"textLines":1,"bbox":[280,228,200,46]}
+{"kind":"textbox","id":"sh/hcnqlc7q","slide":8,"name":"metric-value","text":"5 GHz","textPreview":"5 GHz","textChars":5,"textLines":1,"bbox":[506,158,200,68]}
+{"kind":"textbox","id":"sh/l4bel0j2","slide":8,"name":"metric-label","text":"band","textPreview":"band","textChars":4,"textLines":1,"bbox":[506,228,200,46]}
+{"kind":"textbox","id":"sh/0j2xcv2h","slide":8,"name":"text","text":"OFDM spectrum: overlapping subcarriers, orthogonal at sampling points","textPreview":"OFDM spectrum: overlapping subcarriers, orthogonal at sampling points","textChars":69,"textLines":1,"bbox":[54,290,820,34]}
+{"kind":"shape","id":"sh/zitwjq1w","slide":8,"name":"box","bbox":[72,346.41,14,177.59]}
+{"kind":"shape","id":"sh/yhkfalkb","slide":8,"name":"box","bbox":[114,479.53,14,44.47]}
+{"kind":"shape","id":"sh/98bep0jy","slide":8,"name":"box","bbox":[156,364.72,14,159.28]}
+{"kind":"shape","id":"sh/872xgf2d","slide":8,"name":"box","bbox":[198,453.6,14,70.4]}
+{"kind":"shape","id":"sh/n6twna1s","slide":8,"name":"box","bbox":[240,396.55,14,127.45]}
+{"kind":"shape","id":"sh/m5kfe5kn","slide":8,"name":"box","bbox":[282,417.98,14,106.02]}
+{"kind":"shape","id":"sh/xcvetkja","slide":8,"name":"box","bbox":[324,433.6,14,90.4]}
+{"kind":"shape","id":"sh/wbmxkf2p","slide":8,"name":"box","bbox":[366,381.97,14,142.03]}
+{"kind":"shape","id":"sh/gfuhwjql","slide":8,"name":"box","bbox":[408,466.18,14,57.82]}
+{"kind":"shape","id":"sh/hg3ypor6","slide":8,"name":"box","bbox":[450,354.98,14,169.02]}
+{"kind":"shape","id":"sh/udczut8v","slide":8,"name":"box","bbox":[492,485.78,14,38.22]}
+{"kind":"shape","id":"sh/felgne90","slide":8,"name":"box","bbox":[534,344.06,14,179.94]}
+{"kind":"shape","id":"sh/4juh03qx","slide":8,"name":"box","bbox":[576,487.29,14,36.71]}
+{"kind":"shape","id":"sh/pknyt8ri","slide":8,"name":"box","bbox":[618,352.06,14,171.94]}
+{"kind":"shape","id":"sh/2hczyt8r","slide":8,"name":"box","bbox":[660,470.31,14,53.69]}
+{"kind":"shape","id":"sh/3ilgry9c","slide":8,"name":"box","bbox":[702,376.9,14,147.1]}
+{"kind":"shape","id":"sh/knahozad","slide":8,"name":"rule","bbox":[62,526,700,3]}
+{"kind":"textbox","id":"sh/lojyh4ry","slide":8,"name":"text","text":"frequency →","textPreview":"frequency →","textChars":11,"textLines":1,"bbox":[642,545,130,24]}
+{"kind":"shape","id":"sh/ne9sj6xs","slide":8,"name":"box","bbox":[820,170,350,385]}
+{"kind":"textbox","id":"sh/md0ba1w7","slide":8,"name":"text","text":"20 MHz OFDM","textPreview":"20 MHz OFDM","textChars":11,"textLines":1,"bbox":[852,200,286,36]}
+{"kind":"shape","id":"sh/9gbalgfy","slide":8,"bbox":[850,271,14,14]}
+{"kind":"shape","id":"sh/8fitcbed","slide":8,"name":"circle-label","bbox":[850,271,14,14]}
+{"kind":"textbox","id":"sh/zq9sfmxw","slide":8,"name":"bullet","text":"64-point FFT","textPreview":"64-point FFT","textChars":12,"textLines":1,"bbox":[878,265,258,38]}
+{"kind":"shape","id":"sh/yp0b61gb","slide":8,"bbox":[850,322,14,14]}
+{"kind":"shape","id":"sh/lcrahwfm","slide":8,"name":"circle-label","bbox":[850,322,14,14]}
+{"kind":"textbox","id":"sh/0rit8reh","slide":8,"name":"bullet","text":"48 data subcarriers","textPreview":"48 data subcarriers","textChars":19,"textLines":1,"bbox":[878,316,258,38]}
+{"kind":"shape","id":"sh/bmpsbmxk","slide":8,"bbox":[850,373,14,14]}
+{"kind":"shape","id":"sh/qlgr2hgz","slide":8,"name":"circle-label","bbox":[850,373,14,14]}
+{"kind":"textbox","id":"sh/6t0f6pcz","slide":8,"name":"bullet","text":"4 pilot subcarriers","textPreview":"4 pilot subcarriers","textChars":19,"textLines":1,"bbox":[878,367,258,38]}
+{"kind":"shape","id":"sh/ru9wfut4","slide":8,"bbox":[850,424,14,14]}
+{"kind":"shape","id":"sh/sv2x8fup","slide":8,"name":"circle-label","bbox":[850,424,14,14]}
+{"kind":"textbox","id":"sh/dwbehkba","slide":8,"name":"bullet","text":"BPSK to 64-QAM","textPreview":"BPSK to 64-QAM","textChars":14,"textLines":1,"bbox":[878,418,258,38]}
+{"kind":"shape","id":"sh/ip0v25cn","slide":8,"bbox":[850,475,14,14]}
+{"kind":"shape","id":"sh/jq9wbat8","slide":8,"name":"circle-label","bbox":[850,475,14,14]}
+{"kind":"textbox","id":"sh/4rix4fut","slide":8,"name":"bullet","text":"6–54 Mb/s","textPreview":"6–54 Mb/s","textChars":9,"textLines":1,"bbox":[878,469,258,38]}
+{"kind":"notes","id":"nt/erjny9","slide":8,"text":"• Explain orthogonality operationally: each subcarrier is sampled where the others cross zero, allowing spectra to overlap without ideal inter-carrier interference.\n• The cyclic prefix converts multipath delay spread into a manageable guard interval and supports simple frequency-domain equalization.\n• 802.11a reached 54 Mb/s but early 5 GHz propagation and device cost slowed mass adoption relative to 802.11b.\n\n[Sources]\n- https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html\n- https://standards.ieee.org/ieee/802.11/10548/"}
+{"kind":"slide","id":"sl/p30gw6","slide":9,"title":"WI-FI HISTORY","textShapes":11}
+{"kind":"textbox","id":"sh/dgfet4bm","slide":9,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/qdovypcv","slide":9,"name":"slide-title","text":"802.11g brought the 802.11a waveform back to 2.4 GHz","textPreview":"802.11g brought the 802.11a waveform back to 2.4 GHz","textChars":52,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/bexwrutg","slide":9,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/0jqx4jud","slide":9,"name":"page","text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"shape","id":"sh/lkzex4bi","slide":9,"name":"box","bbox":[70,180,470,330]}
+{"kind":"textbox","id":"sh/yhof29c7","slide":9,"name":"text","text":"802.11b neighborhood","textPreview":"802.11b neighborhood","textChars":20,"textLines":1,"bbox":[104,216,400,38]}
+{"kind":"textbox","id":"sh/zihwvets","slide":9,"name":"text","text":"2.4 GHz","textPreview":"2.4 GHz","textChars":7,"textLines":1,"bbox":[104,286,400,54]}
+{"kind":"textbox","id":"sh/8nqx8ja9","slide":9,"name":"text","text":"DSSS / CCK","textPreview":"DSSS / CCK","textChars":10,"textLines":1,"bbox":[104,365,400,40]}
+{"kind":"shape","id":"sh/98ze1obu","slide":9,"name":"box","bbox":[740,180,470,330]}
+{"kind":"textbox","id":"sh/9o32xwby","slide":9,"name":"text","text":"802.11a engine","textPreview":"802.11a engine","textChars":14,"textLines":1,"bbox":[774,216,400,38]}
+{"kind":"textbox","id":"sh/8nalorat","slide":9,"name":"text","text":"OFDM","textPreview":"OFDM","textChars":4,"textLines":1,"bbox":[774,286,400,54]}
+{"kind":"textbox","id":"sh/nm1kvmt8","slide":9,"name":"text","text":"up to 54 Mb/s","textPreview":"up to 54 Mb/s","textChars":13,"textLines":1,"bbox":[774,365,400,40]}
+{"kind":"textbox","id":"sh/mls3mhsn","slide":9,"name":"text","text":"+","textPreview":"+","textChars":1,"textLines":1,"bbox":[603,282,74,66]}
+{"kind":"textbox","id":"sh/xs321wra","slide":9,"name":"text","text":"Backward-compatible mixed networks pay protection overhead when legacy 802.11b stations are present.","textPreview":"Backward-compatible mixed networks pay protection overhead when legacy 802.11b stations are present.","textChars":100,"textLines":1,"bbox":[160,550,960,54]}
+{"kind":"notes","id":"nt/p30gw6","slide":9,"text":"• Frame 802.11g as a strategic recombination: the OFDM PHY ideas of 802.11a in the popular 2.4 GHz ecosystem.\n• Backward compatibility accelerated adoption but created mixed-mode protection overhead.\n\n[Sources]\n- https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html\n- https://standards.ieee.org/ieee/802.11/10548/"}
+{"kind":"slide","id":"sl/f3aqdk","slide":10,"title":"WI-FI HISTORY","textShapes":15}
+{"kind":"textbox","id":"sh/yhsvi58j","slide":10,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/lkjud07a","slide":10,"name":"slide-title","text":"802.11n scales rate in bandwidth, space, and time","textPreview":"802.11n scales rate in bandwidth, space, and time","textChars":49,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/kjadkvqp","slide":10,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/7m1cfapg","slide":10,"name":"page","text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"textbox","id":"sh/6lsvm58v","slide":10,"name":"text","text":"40 MHz","textPreview":"40 MHz","textChars":6,"textLines":1,"bbox":[54,168,250,52]}
+{"kind":"textbox","id":"sh/tojehk76","slide":10,"name":"text","text":"channel bonding","textPreview":"channel bonding","textChars":15,"textLines":1,"bbox":[54,224,450,34]}
+{"kind":"shape","id":"sh/8nadofq1","slide":10,"name":"rule","bbox":[54,283,500,2]}
+{"kind":"textbox","id":"sh/valwjupc","slide":10,"name":"text","text":"4 streams","textPreview":"4 streams","textChars":9,"textLines":1,"bbox":[640,168,250,52]}
+{"kind":"textbox","id":"sh/u9cvqp8r","slide":10,"name":"text","text":"SU‑MIMO","textPreview":"SU‑MIMO","textChars":7,"textLines":1,"bbox":[640,224,450,34]}
+{"kind":"shape","id":"sh/8bi90zup","slide":10,"name":"rule","bbox":[640,283,500,2]}
+{"kind":"textbox","id":"sh/9wrqt4ba","slide":10,"name":"text","text":"64‑QAM","textPreview":"64‑QAM","textChars":6,"textLines":1,"bbox":[54,338,250,52]}
+{"kind":"textbox","id":"sh/m9grypcj","slide":10,"name":"text","text":"denser symbols","textPreview":"denser symbols","textChars":14,"textLines":1,"bbox":[54,394,450,34]}
+{"kind":"shape","id":"sh/nap8rut4","slide":10,"name":"rule","bbox":[54,453,500,2]}
+{"kind":"textbox","id":"sh/wzi94zul","slide":10,"name":"text","text":"A‑MPDU","textPreview":"A‑MPDU","textChars":6,"textLines":1,"bbox":[640,338,250,52]}
+{"kind":"textbox","id":"sh/x0rax4b6","slide":10,"name":"text","text":"frame aggregation","textPreview":"frame aggregation","textChars":17,"textLines":1,"bbox":[640,394,450,34]}
+{"kind":"shape","id":"sh/ax0r2pcv","slide":10,"name":"rule","bbox":[640,453,500,2]}
+{"kind":"textbox","id":"sh/vy98vutg","slide":10,"name":"text","text":"Antenna arrays turn multipath from an impairment into parallel spatial streams.","textPreview":"Antenna arrays turn multipath from an impairment into parallel spatial streams.","textChars":79,"textLines":1,"bbox":[54,526,700,72]}
+{"kind":"shape","id":"sh/k3298jux","slide":10,"bbox":[875,540,60,60]}
+{"kind":"textbox","id":"sh/54ba1obi","slide":10,"name":"circle-label","text":"AP","textPreview":"AP","textChars":2,"textLines":1,"bbox":[875,540,60,60]}
+{"kind":"shape","id":"sh/t8nipkza","slide":10,"bbox":[1100,540,60,60]}
+{"kind":"textbox","id":"sh/s7ehwfyp","slide":10,"name":"circle-label","text":"STA","textPreview":"STA","textChars":3,"textLines":1,"bbox":[1100,540,60,60]}
+{"kind":"shape","id":"sh/76503ah4","slide":10,"name":"rule","bbox":[935,526,165,3]}
+{"kind":"shape","id":"sh/65wzu5gz","slide":10,"name":"rule","bbox":[935,550,165,3]}
+{"kind":"shape","id":"sh/hc7itkzm","slide":10,"name":"rule","bbox":[935,574,165,3]}
+{"kind":"shape","id":"sh/gbyh0zy1","slide":10,"name":"pill","bbox":[885,620,220,34]}
+{"kind":"textbox","id":"sh/fa50ruhg","slide":10,"name":"pill-text","text":"2.4 + 5 GHz","textPreview":"2.4 + 5 GHz","textChars":11,"textLines":1,"bbox":[885,620,220,34]}
+{"kind":"notes","id":"nt/f3aqdk","slide":10,"text":"• 802.11n is the major architectural jump: MIMO, channel bonding, short guard interval, and aggregation work together.\n• Maximum standardized configuration reaches 600 Mb/s using four spatial streams, 40 MHz, 64-QAM 5/6, and short GI; typical client devices implement fewer streams.\n\n[Sources]\n- https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html\n- https://www.cisco.com/c/en/us/support/docs/wireless-mobility/wireless-lan-wlan/212892-802-11ac-wireless-throughput-testing-and.html"}
+{"kind":"slide","id":"sl/tc5y2w","slide":11,"title":"WI-FI HISTORY","textShapes":20}
+{"kind":"textbox","id":"sh/i1krytcn","slide":11,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/54bat8by","slide":11,"name":"slide-title","text":"802.11ac pushes the 5 GHz OFDM formula harder","textPreview":"802.11ac pushes the 5 GHz OFDM formula harder","textChars":45,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/432903ud","slide":11,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/vy98nydw","slide":11,"name":"page","text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"textbox","id":"sh/ux0rutcb","slide":11,"name":"text","text":"160 MHz","textPreview":"160 MHz","textChars":7,"textLines":1,"bbox":[54,178,240,56]}
+{"kind":"textbox","id":"sh/h0bqpob2","slide":11,"name":"text","text":"up to 80+80 / 160","textPreview":"up to 80+80 / 160","textChars":17,"textLines":1,"bbox":[54,244,240,42]}
+{"kind":"textbox","id":"sh/wzi9w3uh","slide":11,"name":"text","text":"256‑QAM","textPreview":"256‑QAM","textChars":7,"textLines":1,"bbox":[330,178,240,56]}
+{"kind":"textbox","id":"sh/fudszit0","slide":11,"name":"text","text":"8 bits per symbol","textPreview":"8 bits per symbol","textChars":17,"textLines":1,"bbox":[330,244,240,42]}
+{"kind":"textbox","id":"sh/et4r6dcv","slide":11,"name":"text","text":"8 streams","textPreview":"8 streams","textChars":9,"textLines":1,"bbox":[606,178,240,56]}
+{"kind":"textbox","id":"sh/k3m9onq5","slide":11,"name":"text","text":"standard maximum","textPreview":"standard maximum","textChars":16,"textLines":1,"bbox":[606,244,240,42]}
+{"kind":"textbox","id":"sh/l4vqh87a","slide":11,"name":"text","text":"DL MU‑MIMO","textPreview":"DL MU‑MIMO","textChars":10,"textLines":1,"bbox":[882,178,240,56]}
+{"kind":"textbox","id":"sh/y1k7md8z","slide":11,"name":"text","text":"Wave 2 capability","textPreview":"Wave 2 capability","textChars":17,"textLines":1,"bbox":[882,244,240,42]}
+{"kind":"shape","id":"sh/j2d8fi9k","slide":11,"name":"rule","bbox":[54,315,1068,2]}
+{"kind":"textbox","id":"sh/wz2pk3qt","slide":11,"name":"text","text":"Wider","textPreview":"Wider","textChars":5,"textLines":1,"bbox":[70,370,240,42]}
+{"kind":"shape","id":"sh/x0bqd8re","slide":11,"name":"box","bbox":[70,430,100,42]}
+{"kind":"shape","id":"sh/axk7it8n","slide":11,"name":"box","bbox":[174,430,200,42]}
+{"kind":"textbox","id":"sh/byt8by98","slide":11,"name":"text","text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[88,480,64,24]}
+{"kind":"textbox","id":"sh/ov2pg3qx","slide":11,"name":"text","text":"+ 40 + 80 + 160 MHz","textPreview":"+ 40 + 80 + 160 MHz","textChars":19,"textLines":1,"bbox":[174,480,200,24]}
+{"kind":"textbox","id":"sh/9wbq9ori","slide":11,"name":"text","text":"Tighter","textPreview":"Tighter","textChars":7,"textLines":1,"bbox":[448,370,240,42]}
+{"kind":"shape","id":"sh/ps36dkj6","slide":11,"bbox":[470,438,6,6]}
+{"kind":"shape","id":"sh/oru5kfil","slide":11,"name":"circle-label","bbox":[470,438,6,6]}
+{"kind":"shape","id":"sh/3qloba10","slide":11,"bbox":[470,454,6,6]}
+{"kind":"shape","id":"sh/2psnip0f","slide":11,"name":"circle-label","bbox":[470,454,6,6]}
+{"kind":"shape","id":"sh/1oj69kju","slide":11,"bbox":[470,470,6,6]}
+{"kind":"shape","id":"sh/gna5gfip","slide":11,"name":"circle-label","bbox":[470,470,6,6]}
+{"kind":"shape","id":"sh/f21o7a14","slide":11,"bbox":[470,486,6,6]}
+{"kind":"shape","id":"sh/e1sne50j","slide":11,"name":"circle-label","bbox":[470,486,6,6]}
+{"kind":"shape","id":"sh/lkn6l4je","slide":11,"bbox":[470,502,6,6]}
+{"kind":"shape","id":"sh/0jepszit","slide":11,"name":"circle-label","bbox":[470,502,6,6]}
+{"kind":"shape","id":"sh/i5o3m1gb","slide":11,"bbox":[470,518,6,6]}
+{"kind":"shape","id":"sh/j6xkf6hw","slide":11,"name":"circle-label","bbox":[470,518,6,6]}
+{"kind":"shape","id":"sh/47qlobyh","slide":11,"bbox":[470,534,6,6]}
+{"kind":"shape","id":"sh/58z2hgzm","slide":11,"name":"circle-label","bbox":[470,534,6,6]}
+{"kind":"shape","id":"sh/u1o3i1gz","slide":11,"bbox":[470,550,6,6]}
+{"kind":"shape","id":"sh/v2xkb6hk","slide":11,"name":"circle-label","bbox":[470,550,6,6]}
+{"kind":"shape","id":"sh/w36lkry5","slide":11,"bbox":[493,438,6,6]}
+{"kind":"shape","id":"sh/h4f2dwzq","slide":11,"name":"circle-label","bbox":[493,438,6,6]}
+{"kind":"shape","id":"sh/ex83ulgj","slide":11,"bbox":[493,454,6,6]}
+{"kind":"shape","id":"sh/fyh4nqh4","slide":11,"name":"circle-label","bbox":[493,454,6,6]}
+{"kind":"shape","id":"sh/zqx0jil4","slide":11,"bbox":[493,470,6,6]}
+{"kind":"shape","id":"sh/epozaxkz","slide":11,"name":"circle-label","bbox":[493,470,6,6]}
+{"kind":"shape","id":"sh/1sfils3a","slide":11,"bbox":[493,486,6,6]}
+{"kind":"shape","id":"sh/0r6hcn2p","slide":11,"name":"circle-label","bbox":[493,486,6,6]}
+{"kind":"shape","id":"sh/rmxgfil8","slide":11,"bbox":[493,502,6,6]}
+{"kind":"shape","id":"sh/qloz6dkn","slide":11,"name":"circle-label","bbox":[493,502,6,6]}
+{"kind":"shape","id":"sh/dofyhs3e","slide":11,"bbox":[493,518,6,6]}
+{"kind":"shape","id":"sh/cn6h8n2t","slide":11,"name":"circle-label","bbox":[493,518,6,6]}
+{"kind":"shape","id":"sh/bih0r2lc","slide":11,"bbox":[493,534,6,6]}
+{"kind":"shape","id":"sh/ah8zihk7","slide":11,"name":"circle-label","bbox":[493,534,6,6]}
+{"kind":"shape","id":"sh/8ri5wfed","slide":11,"bbox":[493,550,6,6]}
+{"kind":"shape","id":"sh/tsr6pkfy","slide":11,"name":"circle-label","bbox":[493,550,6,6]}
+{"kind":"shape","id":"sh/6p0nu5w7","slide":11,"bbox":[516,438,6,6]}
+{"kind":"shape","id":"sh/7q9onaxs","slide":11,"name":"circle-label","bbox":[516,438,6,6]}
+{"kind":"shape","id":"sh/gfi50fe9","slide":11,"bbox":[516,454,6,6]}
+{"kind":"shape","id":"sh/hgb6tkfu","slide":11,"name":"circle-label","bbox":[516,454,6,6]}
+{"kind":"shape","id":"sh/ut0nypw3","slide":11,"bbox":[516,470,6,6]}
+{"kind":"shape","id":"sh/vu9oraxo","slide":11,"name":"circle-label","bbox":[516,470,6,6]}
+{"kind":"shape","id":"sh/4j254zel","slide":11,"bbox":[516,486,6,6]}
+{"kind":"shape","id":"sh/5kb6x4fq","slide":11,"name":"circle-label","bbox":[516,486,6,6]}
+{"kind":"shape","id":"sh/d076h47a","slide":11,"bbox":[516,502,6,6]}
+{"kind":"shape","id":"sh/cfy5oz6p","slide":11,"name":"circle-label","bbox":[516,502,6,6]}
+{"kind":"shape","id":"sh/rep4fup4","slide":11,"bbox":[516,518,6,6]}
+{"kind":"shape","id":"sh/qdgnmpoj","slide":11,"name":"circle-label","bbox":[516,518,6,6]}
+{"kind":"shape","id":"sh/14r6l4n6","slide":11,"bbox":[516,534,6,6]}
+{"kind":"shape","id":"sh/03i5sz6l","slide":11,"name":"circle-label","bbox":[516,534,6,6]}
+{"kind":"shape","id":"sh/z29ojup0","slide":11,"bbox":[516,550,6,6]}
+{"kind":"shape","id":"sh/e1gnqpof","slide":11,"name":"circle-label","bbox":[516,550,6,6]}
+{"kind":"shape","id":"sh/h8nm9k72","slide":11,"bbox":[539,438,6,6]}
+{"kind":"shape","id":"sh/g7e5gf6h","slide":11,"name":"circle-label","bbox":[539,438,6,6]}
+{"kind":"shape","id":"sh/6dc3q14f","slide":11,"bbox":[539,454,6,6]}
+{"kind":"shape","id":"sh/7elkj65k","slide":11,"name":"circle-label","bbox":[539,454,6,6]}
+{"kind":"shape","id":"sh/sfulcbm5","slide":11,"bbox":[539,470,6,6]}
+{"kind":"shape","id":"sh/tg32lgnq","slide":11,"name":"circle-label","bbox":[539,470,6,6]}
+{"kind":"shape","id":"sh/uhc3el4b","slide":11,"bbox":[539,486,6,6]}
+{"kind":"shape","id":"sh/filknq5w","slide":11,"name":"circle-label","bbox":[539,486,6,6]}
+{"kind":"shape","id":"sh/gjelgvmh","slide":11,"bbox":[539,502,6,6]}
+{"kind":"shape","id":"sh/hkn2p0n2","slide":11,"name":"circle-label","bbox":[539,502,6,6]}
+{"kind":"shape","id":"sh/alsjih47","slide":11,"bbox":[539,518,6,6]}
+{"kind":"shape","id":"sh/vm1kbm5c","slide":11,"name":"circle-label","bbox":[539,518,6,6]}
+{"kind":"shape","id":"sh/fupcnmhs","slide":11,"bbox":[539,534,6,6]}
+{"kind":"shape","id":"sh/etgvehg7","slide":11,"name":"circle-label","bbox":[539,534,6,6]}
+{"kind":"shape","id":"sh/1wrupwzy","slide":11,"bbox":[539,550,6,6]}
+{"kind":"shape","id":"sh/0vidgryd","slide":11,"name":"circle-label","bbox":[539,550,6,6]}
+{"kind":"shape","id":"sh/ny9crmh4","slide":11,"bbox":[562,438,6,6]}
+{"kind":"shape","id":"sh/2x0vi1gj","slide":11,"name":"circle-label","bbox":[562,438,6,6]}
+{"kind":"shape","id":"sh/p0rudwzu","slide":11,"bbox":[562,454,6,6]}
+{"kind":"shape","id":"sh/ozidkryp","slide":11,"name":"circle-label","bbox":[562,454,6,6]}
+{"kind":"shape","id":"sh/325cf2hk","slide":11,"bbox":[562,470,6,6]}
+{"kind":"shape","id":"sh/i1wb6x0f","slide":11,"name":"circle-label","bbox":[562,470,6,6]}
+{"kind":"shape","id":"sh/87u9g3ex","slide":11,"bbox":[562,486,6,6]}
+{"kind":"shape","id":"sh/983a98fi","slide":11,"name":"circle-label","bbox":[562,486,6,6]}
+{"kind":"shape","id":"sh/m5cretg7","slide":11,"bbox":[562,502,6,6]}
+{"kind":"shape","id":"sh/76ls7yxc","slide":11,"name":"circle-label","bbox":[562,502,6,6]}
+{"kind":"shape","id":"sh/k3a9cjy1","slide":11,"bbox":[562,518,6,6]}
+{"kind":"shape","id":"sh/l4ja5ofm","slide":11,"name":"circle-label","bbox":[562,518,6,6]}
+{"kind":"shape","id":"sh/y1sratgv","slide":11,"bbox":[562,534,6,6]}
+{"kind":"shape","id":"sh/z21s3exg","slide":11,"name":"circle-label","bbox":[562,534,6,6]}
+{"kind":"shape","id":"sh/4ze9one5","slide":11,"bbox":[562,550,6,6]}
+{"kind":"shape","id":"sh/50nahsfq","slide":11,"name":"circle-label","bbox":[562,550,6,6]}
+{"kind":"shape","id":"sh/6xcb6tgf","slide":11,"bbox":[585,438,6,6]}
+{"kind":"shape","id":"sh/7ylcfyh0","slide":11,"name":"circle-label","bbox":[585,438,6,6]}
+{"kind":"shape","id":"sh/szut83yl","slide":11,"bbox":[585,454,6,6]}
+{"kind":"shape","id":"sh/tk3uh8z6","slide":11,"name":"circle-label","bbox":[585,454,6,6]}
+{"kind":"shape","id":"sh/itsb2tgj","slide":11,"bbox":[585,470,6,6]}
+{"kind":"shape","id":"sh/ju1sbyh4","slide":11,"name":"circle-label","bbox":[585,470,6,6]}
+{"kind":"shape","id":"sh/kvat43y9","slide":11,"bbox":[585,486,6,6]}
+{"kind":"shape","id":"sh/5w3adozu","slide":11,"name":"circle-label","bbox":[585,486,6,6]}
+{"kind":"shape","id":"sh/apsby9g7","slide":11,"bbox":[585,502,6,6]}
+{"kind":"shape","id":"sh/vq1s7ehs","slide":11,"name":"circle-label","bbox":[585,502,6,6]}
+{"kind":"shape","id":"sh/xwr6tgnm","slide":11,"bbox":[585,518,6,6]}
+{"kind":"shape","id":"sh/cvi50bm1","slide":11,"name":"circle-label","bbox":[585,518,6,6]}
+{"kind":"shape","id":"sh/bu94r65g","slide":11,"bbox":[585,534,6,6]}
+{"kind":"shape","id":"sh/at0ny14v","slide":11,"name":"circle-label","bbox":[585,534,6,6]}
+{"kind":"shape","id":"sh/ps7mpwnq","slide":11,"bbox":[585,550,6,6]}
+{"kind":"shape","id":"sh/ory5wbm5","slide":11,"name":"circle-label","bbox":[585,550,6,6]}
+{"kind":"shape","id":"sh/3qp4n65k","slide":11,"bbox":[608,438,6,6]}
+{"kind":"shape","id":"sh/25gnu14z","slide":11,"name":"circle-label","bbox":[608,438,6,6]}
+{"kind":"shape","id":"sh/147mlwne","slide":11,"bbox":[608,454,6,6]}
+{"kind":"shape","id":"sh/g3y5srmt","slide":11,"name":"circle-label","bbox":[608,454,6,6]}
+{"kind":"shape","id":"sh/s7258rup","slide":11,"bbox":[608,470,6,6]}
+{"kind":"shape","id":"sh/t8b6hwva","slide":11,"name":"circle-label","bbox":[608,470,6,6]}
+{"kind":"shape","id":"sh/650n6hcj","slide":11,"bbox":[608,486,6,6]}
+{"kind":"shape","id":"sh/76tofmd4","slide":11,"name":"circle-label","bbox":[608,486,6,6]}
+{"kind":"shape","id":"sh/kji54rut","slide":11,"bbox":[608,502,6,6]}
+{"kind":"shape","id":"sh/5krmdwve","slide":11,"name":"circle-label","bbox":[608,502,6,6]}
+{"kind":"shape","id":"sh/ih0n2hcn","slide":11,"bbox":[608,518,6,6]}
+{"kind":"shape","id":"sh/ji94bmd8","slide":11,"name":"circle-label","bbox":[608,518,6,6]}
+{"kind":"shape","id":"sh/4fm5gbux","slide":11,"bbox":[608,534,6,6]}
+{"kind":"shape","id":"sh/pgv6pgvi","slide":11,"name":"circle-label","bbox":[608,534,6,6]}
+{"kind":"shape","id":"sh/zax8faxk","slide":11,"bbox":[608,550,6,6]}
+{"kind":"shape","id":"sh/y9or65wz","slide":11,"name":"circle-label","bbox":[608,550,6,6]}
+{"kind":"shape","id":"sh/lwfqhkfq","slide":11,"bbox":[631,438,6,6]}
+{"kind":"shape","id":"sh/0v698fe5","slide":11,"name":"circle-label","bbox":[631,438,6,6]}
+{"kind":"shape","id":"sh/nyh8juxw","slide":11,"bbox":[631,454,6,6]}
+{"kind":"shape","id":"sh/mx8rapwb","slide":11,"name":"circle-label","bbox":[631,454,6,6]}
+{"kind":"shape","id":"sh/90zql4fm","slide":11,"bbox":[631,470,6,6]}
+{"kind":"shape","id":"sh/8zq9cze1","slide":11,"name":"circle-label","bbox":[631,470,6,6]}
+{"kind":"shape","id":"sh/32d87qxc","slide":11,"bbox":[631,486,6,6]}
+{"kind":"shape","id":"sh/2147ylwr","slide":11,"name":"circle-label","bbox":[631,486,6,6]}
+{"kind":"shape","id":"sh/ul8re54n","slide":11,"bbox":[631,502,6,6]}
+{"kind":"shape","id":"sh/vmh8nq58","slide":11,"name":"circle-label","bbox":[631,502,6,6]}
+{"kind":"shape","id":"sh/gnq9gvmt","slide":11,"bbox":[631,518,6,6]}
+{"kind":"shape","id":"sh/hozqp0ne","slide":11,"name":"circle-label","bbox":[631,518,6,6]}
+{"kind":"shape","id":"sh/2p8ri54z","slide":11,"bbox":[631,534,6,6]}
+{"kind":"shape","id":"sh/3ah8ra5k","slide":11,"name":"circle-label","bbox":[631,534,6,6]}
+{"kind":"shape","id":"sh/4ba9kfmp","slide":11,"bbox":[631,550,6,6]}
+{"kind":"shape","id":"sh/pcjqtkna","slide":11,"name":"circle-label","bbox":[631,550,6,6]}
+{"kind":"textbox","id":"sh/qdsrmp4v","slide":11,"name":"text","text":"More users","textPreview":"More users","textChars":10,"textLines":1,"bbox":[824,370,280,42]}
+{"kind":"shape","id":"sh/re18vu5g","slide":11,"bbox":[854,452,58,58]}
+{"kind":"textbox","id":"sh/lkn218bu","slide":11,"name":"circle-label","text":"AP","textPreview":"AP","textChars":2,"textLines":1,"bbox":[854,452,58,58]}
+{"kind":"shape","id":"sh/0jel83a9","slide":11,"bbox":[1025,420,42,42]}
+{"kind":"textbox","id":"sh/zi5kzyto","slide":11,"name":"circle-label","text":"U1","textPreview":"U1","textChars":2,"textLines":1,"bbox":[1025,420,42,42]}
+{"kind":"shape","id":"sh/yhwj6dsj","slide":11,"name":"rule","bbox":[912,440,113,3]}
+{"kind":"shape","id":"sh/9o725sb6","slide":11,"bbox":[1025,485,42,42]}
+{"kind":"textbox","id":"sh/8nylcnal","slide":11,"name":"circle-label","text":"U2","textPreview":"U2","textChars":2,"textLines":1,"bbox":[1025,485,42,42]}
+{"kind":"shape","id":"sh/nm5k3it0","slide":11,"name":"rule","bbox":[912,505,113,3]}
+{"kind":"shape","id":"sh/mlw3adsf","slide":11,"bbox":[1025,550,42,42]}
+{"kind":"textbox","id":"sh/xc729sb2","slide":11,"name":"circle-label","text":"U3","textPreview":"U3","textChars":2,"textLines":1,"bbox":[1025,550,42,42]}
+{"kind":"shape","id":"sh/wbylgnah","slide":11,"name":"rule","bbox":[912,570,113,3]}
+{"kind":"notes","id":"nt/tc5y2w","slide":11,"text":"• Summarize 802.11ac with Cisco's memorable dimensions: wider channels, tighter modulation, more spatial streams, and downlink MU-MIMO.\n• 256-QAM carries 8 coded bits per subcarrier symbol but requires higher SNR than 64-QAM.\n• Maximum PHY rates are configuration ceilings, not expected application throughput.\n\n[Sources]\n- https://www.cisco.com/c/en/us/td/docs/wireless/controller/technotes/8-4/b_cisco_aironet_series_migrating_to802_11_ac.html\n- https://www.cisco.com/c/en/us/support/docs/wireless-mobility/wireless-lan-wlan/212892-802-11ac-wireless-throughput-testing-and.html"}
+{"kind":"slide","id":"sl/gz2xe5","slide":12,"title":"WI-FI HISTORY","textShapes":17}
+{"kind":"textbox","id":"sh/xg7a1oji","slide":12,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/adgr69k7","slide":12,"name":"slide-title","text":"802.11ax optimizes dense efficiency, not only peak speed","textPreview":"802.11ax optimizes dense efficiency, not only peak speed","textChars":56,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/bepsze1c","slide":12,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/oby94j21","slide":12,"name":"page","text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"textbox","id":"sh/pc7ax4jm","slide":12,"name":"text","text":"Before: one user occupies the channel","textPreview":"Before: one user occupies the channel","textChars":37,"textLines":1,"bbox":[54,172,530,36]}
+{"kind":"textbox","id":"sh/29wr29kv","slide":12,"name":"text","text":"802.11ax: users share frequency in one PPDU","textPreview":"802.11ax: users share frequency in one PPDU","textChars":43,"textLines":1,"bbox":[660,172,566,36]}
+{"kind":"shape","id":"sh/napsve1g","slide":12,"name":"box","bbox":[60,254,510,100]}
+{"kind":"shape","id":"sh/0ne90z2p","slide":12,"name":"box","bbox":[72,278,18,52]}
+{"kind":"shape","id":"sh/1onat4ja","slide":12,"name":"box","bbox":[96,278,18,52]}
+{"kind":"shape","id":"sh/tof6hk7q","slide":12,"name":"box","bbox":[120,278,18,52]}
+{"kind":"shape","id":"sh/8n6pof65","slide":12,"name":"box","bbox":[144,278,18,52]}
+{"kind":"shape","id":"sh/7mxofapk","slide":12,"name":"box","bbox":[168,278,18,52]}
+{"kind":"shape","id":"sh/6147mpoz","slide":12,"name":"box","bbox":[192,278,18,52]}
+{"kind":"shape","id":"sh/l0v6dk7u","slide":12,"name":"box","bbox":[216,278,18,52]}
+{"kind":"shape","id":"sh/kzmpkf69","slide":12,"name":"box","bbox":[240,278,18,52]}
+{"kind":"shape","id":"sh/jydobapo","slide":12,"name":"box","bbox":[264,278,18,52]}
+{"kind":"shape","id":"sh/yx47i5o3","slide":12,"name":"box","bbox":[288,278,18,52]}
+{"kind":"shape","id":"sh/xwv6907i","slide":12,"name":"box","bbox":[312,278,18,52]}
+{"kind":"shape","id":"sh/wvmpgv6x","slide":12,"name":"box","bbox":[336,278,18,52]}
+{"kind":"shape","id":"sh/of6pwvyt","slide":12,"name":"box","bbox":[360,278,18,52]}
+{"kind":"shape","id":"sh/pgz6p0fe","slide":12,"name":"box","bbox":[384,278,18,52]}
+{"kind":"shape","id":"sh/2do7u5gn","slide":12,"name":"box","bbox":[408,278,18,52]}
+{"kind":"shape","id":"sh/nexonax8","slide":12,"name":"box","bbox":[432,278,18,52]}
+{"kind":"shape","id":"sh/0b6psvyx","slide":12,"name":"box","bbox":[456,278,18,52]}
+{"kind":"shape","id":"sh/1cf6l0fi","slide":12,"name":"box","bbox":[480,278,18,52]}
+{"kind":"shape","id":"sh/e9o7qlgr","slide":12,"name":"box","bbox":[504,278,18,52]}
+{"kind":"shape","id":"sh/faxojqxc","slide":12,"name":"box","bbox":[528,278,18,52]}
+{"kind":"textbox","id":"sh/k7ap4ze1","slide":12,"name":"text","text":"one scheduled user","textPreview":"one scheduled user","textChars":18,"textLines":1,"bbox":[60,374,510,26]}
+{"kind":"shape","id":"sh/l8jqxkfm","slide":12,"name":"box","bbox":[666,254,510,100]}
+{"kind":"shape","id":"sh/v2lsnyho","slide":12,"name":"box","bbox":[678,278,18,52]}
+{"kind":"shape","id":"sh/u1crutg3","slide":12,"name":"box","bbox":[702,278,18,52]}
+{"kind":"shape","id":"sh/h43apozu","slide":12,"name":"box","bbox":[726,278,18,52]}
+{"kind":"shape","id":"sh/g3u9wjy9","slide":12,"name":"box","bbox":[750,278,18,52]}
+{"kind":"shape","id":"sh/36lsryh0","slide":12,"name":"box","bbox":[774,278,18,52]}
+{"kind":"shape","id":"sh/i5crytgf","slide":12,"name":"box","bbox":[798,278,18,52]}
+{"kind":"shape","id":"sh/5snat8zq","slide":12,"name":"box","bbox":[822,278,18,52]}
+{"kind":"shape","id":"sh/4ret03yl","slide":12,"name":"box","bbox":[846,278,18,52]}
+{"kind":"shape","id":"sh/za1svehg","slide":12,"name":"box","bbox":[870,278,18,52]}
+{"kind":"shape","id":"sh/y9srm90v","slide":12,"name":"box","bbox":[894,278,18,52]}
+{"kind":"shape","id":"sh/apwjytc3","slide":12,"name":"box","bbox":[918,278,18,52]}
+{"kind":"shape","id":"sh/bqp0ryto","slide":12,"name":"box","bbox":[942,278,18,52]}
+{"kind":"shape","id":"sh/cry103u9","slide":12,"name":"box","bbox":[966,278,18,52]}
+{"kind":"shape","id":"sh/xs72t8bu","slide":12,"name":"box","bbox":[990,278,18,52]}
+{"kind":"shape","id":"sh/ytgj2dcf","slide":12,"name":"box","bbox":[1014,278,18,52]}
+{"kind":"shape","id":"sh/zupkvitk","slide":12,"name":"box","bbox":[1038,278,18,52]}
+{"kind":"shape","id":"sh/kvy14nu5","slide":12,"name":"box","bbox":[1062,278,18,52]}
+{"kind":"shape","id":"sh/lw72xsbq","slide":12,"name":"box","bbox":[1086,278,18,52]}
+{"kind":"shape","id":"sh/6hgj6dcb","slide":12,"name":"box","bbox":[1110,278,18,52]}
+{"kind":"shape","id":"sh/7i9kzitw","slide":12,"name":"box","bbox":[1134,278,18,52]}
+{"kind":"textbox","id":"sh/hcbmpcvy","slide":12,"name":"text","text":"four resource-unit allocations","textPreview":"four resource-unit allocations","textChars":30,"textLines":1,"bbox":[666,374,510,26]}
+{"kind":"textbox","id":"sh/gb2lwred","slide":12,"name":"text","text":"OFDMA","textPreview":"OFDMA","textChars":5,"textLines":1,"bbox":[64,470,210,34]}
+{"kind":"textbox","id":"sh/vqt4nmds","slide":12,"name":"text","text":"frequency scheduling","textPreview":"frequency scheduling","textChars":20,"textLines":1,"bbox":[64,510,210,48]}
+{"kind":"textbox","id":"sh/upk3uhwn","slide":12,"name":"text","text":"UL + DL MU‑MIMO","textPreview":"UL + DL MU‑MIMO","textChars":15,"textLines":1,"bbox":[294,470,210,34]}
+{"kind":"textbox","id":"sh/5gbmtwva","slide":12,"name":"text","text":"spatial scheduling","textPreview":"spatial scheduling","textChars":18,"textLines":1,"bbox":[294,510,210,48]}
+{"kind":"textbox","id":"sh/4f250rep","slide":12,"name":"text","text":"1024‑QAM","textPreview":"1024‑QAM","textChars":8,"textLines":1,"bbox":[524,470,210,34]}
+{"kind":"textbox","id":"sh/3et4rmd4","slide":12,"name":"text","text":"10 bits/symbol","textPreview":"10 bits/symbol","textChars":14,"textLines":1,"bbox":[524,510,210,48]}
+{"kind":"textbox","id":"sh/idk3yhwj","slide":12,"name":"text","text":"BSS coloring","textPreview":"BSS coloring","textChars":12,"textLines":1,"bbox":[754,470,210,34]}
+{"kind":"textbox","id":"sh/dkvmxwv6","slide":12,"name":"text","text":"spatial reuse","textPreview":"spatial reuse","textChars":13,"textLines":1,"bbox":[754,510,210,48]}
+{"kind":"textbox","id":"sh/sjm54bel","slide":12,"name":"text","text":"TWT","textPreview":"TWT","textChars":3,"textLines":1,"bbox":[984,470,210,34]}
+{"kind":"textbox","id":"sh/cnup0f2x","slide":12,"name":"text","text":"power scheduling","textPreview":"power scheduling","textChars":16,"textLines":1,"bbox":[984,510,210,48]}
+{"kind":"notes","id":"nt/gz2xe5","slide":12,"text":"• OFDMA is the conceptual center: an AP partitions OFDM subcarriers into resource units for multiple stations in the same transmission opportunity.\n• 802.11ax adds frequency as a multiuser allocation dimension on top of time and space.\n• The design target is high efficiency in dense deployments, not simply a larger single-link headline rate.\n\n[Sources]\n- https://www.cisco.com/c/en/us/products/collateral/wireless/white-paper-c11-740788.html\n- https://standards.ieee.org/ieee/802.11/10548/"}
+{"kind":"slide","id":"sl/dso0fx","slide":13,"title":"WI-FI HISTORY","textShapes":9}
+{"kind":"textbox","id":"sh/2h0zq1g3","slide":13,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/p4ry1wfu","slide":13,"name":"slide-title","text":"802.11ax uses 4× narrower subcarrier spacing","textPreview":"802.11ax uses 4× narrower subcarrier spacing","textChars":44,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/o3ihsby9","slide":13,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/fepgvmxc","slide":13,"name":"page","text":"13","textPreview":"13","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"textbox","id":"sh/edgzmhgr","slide":13,"name":"text","text":"802.11a/g/n/ac","textPreview":"802.11a/g/n/ac","textChars":14,"textLines":1,"bbox":[54,190,260,36]}
+{"kind":"textbox","id":"sh/1gryxwfi","slide":13,"name":"text","text":"312.5 kHz spacing • 3.2 μs useful symbol","textPreview":"312.5 kHz spacing • 3.2 μs useful symbol","textChars":40,"textLines":1,"bbox":[54,232,340,48]}
+{"kind":"shape","id":"sh/gfihoryx","slide":13,"name":"rule","bbox":[430,262,720,3]}
+{"kind":"shape","id":"sh/zat07qxw","slide":13,"name":"box","bbox":[444,214,4,48]}
+{"kind":"shape","id":"sh/y9kzylgb","slide":13,"name":"box","bbox":[489.33,214,4,48]}
+{"kind":"shape","id":"sh/s7mhcjmx","slide":13,"name":"box","bbox":[534.67,214,4,48]}
+{"kind":"shape","id":"sh/d8fil432","slide":13,"name":"box","bbox":[580,214,4,48]}
+{"kind":"shape","id":"sh/6l4za94r","slide":13,"name":"box","bbox":[625.33,214,4,48]}
+{"kind":"shape","id":"sh/r6d0jelc","slide":13,"name":"box","bbox":[670.67,214,4,48]}
+{"kind":"shape","id":"sh/4jmh8zml","slide":13,"name":"box","bbox":[716,214,4,48]}
+{"kind":"shape","id":"sh/5kvih436","slide":13,"name":"box","bbox":[761.33,214,4,48]}
+{"kind":"shape","id":"sh/ih4z6p4f","slide":13,"name":"box","bbox":[806.67,214,4,48]}
+{"kind":"shape","id":"sh/jidgfu50","slide":13,"name":"box","bbox":[852,214,4,48]}
+{"kind":"shape","id":"sh/wf2h4zmp","slide":13,"name":"box","bbox":[897.33,214,4,48]}
+{"kind":"shape","id":"sh/hgbydkna","slide":13,"name":"box","bbox":[942.67,214,4,48]}
+{"kind":"shape","id":"sh/x036lwbm","slide":13,"name":"box","bbox":[988,214,4,48]}
+{"kind":"shape","id":"sh/cza5sra1","slide":13,"name":"box","bbox":[1033.33,214,4,48]}
+{"kind":"shape","id":"sh/by1ojmtg","slide":13,"name":"box","bbox":[1078.67,214,4,48]}
+{"kind":"shape","id":"sh/axsnqhsb","slide":13,"name":"box","bbox":[1124,214,4,48]}
+{"kind":"textbox","id":"sh/pwj6hcbq","slide":13,"name":"text","text":"802.11ax HE","textPreview":"802.11ax HE","textChars":11,"textLines":1,"bbox":[54,405,260,36]}
+{"kind":"textbox","id":"sh/ova5o7a5","slide":13,"name":"text","text":"78.125 kHz spacing • 12.8 μs useful symbol","textPreview":"78.125 kHz spacing • 12.8 μs useful symbol","textChars":42,"textLines":1,"bbox":[54,447,340,48]}
+{"kind":"shape","id":"sh/nu1of2tk","slide":13,"name":"rule","bbox":[430,477,720,3]}
+{"kind":"shape","id":"sh/2tsnmxsz","slide":13,"name":"box","bbox":[444,429,4,48]}
+{"kind":"shape","id":"sh/9sn6tgbu","slide":13,"name":"box","bbox":[461.44,429,4,48]}
+{"kind":"shape","id":"sh/8rep0ba9","slide":13,"name":"box","bbox":[478.87,429,4,48]}
+{"kind":"shape","id":"sh/qdo3ud8r","slide":13,"name":"box","bbox":[496.31,429,4,48]}
+{"kind":"shape","id":"sh/ryx4ny9c","slide":13,"name":"box","bbox":[513.74,429,4,48]}
+{"kind":"shape","id":"sh/sz6lw3qx","slide":13,"name":"box","bbox":[531.18,429,4,48]}
+{"kind":"shape","id":"sh/d0zmp8ri","slide":13,"name":"box","bbox":[548.62,429,4,48]}
+{"kind":"shape","id":"sh/i9o3qt8v","slide":13,"name":"box","bbox":[566.05,429,4,48]}
+{"kind":"shape","id":"sh/3axkjy9g","slide":13,"name":"box","bbox":[583.49,429,4,48]}
+{"kind":"shape","id":"sh/4b6ls3ql","slide":13,"name":"box","bbox":[600.92,429,4,48]}
+{"kind":"shape","id":"sh/5cf2l8r6","slide":13,"name":"box","bbox":[618.36,429,4,48]}
+{"kind":"shape","id":"sh/25832x8z","slide":13,"name":"box","bbox":[635.79,429,4,48]}
+{"kind":"shape","id":"sh/n6h4vi9k","slide":13,"name":"box","bbox":[653.23,429,4,48]}
+{"kind":"shape","id":"sh/nyx0rud0","slide":13,"name":"box","bbox":[670.67,429,4,48]}
+{"kind":"shape","id":"sh/mxozipcf","slide":13,"name":"box","bbox":[688.1,429,4,48]}
+{"kind":"shape","id":"sh/90fit4vq","slide":13,"name":"box","bbox":[705.54,429,4,48]}
+{"kind":"shape","id":"sh/8z6hkzul","slide":13,"name":"box","bbox":[722.97,429,4,48]}
+{"kind":"shape","id":"sh/zuxgnado","slide":13,"name":"box","bbox":[740.41,429,4,48]}
+{"kind":"shape","id":"sh/yt4ze5c3","slide":13,"name":"box","bbox":[757.85,429,4,48]}
+{"kind":"shape","id":"sh/lwfipkvu","slide":13,"name":"box","bbox":[775.28,429,4,48]}
+{"kind":"shape","id":"sh/0v6hgfu9","slide":13,"name":"box","bbox":[792.72,429,4,48]}
+{"kind":"shape","id":"sh/jqh0zet8","slide":13,"name":"box","bbox":[810.15,429,4,48]}
+{"kind":"shape","id":"sh/ip8zq9cn","slide":13,"name":"box","bbox":[827.59,429,4,48]}
+{"kind":"shape","id":"sh/gb2xkba5","slide":13,"name":"box","bbox":[845.03,429,4,48]}
+{"kind":"shape","id":"sh/1wbetgbq","slide":13,"name":"box","bbox":[862.46,429,4,48]}
+{"kind":"shape","id":"sh/e90fi1sz","slide":13,"name":"box","bbox":[879.9,429,4,48]}
+{"kind":"shape","id":"sh/fa9wr6tk","slide":13,"name":"box","bbox":[897.33,429,4,48]}
+{"kind":"shape","id":"sh/oz2xoba1","slide":13,"name":"box","bbox":[914.77,429,4,48]}
+{"kind":"shape","id":"sh/p0bexgbm","slide":13,"name":"box","bbox":[932.21,429,4,48]}
+{"kind":"shape","id":"sh/2xkfmlsv","slide":13,"name":"box","bbox":[949.64,429,4,48]}
+{"kind":"shape","id":"sh/3ytwv6tg","slide":13,"name":"box","bbox":[967.08,429,4,48]}
+{"kind":"shape","id":"sh/c3mxsvad","slide":13,"name":"box","bbox":[984.51,429,4,48]}
+{"kind":"shape","id":"sh/d4ve10bi","slide":13,"name":"box","bbox":[1001.95,429,4,48]}
+{"kind":"shape","id":"sh/lkrel032","slide":13,"name":"box","bbox":[1019.38,429,4,48]}
+{"kind":"shape","id":"sh/kjixcv2h","slide":13,"name":"box","bbox":[1036.82,429,4,48]}
+{"kind":"shape","id":"sh/zi9wjqlw","slide":13,"name":"box","bbox":[1054.26,429,4,48]}
+{"kind":"shape","id":"sh/yhgfalkb","slide":13,"name":"box","bbox":[1071.69,429,4,48]}
+{"kind":"shape","id":"sh/9orep0jy","slide":13,"name":"box","bbox":[1089.13,429,4,48]}
+{"kind":"shape","id":"sh/8nixgv2d","slide":13,"name":"box","bbox":[1106.56,429,4,48]}
+{"kind":"shape","id":"sh/7m9wnq1s","slide":13,"name":"box","bbox":[1124,429,4,48]}
+{"kind":"textbox","id":"sh/ml0felk7","slide":13,"name":"text","text":"4× more FFT points in the same 20 MHz channel","textPreview":"4× more FFT points in the same 20 MHz channel","textChars":45,"textLines":1,"bbox":[700,325,450,42]}
+{"kind":"textbox","id":"sh/ps7edw3u","slide":13,"name":"text","text":"Longer symbols improve tolerance to delay spread and create finer-grained resource units; guard intervals adapt to the environment.","textPreview":"Longer symbols improve tolerance to delay spread and create finer-grained resource units; guard intervals adapt to the environment.","textChars":131,"textLines":1,"bbox":[420,558,750,56]}
+{"kind":"notes","id":"nt/dso0fx","slide":13,"text":"• For a 20 MHz channel, legacy OFDM uses 312.5 kHz subcarrier spacing and 3.2 μs useful symbol time; HE OFDM uses 78.125 kHz and 12.8 μs.\n• A longer OFDM symbol reduces the relative cost of a longer guard interval and creates more subcarriers that can be grouped into resource units.\n• The diagram is conceptual and not a literal spectrum mask.\n\n[Sources]\n- https://www.cisco.com/c/en/us/products/collateral/wireless/white-paper-c11-740788.html"}
+{"kind":"slide","id":"sl/57971a","slide":14,"title":"WI-FI HISTORY","textShapes":12}
+{"kind":"textbox","id":"sh/0b65kre5","slide":14,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/zqx4rmdk","slide":14,"name":"slide-title","text":"Wi‑Fi 6E adds spectrum, not a new 802.11 waveform","textPreview":"Wi‑Fi 6E adds spectrum, not a new 802.11 waveform","textChars":49,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/eponihwz","slide":14,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/dovmpcve","slide":14,"name":"page","text":"14","textPreview":"14","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"shape","id":"sh/cnm5g7et","slide":14,"name":"box","bbox":[54,235,310,160]}
+{"kind":"textbox","id":"sh/rmd4n2do","slide":14,"name":"text","text":"2.4 GHz","textPreview":"2.4 GHz","textChars":7,"textLines":1,"bbox":[54,260,310,55]}
+{"kind":"textbox","id":"sh/ql43exw3","slide":14,"name":"text","text":"range + legacy","textPreview":"range + legacy","textChars":14,"textLines":1,"bbox":[70,330,278,42]}
+{"kind":"shape","id":"sh/xkz61wvy","slide":14,"name":"box","bbox":[384,235,370,160]}
+{"kind":"textbox","id":"sh/wjq5sbed","slide":14,"name":"text","text":"5 GHz","textPreview":"5 GHz","textChars":5,"textLines":1,"bbox":[384,260,370,55]}
+{"kind":"textbox","id":"sh/adsbupsv","slide":14,"name":"text","text":"capacity + mature ecosystem","textPreview":"capacity + mature ecosystem","textChars":27,"textLines":1,"bbox":[400,330,338,42]}
+{"kind":"shape","id":"sh/be1s3u9g","slide":14,"name":"box","bbox":[774,235,452,160]}
+{"kind":"textbox","id":"sh/cfatwza1","slide":14,"name":"text","text":"6 GHz","textPreview":"6 GHz","textChars":5,"textLines":1,"bbox":[774,260,452,55]}
+{"kind":"textbox","id":"sh/xgja54rm","slide":14,"name":"text","text":"clean wide channels for Wi‑Fi 6E/7","textPreview":"clean wide channels for Wi‑Fi 6E/7","textChars":34,"textLines":1,"bbox":[790,330,420,42]}
+{"kind":"textbox","id":"sh/298bqpsz","slide":14,"name":"text","text":"Same HE PHY/MAC toolbox","textPreview":"Same HE PHY/MAC toolbox","textChars":23,"textLines":1,"bbox":[54,470,420,44]}
+{"kind":"textbox","id":"sh/nahszu9k","slide":14,"name":"text","text":"New operating spectrum and channel plan","textPreview":"New operating spectrum and channel plan","textChars":39,"textLines":1,"bbox":[54,525,540,44]}
+{"kind":"textbox","id":"sh/obqtsza5","slide":14,"name":"text","text":"A band extension is not the same as a new IEEE amendment.","textPreview":"A band extension is not the same as a new IEEE amendment.","textChars":57,"textLines":1,"bbox":[720,490,460,66]}
+{"kind":"notes","id":"nt/57971a","slide":14,"text":"• Clarify the naming trap: Wi‑Fi 6E is Wi‑Fi 6 / 802.11ax extended into 6 GHz; it is not a separate PHY generation.\n• Regulatory channel availability varies by country, so avoid implying identical 6 GHz allocations worldwide.\n\n[Sources]\n- https://standards.ieee.org/ieee/802.11/10548/\n- https://www.cisco.com/c/en/us/support/docs/wireless-mobility/wireless-lan-wlan/212892-802-11ac-wireless-throughput-testing-and.html"}
+{"kind":"slide","id":"sl/760k9g","slide":15,"title":"WI-FI HISTORY","textShapes":17}
+{"kind":"textbox","id":"sh/y9ob2l83","slide":15,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/lczux07u","slide":15,"name":"slide-title","text":"802.11be makes several links behave like one connection","textPreview":"802.11be makes several links behave like one connection","textChars":55,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/kbqt4vq9","slide":15,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/b6xsrqps","slide":15,"name":"page","text":"15","textPreview":"15","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"shape","id":"sh/a5obyl87","slide":15,"bbox":[142,350,90,90]}
+{"kind":"textbox","id":"sh/x8fat07y","slide":15,"name":"circle-label","text":"AP","textPreview":"AP","textChars":2,"textLines":1,"bbox":[142,350,90,90]}
+{"kind":"shape","id":"sh/c76t0vqd","slide":15,"bbox":[1055,350,90,90]}
+{"kind":"textbox","id":"sh/3idsn6pg","slide":15,"name":"circle-label","text":"STA","textPreview":"STA","textChars":3,"textLines":1,"bbox":[1055,350,90,90]}
+{"kind":"shape","id":"sh/2h4bu18b","slide":15,"name":"rule","bbox":[232,288,823,8]}
+{"kind":"shape","id":"sh/s7itw36p","slide":15,"name":"pill","bbox":[555,263,170,34]}
+{"kind":"textbox","id":"sh/t8rupo7a","slide":15,"name":"pill-text","text":"2.4 GHz","textPreview":"2.4 GHz","textChars":7,"textLines":1,"bbox":[555,263,170,34]}
+{"kind":"shape","id":"sh/650butoj","slide":15,"name":"rule","bbox":[232,393,823,8]}
+{"kind":"shape","id":"sh/769cnyp4","slide":15,"name":"pill","bbox":[555,368,170,34]}
+{"kind":"textbox","id":"sh/k3ytsj6t","slide":15,"name":"pill-text","text":"5 GHz","textPreview":"5 GHz","textChars":5,"textLines":1,"bbox":[555,368,170,34]}
+{"kind":"shape","id":"sh/547alo7y","slide":15,"name":"rule","bbox":[232,498,823,8]}
+{"kind":"shape","id":"sh/i1gbq9on","slide":15,"name":"pill","bbox":[555,473,170,34]}
+{"kind":"textbox","id":"sh/j2psjep8","slide":15,"name":"pill-text","text":"6 GHz","textPreview":"6 GHz","textChars":5,"textLines":1,"bbox":[555,473,170,34]}
+{"kind":"textbox","id":"sh/4z2t4n6x","slide":15,"name":"text","text":"MULTI‑LINK OPERATION","textPreview":"MULTI‑LINK OPERATION","textChars":20,"textLines":1,"bbox":[450,160,390,34]}
+{"kind":"textbox","id":"sh/p0buxs7i","slide":15,"name":"text","text":"320 MHz","textPreview":"320 MHz","textChars":7,"textLines":1,"bbox":[80,568,250,40]}
+{"kind":"textbox","id":"sh/dg7uh8zm","slide":15,"name":"text","text":"channel width","textPreview":"channel width","textChars":13,"textLines":1,"bbox":[80,611,250,30]}
+{"kind":"textbox","id":"sh/cfyt83y1","slide":15,"name":"text","text":"4096‑QAM","textPreview":"4096‑QAM","textChars":8,"textLines":1,"bbox":[372,568,250,40]}
+{"kind":"textbox","id":"sh/bepsfihg","slide":15,"name":"text","text":"12 bits/symbol","textPreview":"12 bits/symbol","textChars":14,"textLines":1,"bbox":[372,611,250,30]}
+{"kind":"textbox","id":"sh/qtgb6dgv","slide":15,"name":"text","text":"puncturing","textPreview":"puncturing","textChars":10,"textLines":1,"bbox":[664,568,250,40]}
+{"kind":"textbox","id":"sh/ps7ad8za","slide":15,"name":"text","text":"use clean subchannels","textPreview":"use clean subchannels","textChars":21,"textLines":1,"bbox":[664,611,250,30]}
+{"kind":"textbox","id":"sh/oret43y5","slide":15,"name":"text","text":">30 Gb/s","textPreview":">30 Gb/s","textChars":8,"textLines":1,"bbox":[956,568,250,40]}
+{"kind":"textbox","id":"sh/3q5sbyhk","slide":15,"name":"text","text":"required max mode","textPreview":"required max mode","textChars":17,"textLines":1,"bbox":[956,611,250,30]}
+{"kind":"notes","id":"nt/760k9g","slide":15,"text":"• MLO lets a device establish and coordinate links across bands; implementations can use links for throughput, load balancing, redundancy, or latency reduction.\n• 802.11be adds 320 MHz channels, 4096-QAM, flexible puncturing, and other enhancements while preserving backward compatibility.\n• IEEE 802.11be-2024 requires at least one mode supporting at least 30 Gb/s at the MAC service access point; marketing peak PHY figures may be higher.\n\n[Sources]\n- https://standards.ieee.org/ieee/802.11be/7516/\n- https://standards.ieee.org/ieee/802.11/10548/"}
+{"kind":"slide","id":"sl/7rzabi","slide":16,"title":"WI-FI HISTORY","textShapes":16}
+{"kind":"textbox","id":"sh/9k7610vm","slide":16,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/mhg7q5cv","slide":16,"name":"slide-title","text":"802.11ad uses enormous bandwidth at 60 GHz","textPreview":"802.11ad uses enormous bandwidth at 60 GHz","textChars":42,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/7ipozadg","slide":16,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/kfypovu5","slide":16,"name":"page","text":"16","textPreview":"16","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"textbox","id":"sh/lg76x0vq","slide":16,"name":"metric-value","text":"2.16 GHz","textPreview":"2.16 GHz","textChars":8,"textLines":1,"bbox":[54,160,250,68]}
+{"kind":"textbox","id":"sh/ydw7mlcz","slide":16,"name":"metric-label","text":"channel width","textPreview":"channel width","textChars":13,"textLines":1,"bbox":[54,230,250,46]}
+{"kind":"textbox","id":"sh/zepovqdk","slide":16,"name":"metric-value","text":"≈6.8 Gb/s","textPreview":"≈6.8 Gb/s","textChars":9,"textLines":1,"bbox":[340,160,250,68]}
+{"kind":"textbox","id":"sh/cbe5kvut","slide":16,"name":"metric-label","text":"maximum PHY rate","textPreview":"maximum PHY rate","textChars":16,"textLines":1,"bbox":[340,230,250,46]}
+{"kind":"textbox","id":"sh/dcn6tgve","slide":16,"name":"metric-value","text":"room scale","textPreview":"room scale","textChars":10,"textLines":1,"bbox":[626,160,250,68]}
+{"kind":"textbox","id":"sh/1gritsr2","slide":16,"name":"metric-label","text":"range","textPreview":"range","textChars":5,"textLines":1,"bbox":[626,230,250,46]}
+{"kind":"shape","id":"sh/0fihknqx","slide":16,"name":"box","bbox":[54,320,710,220]}
+{"kind":"textbox","id":"sh/fe90ri9c","slide":16,"name":"text","text":"Three PHY modes","textPreview":"Three PHY modes","textChars":15,"textLines":1,"bbox":[84,350,250,32]}
+{"kind":"shape","id":"sh/etgzid8r","slide":16,"bbox":[90,414,14,14]}
+{"kind":"shape","id":"sh/ds7ipsr6","slide":16,"name":"circle-label","bbox":[90,414,14,14]}
+{"kind":"textbox","id":"sh/sryhgnql","slide":16,"name":"bullet","text":"Control PHY: robust spread BPSK","textPreview":"Control PHY: robust spread BPSK","textChars":31,"textLines":1,"bbox":[118,408,592,38]}
+{"kind":"shape","id":"sh/rqp0ni90","slide":16,"bbox":[90,462,14,14]}
+{"kind":"shape","id":"sh/qpgzed8f","slide":16,"name":"circle-label","bbox":[90,462,14,14]}
+{"kind":"textbox","id":"sh/5o7yl8ra","slide":16,"name":"bullet","text":"Single‑carrier PHY: practical high rate","textPreview":"Single‑carrier PHY: practical high rate","textChars":39,"textLines":1,"bbox":[118,456,592,38]}
+{"kind":"shape","id":"sh/4nyhc3qp","slide":16,"bbox":[90,510,14,14]}
+{"kind":"shape","id":"sh/w7ih83yl","slide":16,"name":"circle-label","bbox":[90,510,14,14]}
+{"kind":"textbox","id":"sh/h8bi18zq","slide":16,"name":"bullet","text":"OFDM PHY: multicarrier option","textPreview":"OFDM PHY: multicarrier option","textChars":29,"textLines":1,"bbox":[118,504,592,38]}
+{"kind":"shape","id":"sh/u50z6dgf","slide":16,"bbox":[910,330,72,72]}
+{"kind":"textbox","id":"sh/v690zyh0","slide":16,"name":"circle-label","text":"AP","textPreview":"AP","textChars":2,"textLines":1,"bbox":[910,330,72,72]}
+{"kind":"shape","id":"sh/83ih43y9","slide":16,"bbox":[1095,480,60,60]}
+{"kind":"textbox","id":"sh/94rix8zu","slide":16,"name":"circle-label","text":"STA","textPreview":"STA","textChars":3,"textLines":1,"bbox":[1095,480,60,60]}
+{"kind":"shape","id":"sh/m10z2tg3","slide":16,"name":"rule","bbox":[976,354,122,3]}
+{"kind":"shape","id":"sh/7290vyho","slide":16,"name":"rule","bbox":[976,361,127,3]}
+{"kind":"shape","id":"sh/szm1gnyt","slide":16,"name":"rule","bbox":[976,368,132,3]}
+{"kind":"shape","id":"sh/t0vi9szy","slide":16,"name":"rule","bbox":[976,375,137,3]}
+{"kind":"shape","id":"sh/3uxkzm1g","slide":16,"name":"rule","bbox":[976,382,142,3]}
+{"kind":"textbox","id":"sh/2to3610v","slide":16,"name":"text","text":"Beam training is essential","textPreview":"Beam training is essential","textChars":26,"textLines":1,"bbox":[820,576,350,36]}
+{"kind":"notes","id":"nt/7rzabi","slide":16,"text":"• 802.11ad is the Directional Multi-Gigabit branch around 60 GHz.\n• Its 2.16 GHz-wide channels make multi-gigabit rates possible without relying only on extremely dense modulation.\n• High path and penetration loss shrink coverage but enable directional reuse; beam training aligns transmit and receive sectors.\n\n[Sources]\n- https://standards.ieee.org/ieee/802.11/10548/\n- https://helpfiles.keysight.com/csg/n7637/Content/Main/802.11ad%20Concepts.htm\n- https://www.keysight.com/us/en/assets/7018-03292/application-notes/5990-9697.pdf"}
+{"kind":"slide","id":"sl/qtd81a","slide":17,"title":"WI-FI HISTORY","textShapes":9}
+{"kind":"textbox","id":"sh/jutonmds","slide":17,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/kv2pgrud","slide":17,"name":"slide-title","text":"802.11ay turns the 60 GHz link into a wider, spatial system","textPreview":"802.11ay turns the 60 GHz link into a wider, spatial system","textChars":59,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/5wb6pwby","slide":17,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/a507ahcv","slide":17,"name":"page","text":"17","textPreview":"17","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"shape","id":"sh/vq9ojmdg","slide":17,"name":"box","bbox":[70,210,460,310]}
+{"kind":"shape","id":"sh/wripcru1","slide":17,"name":"box","bbox":[750,210,460,310]}
+{"kind":"textbox","id":"sh/xsb6lcvm","slide":17,"name":"text","text":"802.11ad","textPreview":"802.11ad","textChars":8,"textLines":1,"bbox":[70,244,460,42]}
+{"kind":"textbox","id":"sh/m10n6xcz","slide":17,"name":"text","text":"one 2.16 GHz channel\ndirectional single link","textPreview":"one 2.16 GHz channel | directional single link","textChars":44,"textLines":2,"bbox":[110,330,380,100]}
+{"kind":"textbox","id":"sh/n29of2dk","slide":17,"name":"text","text":"802.11ay","textPreview":"802.11ay","textChars":8,"textLines":1,"bbox":[750,244,460,42]}
+{"kind":"textbox","id":"sh/7ylcvmhg","slide":17,"name":"text","text":"channel bonding + MIMO\nat least one ≥20 Gb/s mode","textPreview":"channel bonding + MIMO | at least one ≥20 Gb/s mode","textChars":49,"textLines":2,"bbox":[790,330,380,100]}
+{"kind":"textbox","id":"sh/mxsv210v","slide":17,"name":"text","text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[592,322,96,60]}
+{"kind":"textbox","id":"sh/903uxwzm","slide":17,"name":"text","text":"60 GHz evolves from a cable-replacement idea toward high-capacity access and backhaul.","textPreview":"60 GHz evolves from a cable-replacement idea toward high-capacity access and backhaul.","textChars":86,"textLines":1,"bbox":[130,570,1020,62]}
+{"kind":"notes","id":"nt/qtd81a","slide":17,"text":"• 802.11ay enhances operation in license-exempt bands above 45 GHz and requires at least one mode delivering at least 20 Gb/s at the MAC service access point.\n• Key extensions include channel bonding/aggregation, MIMO, improved beamforming, and longer-range use cases.\n\n[Sources]\n- https://standards.ieee.org/ieee/802.11/10548/\n- https://standards.ieee.org/wp-content/uploads/import/documents/other/geps_07-iot_smart_cities.pdf"}
+{"kind":"slide","id":"sl/5gnvbx","slide":18,"title":"WI-FI HISTORY","textShapes":12}
+{"kind":"textbox","id":"sh/wryx4n2t","slide":18,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/vqpgbil8","slide":18,"name":"slide-title","text":"Four waveform ideas explain most of Wi‑Fi’s PHY history","textPreview":"Four waveform ideas explain most of Wi‑Fi’s PHY history","textChars":55,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/apgf2dk3","slide":18,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/5gryhs3q","slide":18,"name":"page","text":"18","textPreview":"18","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"textbox","id":"sh/kvix8725","slide":18,"name":"text","text":"DSSS / CCK","textPreview":"DSSS / CCK","textChars":10,"textLines":1,"bbox":[54,170,250,40]}
+{"kind":"shape","id":"sh/ju9gf2lk","slide":18,"name":"box","bbox":[54,230,250,220]}
+{"kind":"shape","id":"sh/it0f6xkz","slide":18,"name":"box","bbox":[82,310,25,58]}
+{"kind":"shape","id":"sh/l07e5836","slide":18,"name":"box","bbox":[114,310,25,58]}
+{"kind":"shape","id":"sh/0zexw32l","slide":18,"name":"box","bbox":[146,310,25,30]}
+{"kind":"shape","id":"sh/ydsbmx0n","slide":18,"name":"box","bbox":[178,310,25,58]}
+{"kind":"shape","id":"sh/je1sv2h8","slide":18,"name":"box","bbox":[210,310,25,30]}
+{"kind":"shape","id":"sh/kfato7it","slide":18,"name":"box","bbox":[242,310,25,30]}
+{"kind":"textbox","id":"sh/lg3axsze","slide":18,"name":"text","text":"Spread symbols across chips","textPreview":"Spread symbols across chips","textChars":27,"textLines":1,"bbox":[64,478,230,62]}
+{"kind":"textbox","id":"sh/6hcbqxgz","slide":18,"name":"text","text":"OFDM","textPreview":"OFDM","textChars":4,"textLines":1,"bbox":[350,170,250,40]}
+{"kind":"shape","id":"sh/7ilsz2h4","slide":18,"name":"box","bbox":[350,230,250,220]}
+{"kind":"shape","id":"sh/8juts7yp","slide":18,"name":"box","bbox":[380,340,8,25]}
+{"kind":"shape","id":"sh/tk3a1cza","slide":18,"name":"box","bbox":[402,270.37,8,94.63]}
+{"kind":"shape","id":"sh/ulcbuhgv","slide":18,"name":"box","bbox":[424,320.07,8,44.93]}
+{"kind":"shape","id":"sh/vmlc3mhg","slide":18,"name":"box","bbox":[446,304.52,8,60.48]}
+{"kind":"shape","id":"sh/ra5sbmxo","slide":18,"name":"box","bbox":[468,281.46,8,83.54]}
+{"kind":"shape","id":"sh/q9wrihw3","slide":18,"name":"box","bbox":[490,336.53,8,28.47]}
+{"kind":"shape","id":"sh/dcnadwfe","slide":18,"name":"box","bbox":[512,265.22,8,99.78]}
+{"kind":"shape","id":"sh/sbe9kre9","slide":18,"name":"box","bbox":[534,332.36,8,32.64]}
+{"kind":"shape","id":"sh/3mls72xc","slide":18,"name":"box","bbox":[556,288.6,8,76.4]}
+{"kind":"textbox","id":"sh/ilcrehwr","slide":18,"name":"text","text":"Parallel orthogonal tones","textPreview":"Parallel orthogonal tones","textChars":25,"textLines":1,"bbox":[360,478,230,62]}
+{"kind":"textbox","id":"sh/5ona9cfi","slide":18,"name":"text","text":"OFDMA","textPreview":"OFDMA","textChars":5,"textLines":1,"bbox":[646,170,250,40]}
+{"kind":"shape","id":"sh/4ne9g7ex","slide":18,"name":"box","bbox":[646,230,250,220]}
+{"kind":"shape","id":"sh/vils32xg","slide":18,"name":"box","bbox":[674,270,22,38]}
+{"kind":"shape","id":"sh/uhcraxwv","slide":18,"name":"box","bbox":[702,270,22,38]}
+{"kind":"shape","id":"sh/knqpk3ut","slide":18,"name":"box","bbox":[730,270,22,38]}
+{"kind":"shape","id":"sh/loj6d8vy","slide":18,"name":"box","bbox":[758,270,22,38]}
+{"kind":"shape","id":"sh/yl87itcn","slide":18,"name":"box","bbox":[786,270,22,38]}
+{"kind":"shape","id":"sh/jmhobyd8","slide":18,"name":"box","bbox":[814,270,22,38]}
+{"kind":"shape","id":"sh/8rapo3up","slide":18,"name":"box","bbox":[842,270,22,38]}
+{"kind":"shape","id":"sh/tsjqh8va","slide":18,"name":"box","bbox":[674,318,22,38]}
+{"kind":"shape","id":"sh/6ps7mdcj","slide":18,"name":"box","bbox":[702,318,22,38]}
+{"kind":"shape","id":"sh/7q1ofyd4","slide":18,"name":"box","bbox":[730,318,22,38]}
+{"kind":"shape","id":"sh/ov6pcjul","slide":18,"name":"box","bbox":[758,318,22,38]}
+{"kind":"shape","id":"sh/9wz65ov6","slide":18,"name":"box","bbox":[786,318,22,38]}
+{"kind":"shape","id":"sh/1obq18zm","slide":18,"name":"box","bbox":[814,318,22,38]}
+{"kind":"shape","id":"sh/gn2p83y1","slide":18,"name":"box","bbox":[842,318,22,38]}
+{"kind":"shape","id":"sh/fmt8zyhg","slide":18,"name":"box","bbox":[674,366,22,38]}
+{"kind":"shape","id":"sh/e1k76dgv","slide":18,"name":"box","bbox":[702,366,22,38]}
+{"kind":"shape","id":"sh/t0bqx8za","slide":18,"name":"box","bbox":[730,366,22,38]}
+{"kind":"shape","id":"sh/sz2p43y5","slide":18,"name":"box","bbox":[758,366,22,38]}
+{"kind":"shape","id":"sh/rytovyhk","slide":18,"name":"box","bbox":[786,366,22,38]}
+{"kind":"shape","id":"sh/6x072tgz","slide":18,"name":"box","bbox":[814,366,22,38]}
+{"kind":"shape","id":"sh/5wr6toze","slide":18,"name":"box","bbox":[842,366,22,38]}
+{"kind":"textbox","id":"sh/4vip0jyt","slide":18,"name":"text","text":"Assign tone groups to users","textPreview":"Assign tone groups to users","textChars":27,"textLines":1,"bbox":[656,478,230,62]}
+{"kind":"textbox","id":"sh/apwve5sf","slide":18,"name":"text","text":"60 GHz SC","textPreview":"60 GHz SC","textChars":9,"textLines":1,"bbox":[942,170,250,40]}
+{"kind":"shape","id":"sh/bq5wnqt0","slide":18,"name":"box","bbox":[942,230,250,220]}
+{"kind":"shape","id":"sh/wredgval","slide":18,"name":"box","bbox":[967,338,3,4]}
+{"kind":"shape","id":"sh/xsnep0b6","slide":18,"name":"box","bbox":[969.5,334.04,3,4]}
+{"kind":"shape","id":"sh/mlcvalsj","slide":18,"name":"box","bbox":[972,331.16,3,4]}
+{"kind":"shape","id":"sh/nm5wjqto","slide":18,"name":"box","bbox":[974.5,331.24,3,4]}
+{"kind":"shape","id":"sh/onedcva9","slide":18,"name":"box","bbox":[977,335.05,3,4]}
+{"kind":"shape","id":"sh/9onel0bu","slide":18,"name":"box","bbox":[979.5,341.46,3,4]}
+{"kind":"shape","id":"sh/excv6ls7","slide":18,"name":"box","bbox":[982,347.6,3,4]}
+{"kind":"shape","id":"sh/zylcf6ts","slide":18,"name":"box","bbox":[984.5,350.04,3,4]}
+{"kind":"shape","id":"sh/321s7m9k","slide":18,"name":"box","bbox":[987,346.59,3,4]}
+{"kind":"shape","id":"sh/218beh8z","slide":18,"name":"box","bbox":[989.5,337.75,3,4]}
+{"kind":"shape","id":"sh/p4ja9crq","slide":18,"name":"box","bbox":[992,327.1,3,4]}
+{"kind":"shape","id":"sh/43atg7q5","slide":18,"name":"box","bbox":[994.5,319.99,3,4]}
+{"kind":"shape","id":"sh/r61sbm9g","slide":18,"name":"box","bbox":[997,320.94,3,4]}
+{"kind":"shape","id":"sh/q5sbih8b","slide":18,"name":"box","bbox":[999.5,331.04,3,4]}
+{"kind":"shape","id":"sh/dsjadwrm","slide":18,"name":"box","bbox":[1002,346.7,3,4]}
+{"kind":"shape","id":"sh/cratkrq1","slide":18,"name":"box","bbox":[1004.5,360.65,3,4]}
+{"kind":"shape","id":"sh/7axsz29c","slide":18,"name":"box","bbox":[1007,365.27,3,4]}
+{"kind":"shape","id":"sh/69or6xsr","slide":18,"name":"box","bbox":[1009.5,356.56,3,4]}
+{"kind":"shape","id":"sh/wfmpg36p","slide":18,"name":"box","bbox":[1012,336.92,3,4]}
+{"kind":"shape","id":"sh/xgvq9o7a","slide":18,"name":"box","bbox":[1014.5,314.86,3,4]}
+{"kind":"shape","id":"sh/ad47etoj","slide":18,"name":"box","bbox":[1017,301.44,3,4]}
+{"kind":"shape","id":"sh/ved87yp4","slide":18,"name":"box","bbox":[1019.5,304.77,3,4]}
+{"kind":"shape","id":"sh/8b2pcjqt","slide":18,"name":"box","bbox":[1022,325.37,3,4]}
+{"kind":"shape","id":"sh/9cvq5o7y","slide":18,"name":"box","bbox":[1024.5,354.84,3,4]}
+{"kind":"shape","id":"sh/m9k7a98n","slide":18,"name":"box","bbox":[1027,379.25,3,4]}
+{"kind":"shape","id":"sh/nat83ep8","slide":18,"name":"box","bbox":[1029.5,385.65,3,4]}
+{"kind":"shape","id":"sh/s76pon6x","slide":18,"name":"box","bbox":[1032,368.94,3,4]}
+{"kind":"shape","id":"sh/t8fqh87i","slide":18,"name":"box","bbox":[1034.5,335.31,3,4]}
+{"kind":"shape","id":"sh/18zmhkzm","slide":18,"name":"box","bbox":[1037,300.09,3,4]}
+{"kind":"shape","id":"sh/g7qlofy1","slide":18,"name":"box","bbox":[1039.5,280.74,3,4]}
+{"kind":"shape","id":"sh/f6hkfahw","slide":18,"name":"box","bbox":[1042,288.09,3,4]}
+{"kind":"shape","id":"sh/el83mpgb","slide":18,"name":"box","bbox":[1044.5,320.35,3,4]}
+{"kind":"shape","id":"sh/pcjml4fy","slide":18,"name":"box","bbox":[1047,363.12,3,4]}
+{"kind":"shape","id":"sh/obalszyd","slide":18,"name":"box","bbox":[1049.5,395.94,3,4]}
+{"kind":"shape","id":"sh/3a14juxs","slide":18,"name":"box","bbox":[1052,402.22,3,4]}
+{"kind":"shape","id":"sh/29s3qpg7","slide":18,"name":"box","bbox":[1054.5,377.77,3,4]}
+{"kind":"shape","id":"sh/5gf290ze","slide":18,"name":"box","bbox":[1057,333.41,3,4]}
+{"kind":"shape","id":"sh/4f6lgvy9","slide":18,"name":"box","bbox":[1059.5,290.1,3,4]}
+{"kind":"shape","id":"sh/ul4ja1wr","slide":18,"name":"box","bbox":[1062,268.82,3,4]}
+{"kind":"shape","id":"sh/vmd0j6xc","slide":18,"name":"box","bbox":[1064.5,280.18,3,4]}
+{"kind":"shape","id":"sh/wnm1cbex","slide":18,"name":"box","bbox":[1067,319.04,3,4]}
+{"kind":"shape","id":"sh/hovilgfi","slide":18,"name":"box","bbox":[1069.5,366.86,3,4]}
+{"kind":"shape","id":"sh/ip4jelw3","slide":18,"name":"box","bbox":[1072,400.78,3,4]}
+{"kind":"shape","id":"sh/jqx0nqxo","slide":18,"name":"box","bbox":[1074.5,404.77,3,4]}
+{"kind":"shape","id":"sh/4r61gbet","slide":18,"name":"box","bbox":[1077,377.42,3,4]}
+{"kind":"shape","id":"sh/5cfipgve","slide":18,"name":"box","bbox":[1079.5,332.35,3,4]}
+{"kind":"shape","id":"sh/ytkz2hwj","slide":18,"name":"box","bbox":[1082,291.34,3,4]}
+{"kind":"shape","id":"sh/zut0bmx4","slide":18,"name":"box","bbox":[1084.5,273.52,3,4]}
+{"kind":"shape","id":"sh/8r6lw3mt","slide":18,"name":"box","bbox":[1087,286.33,3,4]}
+{"kind":"shape","id":"sh/9sfm58ne","slide":18,"name":"box","bbox":[1089.5,322.34,3,4]}
+{"kind":"shape","id":"sh/mpo3ut4n","slide":18,"name":"box","bbox":[1092,363.54,3,4]}
+{"kind":"shape","id":"sh/nqx43y58","slide":18,"name":"box","bbox":[1094.5,390.47,3,4]}
+{"kind":"shape","id":"sh/wv6l03mp","slide":18,"name":"box","bbox":[1097,391.56,3,4]}
+{"kind":"shape","id":"sh/xwzm98na","slide":18,"name":"box","bbox":[1099.5,368.12,3,4]}
+{"kind":"shape","id":"sh/ato3yd4z","slide":18,"name":"box","bbox":[1102,332.85,3,4]}
+{"kind":"shape","id":"sh/vux47i5k","slide":18,"name":"box","bbox":[1104.5,302.94,3,4]}
+{"kind":"shape","id":"sh/kjq54nm1","slide":18,"name":"box","bbox":[1107,291.64,3,4]}
+{"kind":"shape","id":"sh/5kzmdsnm","slide":18,"name":"box","bbox":[1109.5,302.38,3,4]}
+{"kind":"shape","id":"sh/fqlgjqt0","slide":18,"name":"box","bbox":[1112,328.06,3,4]}
+{"kind":"shape","id":"sh/epcfqlsf","slide":18,"name":"box","bbox":[1114.5,355.42,3,4]}
+{"kind":"shape","id":"sh/1s3ylgb6","slide":18,"name":"box","bbox":[1117,371.83,3,4]}
+{"kind":"shape","id":"sh/gruxsbal","slide":18,"name":"box","bbox":[1119.5,371.14,3,4]}
+{"kind":"shape","id":"sh/r2lgf6to","slide":18,"name":"box","bbox":[1122,355.75,3,4]}
+{"kind":"shape","id":"sh/61cfm1sj","slide":18,"name":"box","bbox":[1124.5,334.47,3,4]}
+{"kind":"shape","id":"sh/to3yhgbu","slide":18,"name":"box","bbox":[1127,317.68,3,4]}
+{"kind":"shape","id":"sh/s3uxoba9","slide":18,"name":"box","bbox":[1129.5,312.28,3,4]}
+{"kind":"shape","id":"sh/by5grat8","slide":18,"name":"box","bbox":[1132,319.06,3,4]}
+{"kind":"shape","id":"sh/qxwzy5sn","slide":18,"name":"box","bbox":[1134.5,333.16,3,4]}
+{"kind":"shape","id":"sh/mt0jq9cv","slide":18,"name":"box","bbox":[1137,347.15,3,4]}
+{"kind":"shape","id":"sh/7e90jedg","slide":18,"name":"box","bbox":[1139.5,354.83,3,4]}
+{"kind":"shape","id":"sh/8fi1szu1","slide":18,"name":"box","bbox":[1142,353.82,3,4]}
+{"kind":"shape","id":"sh/9gril4v6","slide":18,"name":"box","bbox":[1144.5,346.06,3,4]}
+{"kind":"shape","id":"sh/uh0ju9cr","slide":18,"name":"box","bbox":[1147,336.18,3,4]}
+{"kind":"shape","id":"sh/vi90nedc","slide":18,"name":"box","bbox":[1149.5,328.92,3,4]}
+{"kind":"shape","id":"sh/wji1wjux","slide":18,"name":"box","bbox":[1152,327,3,4]}
+{"kind":"shape","id":"sh/hkb2povi","slide":18,"name":"box","bbox":[1154.5,330.23,3,4]}
+{"kind":"shape","id":"sh/qlgjipcn","slide":18,"name":"box","bbox":[1157,336.19,3,4]}
+{"kind":"shape","id":"sh/bmp0bad8","slide":18,"name":"box","bbox":[1159.5,341.71,3,4]}
+{"kind":"shape","id":"sh/tgvmxsfq","slide":18,"name":"box","bbox":[1162,344.46,3,4]}
+{"kind":"shape","id":"sh/sfmlone5","slide":18,"name":"box","bbox":[1164.5,343.82,3,4]}
+{"kind":"textbox","id":"sh/red4vixk","slide":18,"name":"text","text":"Very wide directional carrier","textPreview":"Very wide directional carrier","textChars":29,"textLines":1,"bbox":[952,478,230,62]}
+{"kind":"textbox","id":"sh/6d43mdwz","slide":18,"name":"text","text":"Waveform choice follows the channel: interference, delay spread, bandwidth, mobility, and hardware constraints.","textPreview":"Waveform choice follows the channel: interference, delay spread, bandwidth, mobility, and hardware constraints.","textChars":111,"textLines":1,"bbox":[95,584,1090,52]}
+{"kind":"notes","id":"nt/5gnvbx","slide":18,"text":"• Use this slide for retrieval practice: ask students to match standards to waveform families.\n• DSSS/CCK: 802.11b. OFDM: 802.11a/g/n/ac and the basis of ax/be. OFDMA: multiuser extension emphasized by ax/be. 60 GHz single carrier: widely used in ad and enhanced by ay.\n• The sketches are conceptual, not calibrated time-domain or spectrum-mask plots.\n\n[Sources]\n- https://standards.ieee.org/ieee/802.11/10548/\n- https://www.cisco.com/c/en/us/products/collateral/wireless/white-paper-c11-740788.html\n- https://helpfiles.keysight.com/csg/n7637/Content/Main/802.11ad%20Concepts.htm"}
+{"kind":"slide","id":"sl/p5wz2t","slide":19,"title":"WI-FI HISTORY","textShapes":52}
+{"kind":"textbox","id":"sh/6psruhcn","slide":19,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/ts3q5cvy","slide":19,"name":"slide-title","text":"The mainstream branch evolves continuously from b to be","textPreview":"The mainstream branch evolves continuously from b to be","textChars":55,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/sru9w7ud","slide":19,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/ful87md4","slide":19,"name":"page","text":"19","textPreview":"19","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"textbox","id":"sh/utcryhcj","slide":19,"name":"text","text":"802.11","textPreview":"802.11","textChars":6,"textLines":1,"bbox":[62,155,84,36]}
+{"kind":"textbox","id":"sh/hw3a9wva","slide":19,"name":"text","text":"year","textPreview":"year","textChars":4,"textLines":1,"bbox":[162,155,114,36]}
+{"kind":"textbox","id":"sh/gvu90rup","slide":19,"name":"text","text":"GHz","textPreview":"GHz","textChars":3,"textLines":1,"bbox":[292,155,139,36]}
+{"kind":"textbox","id":"sh/vy18vid0","slide":19,"name":"text","text":"MHz","textPreview":"MHz","textChars":3,"textLines":1,"bbox":[447,155,139,36]}
+{"kind":"textbox","id":"sh/ax8rmxwf","slide":19,"name":"text","text":"key PHY idea","textPreview":"key PHY idea","textChars":12,"textLines":1,"bbox":[602,155,314,36]}
+{"kind":"textbox","id":"sh/w76d8nep","slide":19,"name":"text","text":"headline maximum","textPreview":"headline maximum","textChars":16,"textLines":1,"bbox":[932,155,234,36]}
+{"kind":"shape","id":"sh/x8fuhsfa","slide":19,"name":"box","bbox":[54,194,1172,50]}
+{"kind":"textbox","id":"sh/a54v6xwj","slide":19,"name":"text","text":"b","textPreview":"b","textChars":1,"textLines":1,"bbox":[62,198,84,40]}
+{"kind":"textbox","id":"sh/b6dcfix4","slide":19,"name":"text","text":"1999","textPreview":"1999","textChars":4,"textLines":1,"bbox":[162,198,114,40]}
+{"kind":"textbox","id":"sh/kv6dc7el","slide":19,"name":"text","text":"2.4","textPreview":"2.4","textChars":3,"textLines":1,"bbox":[292,198,139,40]}
+{"kind":"textbox","id":"sh/lwfelcf6","slide":19,"name":"text","text":"≈22","textPreview":"≈22","textChars":3,"textLines":1,"bbox":[447,198,139,40]}
+{"kind":"textbox","id":"sh/y9ovaxwv","slide":19,"name":"text","text":"CCK","textPreview":"CCK","textChars":3,"textLines":1,"bbox":[602,198,314,40]}
+{"kind":"textbox","id":"sh/jaxwj2x0","slide":19,"name":"text","text":"11 Mb/s","textPreview":"11 Mb/s","textChars":7,"textLines":1,"bbox":[932,198,234,40]}
+{"kind":"textbox","id":"sh/0fmdg3eh","slide":19,"name":"text","text":"a","textPreview":"a","textChars":1,"textLines":1,"bbox":[62,254,84,40]}
+{"kind":"textbox","id":"sh/10vu98f2","slide":19,"name":"text","text":"1999","textPreview":"1999","textChars":4,"textLines":1,"bbox":[162,254,114,40]}
+{"kind":"textbox","id":"sh/hk32x03e","slide":19,"name":"text","text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[292,254,139,40]}
+{"kind":"textbox","id":"sh/gju1ov29","slide":19,"name":"text","text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[447,254,139,40]}
+{"kind":"textbox","id":"sh/vilkvalo","slide":19,"name":"text","text":"OFDM","textPreview":"OFDM","textChars":4,"textLines":1,"bbox":[602,254,314,40]}
+{"kind":"textbox","id":"sh/uhsjm5k3","slide":19,"name":"text","text":"54 Mb/s","textPreview":"54 Mb/s","textChars":7,"textLines":1,"bbox":[932,254,234,40]}
+{"kind":"shape","id":"sh/po321k3q","slide":19,"name":"box","bbox":[54,306,1172,50]}
+{"kind":"textbox","id":"sh/4nu1sf25","slide":19,"name":"text","text":"g","textPreview":"g","textChars":1,"textLines":1,"bbox":[62,310,84,40]}
+{"kind":"textbox","id":"sh/3mlkzalk","slide":19,"name":"text","text":"2003","textPreview":"2003","textChars":4,"textLines":1,"bbox":[162,310,114,40]}
+{"kind":"textbox","id":"sh/ilcjq5kz","slide":19,"name":"text","text":"2.4","textPreview":"2.4","textChars":3,"textLines":1,"bbox":[292,310,139,40]}
+{"kind":"textbox","id":"sh/dsn25k3m","slide":19,"name":"text","text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[447,310,139,40]}
+{"kind":"textbox","id":"sh/crelwz21","slide":19,"name":"text","text":"OFDM","textPreview":"OFDM","textChars":4,"textLines":1,"bbox":[602,310,314,40]}
+{"kind":"textbox","id":"sh/axozqh0j","slide":19,"name":"text","text":"54 Mb/s","textPreview":"54 Mb/s","textChars":7,"textLines":1,"bbox":[932,310,234,40]}
+{"kind":"textbox","id":"sh/byxgjm14","slide":19,"name":"text","text":"n","textPreview":"n","textChars":1,"textLines":1,"bbox":[62,366,84,40]}
+{"kind":"textbox","id":"sh/wzqhsrip","slide":19,"name":"text","text":"2009","textPreview":"2009","textChars":4,"textLines":1,"bbox":[162,366,114,40]}
+{"kind":"textbox","id":"sh/x0zylwja","slide":19,"name":"text","text":"2.4/5","textPreview":"2.4/5","textChars":5,"textLines":1,"bbox":[292,366,139,40]}
+{"kind":"textbox","id":"sh/y18zu10v","slide":19,"name":"text","text":"20/40","textPreview":"20/40","textChars":5,"textLines":1,"bbox":[447,366,139,40]}
+{"kind":"textbox","id":"sh/j2hgn61g","slide":19,"name":"text","text":"OFDM + MIMO","textPreview":"OFDM + MIMO","textChars":11,"textLines":1,"bbox":[602,366,314,40]}
+{"kind":"textbox","id":"sh/knqhwbil","slide":19,"name":"text","text":"600 Mb/s","textPreview":"600 Mb/s","textChars":8,"textLines":1,"bbox":[932,366,234,40]}
+{"kind":"shape","id":"sh/lozipwj6","slide":19,"name":"box","bbox":[54,418,1172,50]}
+{"kind":"textbox","id":"sh/6p8zy10r","slide":19,"name":"text","text":"ac","textPreview":"ac","textChars":2,"textLines":1,"bbox":[62,422,84,40]}
+{"kind":"textbox","id":"sh/7q10r61c","slide":19,"name":"text","text":"2013","textPreview":"2013","textChars":4,"textLines":1,"bbox":[162,422,114,40]}
+{"kind":"textbox","id":"sh/fmxgb6tg","slide":19,"name":"text","text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[292,422,139,40]}
+{"kind":"textbox","id":"sh/ulozi1sv","slide":19,"name":"text","text":"20–160","textPreview":"20–160","textChars":6,"textLines":1,"bbox":[447,422,139,40]}
+{"kind":"textbox","id":"sh/h8fydgbm","slide":19,"name":"text","text":"OFDM + MU‑MIMO","textPreview":"OFDM + MU‑MIMO","textChars":14,"textLines":1,"bbox":[602,422,314,40]}
+{"kind":"textbox","id":"sh/gn6hkba1","slide":19,"name":"text","text":"6.9 Gb/s","textPreview":"6.9 Gb/s","textChars":8,"textLines":1,"bbox":[932,422,234,40]}
+{"kind":"textbox","id":"sh/3axgfqts","slide":19,"name":"text","text":"ax","textPreview":"ax","textChars":2,"textLines":1,"bbox":[62,478,84,40]}
+{"kind":"textbox","id":"sh/29ozmls7","slide":19,"name":"text","text":"2021","textPreview":"2021","textChars":4,"textLines":1,"bbox":[162,478,114,40]}
+{"kind":"textbox","id":"sh/pcfyhgbi","slide":19,"name":"text","text":"2.4/5/6*","textPreview":"2.4/5/6*","textChars":8,"textLines":1,"bbox":[292,478,139,40]}
+{"kind":"textbox","id":"sh/4b6hobax","slide":19,"name":"text","text":"20–160","textPreview":"20–160","textChars":6,"textLines":1,"bbox":[447,478,139,40]}
+{"kind":"textbox","id":"sh/jedg3mt8","slide":19,"name":"text","text":"OFDMA + MU‑MIMO","textPreview":"OFDMA + MU‑MIMO","textChars":15,"textLines":1,"bbox":[602,478,314,40]}
+{"kind":"textbox","id":"sh/idkfahsn","slide":19,"name":"text","text":"9.6 Gb/s","textPreview":"9.6 Gb/s","textChars":8,"textLines":1,"bbox":[932,478,234,40]}
+{"kind":"shape","id":"sh/8jidknql","slide":19,"name":"box","bbox":[54,530,1172,50]}
+{"kind":"textbox","id":"sh/9kredsr6","slide":19,"name":"text","text":"be","textPreview":"be","textChars":2,"textLines":1,"bbox":[62,534,84,40]}
+{"kind":"textbox","id":"sh/mx0vid8f","slide":19,"name":"text","text":"2024","textPreview":"2024","textChars":4,"textLines":1,"bbox":[162,534,114,40]}
+{"kind":"textbox","id":"sh/ni9wbi90","slide":19,"name":"text","text":"2.4/5/6","textPreview":"2.4/5/6","textChars":7,"textLines":1,"bbox":[292,534,139,40]}
+{"kind":"textbox","id":"sh/0vidg3qp","slide":19,"name":"text","text":"20–320","textPreview":"20–320","textChars":6,"textLines":1,"bbox":[447,534,139,40]}
+{"kind":"textbox","id":"sh/lwre98ra","slide":19,"name":"text","text":"EHT + MLO","textPreview":"EHT + MLO","textChars":9,"textLines":1,"bbox":[602,534,314,40]}
+{"kind":"textbox","id":"sh/ytgved8j","slide":19,"name":"text","text":"≥30 Gb/s†","textPreview":"≥30 Gb/s†","textChars":9,"textLines":1,"bbox":[932,534,234,40]}
+{"kind":"textbox","id":"sh/zupw7i94","slide":19,"name":"text","text":"* 6 GHz via Wi‑Fi 6E certification / regulation.  † IEEE 802.11be requirement is measured at the MAC SAP.","textPreview":"* 6 GHz via Wi‑Fi 6E certification / regulation.  † IEEE 802.11be requirement is measured at the MAC SAP.","textChars":105,"textLines":1,"bbox":[54,628,1090,26]}
+{"kind":"notes","id":"nt/p5wz2t","slide":19,"text":"• Treat the maxima as comparison anchors, not promised throughput.\n• The years are standard milestones; commercial availability and Wi‑Fi certification dates can differ.\n• The standards allow configurations beyond what typical phones and access points implement.\n\n[Sources]\n- https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html\n- https://standards.ieee.org/ieee/802.11/10548/\n- https://standards.ieee.org/ieee/802.11be/7516/\n- https://www.cisco.com/c/en/us/support/docs/wireless-mobility/wireless-lan-wlan/212892-802-11ac-wireless-throughput-testing-and.html"}
+{"kind":"slide","id":"sl/vkyfw9","slide":20,"title":"WI-FI HISTORY","textShapes":20}
+{"kind":"textbox","id":"sh/axorah4n","slide":20,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/x0falwne","slide":20,"name":"slide-title","text":"A PHY rate is the product of several optimistic choices","textPreview":"A PHY rate is the product of several optimistic choices","textChars":55,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/wz69crmt","slide":20,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/nuxsf25c","slide":20,"name":"page","text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"textbox","id":"sh/m94r6x4r","slide":20,"name":"text","text":"Rate ∝","textPreview":"Rate ∝","textChars":6,"textLines":1,"bbox":[90,200,160,54]}
+{"kind":"shape","id":"sh/9wfahcn2","slide":20,"name":"pill","bbox":[250,205,170,34]}
+{"kind":"textbox","id":"sh/ov6987mx","slide":20,"name":"pill-text","text":"bandwidth","textPreview":"bandwidth","textChars":9,"textLines":1,"bbox":[250,205,170,34]}
+{"kind":"textbox","id":"sh/z6dsb250","slide":20,"name":"text","text":"×","textPreview":"×","textChars":1,"textLines":1,"bbox":[430,205,40,36]}
+{"kind":"shape","id":"sh/e54r2x4f","slide":20,"name":"pill","bbox":[480,205,190,34]}
+{"kind":"textbox","id":"sh/czy14ne5","slide":20,"name":"pill-text","text":"bits / symbol","textPreview":"bits / symbol","textChars":13,"textLines":1,"bbox":[480,205,190,34]}
+{"kind":"textbox","id":"sh/dk7ixsvq","slide":20,"name":"text","text":"×","textPreview":"×","textChars":1,"textLines":1,"bbox":[680,205,40,36]}
+{"kind":"shape","id":"sh/qxgj2dwz","slide":20,"name":"pill","bbox":[730,205,160,34]}
+{"kind":"textbox","id":"sh/byp0vidk","slide":20,"name":"pill-text","text":"code rate","textPreview":"code rate","textChars":9,"textLines":1,"bbox":[730,205,160,34]}
+{"kind":"textbox","id":"sh/oveh0net","slide":20,"name":"text","text":"×","textPreview":"×","textChars":1,"textLines":1,"bbox":[900,205,40,36]}
+{"kind":"shape","id":"sh/pwni9sve","slide":20,"name":"pill","bbox":[950,205,210,34]}
+{"kind":"textbox","id":"sh/2twzydw3","slide":20,"name":"pill-text","text":"spatial streams","textPreview":"spatial streams","textChars":15,"textLines":1,"bbox":[950,205,210,34]}
+{"kind":"textbox","id":"sh/3u507id8","slide":20,"name":"text","text":"preamble + pilots","textPreview":"preamble + pilots","textChars":17,"textLines":1,"bbox":[64,395,250,38]}
+{"kind":"textbox","id":"sh/8ri1c7ed","slide":20,"name":"text","text":"airtime overhead","textPreview":"airtime overhead","textChars":16,"textLines":1,"bbox":[64,443,250,34]}
+{"kind":"shape","id":"sh/9sri5cvi","slide":20,"name":"rule","bbox":[88,500,202,5]}
+{"kind":"textbox","id":"sh/xw3a98jq","slide":20,"name":"text","text":"contention + ACK","textPreview":"contention + ACK","textChars":16,"textLines":1,"bbox":[356,395,250,38]}
+{"kind":"textbox","id":"sh/wvu903i5","slide":20,"name":"text","text":"MAC overhead","textPreview":"MAC overhead","textChars":12,"textLines":1,"bbox":[356,443,250,34]}
+{"kind":"shape","id":"sh/vul87i1k","slide":20,"name":"rule","bbox":[380,500,202,5]}
+{"kind":"textbox","id":"sh/atcrydkz","slide":20,"name":"text","text":"retries","textPreview":"retries","textChars":7,"textLines":1,"bbox":[648,395,250,38]}
+{"kind":"textbox","id":"sh/983q58je","slide":20,"name":"text","text":"channel loss","textPreview":"channel loss","textChars":12,"textLines":1,"bbox":[648,443,250,34]}
+{"kind":"shape","id":"sh/87u9w329","slide":20,"name":"rule","bbox":[672,500,202,5]}
+{"kind":"textbox","id":"sh/n6l83y1o","slide":20,"name":"text","text":"TCP / app","textPreview":"TCP / app","textChars":9,"textLines":1,"bbox":[940,395,250,38]}
+{"kind":"textbox","id":"sh/m5srutk3","slide":20,"name":"text","text":"protocol overhead","textPreview":"protocol overhead","textChars":17,"textLines":1,"bbox":[940,443,250,34]}
+{"kind":"shape","id":"sh/l4jq1oji","slide":20,"name":"rule","bbox":[964,500,202,5]}
+{"kind":"textbox","id":"sh/03a9sj2x","slide":20,"name":"text","text":"Application throughput is always lower—and depends on distance, interference, clients, and scheduler behavior.","textPreview":"Application throughput is always lower—and depends on distance, interference, clients, and scheduler behavior.","textChars":110,"textLines":1,"bbox":[120,570,1040,60]}
+{"kind":"notes","id":"nt/vkyfw9","slide":20,"text":"• Use this slide to inoculate students against comparing standards only by their maximum PHY rate.\n• Wider bandwidth and higher QAM require suitable spectrum and SNR; more spatial streams require antennas and favorable channels; multiuser gains require traffic from multiple users.\n• Ask which factor fails first when moving farther from the access point.\n\n[Sources]\n- https://www.cisco.com/c/en/us/support/docs/wireless-mobility/wireless-lan-wlan/212892-802-11ac-wireless-throughput-testing-and.html\n- https://www.cisco.com/c/en/us/td/docs/wireless/controller/technotes/8-4/b_cisco_aironet_series_migrating_to802_11_ac.html"}
+{"kind":"slide","id":"sl/leip30","slide":21,"title":"WI-FI HISTORY","textShapes":22}
+{"kind":"textbox","id":"sh/1obq90ve","slide":21,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/el07e5wn","slide":21,"name":"slide-title","text":"The MAC and security story evolves alongside the waveform","textPreview":"The MAC and security story evolves alongside the waveform","textChars":57,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/fm987ad8","slide":21,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/sjipcvex","slide":21,"name":"page","text":"21","textPreview":"21","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"shape","id":"sh/tkr650v2","slide":21,"name":"rule","bbox":[100,350,1060,4]}
+{"kind":"shape","id":"sh/6h07alwr","slide":21,"bbox":[129,339,24,24]}
+{"kind":"shape","id":"sh/ri9o3qdc","slide":21,"name":"circle-label","bbox":[129,339,24,24]}
+{"kind":"textbox","id":"sh/cfmpofu1","slide":21,"name":"text","text":"1997","textPreview":"1997","textChars":4,"textLines":1,"bbox":[75,284,130,28]}
+{"kind":"textbox","id":"sh/xgvqhkvm","slide":21,"name":"text","text":"CSMA/CA","textPreview":"CSMA/CA","textChars":7,"textLines":1,"bbox":[58,390,164,34]}
+{"kind":"textbox","id":"sh/14j618zi","slide":21,"name":"text","text":"DCF, ACK, RTS/CTS","textPreview":"DCF, ACK, RTS/CTS","textChars":17,"textLines":1,"bbox":[56,434,168,62]}
+{"kind":"shape","id":"sh/03ap83ix","slide":21,"bbox":[339,339,24,24]}
+{"kind":"shape","id":"sh/f21ozyhc","slide":21,"name":"circle-label","bbox":[339,339,24,24]}
+{"kind":"textbox","id":"sh/e1s76t0r","slide":21,"name":"text","text":"1999","textPreview":"1999","textChars":4,"textLines":1,"bbox":[285,284,130,28]}
+{"kind":"textbox","id":"sh/d0j6xoz6","slide":21,"name":"text","text":"WEP","textPreview":"WEP","textChars":3,"textLines":1,"bbox":[268,390,164,34]}
+{"kind":"textbox","id":"sh/szqp4jil","slide":21,"name":"text","text":"privacy goal; later broken","textPreview":"privacy goal; later broken","textChars":26,"textLines":1,"bbox":[266,434,168,62]}
+{"kind":"shape","id":"sh/ryhovyhg","slide":21,"bbox":[549,339,24,24]}
+{"kind":"shape","id":"sh/qx872t0v","slide":21,"name":"circle-label","bbox":[549,339,24,24]}
+{"kind":"textbox","id":"sh/xw3q9szq","slide":21,"name":"text","text":"2004","textPreview":"2004","textChars":4,"textLines":1,"bbox":[495,284,130,28]}
+{"kind":"textbox","id":"sh/wvupgni5","slide":21,"name":"text","text":"WPA2","textPreview":"WPA2","textChars":4,"textLines":1,"bbox":[478,390,164,34]}
+{"kind":"textbox","id":"sh/wz29cr61","slide":21,"name":"text","text":"802.11i / CCMP","textPreview":"802.11i / CCMP","textChars":14,"textLines":1,"bbox":[476,434,168,62]}
+{"kind":"shape","id":"sh/h0ba5w7m","slide":21,"bbox":[759,339,24,24]}
+{"kind":"shape","id":"sh/uxkrahob","slide":21,"name":"circle-label","bbox":[759,339,24,24]}
+{"kind":"textbox","id":"sh/vyts3mpw","slide":21,"name":"text","text":"2009","textPreview":"2009","textChars":4,"textLines":1,"bbox":[705,284,130,28]}
+{"kind":"textbox","id":"sh/8b298r65","slide":21,"name":"text","text":"aggregation","textPreview":"aggregation","textChars":11,"textLines":1,"bbox":[688,390,164,34]}
+{"kind":"textbox","id":"sh/9cbq1w7q","slide":21,"name":"text","text":"A‑MPDU / A‑MSDU","textPreview":"A‑MPDU / A‑MSDU","textChars":15,"textLines":1,"bbox":[686,434,168,62]}
+{"kind":"shape","id":"sh/m90r6hoz","slide":21,"bbox":[969,339,24,24]}
+{"kind":"shape","id":"sh/7a98zmpk","slide":21,"name":"circle-label","bbox":[969,339,24,24]}
+{"kind":"textbox","id":"sh/k7i94769","slide":21,"name":"text","text":"2018+","textPreview":"2018+","textChars":5,"textLines":1,"bbox":[915,284,130,28]}
+{"kind":"textbox","id":"sh/l8rqxc7e","slide":21,"name":"text","text":"WPA3","textPreview":"WPA3","textChars":4,"textLines":1,"bbox":[898,390,164,34]}
+{"kind":"textbox","id":"sh/n2psn29g","slide":21,"name":"text","text":"SAE + stronger protection","textPreview":"SAE + stronger protection","textChars":25,"textLines":1,"bbox":[896,434,168,62]}
+{"kind":"shape","id":"sh/21grexsv","slide":21,"bbox":[1129,339,24,24]}
+{"kind":"shape","id":"sh/p4rapcrm","slide":21,"name":"circle-label","bbox":[1129,339,24,24]}
+{"kind":"textbox","id":"sh/o3y9g7a1","slide":21,"name":"text","text":"2024","textPreview":"2024","textChars":4,"textLines":1,"bbox":[1075,284,130,28]}
+{"kind":"textbox","id":"sh/b69srm9c","slide":21,"name":"text","text":"MLO","textPreview":"MLO","textChars":3,"textLines":1,"bbox":[1058,390,164,34]}
+{"kind":"textbox","id":"sh/a50bihs7","slide":21,"name":"text","text":"coordinate links","textPreview":"coordinate links","textChars":16,"textLines":1,"bbox":[1056,434,168,62]}
+{"kind":"textbox","id":"sh/x8ratcri","slide":21,"name":"text","text":"PHY innovation changes what is possible; MAC innovation determines who gets airtime and how safely.","textPreview":"PHY innovation changes what is possible; MAC innovation determines who gets airtime and how safely.","textChars":99,"textLines":1,"bbox":[130,565,1020,56]}
+{"kind":"notes","id":"nt/leip30","slide":21,"text":"• Keep security chronology high level: WEP's weaknesses motivated WPA as a transition and 802.11i/WPA2 as a durable redesign; WPA3 strengthens authentication and protection.\n• Aggregation was essential because faster PHYs otherwise expose fixed per-frame overhead.\n• MLO is both a PHY/MAC coordination story: multiple links must be discovered, negotiated, and scheduled.\n\n[Sources]\n- https://standards.ieee.org/ieee/802.11/10548/\n- https://extr-p-001.sitecorecontenthub.cloud/api/public/content/3f5d887b048d49cba95392b829960d1b?download=true&v=564c5124\n- https://standards.ieee.org/ieee/802.11be/7516/"}
+{"kind":"slide","id":"sl/yh9fac","slide":22,"title":"WI-FI HISTORY","textShapes":16}
+{"kind":"textbox","id":"sh/0rmxw3yp","slide":22,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/zqdgnyxk","slide":22,"name":"slide-title","text":"Wi‑Fi and cellular optimize different edges of the same network","textPreview":"Wi‑Fi and cellular optimize different edges of the same network","textChars":63,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/yp4futgz","slide":22,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/9wfyt8fm","slide":22,"name":"page","text":"22","textPreview":"22","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"shape","id":"sh/8v6x03e1","slide":22,"name":"box","bbox":[54,172,520,370]}
+{"kind":"shape","id":"sh/nuxgrixg","slide":22,"name":"box","bbox":[706,172,520,370]}
+{"kind":"textbox","id":"sh/mt4fydwv","slide":22,"name":"text","text":"Wi‑Fi","textPreview":"Wi‑Fi","textChars":5,"textLines":1,"bbox":[54,205,520,48]}
+{"kind":"shape","id":"sh/p0byhof2","slide":22,"bbox":[104,291,14,14]}
+{"kind":"shape","id":"sh/oz2xojyx","slide":22,"name":"circle-label","bbox":[104,291,14,14]}
+{"kind":"textbox","id":"sh/i98rehkf","slide":22,"name":"bullet","text":"unlicensed spectrum","textPreview":"unlicensed spectrum","textChars":19,"textLines":1,"bbox":[132,285,392,38]}
+{"kind":"shape","id":"sh/juh8nm10","slide":22,"bbox":[104,340,14,14]}
+{"kind":"shape","id":"sh/kvq9gr2l","slide":22,"name":"circle-label","bbox":[104,340,14,14]}
+{"kind":"textbox","id":"sh/5wzqpwjq","slide":22,"name":"bullet","text":"local ownership","textPreview":"local ownership","textChars":15,"textLines":1,"bbox":[132,334,392,38]}
+{"kind":"shape","id":"sh/6x8ri1kb","slide":22,"bbox":[104,389,14,14]}
+{"kind":"shape","id":"sh/ry1sr61w","slide":22,"name":"circle-label","bbox":[104,389,14,14]}
+{"kind":"textbox","id":"sh/sza9kb2h","slide":22,"name":"bullet","text":"contention-based access","textPreview":"contention-based access","textChars":23,"textLines":1,"bbox":[132,383,392,38]}
+{"kind":"shape","id":"sh/t0jatwj2","slide":22,"bbox":[104,438,14,14]}
+{"kind":"shape","id":"sh/e1srm10n","slide":22,"name":"circle-label","bbox":[104,438,14,14]}
+{"kind":"textbox","id":"sh/f21sv618","slide":22,"name":"bullet","text":"very wide local channels","textPreview":"very wide local channels","textChars":24,"textLines":1,"bbox":[132,432,392,38]}
+{"kind":"shape","id":"sh/b6l836h0","slide":22,"bbox":[104,487,14,14]}
+{"kind":"shape","id":"sh/q5c7a1gv","slide":22,"name":"circle-label","bbox":[104,487,14,14]}
+{"kind":"textbox","id":"sh/ds3q5gz6","slide":22,"name":"bullet","text":"rapid device ecosystem","textPreview":"rapid device ecosystem","textChars":22,"textLines":1,"bbox":[132,481,392,38]}
+{"kind":"textbox","id":"sh/cru9cbyl","slide":22,"name":"text","text":"Cellular","textPreview":"Cellular","textChars":8,"textLines":1,"bbox":[706,205,520,48]}
+{"kind":"shape","id":"sh/3218z6h4","slide":22,"bbox":[756,291,14,14]}
+{"kind":"shape","id":"sh/21s761gj","slide":22,"name":"circle-label","bbox":[756,291,14,14]}
+{"kind":"textbox","id":"sh/p4jq1gza","slide":22,"name":"bullet","text":"licensed / managed spectrum","textPreview":"licensed / managed spectrum","textChars":27,"textLines":1,"bbox":[784,285,392,38]}
+{"kind":"shape","id":"sh/o3ap8byp","slide":22,"bbox":[756,340,14,14]}
+{"kind":"shape","id":"sh/fy18vmh8","slide":22,"name":"circle-label","bbox":[756,340,14,14]}
+{"kind":"textbox","id":"sh/exs72hgn","slide":22,"name":"bullet","text":"operator control","textPreview":"operator control","textChars":16,"textLines":1,"bbox":[784,334,392,38]}
+{"kind":"shape","id":"sh/k365cne5","slide":22,"bbox":[756,389,14,14]}
+{"kind":"shape","id":"sh/54f65sfq","slide":22,"name":"circle-label","bbox":[756,389,14,14]}
+{"kind":"textbox","id":"sh/ihonaxwf","slide":22,"name":"bullet","text":"scheduled access","textPreview":"scheduled access","textChars":16,"textLines":1,"bbox":[784,383,392,38]}
+{"kind":"shape","id":"sh/j2x43ixk","slide":22,"bbox":[756,438,14,14]}
+{"kind":"shape","id":"sh/s7q5g7eh","slide":22,"name":"circle-label","bbox":[756,438,14,14]}
+{"kind":"textbox","id":"sh/t8z69cf2","slide":22,"name":"bullet","text":"wide-area mobility","textPreview":"wide-area mobility","textChars":18,"textLines":1,"bbox":[784,432,392,38]}
+{"kind":"shape","id":"sh/65onexwb","slide":22,"bbox":[756,487,14,14]}
+{"kind":"shape","id":"sh/76ho72xw","slide":22,"name":"circle-label","bbox":[756,487,14,14]}
+{"kind":"textbox","id":"sh/8bm543ex","slide":22,"name":"bullet","text":"integrated service guarantees","textPreview":"integrated service guarantees","textChars":29,"textLines":1,"bbox":[784,481,392,38]}
+{"kind":"textbox","id":"sh/9cvmx8fi","slide":22,"name":"text","text":"Future edge systems choose, combine, and hand off across both.","textPreview":"Future edge systems choose, combine, and hand off across both.","textChars":62,"textLines":1,"bbox":[220,590,840,46]}
+{"kind":"notes","id":"nt/yh9fac","slide":22,"text":"• Relate the Wi‑Fi history back to Future Edge Networks.\n• Avoid a winner/loser framing: Wi‑Fi excels at locally owned, high-capacity access; cellular excels at managed wide-area mobility. Modern devices and edge services use both.\n• Invite examples: campus offload, AR/VR, industrial links, fixed wireless access, and multi-access edge computing.\n\n[Sources]\n- https://standards.ieee.org/wp-content/uploads/import/documents/other/geps_07-iot_smart_cities.pdf"}
+{"kind":"slide","id":"sl/iieb5d","slide":23,"title":"WI-FI HISTORY","textShapes":14}
+{"kind":"textbox","id":"sh/idsfal4j","slide":23,"name":"kicker","text":"WI-FI HISTORY","textPreview":"WI-FI HISTORY","textChars":13,"textLines":1,"bbox":[54,30,500,24]}
+{"kind":"textbox","id":"sh/503e50na","slide":23,"name":"slide-title","text":"Read any new Wi‑Fi generation through five questions","textPreview":"Read any new Wi‑Fi generation through five questions","textChars":52,"textLines":1,"bbox":[54,61,1172,56]}
+{"kind":"shape","id":"sh/kfuxcvmp","slide":23,"name":"rule","bbox":[54,126,1172,2]}
+{"kind":"textbox","id":"sh/72lw7a5g","slide":23,"name":"page","text":"23","textPreview":"23","textChars":2,"textLines":1,"bbox":[1170,684,52,18]}
+{"kind":"textbox","id":"sh/61cfe54v","slide":23,"name":"text","text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[74,162,68,48]}
+{"kind":"textbox","id":"sh/t43e90nm","slide":23,"name":"text","text":"What spectrum does it use?","textPreview":"What spectrum does it use?","textChars":26,"textLines":1,"bbox":[160,162,940,48]}
+{"kind":"shape","id":"sh/s3uxgfm1","slide":23,"name":"rule","bbox":[160,219,940,2]}
+{"kind":"textbox","id":"sh/n6hwv65w","slide":23,"name":"text","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[74,248,68,48]}
+{"kind":"textbox","id":"sh/m58v21or","slide":23,"name":"text","text":"What does one PPDU look like?","textPreview":"What does one PPDU look like?","textChars":29,"textLines":1,"bbox":[160,248,940,48]}
+{"kind":"shape","id":"sh/07ytcbux","slide":23,"name":"rule","bbox":[160,305,940,2]}
+{"kind":"textbox","id":"sh/187u5gvi","slide":23,"name":"text","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[74,334,68,48]}
+{"kind":"textbox","id":"sh/e5gba1cr","slide":23,"name":"text","text":"How are users separated?","textPreview":"How are users separated?","textChars":24,"textLines":1,"bbox":[160,334,940,48]}
+{"kind":"shape","id":"sh/f6pc36dc","slide":23,"name":"rule","bbox":[160,391,940,2]}
+{"kind":"textbox","id":"sh/ovitgbut","slide":23,"name":"text","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[74,420,68,48]}
+{"kind":"textbox","id":"sh/pwru9gve","slide":23,"name":"text","text":"What channel conditions does it assume?","textPreview":"What channel conditions does it assume?","textChars":39,"textLines":1,"bbox":[160,420,940,48]}
+{"kind":"shape","id":"sh/290belcn","slide":23,"name":"rule","bbox":[160,477,940,2]}
+{"kind":"textbox","id":"sh/nu9c7qd8","slide":23,"name":"text","text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[74,506,68,48]}
+{"kind":"textbox","id":"sh/4zet4rup","slide":23,"name":"text","text":"Which bottleneck moved next?","textPreview":"Which bottleneck moved next?","textChars":28,"textLines":1,"bbox":[160,506,940,48]}
+{"kind":"shape","id":"sh/50naxwva","slide":23,"name":"rule","bbox":[160,563,940,2]}
+{"kind":"textbox","id":"sh/5wfa1sny","slide":23,"name":"text","text":"b → a/g → n → ac → ax → be","textPreview":"b → a/g → n → ac → ax → be","textChars":26,"textLines":1,"bbox":[760,625,390,30]}
+{"kind":"notes","id":"nt/iieb5d","slide":23,"text":"• Close by asking students to apply the five questions to one generation not emphasized in class.\n• Suggested check: Why can 4096-QAM increase peak rate but reduce robustness? Why can OFDMA improve efficiency without changing the total channel bandwidth? Why is 60 GHz directional?\n• The durable lesson is not memorizing letters; it is recognizing the resource dimension and engineering tradeoff each amendment introduces.\n\n[Sources]\n- https://standards.ieee.org/ieee/802.11/10548/\n- https://standards.ieee.org/ieee/802.11be/7516/"}
