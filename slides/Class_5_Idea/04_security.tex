@@ -1,0 +1,355 @@
+%!TEX root = ./main.tex
+
+\section[Act III: Security]{Act III: Antivirus on a Tower, Attacks without a Tower}
+
+% SECTION TIMING: 43:00--72:00 (10 frames). Three papers + one teaser.
+%   Paper E  43:00--53:00  5G-Spector (NDSS'24)      -- defenders enter through openness
+%   Paper F  53:00--63:00  SigOver     (USENIX'19)   -- attack without a fake base station
+%   Paper G  63:00--70:00  5G fronthaul (USENIX'24)  -- attack without any radio at all
+%   Teaser   70:00--72:00  Sni5Gect    (USENIX'25)   -- ONE frame, then stop
+% The act must end at 72:00; the wrap-up owns 72:00--75:00.
+%
+% FRAMING BOUNDARY, enforced throughout: everything here is published, peer-reviewed
+% research described at the CONCEPT level. No commands, configs, or step-by-step
+% recipes. Nothing here claims that anyone in the room is being attacked. If a student
+% asks "can I do this", the answer is that the papers exist, the code is the authors'
+% to release, and this course teaches how the architecture makes attacks possible so
+% that defenders understand them.
+%
+% LAYOUT RULE: every bullet fits on one line. Shorten the text, do not let it wrap.
+
+% ===========================================================================
+% PAPER E -- 5G-Spector (NDSS 2024)
+% ===========================================================================
+
+% Teaching note (2 min): callback to Class 4. PCs were not born with antivirus; they
+% got it once they became programmable platforms anyone could ship software to. Ask
+% the \ask out loud BEFORE advancing -- most students will say "no, a tower is not a
+% computer". That is the trap the next slide springs: O-RAN made it one.
+\begin{frame}{Can we install antivirus on a cell tower?}
+  \vspace{0.4em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      \large\textbf{Why did PCs get antivirus?}
+
+      \vspace{0.5em}
+      \normalsize
+      Not because they were computers.
+
+      \vspace{0.4em}
+      Because they became \textbf{programmable platforms} anyone could ship
+      software to --- including defenders.
+    \column{0.48\textwidth}
+      \large\textbf{And the RAN?}
+
+      \vspace{0.5em}
+      \normalsize
+      For decades a base station ran one vendor's locked firmware.
+
+      \vspace{0.4em}
+      Last class you learned O-RAN opened it: \textbf{RIC + xApps}.
+  \end{columns}
+
+  \vspace{0.8em}
+  \ask{If the tower is now a platform, can you install a security app on it?}
+\end{frame}
+
+% Teaching note (3 min): the correction that matters -- this is NOT "AI catches
+% attacks". It is telemetry + rules, the same shape as a classic intrusion detector.
+% MOBIFLOW = a stream of fine-grained RAN events (say "NetFlow for the RAN" and let it
+% land). MOBIEXPERT = an xApp on the RIC that runs production rules over that stream.
+% Draw the pipe left to right; the xApp box is the one they drew themselves last class.
+\begin{frame}{Not deep learning --- telemetry plus rules}
+  \vspace{0.3em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \node[netnode,minimum width=1.7cm] (ran) at (0,0) {RAN\\events};
+    \node[oranode,minimum width=2.2cm] (flow) at (3.0,0) {MobiFlow\\telemetry};
+    \node[attacknode,minimum width=2.3cm] (exp) at (6.6,0) {MobiExpert\\rule xApp};
+    \node[corenode,minimum width=1.7cm] (alert) at (9.8,0) {alert};
+    \draw[flow] (ran) -- (flow);
+    \draw[flow] (flow) -- (exp);
+    \draw[flow] (exp) -- (alert);
+    \node[font=\scriptsize,text=softgray,anchor=north] at (3.0,-0.6)
+      {``NetFlow for the RAN''};
+    \node[font=\scriptsize,text=softgray,anchor=north] at (6.6,-0.6)
+      {runs on the RIC};
+    \node[font=\tiny,text=softgray,anchor=north] at (4.9,-1.05)
+      {NetFlow = the per-connection logs network admins already collect};
+  \end{tikzpicture}
+
+  \vspace{0.7em}
+  \small
+  A stream of fine-grained cellular telemetry feeds a rule engine that watches
+  for known layer-3 \expand{the signaling layer: attach, incoming-call alerts,
+  handover messages} attack patterns. No model to train, no black box.
+
+  \vspace{0.6em}
+  \papercard{5G-Spector: An O-RAN Compliant Layer-3 Cellular Attack Detection Service}
+    {Haohuang Wen, Zhiqiang Lin (Ohio State); Porras, Yegneswaran, Gehani (SRI)}
+    {NDSS 2024}
+    {https://www.ndss-symposium.org/ndss-paper/5g-spector-an-o-ran-compliant-layer-3-cellular-attack-detection-service/}
+\end{frame}
+
+% Teaching note (3 min): land the numbers, then the payoff. The point of "extensible to
+% 11 new variants" is that operators write new rules without redeploying the network --
+% the platform property they learned about, doing real work. The award line is not
+% bragging; it means the artifact was reproducible enough for a committee to run.
+\begin{frame}{What it caught, and what it cost}
+  \vspace{0.4em}
+  \small
+  \begin{itemize}\itemsep6pt
+    % SOURCE: https://www.ndss-symposium.org/ndss-paper/5g-spector-an-o-ran-compliant-layer-3-cellular-attack-detection-service/
+    \item Detects \textbf{7 classes} of layer-3 cellular attacks in real time.
+    % SOURCE: https://www.ndss-symposium.org/ndss-paper/5g-spector-an-o-ran-compliant-layer-3-cellular-attack-detection-service/
+    \item Shown to scale to \textbf{11 previously unknown attacks} by writing new rules.
+    % SOURCE: https://www.ndss-symposium.org/ndss-paper/5g-spector-an-o-ran-compliant-layer-3-cellular-attack-detection-service/
+    \item CPU overhead under \textbf{2\%}; memory under \textbf{100\,MB}.
+    % SOURCE: https://www.5gsec.com/post/award-5g-spector-won-the-ndss-24-distinguished-artifact-award
+    % SOURCE: https://www.ndss-symposium.org/news/ndss-2024-largest-ndss-signals-continued-importance-of-distributed-systems-security/
+    \item Won an \textbf{NDSS 2024 Distinguished Artifact Award}.
+  \end{itemize}
+
+  \vspace{0.6em}
+  \qa{So was the xApp box on our O-RAN slide just a PowerPoint concept?}
+     {No. Someone shipped a working security function inside it --- and a
+      committee reran it. The box on your diagram is a place code lives.}
+\end{frame}
+
+% Teaching note (say before leaving this frame): 5G-Spector's antivirus trusts
+% the telemetry the network feeds it. Pocket that for twenty minutes.
+
+% ===========================================================================
+% PAPER F -- SigOver (USENIX Security 2019)
+% ===========================================================================
+
+% Teaching note (2 min): the pivot. 5G-Spector detects attacks -- but what does a modern
+% attack even look like? Everyone in the room "knows" from Class 4 that you attack
+% cellular by standing up a fake base station. Say the assumption aloud, then break it.
+\begin{frame}{Attacking without building a tower}
+  \vspace{0.5em}
+  % Wording of the assumption below must stay IDENTICAL to item 5 on the
+  % "Five things the diagram never says out loud" frame in 01_assumptions.tex.
+  \brokenassumption{Attacking the network requires \textbf{standing up} a fake base station.}
+    {Whispering in perfect sync with the real tower, slightly louder.}
+
+  \vspace{0.7em}
+  \normalsize
+  A rogue base station is loud, obvious, and easy to look for --- it is a
+  whole tower that should not be there.
+
+  \vspace{0.6em}
+  SigOver never builds one. It \textbf{synchronizes} to the legitimate LTE
+  downlink and overwrites only the subframes it chooses
+  \expand{slices of the LTE frame, a millisecond each}.
+
+  \vspace{0.5em}
+  {\small\textcolor{softgray}{Think: two voices, identical timing --- next
+   slide.}\par}
+
+  \vspace{0.5em}
+  \takeaway{You do not need a new tower to lie ---\\you need better timing.}
+
+  \glossline{LTE = the 4G radio standard \quad downlink = the tower-to-phone direction}
+\end{frame}
+
+% Teaching note (3 min): the analogy is the whole slide. Two voices, IDENTICAL timing,
+% ear keeps the louder. Then the three-way distinction -- read one line each and let the
+% contrast do the teaching. The honesty box is mandatory: this is LTE, 2019, and it
+% targets BROADCAST messages, which are never integrity protected -- before or after
+% authentication.
+\begin{frame}{Jamming, spoofing, overshadowing}
+  \vspace{0.3em}
+  \small
+  \renewcommand{\arraystretch}{1.4}
+  \begin{tabular}{@{}p{0.26\textwidth}p{0.66\textwidth}@{}}
+    \toprule
+    \textbf{Jamming} & You hear \textbf{nothing} --- the channel is drowned out. \\
+    \textbf{Spoofing (fake BS)} & You \textbf{switch towers} --- a new cell lures you over. \\
+    \textbf{\textcolor{attackred}{Overshadowing}} & You hear the \textbf{attacker} but believe it is your tower. \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.8em}
+  \normalsize
+  Two people speak to you with \textbf{identical timing}. Your ear keeps the
+  louder one --- and never notices there were two.
+
+  \vspace{0.6em}
+  {\scriptsize\textcolor{softgray}{Scope: this is LTE (2019). It targets LTE
+   \textbf{broadcast} messages, which are never integrity protected --- before
+   or after authentication. It is not a claim about 5G user traffic.}\par}
+\end{frame}
+
+% Teaching note (2 min): numbers, then play the demo. The 98%-vs-80% comparison is the
+% punchline: overshadowing at a 3 dB edge beats a fake base station that is 35 dB louder,
+% because the victim's receiver was built to lock onto the best-timed signal, not the
+% loudest stranger. Play ~90 s of the talk demo, then move on.
+\begin{frame}{Hiding in plain signal}
+  \vspace{0.2em}
+  \small
+  \begin{itemize}\itemsep5pt
+    % SOURCE: https://www.usenix.org/conference/usenixsecurity19/presentation/yang-hojoon
+    \item A signal only \textbf{3\,dB} \expand{about twice the power} stronger wins.
+    % SOURCE: https://www.usenix.org/conference/usenixsecurity19/presentation/yang-hojoon
+    \item Success rate \textbf{98\%} --- vs \textbf{80\%} for a fake base station.
+    % SOURCE: https://www.usenix.org/conference/usenixsecurity19/presentation/yang-hojoon
+    \item That fake base station needed a \textbf{35\,dB} \expand{about 3000\(\times\)} edge.
+    \item Timing is why 3\,dB is enough: a time-aligned signal wins the receiver's capture.
+    \item A fake tower has no such luck: it must out-shout cell selection.
+  \end{itemize}
+
+  \glossline{capture = the radio locks onto the strongest aligned signal and
+    treats the rest as noise\\
+    cell selection = how your phone picks which tower to camp on}
+
+  \papercard{Hiding in Plain Signal: Physical Signal Overshadowing Attack on LTE}
+    {Hojoon Yang, Sangwook Bae, Mincheol Son, Hongil Kim, Song Min Kim, Yongdae Kim (KAIST)}
+    {USENIX Security 2019}
+    {https://www.usenix.org/conference/usenixsecurity19/presentation/yang-hojoon}
+
+  \watch{https://www.youtube.com/watch?v=xvIaJTJFRJQ}{USENIX Sec'19 talk --- play the demo, \(\sim\)90\,s}
+\end{frame}
+
+% ===========================================================================
+% PAPER G -- 5G Fronthaul Integrity (USENIX Security 2024)
+% ===========================================================================
+
+% CUT FIRST if running long: this frame's content can be delivered verbally over
+% the next one.
+% Teaching note (2 min): the reversal. SigOver was intensely physical -- SDR, timing,
+% power in dB. Now flip it: what if the attacker sends no radio at all? Let the question
+% sit before advancing. It reframes "attack" from the air interface to the wiring.
+\begin{frame}{What if the attacker never transmits a radio signal?}
+  \vspace{0.8em}
+  \large
+  SigOver was intensely physical: a radio, microsecond timing, power measured
+  in decibels.
+
+  \vspace{1.0em}
+  \normalsize
+  Now turn the question inside out.
+
+  \vspace{0.8em}
+  \ask{What could you break from software, without touching the air at all?}
+
+  \vspace{0.6em}
+  \small
+  \textcolor{softgray}{The answer is on a link you drew last class and never
+  thought twice about.}
+\end{frame}
+
+% Teaching note (3 min): recall THEIR diagram. Before disaggregation, fronthaul was
+% dedicated point-to-point fiber (CPRI) -- effectively private wiring, physically
+% trusted. Disaggregated 5G: it is eCPRI over switched, packet-based Ethernet. To
+% hold microsecond latency budgets, integrity protection is not mandatory in the
+% fronthaul standards -- careful framing: this is about what the standards require
+% and what deployments do, not a claim every network is wide open.
+\begin{frame}{The link inside the tower is now a network}
+  \vspace{0.2em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \node[netnode,minimum width=1.5cm] (ru) at (0,0) {RU};
+    \node[netnode,minimum width=1.5cm] (du) at (4.2,0) {DU};
+    \draw[flow] (ru) -- (du);
+    \node[font=\scriptsize,text=softgray,anchor=south] at (2.1,0.15)
+      {eCPRI over Ethernet};
+    \node[attacknode,minimum width=2.0cm] (atk) at (2.1,-1.5) {software\\attacker};
+    \draw[flow,draw=attackred,dashed] (atk) -- (2.1,-0.15);
+  \end{tikzpicture}
+
+  \vspace{0.4em}
+  \small
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \textbf{Before:} fronthaul was dedicated point-to-point fiber (CPRI) ---
+      effectively private wiring, physically trusted.
+    \column{0.47\textwidth}
+      \textbf{Disaggregated 5G:} switched, packet-based Ethernet (eCPRI) --- and
+      to stay fast enough, nobody is required to check packets are genuine.
+  \end{columns}
+
+  \vspace{0.3em}
+  {\scriptsize\textcolor{softgray}{Framing: the fronthaul standards do not
+   require integrity protection, citing performance overhead and assumed low
+   risk. That assumption is what the paper tests.}\par}
+
+  \glossline{RU = Radio Unit (antenna end) \quad DU = Distributed Unit (baseband
+    computer) \quad eCPRI = the packet protocol between them}
+
+  \vspace{0.2em}
+  \brokenassumption{The links inside the base station are trustworthy}
+    {a software attacker on the fronthaul Ethernet}
+\end{frame}
+
+% Teaching note (3 min): impact, then the tension that closes the act. Numbers are from
+% a commercial-grade multi-cell testbed with just two compromised cells and four users --
+% say that scale out loud so nobody hears "the whole country". Then the closing Q/A ties
+% Act III together: 5G-Spector said openness lets defenders in; this says disaggregation
+% lets attackers in. Both true. That is why it is research, not a settled answer.
+\begin{frame}{What software alone could do}
+  \small
+  % SOURCE: https://www.usenix.org/conference/usenixsecurity24/presentation/xing-jiarong
+  On a commercial-grade, multi-cell testbed --- two compromised cells, four users:
+  \begin{itemize}\itemsep2pt
+    % SOURCE: https://www.usenix.org/conference/usenixsecurity24/presentation/xing-jiarong
+    \item User performance degraded by more than \textbf{80\%}.
+    % SOURCE: https://www.usenix.org/conference/usenixsecurity24/presentation/xing-jiarong
+    \item Targeted users \textbf{prevented from ever attaching} to the cell.
+    % SOURCE: https://www.usenix.org/conference/usenixsecurity24/presentation/xing-jiarong
+    \item Signaling storms \expand{floods of junk control messages} over \textbf{2500 msgs/min}.
+  \end{itemize}
+
+  \vspace{0.1em}
+  \papercard{On the Criticality of Integrity Protection in 5G Fronthaul Networks}
+    {Jiarong Xing (Rice); Yoo (Princeton); Foukas (Microsoft); Kim (UT Austin); Reiter (Duke)}
+    {USENIX Security 2024}
+    {https://www.usenix.org/conference/usenixsecurity24/presentation/xing-jiarong}
+
+  \qa{The same opened seams let 5G-Spector in --- and this attacker in. Safer, or
+      more dangerous?}
+     {Both. Openness is a trade, not a verdict --- which is why this is research,
+      not settled fact.}
+\end{frame}
+
+% Teaching note (say while leaving this frame): the fronthaul attacker sits on the
+% wires that telemetry rides. Could it lie to the antivirus?
+% (The \watch talk link was cut from this frame to fix an overfull page; the talk
+% is one click away from the papercard's USENIX page if you want it.)
+
+% ===========================================================================
+% TEASER -- Sni5Gect (USENIX Security 2025) -- ONE frame, then stop.
+% ===========================================================================
+
+% Teaching note (2 min): do NOT explain the mechanism. This is a hand-off to the paper
+% practicum -- one of the students will present it. The single idea to leave in the room:
+% SigOver's lineage did not die with LTE. The same "no rogue tower" move reappears on 5G
+% NR. Name the numbers, name the promise, stop.
+\begin{frame}{The lineage did not die with LTE}
+  \normalsize
+  SigOver's core idea --- attack without a rogue tower --- came back for 5G NR.
+
+  \vspace{0.4em}
+  \small
+  % SOURCE: https://www.usenix.org/conference/usenixsecurity25/presentation/luo-shijie
+  \begin{itemize}\itemsep4pt
+    \item Real-time sniffing of \textbf{pre-authentication 5G NR} traffic.
+    \item Targeted downlink message injection, \textbf{no rogue base station}.
+    % SOURCE: https://www.usenix.org/conference/usenixsecurity25/presentation/luo-shijie
+    \item \textbf{70--90\%} injection success at up to \textbf{\(\sim\)20\,m}.
+  \end{itemize}
+
+  \glossline{5G NR = the 5G radio standard \quad pre-authentication = messages
+    sent before the phone proves its identity}
+
+  \vspace{0.1em}
+  % SOURCE: https://zenodo.org/records/15601773 (Zenodo artifact confirms all
+  % four authors are SUTD)
+  \papercard{Sni5Gect: A Practical Approach to Inject aNRchy into 5G NR}
+    {Shijie Luo, Matheus E. Garbelini, Sudipta Chattopadhyay, Jianying Zhou (SUTD)}
+    {USENIX Security 2025}
+    {https://www.usenix.org/conference/usenixsecurity25/presentation/luo-shijie}
+
+  \vspace{0.1em}
+  \takeaway{You will meet this paper again ---\\one of you presents it in the practicum.}
+\end{frame}

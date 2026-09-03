@@ -1,0 +1,15 @@
+build/
+
+# Source material read while writing this deck. Not ours to republish.
+reference/
+
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.toc
+*.vrb

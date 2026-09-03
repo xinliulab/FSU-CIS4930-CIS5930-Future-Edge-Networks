@@ -1,0 +1,317 @@
+%!TEX root = ./main.tex
+
+\section[Act I: Space]{Act I: A Cell Tower in Space}
+
+% SECTION TIMING: 7:00--25:00 (8 frames). Paper A (SN2, frames 1-5) runs 7:00-17:00;
+% Paper B (StarCDN, frames 6-8) runs 17:00-25:00. Both \watch clips are 60-90 s; if
+% discussion runs long, cut the StarCDN clip, not the student-question frame.
+% LAYOUT RULE: every bullet must fit on one line. Shorten the text, do not let it wrap.
+
+% ---------------------------------------------------------------------------
+% PAPER A: SN2 -- Direct-to-Cell Satellite Network without Satellite Navigation
+% ---------------------------------------------------------------------------
+
+% Teaching note (2 min): ask who has seen a Starlink dish. Then land the twist:
+% this paper is about the version with NO dish -- the phone already in your pocket.
+% The talk clip moved to the "let the network navigate itself" frame -- it lands
+% better after the GPS twist than before it.
+% SOURCE (commercial D2C service is real; launched July 23, 2025; texting on
+% ordinary recent phones, data added Oct 2025):
+% https://broadbandbreakfast.com/t-mobile-and-starlink-satellite-service-to-officially-launch-july-23/
+% https://www.t-mobile.com/coverage/satellite-phone-service
+\begin{frame}{The tower left the ground}
+  \large\textbf{Classic Starlink needs a dish on your roof.}\\[0.3em]
+  What if your ordinary phone talks straight to the satellite?
+
+  \vspace{0.4em}
+  \small
+  Not hypothetical: T-Mobile + Starlink have sold satellite texting\\
+  on unmodified recent phones since July 2025.
+
+  % SOURCE (LEO orbital speed ~7.5-7.8 km/s is standard orbital mechanics):
+  % https://en.wikipedia.org/wiki/Low_Earth_orbit
+  \brokenassumption{The base station stands on the ground}
+    {a cell tower moving at about 7.5 km/s in LEO}
+
+  \vspace{0.4em}
+  \papercard{Direct-to-Cell Satellite Network without Satellite Navigation}
+    {Wei Liu, Yuanjie Li, Jingyi Lan, Hewu Li, et al. --- Tsinghua University}
+    {ACM SIGCOMM 2025}
+    {https://doi.org/10.1145/3718958.3750522}
+
+  \glossline{LEO = Low Earth Orbit \quad D2C = direct-to-cell}
+\end{frame}
+
+% Teaching note (2.5-3 min, HARD CAP 3 -- the section must fit 18:00): after
+% showing the diagram, run the \ask below and let
+% students shout research questions. They reliably produce: handoff every few
+% minutes, Doppler, "which country's satellite serves me", authentication,
+% billing, location. Write them on the board -- Act I and Act III both pay
+% several of them off. Do NOT answer them yet.
+\begin{frame}{Same phone. Very different tower.}
+  \centering
+  \begin{tikzpicture}[scale=0.92,transform shape]
+    % Left: today
+    \node[netnode,minimum width=1.5cm] (ph1) at (0,0) {Phone};
+    \node[netnode,minimum width=1.6cm] (tw) at (3.1,0) {Tower};
+    \draw[flow] (ph1) -- (tw);
+    \node[font=\scriptsize\itshape,align=center] at (1.55,-0.75)
+      {bolted to the ground\\yours for years};
+    % Right: D2C
+    \node[netnode,minimum width=1.5cm] (ph2) at (6.4,0) {Phone};
+    \node[oranode,minimum width=1.7cm] (sat) at (9.5,1.1) {Satellite};
+    \draw[flow] (ph2) -- (sat);
+    \draw[flow,draw=ranpurple,dashed] (sat) -- ++(1.35,0)
+      node[right,font=\scriptsize,text=ranpurple] {7.5 km/s};
+    \node[font=\scriptsize\itshape,align=center] at (8.0,-0.75)
+      {overhead for minutes\\then gone};
+  \end{tikzpicture}
+
+  \vspace{0.7em}
+  \ask{Your base station now moves at 7.5 km/s.\\
+       Sixty seconds: shout out everything that breaks.}
+
+  \vspace{0.3em}
+  {\small\textcolor{softgray}{Keep your list. This lecture pays several of
+   these off.}\par}
+\end{frame}
+
+% Teaching note (2 min): the reveal. Students expect Doppler or handoff to be
+% the paper's problem; the actual problem is a dependency nobody in the room
+% will have named. Pause before the last line.
+% SOURCE (D2C relies on GNSS for radio access, authentication, authorization;
+% GNSS defects propagate into the D2C network):
+% https://doi.org/10.1145/3718958.3750522
+\begin{frame}{The twist: it secretly runs on GPS}
+  \large\textbf{Today's D2C networks lean on GNSS \expand{GPS and friends}.}
+
+  \vspace{0.5em}
+  \small
+  \begin{itemize}\itemsep5pt
+    \item \textbf{Where you are} decides beam, country, and bill.
+    \item \textbf{What time it is} decides when your radio may talk
+      \expand{uplink slots run on a shared clock}.
+    \item Both answers come from a \emph{different} satellite system.
+  \end{itemize}
+
+  \vspace{0.3em}
+  A ground tower knows where it is. A moving one has to keep asking.
+
+  \vspace{0.3em}
+  But GNSS can be \textbf{jammed}, \textbf{spoofed}, or simply
+  \textbf{unavailable}.
+
+  % SOURCE (observed failures: intermittent connectivity, over/under-billing,
+  % unauthorized service, service denials even when D2C sats are reachable):
+  % https://doi.org/10.1145/3718958.3750522
+  \qa{Satellite bars on your phone, but no GPS fix. What happens?}
+     {Field tests: denials, dropped access, wrong bills ---
+      \textbf{even with the D2C satellite overhead}. One satellite
+      system's correctness hangs on another one.}
+
+  \glossline{GNSS = Global Navigation Satellite System (GPS, Galileo, BeiDou, ...)\\
+    beam = the patch of ground the satellite aims at \quad
+    uplink = the phone-to-satellite direction}
+\end{frame}
+
+% Teaching note (2 min): keep this at the idea level. Do NOT derive positioning
+% from Doppler or delay -- one sentence of "the signals you already receive
+% carry enough geometry" is the ceiling for this lecture.
+% SOURCE (fate-sharing principle; reuse D2C satellites as the navigation
+% source; trade navigation accuracy for network availability):
+% https://doi.org/10.1145/3718958.3750522
+\begin{frame}{The move: let the network navigate itself}
+  \large\textbf{SN2's idea: stop borrowing. Self-navigate.}
+
+  \vspace{0.5em}
+  \small
+  \begin{itemize}\itemsep5pt
+    \item The D2C satellites themselves become the position source.
+    \item If you can hear the satellite, you can locate by it.
+    \item They live or die together --- the authors call it \textbf{fate-sharing}.
+  \end{itemize}
+
+  \qa{Doesn't the network need GPS-grade precision?}
+     {No. Beam, country, and bill need \textbf{good-enough} position,
+      not meter-level.}
+
+  \watch{https://www.youtube.com/watch?v=G3KDDdRZYBE}{SIGCOMM'25 talk --- play 60--90 s}
+\end{frame}
+
+% SOURCE (both ranges below; evaluated with commodity phones with 3GPP NTN
+% support, against legacy GNSS-dependent solutions):
+% https://doi.org/10.1145/3718958.3750522
+% Teaching note (90 s): say aloud what the range endpoints correspond to --
+% 4.4x and 23.5x are the extremes across the scenarios the paper tests (mild
+% vs severe GNSS unavailability). Verify the exact scenario mapping against
+% the paper's evaluation section before class; do not improvise it.
+% Teaching note: also say aloud what "network availability" measures here --
+% per the paper, the share of access attempts that succeed (it is NOT tower
+% uptime). VERIFY the exact definition against the paper's evaluation section
+% before class.
+\begin{frame}{What refusing to need GPS bought}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \large\textbf{Network availability}
+
+      \vspace{0.4em}
+      {\Huge\textcolor{ranblue}{4.4--23.5\(\times\)}}
+
+      \vspace{0.3em}
+      \small higher than legacy GNSS-dependent designs
+    \column{0.47\textwidth}
+      \large\textbf{Access latency}
+
+      \vspace{0.4em}
+      {\Huge\textcolor{coreorange}{1.9--12.3\(\times\)}}
+
+      \vspace{0.3em}
+      \small lower, same comparison
+  \end{columns}
+
+  \vspace{0.5em}
+  {\scriptsize\textcolor{softgray}{Evaluated with commodity phones with 3GPP
+   NTN support. Ranges span the scenarios tested.}\par}
+
+  \glossline{NTN = Non-Terrestrial Network, 3GPP's name for satellite cellular}
+
+  \vspace{0.3em}
+  \takeaway{The fix was not better GPS.\\
+    It was deleting the hidden dependency on GPS.}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+% PAPER B: StarCDN -- Moving Content Delivery Networks to Space
+% ---------------------------------------------------------------------------
+
+% Teaching note (2 min): start from the students' own evening. Everyone has
+% streamed video at peak hours; almost nobody has asked why it works.
+% One-liner worth saying at the papercard: the incumbent CDN (Akamai)
+% co-authored the paper about replacing ground CDNs.
+\begin{frame}{Why is Netflix fast at 8 pm?}
+  \qa{Millions stream at once. Why doesn't it collapse?}
+     {Because the video rarely comes from far away. CDNs
+      \expand{Content Delivery Networks} cache popular content in
+      servers \textbf{near you} --- your city, sometimes your ISP.}
+
+  \large\textbf{Now route your Internet through space.}
+
+  \vspace{0.1em}
+  \small
+  Every request climbs to a satellite, drops to a ground station,\\
+  finds the cache on Earth --- then climbs all the way back up.
+
+  \brokenassumption{The cache sits on the ground, near the user}
+    {putting the CDN on the satellites themselves}
+
+  \vspace{0.1em}
+  {\small So well hidden it is not even a box in your diagram.\par}
+
+  \vspace{0.1em}
+  \papercard{StarCDN: Moving Content Delivery Networks to Space}
+    {W.\,X. Zheng, A. Taneja, M. Masood, A. Sabnis, R.\,K. Sitaraman,
+     D. Vasisht --- UIUC, UMass Amherst \& Akamai}
+    {ACM SIGCOMM 2025}
+    {https://doi.org/10.1145/3718958.3754345}
+  \watch{https://www.youtube.com/watch?v=-dX0DbW-9iY}{SIGCOMM'25 talk --- play 60--90 s}
+\end{frame}
+
+% Teaching note (3 min): this is the frame students remember. Let them sit with
+% the problem before revealing the arrow trick: the satellites drift one way,
+% the content is handed the other way, so the CONTENT hovers over Florida even
+% though no SATELLITE does.
+% SOURCE (LEO orbital period ~90-100 min is standard orbital mechanics):
+% https://en.wikipedia.org/wiki/Low_Earth_orbit
+\begin{frame}{Your cache is doing 7.5 km/s}
+  \small
+  A LEO satellite laps the Earth in roughly 95 minutes.\\
+  The one over Florida right now is Florida's for only minutes.
+
+  \qa{It spent those minutes caching what Floridians watch. Then what?}
+     {StarCDN hands the cached content \textbf{backward} through the
+      constellation \expand{the whole fleet} --- against the satellites'
+      motion --- to the next satellite arriving overhead.}
+
+  \vspace{0.15em}
+  % SOURCE (the constellation's inter-satellite laser links are the transport
+  % that carries content between satellites in StarCDN):
+  % https://doi.org/10.1145/3718958.3754345
+  Satellites carry laser links to their neighbors --- content rides those.
+
+  \vspace{0.15em}
+  \centering
+  % Teaching note: the picture is deliberately picture-level -- real orbits are
+  % inclined planes, not neat rows. Say that aloud if a sharp student objects.
+  \begin{tikzpicture}[scale=0.88,transform shape]
+    \node[oranode,minimum width=1.4cm] (s1) at (0,0) {Sat A};
+    \node[oranode,minimum width=1.4cm] (s2) at (3.0,0) {Sat B};
+    \node[oranode,minimum width=1.4cm] (s3) at (6.0,0) {Sat C};
+    \node[font=\scriptsize,text=softgray,anchor=south] at (0,0.42) {next up};
+    \node[font=\scriptsize,text=softgray,anchor=south] at (3.0,0.42) {serving now};
+    \node[font=\scriptsize,text=softgray,anchor=south] at (6.0,0.42) {just left};
+    \draw[flow,draw=ranpurple,dashed] (7.1,0.65) -- (8.6,0.65)
+      node[right,font=\scriptsize,text=ranpurple] {satellites drift};
+    \draw[flow,draw=coreorange,very thick] (s3) -- (s2);
+    \draw[flow,draw=coreorange,very thick] (s2) -- (s1);
+    \node[font=\scriptsize,text=coreorange] at (3.0,-0.75)
+      {content handed backward};
+    \node[netnode,minimum width=2.2cm] (fl) at (3.0,-1.9) {Users in Florida};
+    \draw[flow,dashed] (fl) -- (s2);
+  \end{tikzpicture}
+
+  \vspace{0.3em}
+  {\small A useful way to picture it: \emph{the satellite moves on; the
+   content stays behind.} (Picture-level, not real geometry.)\par}
+\end{frame}
+
+% SOURCE (both numbers below: ~80% reduction in ground-to-satellite bandwidth
+% usage; ~2.5x improvement in user-perceived latency):
+% https://doi.org/10.1145/3718958.3754345
+\begin{frame}{What moving the cache to orbit bought}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \large\textbf{Ground--satellite bandwidth}
+
+      \vspace{0.4em}
+      {\Huge\textcolor{ranblue}{\(\sim\)80\%}}
+
+      \vspace{0.3em}
+      \small less usage on the scarcest link
+    \column{0.47\textwidth}
+      \large\textbf{User-perceived latency}
+
+      \vspace{0.4em}
+      {\Huge\textcolor{coreorange}{\(\sim\)2.5\(\times\)}}
+
+      \vspace{0.3em}
+      \small improvement over ground-based CDN baselines
+  \end{columns}
+
+  \vspace{0.3em}
+  {\scriptsize\textcolor{softgray}{Trace-driven simulation using real-world
+   Akamai CDN traces.}\par}
+
+  \vspace{0.3em}
+  \takeaway{Act I score: the \textbf{tower} box and the \textbf{CDN} box
+    both left the ground --- and the systems got \emph{better}.}
+
+  \vspace{0.4em}
+  % The strip below is the section-01 diagram, shrunk, so students can look at
+  % the picture the closing question is about.
+  \centering
+  \begin{tikzpicture}[scale=0.7,transform shape]
+    \node[netnode,minimum width=1.5cm]  (ue)   at (0,0)    {UE};
+    \node[netnode,minimum width=1.35cm] (ru)   at (2.15,0) {RU};
+    \node[netnode,minimum width=1.35cm] (du)   at (4.05,0) {DU};
+    \node[netnode,minimum width=1.35cm] (cu)   at (5.95,0) {CU};
+    \node[corenode,minimum width=1.6cm] (core) at (8.35,0) {5G Core};
+    \draw[flow] (ue) -- (ru);
+    \draw[flow] (ru) -- (du);
+    \draw[flow] (du) -- (cu);
+    \draw[flow] (cu) -- (core);
+  \end{tikzpicture}
+
+  \vspace{0.2em}
+  \ask{Look at the rest of the architecture diagram.\\
+       Which boxes are on the ground only by habit?}
+\end{frame}

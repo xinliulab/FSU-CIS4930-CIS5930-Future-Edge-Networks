@@ -1,0 +1,148 @@
+%!TEX root = ./main.tex
+
+\section[Assumptions]{The Diagram's Hidden Assumptions}
+
+% SECTION TIMING: 0:00--7:00 (4 frames). This section only plants suspense: no papers,
+% no numbers, no claims. If discussion on frame 1 runs long, compress frame 4 to its
+% Q/A and move on -- the acts themselves repeat the mode-shift point.
+% LAYOUT RULE: every bullet must fit on one line. Shorten the text, do not let it wrap.
+
+% Teaching note (2 min): draw nothing new here -- this is THEIR diagram from Class 3/4,
+% redrawn stroke for stroke. Ask the \ask question, then collect 2-3 student guesses
+% out loud before advancing. Wrong guesses are useful: most students will name missing
+% BOXES (no UPF detail, no AMF), not missing ASSUMPTIONS. That gap is the lecture.
+\begin{frame}{The picture you spent two lectures building}
+  \vspace{0.3em}
+  \centering
+  \begin{tikzpicture}[scale=0.88,transform shape,
+      lbl/.style={font=\scriptsize,text=softgray,align=center}]
+    \node[netnode,minimum width=1.5cm]  (ue)   at (0,0)    {UE};
+    \node[netnode,minimum width=1.35cm] (ru)   at (2.15,0) {RU};
+    \node[netnode,minimum width=1.35cm] (du)   at (4.05,0) {DU};
+    \node[netnode,minimum width=1.35cm] (cu)   at (5.95,0) {CU};
+    \node[corenode,minimum width=1.6cm] (core) at (8.35,0) {5G Core};
+    \draw[flow] (ue) -- (ru);
+    \draw[flow] (ru) -- (du);
+    \draw[flow] (du) -- (cu);
+    \draw[flow] (cu) -- (core);
+    % Link names match the split-gNB diagram the students saw in Class 3
+    % (Class_3_RAN/03_generations.tex): radio / fronthaul / F1 / N2-N3.
+    \node[lbl,anchor=south] at (1.08,0.18)  {air (radio)};
+    \node[lbl,anchor=south] at (3.10,0.18)  {fronthaul};
+    \node[lbl,anchor=south] at (5.00,0.18)  {F1\\(midhaul)};
+    \node[lbl,anchor=south] at (7.15,0.18)  {N2/N3\\(backhaul)};
+    \draw[decorate,decoration={brace,mirror,amplitude=4pt},thick,draw=ranblue]
+      (1.35,-0.62) -- (6.75,-0.62);
+    \node[font=\scriptsize\bfseries,text=ranblue] at (4.05,-1.05) {gNB};
+    \node[oranode,minimum width=2.3cm] (ric) at (5.0,1.7) {RIC + xApps};
+    \draw[flow,dashed,draw=ranpurple] (ric) -- (du);
+    \draw[flow,dashed,draw=ranpurple] (ric) -- (cu);
+  \end{tikzpicture}
+
+  \vspace{0.5em}
+  \normalsize
+  Every box and line is exactly where you left it last class.
+
+  \vspace{0.5em}
+  \ask{This picture is correct. What does it \textbf{silently assume}?}
+
+  \glossline{F1 = the DU--CU interface \quad N2/N3 = the gNB-to-core interfaces}
+\end{frame}
+
+% Teaching note (2 min): read all five slowly; pause after each. Do NOT name any
+% paper yet -- the whole section is suspense. If a student already guesses
+% "satellites" for (a), smile and say "hold that thought until Act I."
+\begin{frame}{Five things the diagram never says out loud}
+  \large\textbf{Hidden in plain sight:}
+
+  \vspace{0.7em}
+  \normalsize
+  \begin{enumerate}\itemsep8pt
+    \item The base station stands \textbf{on the ground}.
+    \item The base station is \textbf{only a radio}.
+    \item Data is \textbf{transmitted first, computed later}
+      {\scriptsize\expand{the wave carries bits; a computer does the math afterward}}.
+    \item The links \textbf{inside} the base station are trustworthy.
+    % Wording below must stay IDENTICAL to the \brokenassumption in 04_security.tex
+    % (SigOver frame) -- the echo is the point.
+    \item Attacking the network requires \textbf{standing up} a fake base station.
+  \end{enumerate}
+
+  \vspace{0.6em}
+  \small
+  None of these are drawn. That is exactly what makes them assumptions.
+
+  \vspace{0.4em}
+  \takeaway{By the end of today, all five will be broken --- plus one so well
+    hidden it is not even a box in the diagram.}
+\end{frame}
+
+% Teaching note (90 s): point at the map, do not read it. Emphasize the goal sentence
+% at the bottom: seven papers in 75 minutes is a tour, not a syllabus. Each act gets
+% its own deep-dive later in the course; today is about the feeling of the moves.
+\begin{frame}{Today's tour: four acts, seven papers}
+  \vspace{0.3em}
+  \centering
+  \small
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    & \textbf{The question it asks} & \textbf{Papers} \\
+    \midrule
+    \textcolor{ranblue}{\textbf{Act I}}
+      & Where does the base station \textit{live}? & 2 papers, SIGCOMM'25 \\
+    \textcolor{ranpurple}{\textbf{Act II}}
+      & What lives \textit{inside} the base station? & 2 papers, SIGCOMM'25 \\
+    \textcolor{attackred}{\textbf{Act III}}
+      & Who attacks it, and how?
+      & \shortstack[l]{3 papers + 1 cliffhanger\\
+          {\scriptsize NDSS'24 + USENIX Sec '19/'24/'25}} \\
+    \textcolor{coreorange}{\textbf{Act IV}}
+      & So what is the diagram, really? & synthesis --- no new papers \\
+    \bottomrule
+  \end{tabular}
+
+  \glossline{SIGCOMM, NDSS, USENIX Security = the top venues where networking
+    and security research is published}
+
+  \vspace{0.7em}
+  \normalsize
+  The goal is \textbf{not} to master seven papers today.
+
+  \vspace{0.4em}
+  It is to leave feeling that \textbf{every box and every line can be reimagined}.
+\end{frame}
+
+% Teaching note (90 s): this is the gear-shift frame. Say it plainly: from here on,
+% the course reads papers, and soon the students will too. If time is short, show
+% only the Q/A and speak the Then/Now contrast instead of dwelling on it.
+\begin{frame}{The course changes gears today}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \large\textbf{Classes 2--4}
+
+      \vspace{0.5em}
+      \normalsize
+      \begin{itemize}\itemsep5pt
+        \item ``Here is how it works.''
+        \item Standards, boxes, splits
+        \item Answers with settled names
+      \end{itemize}
+    \column{0.47\textwidth}
+      \large\textbf{Class 5 onward}
+
+      \vspace{0.5em}
+      \normalsize
+      \begin{itemize}\itemsep5pt
+        \item ``Which assumption breaks?''
+        \item Papers, prototypes, attacks
+        \item Questions nobody has settled yet
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.6em}
+  \qa{If the diagram is correct, why spend a whole class attacking it?}
+     {Because \textbf{correct} is not the same as \textbf{finished}. The diagram
+      tells you what was built; it stays silent about what was assumed. Research
+      lives in that silence --- and starting today, so does this course.}
+\end{frame}
