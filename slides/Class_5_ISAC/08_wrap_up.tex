@@ -1,0 +1,91 @@
+%!TEX root = ./main.tex
+
+\section[Wrap-up]{Wrap-up}
+
+% SECTION TIMING: 70:00--75:00 (3 frames). Use the map to close the story, then collect
+% the exit ticket. Do not start a new idea here.
+
+\begin{frame}{The whole lecture in one map}
+  \vspace{0.3em}
+  \centering
+  \scriptsize
+  \setlength{\tabcolsep}{4pt}
+  \renewcommand{\arraystretch}{1.34}
+  \begin{tabularx}{\textwidth}{>{\bfseries\raggedright\arraybackslash}p{2.15cm}
+      >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+    \toprule
+    & \textcolor{ranblue}{\textbf{What is optimised}} & \textcolor{coreorange}{\textbf{What it costs}} \\
+    \midrule
+    Cross-domain OFDM & Resource elements and their powers & Whoever picks second
+      gets the leftovers \\
+    Multiuser ODDM & Power per user against the CRLB & Complexity, and hardware
+      that does not exist yet \\
+    RIS-ISAC & Beams plus a surface you do not own & An attacker can own the
+      surface instead \\
+    HSR ISAC & Beamforming with a deliberate blind spot & Secrecy is bought with
+      coverage \\
+    FSO-ISAC & DC bias and subcarrier power & Bias is power that carries nothing \\
+    \bottomrule
+  \end{tabularx}
+
+  \vspace{0.6em}
+  \takeaway{Five settings, one shape.\\Every one of them is a point chosen on a frontier.}
+\end{frame}
+
+\begin{frame}{What is actually unfinished}
+  \vspace{0.5em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \large\textbf{\textcolor{softgreen}{Settled enough to build}}
+
+      \vspace{0.5em}
+      \small
+      \begin{itemize}\itemsep4pt
+        \item The tradeoff is understood.
+        \item OFDM-based ISAC works.
+        \item Benches exist and measure.
+      \end{itemize}
+    \column{0.47\textwidth}
+      \large\textbf{\textcolor{coreorange}{Still open}}
+
+      \vspace{0.5em}
+      \small
+      \begin{itemize}\itemsep4pt
+        \item A killer application.
+        \item Passive-attacker security.
+        \item AI for waveform design.
+        \item Space--air--ground reach.
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.9em}
+  \qa{Which of these is not an engineering problem?}
+     {The first. A waveform can be optimised; a market cannot. ISAC has a
+      technology looking for the application that pays for it.}
+
+  \glossline{SAGIN = Space--Air--Ground Integrated Network}
+\end{frame}
+
+% TEACHING NOTE (2:30): collect on paper or in the LMS. Require a marked point and one
+% sentence. Do not accept "both" as an answer to part 3.
+\begin{frame}{Exit ticket: pick a point on the curve}
+  \vspace{0.5em}
+  \begin{center}
+  \begin{tikzpicture}[scale=0.85,transform shape]
+    \draw[-{Latex[length=2.2mm]},softgray] (0,0) -- (5.6,0)
+      node[anchor=north east,font=\scriptsize] {CRLB $\rightarrow$ worse sensing};
+    \draw[-{Latex[length=2.2mm]},softgray] (0,0) -- (0,3.0)
+      node[anchor=south,font=\scriptsize] {rate};
+    \draw[very thick,draw=ranblue] (0.6,2.7) .. controls (2.0,2.5) and (2.8,1.6) .. (5.0,1.1);
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.6em}
+  \begin{enumerate}\itemsep6pt
+    \item Mark where a \textcolor{ranblue}{self-driving car} should sit. Mark where a
+      \textcolor{coreorange}{cabin Wi-Fi link} should sit.
+    \item Name one resource the two designs would allocate differently.
+    \item Answer in one sentence:\\
+      \textbf{what does sensing cost the bits in your example?}
+  \end{enumerate}
+\end{frame}

@@ -1,0 +1,84 @@
+%!TEX root = ./main.tex
+
+\section[Tradeoff]{The Tradeoff That Does Not Go Away}
+
+% SECTION TIMING: 33:00--41:00 (3 frames).
+% TEACHING NOTE: the two tables are one table in the source talk. They are split here
+% because ten rows at a readable size do not fit on one frame. Read down a column, then
+% across one row. Do not read all twenty cells aloud.
+
+\begin{frame}{They want opposite things (1/2)}
+  \vspace{0.2em}
+  \scriptsize
+  \setlength{\tabcolsep}{4pt}
+  \renewcommand{\arraystretch}{1.35}
+  \begin{tabularx}{\textwidth}{>{\bfseries\raggedright\arraybackslash}p{1.55cm}
+      >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+    \toprule
+    & \textcolor{coreorange}{\textbf{Sensing wants}} & \textcolor{ranblue}{\textbf{Communication wants}} \\
+    \midrule
+    Spectrum   & Wide bandwidth, for resolution & Efficient bandwidth, for rate \\
+    Signal     & Deterministic waveforms & Random, information-bearing symbols \\
+    Power      & High transmit power on the target & Power efficiency per bit \\
+    Time       & Continuous illumination & Low-latency bursts \\
+    Space      & Wide or scanning beams & Narrow beams, one per user \\
+    \bottomrule
+  \end{tabularx}
+
+  \vspace{0.6em}
+  \takeaway{Randomness carries information and ruins an autocorrelation.\\That single sentence is the whole conflict.}
+\end{frame}
+
+\begin{frame}{They want opposite things (2/2)}
+  \vspace{0.2em}
+  \scriptsize
+  \setlength{\tabcolsep}{4pt}
+  \renewcommand{\arraystretch}{1.35}
+  \begin{tabularx}{\textwidth}{>{\bfseries\raggedright\arraybackslash}p{1.55cm}
+      >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+    \toprule
+    & \textcolor{coreorange}{\textbf{Sensing wants}} & \textcolor{ranblue}{\textbf{Communication wants}} \\
+    \midrule
+    Interference & A clean echo, no clutter & A clean constellation, no radar leakage \\
+    Domain     & Delay--Doppler resolution & Time--frequency multiplexing \\
+    Hardware   & Precise timing, high-power amplifiers & Spectral efficiency, many users \\
+    Latency    & Low-latency tracking feedback & Tolerates delay off the critical path \\
+    Regulation & Frequency allocation rules & Emission and efficiency standards \\
+    \bottomrule
+  \end{tabularx}
+
+  \vspace{0.6em}
+  \qa{Is there a setting where both are optimal?}
+     {No. There is a \textbf{Pareto frontier}: past a point, every improvement in
+      one is paid for out of the other. Design work is choosing where to sit on
+      it, not escaping it.}
+\end{frame}
+
+% ACCURACY NOTE: lower CRLB = better sensing, so the good corner of this plot is
+% up and to the LEFT. Students read every curve as "up and to the right is better"
+% and will get this backwards unless you say it.
+\begin{frame}{The frontier, drawn once}
+  \vspace{0.3em}
+  \centering
+  \begin{tikzpicture}[scale=0.95,transform shape]
+    \draw[-{Latex[length=2.2mm]},softgray] (0,0) -- (6.6,0)
+      node[anchor=north east,font=\scriptsize] {CRLB (sensing error floor) $\rightarrow$ worse};
+    \draw[-{Latex[length=2.2mm]},softgray] (0,0) -- (0,3.6)
+      node[anchor=south,font=\scriptsize] {achievable rate};
+    \draw[very thick,draw=ranblue] (0.7,3.1) .. controls (2.2,2.9) and (3.0,1.9) .. (5.6,1.3);
+    \node[font=\scriptsize,text=ranblue,anchor=north east] at (2.75,2.15) {attainable frontier};
+    \fill[softgreen] (1.3,3.02) circle (2.6pt);
+    \node[font=\scriptsize,text=softgreen,anchor=west] at (1.5,3.15) {sensing-first};
+    \fill[coreorange] (4.7,1.52) circle (2.6pt);
+    \node[font=\scriptsize,text=coreorange,anchor=west] at (4.9,1.75) {comms-first};
+    \node[font=\scriptsize,text=softgray] at (1.8,0.7) {unreachable};
+    \node[font=\scriptsize,text=softgray] at (5.5,3.0) {infeasible};
+  \end{tikzpicture}
+
+  \vspace{0.6em}
+  \glossline{CRLB = Cram\'er--Rao Lower Bound: the smallest variance any unbiased
+    estimator can achieve. \textbf{Lower is better}, so the good corner is up and to the left.}
+
+  \vspace{0.2em}
+  \takeaway{Every result in the rest of this lecture\\is a claim about one point on a curve like this.}
+\end{frame}

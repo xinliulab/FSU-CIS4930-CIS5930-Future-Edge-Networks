@@ -1,0 +1,87 @@
+%!TEX root = ./main.tex
+
+\usetikzlibrary{positioning,fit,backgrounds}
+
+\definecolor{ranblue}{RGB}{46,91,186}
+\definecolor{coreorange}{RGB}{222,122,36}
+\definecolor{ranpurple}{RGB}{109,53,151}
+\definecolor{softgreen}{RGB}{73,139,74}
+\definecolor{softgray}{RGB}{92,98,105}
+
+\newcommand{\source}[2]{%
+  \par\vspace{0.25em}%
+  {\tiny\textcolor{gray}{\href{#1}{\underline{#2}}}\par}%
+}
+
+% Inline expansion of an acronym at first use: SMS \expand{Short Message Service}
+\newcommand{\expand}[1]{\textcolor{softgray}{(#1)}}
+
+% Small gray glossary line, for slides with several acronyms at once.
+\newcommand{\glossline}[1]{%
+  \par\vspace{0.4em}%
+  {\scriptsize\color{softgray}\raggedright#1\par}%
+}
+
+\newcommand{\plainterm}[2]{%
+  \textbf{#1}\hspace{0.25em}{\small\textcolor{softgray}{#2}}%
+}
+
+\newcommand{\ask}[1]{%
+  \begin{tcolorbox}[colback=blue!4,colframe=ranblue,boxrule=0.7pt,arc=2pt,
+    left=5pt,right=5pt,top=4pt,bottom=4pt]
+    \centering\large #1
+  \end{tcolorbox}%
+}
+
+% Font is deliberately \normalsize, not \large: at \large a one-sentence takeaway
+% wraps to two lines and the box grows into whatever is below it.
+\newcommand{\takeaway}[1]{%
+  \begin{tcolorbox}[colback=orange!7,colframe=coreorange,boxrule=0.7pt,arc=2pt,
+    left=5pt,right=5pt,top=4pt,bottom=4pt]
+    \centering\normalsize #1
+  \end{tcolorbox}%
+}
+
+\tikzset{
+  netnode/.style={draw=ranblue,fill=blue!5,rounded corners=3pt,
+    minimum width=1.9cm,minimum height=0.82cm,align=center,font=\bfseries},
+  corenode/.style={draw=coreorange,fill=orange!7,rounded corners=3pt,
+    minimum width=1.9cm,minimum height=0.82cm,align=center,font=\bfseries},
+  oranode/.style={draw=ranpurple,fill=purple!6,rounded corners=3pt,
+    minimum width=1.9cm,minimum height=0.82cm,align=center,font=\bfseries},
+  flow/.style={-{Latex[length=2.4mm]},thick,draw=softgray}
+}
+
+% Full-width question/answer block: spans the whole frame, no box.
+% Use below \end{columns} when the question is meant for the whole slide.
+\newcommand{\qa}[2]{%
+  \par\vspace{0.55em}%
+  {\large\raggedright
+    \noindent\hangindent=1.25em\hangafter=1
+    \textcolor{ranblue}{\textbf{Q:}}\hspace{0.35em}\textbf{#1}\par
+    \vspace{0.35em}
+    \noindent\hangindent=1.25em\hangafter=1
+    \textcolor{coreorange}{\textbf{A:}}\hspace{0.35em}#2\par}%
+}
+
+% Repeating template for "this box is gone in the next diagram" frames.
+% The deck's spine: a term never vanishes between two architecture diagrams
+% without a frame explaining the pressure that removed it.
+% #1 what it did, #2 what broke, #3 what replaced it
+\newcommand{\gonebox}[3]{%
+  \vspace{0.5em}%
+  \begin{columns}[T,onlytextwidth]
+    \column{0.30\textwidth}
+      {\small\textbf{\textcolor{softgray}{What it did}}\par}
+      \vspace{0.4em}
+      {\small #1\par}
+    \column{0.34\textwidth}
+      {\small\textbf{\textcolor{coreorange}{What broke}}\par}
+      \vspace{0.4em}
+      {\small #2\par}
+    \column{0.30\textwidth}
+      {\small\textbf{\textcolor{softgreen}{What replaced it}}\par}
+      \vspace{0.4em}
+      {\small #3\par}
+  \end{columns}%
+}

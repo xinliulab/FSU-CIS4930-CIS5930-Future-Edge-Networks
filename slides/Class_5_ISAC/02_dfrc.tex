@@ -1,0 +1,135 @@
+%!TEX root = ./main.tex
+
+\section[DFRC]{From Two Boxes to One}
+
+% SECTION TIMING: 12:00--22:00 (4 frames).
+% This section earns the rest of the deck. If the class cannot say what delay and Doppler
+% measure, the waveform section will not land. Do not cut the "what an echo tells you" frame.
+
+\begin{frame}{Two boxes became one box}
+  \vspace{0.3em}
+  \centering
+  \begin{tikzpicture}[scale=0.88,transform shape]
+    % separate
+    \node[font=\small\bfseries,anchor=south] at (-2.3,1.55) {Separate systems};
+    \node[netnode,minimum width=1.9cm] (c1) at (-3.4,0.55) {Comms};
+    \node[corenode,minimum width=1.9cm] (r1) at (-3.4,-0.75) {Radar};
+    \node[font=\scriptsize,align=left,anchor=west] at (-2.35,0.55) {own band\\own antenna};
+    \node[font=\scriptsize,align=left,anchor=west] at (-2.35,-0.75) {own band\\own antenna};
+    % divider
+    \draw[softgray,dashed] (0.45,1.6) -- (0.45,-1.6);
+    % shared
+    \node[font=\small\bfseries,anchor=south] at (3.6,1.55) {DFRC};
+    \node[netnode,minimum width=2.6cm,minimum height=1.6cm,draw=coreorange,
+      fill=orange!5] (d) at (2.9,-0.1) {One transmit\\chain};
+    \node[font=\scriptsize,anchor=west] at (4.35,0.35) {\textcolor{ranblue}{bits out}};
+    \node[font=\scriptsize,anchor=west] at (4.35,-0.55) {\textcolor{coreorange}{echo in}};
+  \end{tikzpicture}
+
+  \vspace{0.8em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      {\small\textbf{\textcolor{softgreen}{What it buys}}\par}
+      \vspace{0.3em}
+      {\small One spectrum licence, one amplifier, one aperture, one power budget.\par}
+    \column{0.47\textwidth}
+      {\small\textbf{\textcolor{coreorange}{What it costs}}\par}
+      \vspace{0.3em}
+      {\small A single waveform now has to satisfy two specifications at once.\par}
+  \end{columns}
+
+  \glossline{DFRC = Dual-Function Radar Communication}
+\end{frame}
+
+\begin{frame}{DFRC is one box. ISAC is the question.}
+  \vspace{0.4em}
+  \centering
+  \begin{tikzpicture}[scale=0.95,transform shape]
+    \node[draw=coreorange,fill=orange!4,rounded corners=6pt,
+      minimum width=8.2cm,minimum height=2.9cm] (isac) at (0,0) {};
+    \node[anchor=north west,font=\bfseries\small,text=coreorange] at (-4.0,1.32) {ISAC};
+    \node[draw=ranblue,fill=blue!6,rounded corners=4pt,
+      minimum width=3.4cm,minimum height=1.5cm,align=center,font=\bfseries\small]
+      (dfrc) at (-1.9,-0.25) {DFRC\\[-2pt]{\scriptsize one shared box}};
+    \node[align=center,font=\scriptsize,text width=3.2cm] at (1.9,-0.25)
+      {separate devices,\\separate sites,\\one sensing picture};
+  \end{tikzpicture}
+
+  \vspace{0.7em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      {\small\textbf{\textcolor{ranblue}{DFRC}} shares waveforms, antennas, and
+       processing chains inside one radio.\par}
+    \column{0.47\textwidth}
+      {\small\textbf{\textcolor{coreorange}{ISAC}} also lets one node transmit
+       and a different node listen.\par}
+  \end{columns}
+
+  \vspace{0.5em}
+  \takeaway{Every DFRC system is ISAC.\\Not every ISAC system fits in one box.}
+\end{frame}
+
+% Teaching note (2:00): this frame is not in the source talk. It is here because the
+% waveform section is unreadable without it. Draw the three arrows on the board as you go.
+\begin{frame}{What an echo actually tells you}
+  \vspace{0.4em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.44\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.85,transform shape]
+        \node[netnode,minimum width=1.5cm] (bs) at (0,0) {BS};
+        \node[corenode,minimum width=1.5cm] (tg) at (3.6,0) {Target};
+        \draw[flow,draw=coreorange,very thick] (0.78,0.28) -- (2.82,0.28);
+        \draw[draw=coreorange,very thick,dashed,-{Latex[length=2.2mm]}]
+          (2.82,-0.28) -- (0.78,-0.28);
+        \node[font=\scriptsize,anchor=south] at (1.8,0.35) {transmit};
+        \node[font=\scriptsize,anchor=north] at (1.8,-0.35) {echo};
+      \end{tikzpicture}
+    \column{0.52\textwidth}
+      \small
+      \begin{itemize}\itemsep6pt
+        \item \textbf{Delay} $\rightarrow$ range, $R = c\tau/2$
+        \item \textbf{Doppler} $\rightarrow$ closing speed
+        \item \textbf{Angle} $\rightarrow$ direction
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.6em}
+  \qa{Which knob buys finer range, and which buys finer speed?}
+     {\textbf{Bandwidth} buys range resolution --- a wider signal has a sharper
+      peak in time. \textbf{Observation time} buys velocity resolution --- you
+      must watch long enough for the phase to drift.}
+\end{frame}
+
+\begin{frame}{The four hard parts, named up front}
+  \vspace{0.5em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \large\textbf{\textcolor{ranblue}{Techniques}}
+
+      \vspace{0.5em}
+      \small
+      \begin{itemize}\itemsep4pt
+        \item Waveform design
+        \item MIMO, beamforming
+        \item Shared RF hardware
+        \item Coding and allocation
+      \end{itemize}
+    \column{0.47\textwidth}
+      \large\textbf{\textcolor{coreorange}{Challenges}}
+
+      \vspace{0.5em}
+      \small
+      \begin{itemize}\itemsep4pt
+        \item Tradeoff: unavoidable
+        \item Interference: mutual
+        \item Complexity: non-convex
+        \item Regulation: who owns it
+      \end{itemize}
+  \end{columns}
+
+  \glossline{MIMO = Multiple Input Multiple Output \quad RF = Radio Frequency}
+
+  \vspace{0.4em}
+  \takeaway{Three of the four are engineering.\\The fourth is a committee.}
+\end{frame}

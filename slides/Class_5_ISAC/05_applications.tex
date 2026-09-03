@@ -1,0 +1,168 @@
+%!TEX root = ./main.tex
+
+\section[Allocation]{Choosing a Point on the Curve}
+
+% SECTION TIMING: 41:00--52:00 (5 frames).
+% SOURCE: "Cross-Domain Dual-Functional OFDM Waveform Design for Accurate
+% Sensing/Positioning," IEEE JSAC, 2024. Simulation parameters on the results frame are
+% quoted from that work; do not round them.
+
+\begin{frame}{The grid is the budget}
+  \vspace{0.3em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.50\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.78,transform shape]
+        \foreach \x/\y in {0/0,1/0,3/0,4/0,1/1,2/1,5/1,0/2,3/2,4/2,2/3,5/3,0/3,3/3}
+          \fill[blue!22,draw=softgray!50] (\x*0.62+0.14,\y*0.52+0.12) rectangle ++(0.58,0.48);
+        \foreach \x/\y in {2/0,5/0,0/1,3/1,4/1,1/2,2/2,5/2,1/3,4/3}
+          \fill[orange!35,draw=softgray!50] (\x*0.62+0.14,\y*0.52+0.12) rectangle ++(0.58,0.48);
+        \draw[-{Latex[length=2mm]},softgray] (0,0) -- (4.05,0)
+          node[anchor=north,font=\scriptsize] {time};
+        \draw[-{Latex[length=2mm]},softgray] (0,0) -- (0,2.42);
+        \node[font=\scriptsize,rotate=90,anchor=south] at (-0.16,1.2) {frequency};
+      \end{tikzpicture}
+
+      \vspace{0.4em}
+      {\scriptsize\textcolor{ranblue}{$\blacksquare$ communication RE} \quad
+       \textcolor{coreorange}{$\blacksquare$ sensing RE}\par}
+    \column{0.46\textwidth}
+      \small
+      \begin{itemize}\itemsep5pt
+        \item One RE is one cell.
+        \item Each carries symbol and power.
+        \item Assign cell, then power.
+        \item Two functions, one grid.
+      \end{itemize}
+  \end{columns}
+
+  \glossline{RE = Resource Element, one subcarrier during one OFDM symbol\\
+    PSLR = Peak-to-SideLobe Ratio; RoI = Region of Interest in the delay--Doppler plane}
+  \source{https://ieeexplore.ieee.org/document/10683983}{Cross-Domain Dual-Functional OFDM Waveform Design, IEEE JSAC 2024}
+\end{frame}
+
+\begin{frame}{Two scores, graded in two rooms}
+  \vspace{0.6em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \large\textbf{\textcolor{ranblue}{Communication score}}
+
+      \vspace{0.5em}
+      \small
+      Achievable data rate, summed over every RE assigned to communication.
+
+      \vspace{0.5em}
+      Measured in \textbf{time--frequency}: put bits where the channel is good.
+    \column{0.47\textwidth}
+      \large\textbf{\textcolor{coreorange}{Sensing score}}
+
+      \vspace{0.5em}
+      \small
+      PSLR inside the region of interest --- how far the true peak stands above the clutter.
+
+      \vspace{0.5em}
+      Measured in \textbf{delay--Doppler}: shape the autocorrelation where targets live.
+  \end{columns}
+
+  \vspace{0.8em}
+  \takeaway{The same grid is graded twice,\\by two examiners in two different domains.}
+\end{frame}
+
+\begin{frame}{Whoever picks first, wins}
+  \vspace{0.4em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      {\small\textbf{\textcolor{ranblue}{Communication-centric}}\par}
+      \vspace{0.4em}
+      \small
+      \begin{enumerate}\itemsep4pt
+        \item Give the good REs to bits.
+        \item Then tune leftover powers.
+        \item Sensing takes the remainder.
+      \end{enumerate}
+
+      \vspace{0.4em}
+      {\scriptsize\textcolor{softgray}{Rate stays optimal; PSLR is merely good inside the RoI.}\par}
+    \column{0.47\textwidth}
+      {\small\textbf{\textcolor{coreorange}{Sensing-centric}}\par}
+      \vspace{0.4em}
+      \small
+      \begin{enumerate}\itemsep4pt
+        \item Lock the RoI autocorrelation.
+        \item Then tune the rest of the plane.
+        \item Bits take the remainder.
+      \end{enumerate}
+
+      \vspace{0.4em}
+      {\scriptsize\textcolor{softgray}{PSLR is locally perfect; rate approaches, not reaches, optimal.}\par}
+  \end{columns}
+
+  \vspace{0.7em}
+  \qa{Both designs claim ``almost no loss''. How can that be?}
+     {Because the constraint is only enforced inside the \textbf{region of
+      interest}. Narrow the room you must be perfect in, and the rest of the grid
+      is free for the other function.}
+\end{frame}
+
+% VERIFY: parameters quoted from the JSAC 2024 paper's simulation section.
+\begin{frame}{What the simulation actually showed}
+  \vspace{0.5em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      {\small\textbf{\textcolor{ranblue}{Communication-centric}}\par}
+      \vspace{0.4em}
+      {\small Keeps the optimal achievable rate, and still shows good
+       autocorrelation inside the RoI.\par}
+    \column{0.47\textwidth}
+      {\small\textbf{\textcolor{coreorange}{Sensing-centric}}\par}
+      \vspace{0.4em}
+      {\small Approaches the optimal rate while guaranteeing a locally perfect
+       autocorrelation.\par}
+  \end{columns}
+
+  \vspace{0.9em}
+  {\scriptsize\textcolor{softgray}{Setup: carrier 240\,GHz, subcarrier spacing 240\,kHz,
+   32 consecutive OFDM symbols, 128 subcarriers, symbol length 4.1470\,\textmu s,
+   cyclic prefix 1.0368\,\textmu s.}\par}
+
+  \vspace{0.7em}
+  \ask{240 GHz and 240 kHz spacing.\\What kind of link is being assumed here?}
+\end{frame}
+
+% SOURCE: multiuser ODDM downlink; sum-rate against CRLB, decomposed into two
+% subproblems. From the source talk's resource-allocation section.
+\begin{frame}{Many users, one echo}
+  \vspace{0.4em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.45\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.9,transform shape]
+        \draw[-{Latex[length=2mm]},softgray] (0,0) -- (3.6,0)
+          node[anchor=north east,font=\scriptsize] {CRLB};
+        \draw[-{Latex[length=2mm]},softgray] (0,0) -- (0,2.7)
+          node[anchor=south,font=\scriptsize] {sum-rate};
+        \draw[very thick,draw=softgreen] (0.5,2.25) .. controls (1.4,2.0) .. (3.1,1.45);
+        \node[font=\scriptsize,text=softgreen,anchor=south west] at (1.6,2.02) {ODDM};
+        \draw[very thick,draw=softgray!70,dashed] (0.5,1.55) .. controls (1.4,1.3) .. (3.1,0.75);
+        \node[font=\scriptsize,text=softgray,anchor=north west] at (1.6,1.22) {OTFS};
+      \end{tikzpicture}
+    \column{0.51\textwidth}
+      \small
+      \begin{itemize}\itemsep5pt
+        \item Power is split over subcarriers.
+        \item Other users are interference.
+        \item CRLB bounds the estimate.
+        \item The problem splits in two.
+      \end{itemize}
+
+      \vspace{0.4em}
+      {\small\textcolor{softgreen}{\textbf{ODDM sits above OTFS across the whole
+       range.}}\par}
+  \end{columns}
+
+  \glossline{SINR = Signal to Interference-plus-Noise Ratio \quad
+    Fisher information $\rightarrow$ CRLB by inversion}
+
+  \vspace{0.3em}
+  \takeaway{Sparser echoes mean less interference,\\and less interference is rate you keep.}
+\end{frame}
