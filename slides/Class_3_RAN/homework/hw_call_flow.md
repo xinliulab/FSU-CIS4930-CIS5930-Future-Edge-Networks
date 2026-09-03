@@ -19,14 +19,16 @@ Use AI freely. Part E requires you to show what you used and what it got wrong.
 
 ## Part A — Draw the ladder (30 pts)
 
-**Your generation** is set by the last digit of your FSU ID:
+**Your generation** is set by the **last character of your FSUID** — your @fsu.edu
+username, not your name. For example `xl24j` ends in `j`, and `bd21c7` ends in `7`.
+Letters are case-insensitive.
 
-| last digit | generation you draw |
+| last character of your FSUID | generation you draw |
 |---|---|
-| 0, 1, 2 | 2G (GSM + GPRS) |
-| 3, 4 | 3G (UMTS) |
-| 5, 6, 7 | 4G (LTE / EPS) |
-| 8, 9 | 5G standalone |
+| `0` `1` `2` or `a` `b` `c` `d` `e` `f` | 2G (GSM + GPRS) |
+| `3` `4` or `g` `h` `i` `j` `k` `l` `m` | 3G (UMTS) |
+| `5` `6` `7` or `n` `o` `p` `q` `r` `s` | 4G (LTE / EPS) |
+| `8` `9` or `t` `u` `v` `w` `x` `y` `z` | 5G standalone |
 
 Draw a **sequence diagram** of what happens between the moment the phone is switched on
 and the moment the first byte of your data reaches the Internet — or, for 2G and 3G, the

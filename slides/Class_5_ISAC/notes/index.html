@@ -88,6 +88,34 @@
   }
   .t{font-family:Consolas,monospace; font-size:14.5px; color:var(--purple)}
 
+  /* ---- English spoken script ---- */
+  #script{
+    margin-top:30px; padding:20px 22px 6px;
+    background:#f4f8f4; border:1px solid #cfe0cf; border-radius:7px;
+    font-family:Georgia,"Times New Roman",serif; font-size:16.5px; line-height:1.78;
+  }
+  #script>h3.hdr{
+    margin:0 0 14px; padding:0 0 10px 0; border:0; border-bottom:1px solid #cfe0cf;
+    font-family:"Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:13px; color:var(--green); letter-spacing:.08em;
+  }
+  #script p{margin:0 0 13px}
+  #script b{color:#123312}
+  #script i{color:#5f7a5f; font-size:15.5px}
+
+  /* language toggle */
+  #lang{display:flex; gap:0; border:1px solid var(--line); border-radius:6px; overflow:hidden}
+  #lang button{
+    border:0; background:#fff; color:var(--muted); cursor:pointer;
+    font-family:inherit; font-size:12.5px; padding:4px 11px; border-left:1px solid var(--line);
+  }
+  #lang button:first-child{border-left:0}
+  #lang button.on{background:var(--blue); color:#fff}
+  /* EN mode keeps the headings so you still know which slide you are on. */
+  body.only-en #note>*:not(#script):not(h2):not(.en){display:none}
+  body.only-en #script{margin-top:12px}
+  body.only-zh #script{display:none}
+
   /* ---- footer hint ---- */
   #hint{
     position:fixed; bottom:0; right:0; left:54%;
@@ -114,6 +142,11 @@
 <div id="bar">
   <b>Class 5 · ISAC</b>
   <span id="sec"></span>
+  <span id="lang">
+    <button data-m="both" class="on">双语</button>
+    <button data-m="zh">中文</button>
+    <button data-m="en">EN</button>
+  </span>
   <span id="count"></span>
 </div>
 <div id="prog"><i></i></div>
@@ -677,6 +710,349 @@ const S = [
 `}
 ];
 
+// Spoken English, one script per slide. Written to be read aloud, not summarised:
+// contractions, short sentences, and the pauses marked where the class needs one.
+const EN = [
+`<p>So far in this course, the network has been doing one job: <b>moving bits from here to there</b>. Today is about something different. Today the network starts to <b>look at things</b>.</p>
+<p>Everything we've done so far is about getting information out. Today I want to ask a different question: can the same signal that carries your data also tell us what the world outside looks like?</p>
+<p>Those five words in the subtitle — waveforms, resource allocation, attacks, prototypes, standards — those are our five stops. And by the end you'll see they're really <b>five versions of the same problem</b>.</p>`,
+
+`<p>Take a look at these two machines. What do they have in common?</p>
+<p><i>[Wait. Someone will say "antennas."]</i></p>
+<p>Right, antennas. But there's something more important than that. <b>They want the same things.</b> Both of them want spectrum. Both want power. Both want antenna area. Both want silicon. And there is only one sky.</p>
+<p>Here's why that matters, and it's not a technical reason — it's a money reason. Spectrum is bought at auction, it is extremely expensive, and you cannot make more of it. So if you build a radar system and a communication system separately, you are <b>paying for the same hardware twice</b>.</p>
+<p>Remember what we said about carrier economics: every architecture change is somebody trying to serve more people for less money per person. This is that again. Except what's being saved here isn't base stations — it's <b>spectrum and antennas</b>.</p>`,
+
+`<p>This is <b>the</b> slide. Everything else today is a consequence of this one. So let's go slowly.</p>
+<p>Blue arrow, base station to phone: the signal goes out carrying bits. That's communication, you know that already.</p>
+<p>Orange solid line: that same signal also lands on something. A car. A person. A wall.</p>
+<p>Orange dashed line: and it <b>bounces back</b>. That dashed line is the entire new idea in this lecture.</p>
+<p>Now notice — there is only <b>one transmission</b> here. We are not sending two signals, one for data and one for radar. It's the same signal. It's <b>information</b> on the way out, and it's <b>measurement</b> on the way back.</p>
+<p>Put it another way. Your phone is downloading a video. That signal the base station sends is, at the same time, lighting up a car on the road. And the tiny bit of energy that comes back tells the base station where that car is and how fast it's moving. Nobody ever uploaded that car's position. Nobody consented, nobody installed an app.</p>
+<p>So write this down: <b>ISAC does not add a radar to the network. It reads the network's own signal as radar.</b></p>`,
+
+`<p>That was the how. Now the what-for.</p>
+<p>I'm not going to read all six of these. Let me take three.</p>
+<p><b>Cars.</b> An echo sees what a camera can't — fog, darkness, around a corner.</p>
+<p><b>XR.</b> Track your hand with <b>nothing on your hand</b>. Right now VR needs either controllers or cameras watching you. ISAC just uses the echo off the Wi-Fi signal that's already in the room.</p>
+<p><b>IoT.</b> Count how many people are in a room <b>with no camera</b>. Think about where that matters — a nursing home, a classroom.</p>
+<p>Now, these six look like they have nothing to do with each other. Cars, VR, counting people, satellites, disaster response, farming. But they are <b>the same thing</b>: the network noticing something by itself, instead of waiting for an app to report it.</p>
+<p>Every piece of location data on your phone right now got there because your phone <b>chose to upload it</b>. This is the opposite. The network just knows.</p>
+<p><i>[Let that sit for a second. Don't resolve it — we come back to it on the DISCO slide.]</i></p>`,
+
+`<p>The last three slides were engineering. This one is <b>politics</b>, and it matters more than it looks.</p>
+<p>In 2023 the ITU published Recommendation M.2160. That document defines IMT-2030 — the official framework for 6G — and it lists six usage scenarios. <b>ISAC is one of them.</b></p>
+<p>Now you might think, who cares what a standards body writes down? If a technology is good, it's good.</p>
+<p>It matters a lot. Being named a usage scenario means three things start happening for you: <b>spectrum gets allocated, performance requirements get written, and test procedures get defined</b>.</p>
+<p>Before ISAC was named, <b>no radio was obliged to be measurable</b>. A vendor could claim their box does sensing, but nobody could verify it and nobody had to support it. Once it's in the framework, it stops being somebody's research direction and becomes something you have to ship.</p>
+<p>Same logic as O-RAN. An interface only becomes something you can buy separately once it's standardised. A capability only gets built once it's standardised.</p>`,
+
+`<p>Now let's put that idea into hardware.</p>
+<p>Left side: the traditional way. Communication is one system, radar is another. Each has its own band, its own antenna.</p>
+<p>Right side: DFRC — Dual-Function Radar Communication. <b>One transmit chain.</b> Bits out, echo in.</p>
+<p>Those two boxes on the left are both mature. Decades of engineering in each. And when you merge them into that one box on the right, what you save is real: <b>one spectrum licence, one amplifier, one aperture, one power budget.</b></p>
+<p>But the cost is also real, and that cost is the other thirty slides of this lecture. <b>One waveform now has to satisfy two specifications at the same time.</b></p>
+<p>It's like asking one person to be both your translator and your surveyor. You saved a salary. That person now has a very hard job.</p>`,
+
+`<p>I want to fix a confusion before it starts, because everybody makes this one.</p>
+<p><b>DFRC and ISAC are not the same thing.</b></p>
+<p>DFRC is <b>inside one radio</b>. Shared waveform, shared antennas, shared processing chain. It's a hardware merger.</p>
+<p>ISAC is bigger. ISAC also allows <b>one node to transmit and a different node to listen</b>. The transmitter and the receiver can be two separate devices at two separate sites.</p>
+<p>So: <b>every DFRC system is ISAC. Not every ISAC system fits in one box.</b></p>
+<p>Why does that distinction matter? Because if transmit and receive can be separated, then <b>all the base stations in the network can build one sensing picture together</b>. At that point sensing stops being a feature of a base station and becomes a feature of the network.</p>
+<p>By the way, separating transmit and receive is an old idea in radar. It's called <b>bistatic radar</b> and it goes back to World War Two. Nothing new about it. What's new is putting it inside a cellular network.</p>`,
+
+`<p>This slide is the technical foundation for everything after it, so do not let me rush.</p>
+<p>An echo gives you three things. I'm going to draw three arrows on the board.</p>
+<p><b>Delay gives you range.</b> <span class="t">R = c·tau over 2</span>. Tau is the delay, c is the speed of light, and we divide by two because the signal made a round trip.</p>
+<p><b>Doppler gives you closing speed.</b> Object coming toward you, the echo comes back at a higher frequency. Going away, lower. You've all heard this — an ambulance siren is high-pitched coming at you and drops as it passes. Radio waves do exactly the same thing. The shift is far too small for you to hear, but a receiver can compute it.</p>
+<p><b>Angle gives you direction</b>, from the phase difference across multiple antennas.</p>
+<p>Now the important part. Which knob buys you finer <b>range</b>, and which buys you finer <b>speed</b>?</p>
+<p><i>[Let them try.]</i></p>
+<p><b>Bandwidth buys range resolution.</b> A wider signal has a sharper peak in time, so you can separate two targets that are close together.</p>
+<p><b>Observation time buys velocity resolution.</b> You have to watch long enough for the phase to drift by a measurable amount.</p>
+<p>Hold on to those two, because in twenty minutes I'm going to tell you that sensing wants wide bandwidth and communication wants to conserve it. That conflict only feels real if you know <b>what the bandwidth was buying</b>.</p>`,
+
+`<p>This is a signpost, not content. I just want you to know where we're going.</p>
+<p>Left column, four techniques — waveform design, MIMO and beamforming, shared RF hardware, coding and allocation. We'll hit all four.</p>
+<p>Right column, four challenges. <b>The tradeoff, which doesn't go away.</b> <b>Interference, which goes both ways</b> — the radar half pollutes your constellation, the communication half pollutes your echo. <b>Complexity</b>, because these optimisation problems are non-convex, meaning no algorithm is guaranteed to find the global optimum. And <b>regulation</b> — who owns this.</p>
+<p>Three of those four are engineering. Give me enough time and enough smart people and we make progress.</p>
+<p><b>The fourth one is a committee.</b></p>
+<p><i>[Wait for the laugh.]</i></p>
+<p>I'm not joking, though. Who owns the spectrum? The rules for radar bands were written by aviation and defence. The rules for communication bands were written by telecom regulators. When one signal does both jobs at once — whose rules apply? That answer isn't in the physics. It's in a meeting room.</p>`,
+
+`<p>Waveforms. And the first piece of news is good news: <b>you don't need anything new to start.</b></p>
+<p>This grid — you've seen it before, in the physical layer lecture. Horizontal axis is time, one OFDM symbol per column. Vertical is frequency, one subcarrier per row. Each little cell is a <b>resource element</b>.</p>
+<p>OFDM is already deployed in Wi-Fi, 4G, 5G, 6G. It is the most mature waveform we have.</p>
+<p>And here's the neat part: <b>that grid is already a set of knobs.</b> For every cell you get to decide what goes in it and how much power it gets. So — why not let some cells carry bits and some cells be there purely to light up a target? The subcarriers naturally double as radar frequency bins. <b>You don't have to build a new modulator at all.</b></p>
+<p>Which raises the obvious question: if OFDM is good enough, why is anyone designing new waveforms?</p>
+<p>Because OFDM is described in <b>time and frequency</b>, and a moving target is naturally described in <b>delay and Doppler</b>. A fast target <b>smears</b> across an OFDM grid — specifically, Doppler breaks the orthogonality between subcarriers. In a delay-Doppler grid, that same target sits still.</p>
+<p><i>[Don't answer further. Turn the page and answer with the picture.]</i></p>`,
+
+`<p>This is the most abstract slide in the lecture. If I lose anybody, it's here. So let me try it twice.</p>
+<p>Left, in blue: time-frequency. Five dots scattered around — one moving target, and its energy is <b>spread out</b>. Right, in orange: the same target, in delay-Doppler, is <b>two clean points</b>. The arrow in the middle is the transform between them.</p>
+<p>Here's the other way to say it.</p>
+<p>Think about a long-exposure photograph. A car drives past, and in the photo it's a <b>streak</b> — smeared across a big region of the image. But if you recorded the scene differently — if you only wrote down "this object is here, moving at this speed" — that car becomes <b>one data point</b>. Position and velocity.</p>
+<p>The streak and the data point are <b>the same car</b>. What changed is where you're standing. Time-frequency is the long-exposure photo. Delay-Doppler is the data point.</p>
+<p>Change where you stand, and the same physical reality goes from smeared-out to a sharp point. And estimators love sharp points.</p>
+<p>That transform is called the ISFFT. I'm not going to do the maths and it's not on the exam. All you need is: <b>there's a tool that converts between the two domains.</b></p>
+<p>One caution. Delay-Doppler is <b>not better</b> than time-frequency. It's better <b>for different things</b>. Communication is natural in time-frequency; sensing is natural in delay-Doppler. That's exactly where the conflict comes from.</p>`,
+
+`<p>Table slide. I'm not reading twelve cells to you. Let's read down the columns and then across one row.</p>
+<p><b>OFDM.</b> Symbols live in time-frequency. Strength: it's deployed everywhere, and the subcarriers double as radar bins. Weakness: Doppler breaks subcarrier orthogonality.</p>
+<p><b>OTFS.</b> Symbols live in delay-Doppler, but get mapped <b>up</b> to time-frequency by the ISFFT before transmission. Strength: robust at high mobility, and you can bolt it onto an existing OFDM system. Weakness: energy <b>leaks</b> between bins, and the PAPR is high.</p>
+<p><b>ODDM.</b> Symbols live in delay-Doppler <b>natively</b>. Strength: the pulses are genuinely orthogonal, so echoes come out sparse and clean. Weakness: it's early research and the hardware isn't there.</p>
+<p>One thing I have to be precise about. <b>ODDM is not "OTFS with better pulses."</b> The difference isn't pulse quality — it's how orthogonality is defined. OTFS maps delay-Doppler symbols onto a time-frequency grid, so it inherits an OFDM-like modulator. ODDM builds pulses that are orthogonal <b>with respect to the delay-Doppler resolution directly</b>. That orthogonality claim is the entire point of ODDM.</p>
+<p>And PAPR — peak-to-average power ratio. In plain terms: <b>it decides how hard the amplifier has to work.</b> High PAPR means the signal occasionally spikes very high, so the amplifier has to leave headroom for that spike and runs underused the rest of the time. That's wasted power and wasted money, on handsets and on base stations.</p>
+<p>So: <b>OFDM is what ships. ODDM is what the sensing side wants.</b></p>`,
+
+`<p>Last slide said ODDM's selling point is real orthogonality. Let's see what that actually buys.</p>
+<p>Left, OTFS, a leaky basis: two bright dots, but each one has a halo of faint dots around it. That halo is <b>leakage</b> — energy that ended up in bins where it doesn't belong.</p>
+<p>Right, ODDM, an orthogonal basis: two clean points. Nothing around them.</p>
+<p>Two blurry dots versus two sharp dots — why does the estimator care?</p>
+<p>Leakage is <b>energy in the wrong bin</b>, and it costs you three things.</p>
+<p>One: <b>it raises the sidelobes.</b> Your effective noise floor went up.</p>
+<p>Two: <b>a weak target next to a strong one disappears.</b> Picture a large truck with a pedestrian standing next to it. The truck's echo leaks out in a halo, and the pedestrian is gone. In an automotive context that is not an academic problem.</p>
+<p>Three: in a multi-user system, <b>that leakage is literally interference between users.</b></p>
+<p>Remember that third one. In about ten slides it turns into bits per second.</p>`,
+
+`<p>This section is the intellectual core of the lecture. The table is split across two slides only because ten rows won't fit legibly on one — it's one table, one topic.</p>
+<p>Five rows. Let's read the columns, then I'll take one row properly.</p>
+<p>Row two. <b>Signal.</b> This row is the mathematical root of the whole conflict, and the other four are just symptoms of it.</p>
+<p>What does communication want its signal to look like? <b>Random.</b> Why? Because randomness is what carries information. If you can predict what I'm about to send, I haven't told you anything new. Unpredictability <i>is</i> the definition of information content.</p>
+<p>What does radar want its signal to look like? <b>Deterministic.</b> Why? Because radar correlates the echo it receives against <b>what it knows it sent</b>. You have to know your own transmission exactly to recognise it coming back.</p>
+<p>So here it is: <b>randomness carries information, and randomness ruins an autocorrelation.</b></p>
+<p>That one sentence is the whole conflict. This isn't sloppy engineering. These two requirements pull in opposite directions at the level of information theory.</p>`,
+
+`<p>Second half of the table. Again, let me take two rows.</p>
+<p><b>Domain.</b> Sensing wants delay-Doppler resolution; communication wants time-frequency multiplexing. This row is where that abstract idea about "where you stand" turns into a concrete design conflict.</p>
+<p><b>Latency.</b> Sensing wants low-latency tracking feedback — you need to know where that car is <i>now</i>. And a lot of communication traffic actually <b>tolerates</b> delay: video buffers, background sync. That one's a bit counterintuitive; most of you would assume communication is the impatient one.</p>
+<p>So — is there a setting where both are optimal?</p>
+<p><b>No.</b> What exists is a <b>Pareto frontier</b>. Past a certain point, every improvement in one is paid for out of the other. The design work is <b>choosing where to sit on the curve</b>, not escaping it.</p>
+<p>I want you to take the attitude here, not just the word.</p>
+<p>There are two kinds of problems in engineering. One kind is "we haven't got it right yet" — effort makes it better. The other kind is "this is structural" — you can only <b>choose</b>, you cannot <b>win</b>.</p>
+<p>ISAC is the second kind. Every paper and every prototype in the rest of this lecture is not <i>solving</i> this tradeoff. Every one of them is <b>picking a point on this curve and then arguing the point was well chosen</b>.</p>`,
+
+`<p>Last slide said there's a frontier. Here it is drawn. And this picture comes back four more times today, so let's make sure it lands.</p>
+<p>Vertical axis: achievable rate. <b>Higher is better</b> — that one's intuitive.</p>
+<p>Horizontal axis: CRLB, the sensing error floor. <b>Lower is better</b> — which means <b>further right is worse</b>.</p>
+<p>So say it with me: the good corner of this plot is <b>up and to the left</b>. <i>[Point at it.]</i> I'm making a point of this because every curve you've ever seen has "up and to the right" as good, and about half of you will read this backwards if I don't say it out loud.</p>
+<p>CRLB is the Cramér-Rao Lower Bound: <b>the smallest variance any unbiased estimator can achieve.</b> It is not the performance of some algorithm. It's the ceiling — or the floor — that physics and information hand you. It says: given this signal and this SNR, no matter how clever your algorithm is, your error cannot be smaller than this.</p>
+<p>So when a paper says "we approach the CRLB," what they mean is: our algorithm is close enough to the theoretical limit that you should stop expecting big gains from better algorithms.</p>
+<p>Green point, up and left: a sensing-first design. Orange point, down and right: a communication-first design. Both are on the frontier. Both are legitimate. They're different <b>choices</b>.</p>
+<p>And that's the frame for the rest of the hour: <b>every result after this is a claim about one point on a curve like this one.</b></p>`,
+
+`<p>Up to now we've said there's a tradeoff. From here we ask: <b>so how do you actually divide things up?</b> This is the most hands-on section of the day.</p>
+<p>Same grid as before, except now <b>every cell is coloured</b>. Blue cells go to communication, orange cells to sensing.</p>
+<p>One RE is one cell: one subcarrier during one OFDM symbol. Each cell carries two things — <b>a symbol and an amount of power</b>. So allocation is two decisions: <b>first who gets the cell, then how much power it gets.</b></p>
+<p>This is where the budget metaphor comes from. That grid is your money, and the total is fixed. One more cell for sensing is one fewer cell for bits. There's no third option.</p>
+<p>Three acronyms to plant now because we need them shortly. <b>RE</b>, resource element. <b>PSLR</b>, peak-to-sidelobe ratio — that'll be our sensing score. And <b>RoI</b>, region of interest. Remember that last one especially; in two slides it's going to explain a magic trick.</p>`,
+
+`<p>Same grid, but it gets <b>graded twice, by two examiners using completely different standards</b>.</p>
+<p><b>Communication score:</b> achievable data rate, summed over every RE assigned to communication. Measured in <b>time-frequency</b>. The strategy is: put bits where the channel is good.</p>
+<p><b>Sensing score:</b> PSLR inside the region of interest — <b>how far the true peak stands above the clutter</b>. Measured in <b>delay-Doppler</b>. The strategy is: shape the autocorrelation where the targets actually live.</p>
+<p>PSLR in plain language: the thing you're looking for produces a peak, and there's junk all around it. How much higher is your peak than the junk? A lot higher, easy to find. About the same, it's buried.</p>
+<p>Now the crucial bit is those last two lines. <b>These two scores are not graded in the same domain.</b></p>
+<p>This isn't two people giving different marks to the same exam. It's <b>the same grid translated into two different languages and marked separately in each</b>.</p>
+<p>So why is the optimisation hard? Because when you change one thing in one domain, <b>everything</b> in the other domain moves. That's what "non-convex" meant back on the challenges slide.</p>`,
+
+`<p>This one's easy, because it's just a question of who goes first.</p>
+<p><b>Communication-centric:</b> give the good REs to bits, then tune the leftover powers, and sensing takes the remainder. Result: rate stays optimal, and PSLR is merely <i>good</i> inside the RoI.</p>
+<p><b>Sensing-centric:</b> lock the RoI autocorrelation first, then tune the rest of the plane, and bits take the remainder. Result: PSLR is locally perfect, and rate <i>approaches</i> optimal without reaching it.</p>
+<p>It's cake. Whoever cuts first does better. And notice the wording difference is real: one design <b>keeps</b> the optimal rate, the other <b>approaches</b> it. One is an equals sign, the other is an approximately-equals.</p>
+<p>Now — both designs claim "almost no loss." How can that be?</p>
+<p><i>[Let them think.]</i></p>
+<p><b>Because the constraint is only enforced inside the region of interest.</b> Narrow the room you have to be perfect in, and the rest of the grid is free for the other function.</p>
+<p>This is the most useful habit of mind in the whole lecture, so I'll say it slowly.</p>
+<p>"Almost no loss" sounds like a free lunch. It sounds like somebody got around the tradeoff we just spent ten minutes saying is inescapable. Nobody got around it.</p>
+<p>What they did was <b>make the requirement smaller</b>. I don't need the whole delay-Doppler plane to be clean. I only need the little patch where that car might be. Outside that patch, I don't care. And now that big region is available for bits.</p>
+<p>So every time you read "almost no loss" in a paper, the first question is: <b>how small did you make the requirement?</b></p>`,
+
+`<p>Strategy last slide, results here. Two results, and then something more interesting.</p>
+<p>Communication-centric keeps the optimal achievable rate and still shows good autocorrelation inside the RoI. Sensing-centric approaches the optimal rate while guaranteeing a locally perfect autocorrelation. Both work, as advertised.</p>
+<p>But the important thing on this slide is that grey line at the bottom.</p>
+<p>Carrier at <b>240 gigahertz</b>. Subcarrier spacing 240 kilohertz. 32 consecutive OFDM symbols, 128 subcarriers.</p>
+<p>240 gigahertz. What kind of link is being assumed here?</p>
+<p><i>[Wait for it.]</i></p>
+<p>That's terahertz territory. That is not the 5G your phone is on. At 240 gigahertz the wave will not get around a leaf. So this simulation is describing a future deployment that doesn't exist yet.</p>
+<p>I want you to build a habit here. When you see a beautiful result, <b>go find the parameters line first</b>.</p>
+<p>This result is real. But it was produced at 240 gigahertz, and "almost no loss" holds under a very specific set of conditions. That's not a criticism of the paper — that's how research works. But the distance between "true in simulation" and "true on your phone" has a lot in it.</p>`,
+
+`<p>Everything so far has been one user. A real base station serves many, so let's add that.</p>
+<p>Horizontal axis CRLB, worse to the right. Vertical axis sum-rate, higher is better. Green curve is ODDM, grey dashed is OTFS. <b>ODDM sits above OTFS across the whole range.</b></p>
+<p>Four things are going on: power gets split across subcarriers; <b>other users are interference</b>, which is the new problem multi-user brings; CRLB bounds the estimate; and the whole problem decomposes into two subproblems, which is that paper's methodological contribution.</p>
+<p>Now — why is ODDM above OTFS everywhere? Go back to the two pictures of dots.</p>
+<p>OTFS has a <b>leaky</b> basis. Energy spills into neighbouring bins. With one user, that spill just makes your target look a bit fuzzy.</p>
+<p>With many users, <b>the energy that spilled into the neighbouring bin is somebody else's interference</b>. And interference eats rate directly — it's in the denominator of the SINR, and rate is log of one plus SINR.</p>
+<p>So: <b>sparser echoes mean less interference, and less interference is rate you keep.</b></p>
+<p>I want to point at what just happened. Orthogonality looked like a purely mathematical property fifteen minutes ago. It just turned into bits per second. That's a complete loop, and those are the satisfying ones.</p>`,
+
+`<p>Now we go out into the field. First stop is RIS — and it's also our way into the security part of today.</p>
+<p>Reconfigurable Intelligent Surface. It's a panel covered in tunable elements. The direct path from base station to user is blocked — that's the grey dashed line. So the signal goes to the surface instead, and the surface reflects it to the user.</p>
+<p>The key words are on the diagram: <b>passive</b>, and <b>no amplifier</b>. It <b>transmits nothing</b>. All it does is change the phase of whatever lands on it. Like a programmable mirror. Which is why it barely uses power and doesn't need a spectrum licence.</p>
+<p>Used honestly, it gives you coverage, energy efficiency, and <b>a second look at a target</b> — that last one is free value for sensing.</p>
+<p>Used dishonestly: <b>it changes your channel without ever emitting a signal of its own.</b></p>
+<p>Stop on that sentence for a second.</p>
+<p>Something can interfere with your link while <b>transmitting absolutely nothing</b>.</p>
+<p>Every jammer-detection technique you have ever learned works by <b>finding the transmitter</b>. There is no transmitter here.</p>
+<p>Next slide is the formal version of that problem.</p>`,
+
+`<p>This is the security payoff of the lecture, and it's the part you'll still remember next semester.</p>
+<p>The ISAC base station is working normally: blue to the user, orange to the target. Up top, in purple, a <b>DISCO RIS</b> — and read the label, <b>no transmitter</b>. It receives the base station's signal and reflects it, scrambled, at both the user and the target. And notice the annotation: <b>phases re-randomised every frame</b>.</p>
+<p>Let me be precise about what this thing is, because it's easy to get wrong. A DISCO RIS is a <b>fully passive</b> jammer. It has no transmitter. It has no knowledge of the legitimate channels. <b>It does not transmit noise.</b> It transmits nothing at all. That is the entire novelty.</p>
+<p>So how do you jam a link with no amplifier and no channel knowledge?</p>
+<p><i>[Give them a moment. Nobody gets this one.]</i></p>
+<p><b>You make the channel move.</b></p>
+<p>Think about how the base station works. First it measures the channel — it gets CSI, channel state information. Then it computes where to point the beam based on that CSI. The whole procedure assumes one thing: <b>the channel is still the same channel between when I measured it and when I use it.</b></p>
+<p>So the surface does one thing. <b>It reshuffles itself faster than the base station refreshes its estimate.</b></p>
+<p>Now the CSI the base station measured is <b>already stale by the time it's used</b>. The beam points wrong, and the base station thinks it pointed right.</p>
+<p>This has a published name: <b>active channel aging</b>. You make the victim's channel information get old.</p>
+<p>Compare it to the fake base station we talked about in the RAN lecture. A fake base station <b>has to transmit</b>, and it has to be louder than the real one — so it <b>leaves evidence</b>. You can go looking for that signal. A DISCO RIS emits nothing. <b>There is no emission to detect.</b></p>`,
+
+`<p>Three columns, and I want to do this one calmly rather than dramatically.</p>
+<p><b>Without the attack:</b> a well-designed ISAC waveform costs the sum-rate very little. Sensing is nearly free.</p>
+<p><b>With a DISCO RIS:</b> both functions degrade at once, and the victim <b>has no knowledge of the jammed channel to correct with</b>.</p>
+<p>That second sentence is the worst part. Normally when you're jammed, you at least know you're jammed. You can estimate how strong the interference is and compensate. Not here — because the thing making you worse <b>is your own channel moving</b>, and the instrument you'd use to measure the channel is the thing that's been corrupted. You have no clean reference.</p>
+<p>Third column, and this is the actual teaching point. <b>The damage is statistical, so it can be quantified — and what can be quantified can be budgeted for.</b></p>
+<p>That's not a consolation prize. That's the only useful direction.</p>
+<p>You cannot detect this attacker; it doesn't transmit. But you <b>can</b> say: under this attack, here's what my SINR distribution looks like, here's how much expected rate I lose. And once you can write that number down, you can <b>design for it</b> — assume from the start that somebody is doing this, and make sure the system still works under that assumption.</p>
+<p>That's a very common move in security engineering, and it's worth naming: <b>you shift from "detect and block" to "assume it's there and leave headroom."</b></p>`,
+
+`<p>New setting, and a more relaxed one. That's a CR400AF trainset.</p>
+<p>Four things make this a nasty radio environment.</p>
+<p><b>mmWave blocks on anything</b> — a tunnel, a line of trees, a noise barrier, and you're gone.</p>
+<p><b>Doppler is large and shifting</b> — 350 kilometres an hour, and the sign of the relative velocity flips as you pass a station. Notice what that means: Doppler is the <b>signal</b> for sensing and the thing that <b>breaks orthogonality</b> for communication. Same physical quantity, an asset on one side and a liability on the other.</p>
+<p><b>Handovers every few seconds</b> — the handover we discussed in the RAN lecture, happening constantly.</p>
+<p><b>And the track itself has to be watched</b> — rockfall, debris, deformation of the roadbed.</p>
+<p>So high-speed rail is a natural ISAC setting: <b>one system that both connects the passengers and watches the line</b>. If you built those separately, you'd be installing two sets of infrastructure along thousands of kilometres of track. The economic case for merging is much stronger here than it is in a city.</p>
+<p>And one design idea worth taking away: <b>rooftop relays turn one hard outdoor link into one easy link plus an indoor problem.</b></p>
+<p>Don't have every passenger's phone talk directly to the trackside base station — the carriage is a metal box, the signal doesn't get in. Instead, put a relay on the roof. It deals with the fast, difficult outdoor link. Inside the carriage it's ordinary Wi-Fi.</p>
+<p>One hard problem became one hard problem plus one easy one. That's a general engineering move: <b>push the difficulty onto an interface you control.</b></p>`,
+
+`<p>Same train, but now add secrecy.</p>
+<p>The main lobe points at the mobile relay on the carriage roof. And down here is an <b>eavesdropper</b>, with the path to it marked grey and dashed: <b>blind region, by design</b>.</p>
+<p>I need you to be careful with that phrase. <b>The blind region is not a coverage hole.</b> It isn't there because something is in the way. The beam design <b>deliberately</b> keeps that region poorly illuminated, and that requirement is written into the optimisation problem as a <b>secrecy constraint</b>.</p>
+<p>A coverage hole is a defect. A blind region is a feature.</p>
+<p>Two variables in the problem: the <b>beamforming matrix</b>, for where the energy points, and the <b>waveform</b>, for what the energy says. Four constraints: transmit power, constant modulus, sensing SINR, and the blind region.</p>
+<p>"Constant modulus" is worth a sentence, because it's a hardware fact leaking into the maths. An amplifier is most efficient and most linear when the <b>amplitude is constant</b>. So a lot of waveform designs are forced to hold every sample at the same amplitude and are only allowed to move the phase. That's a good example of something to watch for: the constraints in these optimisation problems usually exist because <b>some specific component refuses to cooperate</b>.</p>
+<p>And note what's being traded here. You gave up service in that region so the eavesdropper couldn't hear. <b>Secrecy was bought with coverage.</b> Another point chosen on a frontier.</p>`,
+
+`<p>Now something that shows this idea isn't about radio at all.</p>
+<p>LiDAR already ranges with light. An optical link already carries data. They use <b>the same aperture, the same detector, the same beam</b>. And there's no RF licence to argue about.</p>
+<p>Do you see it? This is <b>exactly the argument from the second slide of the lecture</b>, with radar swapped for LiDAR and the base station swapped for an optical terminal. Two machines, one sky. Paying for the same hardware twice.</p>
+<p>Which tells you ISAC isn't a trick that belongs to radio engineering. It's a <b>more general idea</b>: any physical channel that can both carry information and measure distance invites this same question.</p>
+<p>Now, one question with a nice answer. Why does an optical system need a DC bias?</p>
+<p><i>[Let them try.]</i></p>
+<p><b>Because intensity cannot be negative.</b></p>
+<p>A radio signal swings above and below zero, positive and negative, no problem. Light can't. There is no such thing as negative brightness. So you have to <b>lift the whole waveform above zero</b> by adding a DC bias.</p>
+<p>And the cost is: <b>every watt of that bias carries no information whatsoever.</b> It's pure tax, paid to make the waveform physically legal.</p>`,
+
+`<p>Same tradeoff, drawn in photons. And here the <b>shape matters more than the numbers</b>.</p>
+<p>Horizontal axis: ranging precision, better to the right. Vertical: spectral efficiency. The curve starts <b>flat</b> — labelled "cheap" — and then falls off a <b>cliff</b>.</p>
+<p>Four things: DC bias gets tuned along with the subcarrier powers; <b>rate is the objective</b>; <b>precision is the constraint</b>; and both metrics saturate.</p>
+<p>Notice that division of labour in the middle two. Rate is the thing being maximised, precision is a threshold that must be met. That's a standard engineering move — <b>demote one of your two objectives into a constraint</b>, and a multi-objective problem becomes a single-objective problem, which is far more tractable.</p>
+<p>But the value of this slide is that shape.</p>
+<p>Look at the flat part on the left. In that region, <b>asking for a bit more ranging precision costs you almost nothing</b>. Spectral efficiency dips a hair, that's it.</p>
+<p>And then at some point, <b>it falls off</b>. A little further right and spectral efficiency collapses.</p>
+<p>So: <b>the right question is never "which is better." It's "where on the curve is the cliff."</b></p>
+<p>That's the second habit of mind I want you to leave with. When somebody asks you "which matters more, sensing or communication," the question itself is malformed. The right question is: <b>the precision I need — which side of the cliff is it on?</b></p>
+<p>If it's on the flat part, take it, it's nearly free. If it's past the cliff, you had better know exactly what you're buying.</p>`,
+
+`<p>Forty minutes of optimisation and curves. Here's the part where somebody actually built the thing.</p>
+<p>The bench: a host PC drives everything, an FPGA steers the surface, a USRP plus a converter generates the signal, <b>transmit happens on the surface</b>, <b>receive on a separate horn antenna</b>, and a target module fakes the echoes.</p>
+<p>Two things I want you to notice about that list.</p>
+<p>First, <b>it's all off-the-shelf</b>. USRP, FPGA, horn antenna — that's standard lab equipment, not a custom chip tapeout. Which means the barrier to entry for this kind of research is low enough that you could touch it as undergraduates. That's not true of most of what we discuss in this course.</p>
+<p>Second, transmit on the surface, receive on a different antenna. Go back to the DFRC-versus-ISAC slide: <b>the transmitter and receiver are not the same device. This is ISAC, not just DFRC.</b></p>
+<p>And the result: <b>two main lobes, one aimed at a user and one at a target, from one aperture, at the same time.</b></p>
+<p>"At the same time" is the operative phrase. Not time-sharing — not communication this millisecond and radar the next. Same instant, same antenna surface, two beams. Which is what we promised back on the "one transmission" slide.</p>`,
+
+`<p>That's an anechoic chamber. Most of you have never been in one, so let me explain what you're looking at.</p>
+<p>Those spikes on the walls are absorber. They soak up essentially all the electromagnetic energy that hits them. So this room has <b>almost no reflections</b> — it's an artificial electromagnetic vacuum.</p>
+<p>Chamber's about four metres cubed. The lobe was steered to minus fifty degrees, zero, and twenty. The estimated range tracked the truth. And a second lobe was carrying live data the whole time.</p>
+<p>Why prove it in a chamber first?</p>
+<p><b>Because the chamber removes every echo you did not create yourself.</b></p>
+<p>So the logic is clean. If sensing fails in here, <b>your waveform is wrong</b>. If it works in here and fails outdoors, then <b>the world is the variable</b> — clutter, multipath, other people's signals.</p>
+<p>That's a basic experimental discipline and it generalises well beyond radio: <b>change one thing at a time</b>. Prove the principle in a place with no world in it, then add the world back.</p>
+<p>This demo won the Best Demo award at IEEE/CIC ICCC in 2024, for what that's worth — it means peers looked at it and believed it.</p>`,
+
+`<p>I'm going to be honest on this slide rather than flattering.</p>
+<p>Range, outdoors: target was a metal plate, span four to twenty-one metres, <b>accuracy about 0.425 metres</b>.</p>
+<p>Angle, indoors: same plate, minus sixty to plus sixty degrees, <b>accuracy about fifteen degrees</b>.</p>
+<p>Stop and compare that with the last forty minutes.</p>
+<p>We've been discussing Cramér-Rao bounds, Pareto frontiers, approaching optimal rate. Very refined stuff.</p>
+<p>Measured: <b>half a metre, and fifteen degrees.</b></p>
+<p>How much is fifteen degrees? Hold your arm straight out. Your thumb is about two degrees wide. Fifteen degrees is seven or eight thumbs side by side. That is not good enough for autonomous driving.</p>
+<p>I'm not telling you this to dismiss the work — the opposite. <b>There's a wide gap between simulation numbers and bench numbers, and reporting that gap honestly is a marker of good research.</b></p>
+<p>When you read papers: beautiful simulations with no measurements, put a question mark next to it. Measurements an order of magnitude worse than the simulation, reported anyway — that one you can trust.</p>
+<p>So: half a metre and fifteen degrees. <b>Which applications does that already serve?</b></p>
+<p><i>[Push for specifics. Counting people in a room — fine. Detecting a fall — probably. Is there a car at the intersection — marginal. Obstacle avoidance in a self-driving car — nowhere close. The point of the exercise is to match a spec to an application instead of saying "not accurate enough" in the abstract.]</i></p>`,
+
+`<p>A timeline, five phases. And I'm going to be careful about which parts are facts.</p>
+<p>2020 to 2023: concept and use cases. 2024 to 2026: 3GPP Release 19, and trials. 2027 to 2028: spectrum policy. 2029 to 2030: specifications and certification. 2031 onward: commercial rollout.</p>
+<p>Now — <b>this is not a schedule published by 3GPP or the ITU.</b></p>
+<p>What's real: Release 19 does contain ISAC study work. M.2160 does name ISAC as an IMT-2030 usage scenario. Those are documented.</p>
+<p><b>Everything from 2027 rightward is a forecast.</b> It says so in grey at the bottom of the slide, and I'm reading it out loud on purpose.</p>
+<p>I'm drawing that line clearly because you'll run into this constantly. Technology roadmaps all look authoritative — boxes, arrows, years. And usually half of it has happened and half of it is a guess. The test is simple: <b>ask whether there's a document behind the date.</b> Release 19 has a document. 2029 certification does not.</p>
+<p>And one closing thought on this: <b>standardisation is where the tradeoff stops being a curve and starts being a number somebody has to certify.</b></p>
+<p>We spent an hour saying this is a curve and you can only pick a point on it. But you can't sell a curve. To ship a product somebody has to say "the ranging accuracy of this device is X metres," and then somebody else shows up with instruments to verify it.</p>
+<p>That X is somebody <b>choosing a point on this curve on behalf of everyone</b> and writing it into a standard. Which is where all of today's engineering meets that committee I mentioned at the start.</p>`,
+
+`<p>Five settings from today, side by side, asked the same two questions: what got optimised, and what did it cost.</p>
+<p>Cross-domain OFDM: optimises resource elements and their powers; costs you — whoever picks second gets the leftovers.</p>
+<p>Multiuser ODDM: optimises power per user against the CRLB; costs complexity, and hardware that doesn't exist yet.</p>
+<p>RIS-ISAC: optimises beams plus a surface you don't own; costs — an attacker can own that surface instead.</p>
+<p>High-speed rail ISAC: optimises beamforming with a deliberate blind spot; secrecy is bought with coverage.</p>
+<p>FSO-ISAC: optimises DC bias and subcarrier power; the bias is power that carries nothing.</p>
+<p>Five completely different settings. An OFDM grid, many users, a wall, a train, a beam of light.</p>
+<p>But read down that right-hand column, and <b>they're all the same shape</b>. Every row says: I got this, I paid that.</p>
+<p>And <b>not one row</b> says "we solved the tradeoff." Not one.</p>
+<p>Five settings, one shape. Every one of them is a point chosen on a frontier.</p>`,
+
+`<p>Let me draw an honest line between what's ready and what isn't.</p>
+<p>Settled enough to build: the tradeoff is understood, OFDM-based ISAC works, and benches exist that actually measure things.</p>
+<p>Still open: a killer application; security against passive attackers; AI for waveform design; and space-air-ground reach.</p>
+<p>Now — which of those four is <b>not</b> an engineering problem?</p>
+<p><i>[Let them answer. Some will say security.]</i></p>
+<p><b>The first one.</b> A waveform can be optimised. <b>A market cannot.</b> ISAC is a technology looking for the application that pays for it.</p>
+<p>I want you to take this one seriously.</p>
+<p>The last three — security, AI waveforms, space-air-ground — those are hard engineering problems. Give them time and people and they'll move.</p>
+<p>The first one won't move that way. "Killer application" is not a problem you solve by being clever.</p>
+<p>Where ISAC is right now: <b>technically elegant, and economically still looking for a buyer.</b> It can range, it can count people, it can track a hand. But no single use case is yet big enough to justify the cost of deploying it across a whole network.</p>
+<p>Which is the same conversation we had about carrier economics: every architecture change needs somebody for whom the numbers work. For ISAC, those numbers aren't in yet.</p>
+<p>That doesn't mean it fails. Nobody could name 5G's killer app when 5G launched either. But as engineers you should carry this awareness: <b>a technology maturing and a technology being adopted are two different events, and the second one is usually decided by things outside the technology.</b></p>`,
+
+`<p>Before you go. Same frontier curve as before, except I've left it blank, and you're going to mark it up.</p>
+<p>One: mark where a <b>self-driving car</b> should sit. Then mark where a <b>cabin Wi-Fi link</b> should sit.</p>
+<p>Two: name one resource the two designs would allocate differently.</p>
+<p>Three: in one sentence — <b>what does sensing cost the bits in your example?</b></p>
+<p>And to be clear: <b>"both" is not an answer to part three.</b> The entire point of today is that you cannot have both. If your instinct is to write "both," go back and look at the frontier again.</p>
+<p>Two things before you hand it in: <b>a marked point, and one sentence.</b> Not a paragraph. One point, one sentence. Because if you actually understand it, one sentence is enough — and if you've written three paragraphs and still haven't said it, you don't have it yet.</p>`,
+
+`<p><i>[Backup slide — not in the planned seventy-five minutes.]</i></p>
+<p>All the acronyms from today are collected here. Don't go searching online for them, they're on this slide.</p>
+<p>The density of acronyms in this material is genuinely high, and I know that. But let me say one thing: <b>I will not examine you on what the letters stand for.</b> What I care about is that you know the difference between ODDM and OFDM and why somebody bothered inventing ODDM — not whether you can recite four words.</p>
+<p>Notice the table is grouped by area: system, waveform, and so on. That grouping is doing real work — it tells you these acronyms <b>live at different layers</b>. They're not one flat pile of jargon.</p>`,
+
+`<p><i>[Backup slide.]</i></p>
+<p>Every quantity behind every plot today, in one place.</p>
+<p>If somebody asks whether these need memorising — the first two you should recognise, because they tell you where the physics is.</p>
+<p><span class="t">R = c·tau over 2</span> tells you why measuring distance is really measuring time.</p>
+<p><span class="t">log base 2 of (1 + SINR)</span> tells you why interference eats rate directly — the interference is <b>in the denominator</b>. That's the mathematical form of the ODDM-versus-OTFS result.</p>
+<p>For CRLB and Fisher information, knowing the direction is enough: <b>more Fisher information means a lower CRLB means a better estimate.</b> More information, less error. That one matches intuition.</p>`,
+
+`<p><i>[Backup slide — and honestly the most practical one here.]</i></p>
+<p>Three waveforms: when to use each, when to avoid it, how mature it is.</p>
+<p>If any of you go on to work in this area, this slide is worth more than all the curves.</p>
+<p>Roughly: <b>OFDM</b> if you need it running today, need compatibility with deployed equipment, and your targets aren't moving fast. That's the right answer most of the time.</p>
+<p><b>OTFS</b> if high mobility is your main pain and you want to bolt onto an existing OFDM system without rebuilding the modulator.</p>
+<p><b>ODDM</b> if you're writing a paper, or your sensing requirement is strict enough that OTFS leakage is unacceptable. The hardware isn't ready.</p>`,
+
+`<p>Last slide. Today's material comes from Professor Zhu Han's ISAC talk at the University of Houston, plus a handful of specific papers.</p>
+<p>The cross-domain OFDM work is IEEE JSAC 2024 — that was our resource allocation section. The DISCO jamming work is Huang and colleagues, IEEE Wireless Communications Letters, 2024 — that was the attack. The high-speed rail work is Li and colleagues, IEEE Internet of Things Journal, 2024. The bench won Best Demo at IEEE/CIC ICCC 2024. And ITU-R M.2160 is the framework document.</p>
+<p>One last thing before you go. If anything today made you want to dig further, I'd point you at <b>the jammer that never transmits</b>.</p>
+<p>That's an attack which has been published, has been shown to work, and <b>does not yet have a good defence</b>. Which makes it close to ideal for undergraduate research: the problem is real, and the door is still open.</p>`
+];
+
 const img=document.getElementById('slide'), note=document.getElementById('note'),
       sec=document.getElementById('sec'), cnt=document.getElementById('count'),
       bar=document.querySelector('#prog>i'), right=document.getElementById('right');
@@ -691,10 +1067,26 @@ function draw(){
   sec.textContent=d.s;
   cnt.textContent=(i+1)+' / '+S.length;
   bar.style.width=((i+1)/S.length*100)+'%';
-  note.innerHTML='<h2>'+d.t+'</h2><p class="en">'+d.e+'</p>'+d.n;
+  note.innerHTML='<h2>'+d.t+'</h2><p class="en">'+d.e+'</p>'+d.n
+    +'<div id="script"><h3 class="hdr">SAY THIS IN CLASS</h3>'+(EN[i]||'')+'</div>';
   right.scrollTop=0;
   try{localStorage.setItem('isac-note-page',i)}catch(e){}
 }
+
+// ---- language toggle ----
+function setLang(m){
+  document.body.classList.toggle('only-en', m==='en');
+  document.body.classList.toggle('only-zh', m==='zh');
+  document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('on', b.dataset.m===m));
+  try{localStorage.setItem('isac-note-lang',m)}catch(e){}
+}
+document.querySelectorAll('#lang button').forEach(b=>{
+  // blur, or the button keeps focus and Space/Enter re-triggers it instead of paging
+  b.addEventListener('click',()=>{setLang(b.dataset.m); b.blur();});
+});
+let lang='both';
+try{ lang=localStorage.getItem('isac-note-lang')||'both'; }catch(e){}
+setLang(lang);
 
 function go(n){ i=Math.max(0,Math.min(S.length-1,n)); draw(); }
 
