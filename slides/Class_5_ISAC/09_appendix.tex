@@ -1,0 +1,114 @@
+%!TEX root = ./main.tex
+
+\section[Appendix]{Appendix}
+
+% BACKUP ONLY: four reference slides; do not include in the planned 75-minute path.
+
+\begin{frame}{Appendix: the acronym decoder ring}
+  \vspace{-0.2em}
+  \scriptsize
+  \renewcommand{\arraystretch}{1.10}
+  \begin{tabularx}{\textwidth}{l l >{\raggedright\arraybackslash}X}
+    \toprule
+    \textbf{Area} & \textbf{Term} & \textbf{Meaning / why it matters} \\
+    \midrule
+    System & ISAC & Integrated Sensing and Communication \\
+    System & DFRC & Dual-Function Radar Communication; ISAC inside one radio \\
+    System & IMT-2030 & The ITU framework naming ISAC as a 6G usage scenario \\
+    Waveform & OFDM & Orthogonal Frequency Division Multiplexing \\
+    Waveform & OTFS & Orthogonal Time Frequency Space; delay--Doppler via ISFFT \\
+    Waveform & ODDM & Orthogonal Delay-Doppler Division Multiplexing \\
+    Waveform & ISFFT & Inverse Symplectic Finite Fourier Transform \\
+    Metric & CRLB & Cram\'er--Rao Lower Bound; sensing error floor, lower is better \\
+    Metric & PSLR & Peak-to-SideLobe Ratio; true peak above the clutter \\
+    Metric & SINR & Signal to Interference-plus-Noise Ratio \\
+    Metric & PAPR & Peak-to-Average Power Ratio; sets amplifier headroom \\
+    Resource & RE / RoI & Resource Element; Region of Interest in delay--Doppler \\
+    Surface & RIS / RHS & Reconfigurable Intelligent / Holographic Surface \\
+    Attack & DRIS / ACA & DISCO RIS; Active Channel Aging, its jamming mechanism \\
+    Optical & FSO, IM/DD & Free Space Optics; Intensity Modulation / Direct Detection \\
+    \bottomrule
+  \end{tabularx}
+\end{frame}
+
+\begin{frame}{Appendix: the quantities behind every plot}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \small
+      \plainterm{Delay $\tau$}{range, $R = c\tau/2$}
+      \par\vspace{0.75em}
+      \plainterm{Doppler $\nu$}{speed, $v = \nu c / (2 f_c)$}
+      \par\vspace{0.75em}
+      \plainterm{Bandwidth}{buys range resolution}
+      \par\vspace{0.75em}
+      \plainterm{Dwell time}{buys velocity resolution}
+    \end{column}
+    \begin{column}{0.49\textwidth}
+      \small
+      \plainterm{Rate}{$\sum \log_2(1 + \mathrm{SINR})$ over REs}
+      \par\vspace{0.75em}
+      \plainterm{CRLB}{inverse of the Fisher information}
+      \par\vspace{0.75em}
+      \plainterm{PSLR}{peak over worst sidelobe, in the RoI}
+      \par\vspace{0.75em}
+      \textcolor{softgray}{Rate is a sum you maximise. CRLB is a floor you cannot
+      go below.}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.7em}
+  \takeaway{Sensing accuracy is bounded from below.\\That is why the frontier bends.}
+\end{frame}
+
+\begin{frame}{Appendix: which waveform for which problem}
+  \scriptsize
+  \renewcommand{\arraystretch}{1.24}
+  \vspace{0.15em}
+  \begin{tabularx}{\textwidth}{
+      >{\raggedright\arraybackslash}p{1.35cm}
+      >{\raggedright\arraybackslash}X
+      >{\raggedright\arraybackslash}X
+      >{\raggedright\arraybackslash}p{2.2cm}}
+    \toprule
+    \textbf{Waveform} & \textbf{Best when} & \textbf{Avoid when} & \textbf{Maturity} \\
+    \midrule
+    OFDM & You must ship on existing 5G hardware & Doppler spread is large &
+      Deployed \\
+    OTFS & Mobility is high and you want an OFDM front end & Sidelobes must be
+      clean & Prototypes \\
+    ODDM & Sensing accuracy and multiuser separation both matter & You need it this
+      year & Research \\
+    DCO-OFDM & The medium is light, not radio & Illumination power is scarce &
+      Research \\
+    \bottomrule
+  \end{tabularx}
+
+  \vspace{0.5em}
+  \qa{Why would anyone still choose OFDM for sensing?}
+     {Because the alternative costs a new modem in every device. A worse waveform
+      that exists beats a better one that does not.}
+\end{frame}
+
+\begin{frame}{Sources and further reading}
+  \vspace{-0.2em}
+  \footnotesize
+  \begin{itemize}\itemsep3pt
+    \item \href{https://www2.egr.uh.edu/~zhan2/}{\textbf{Zhu Han (Univ.\ of Houston), ``Integrated Sensing and Communication for 6G''}}\\
+      {\scriptsize\color{softgray}The invited talk this lecture is built from.
+      Slides and code: \href{https://wireless.egr.uh.edu/}{wireless.egr.uh.edu}.}
+    \item \href{https://www.itu.int/rec/R-REC-M.2160/en}{\textbf{ITU-R M.2160: IMT-2030 framework}}\\
+      {\scriptsize\color{softgray}Where ISAC becomes an official 6G usage scenario.}
+    \item \href{https://ieeexplore.ieee.org/document/10683983}{\textbf{Cross-domain dual-functional OFDM waveform design}}\\
+      {\scriptsize\color{softgray}IEEE JSAC 2024. Source of the RE-allocation results.}
+    \item \href{https://ieeexplore.ieee.org/document/10681452}{\textbf{H. Huang et al., ISAC under DISCO physical-layer jamming attacks}}\\
+      {\scriptsize\color{softgray}IEEE Wireless Commun.\ Lett.\ 13(11), 3044--3048, Nov.\ 2024.}
+    \item \href{https://ieeexplore.ieee.org/document/10557622}{\textbf{P. Li et al., Secure high-speed train-to-ground communications through ISAC}}\\
+      {\scriptsize\color{softgray}IEEE Internet of Things J.\ 11(19), 31235--31248, Oct.\ 2024.}
+    \item \href{https://ieeexplore.ieee.org/document/10556663}{\textbf{R. Liu et al., SNR/CRB-constrained beamforming for RIS-ISAC}}\\
+      {\scriptsize\color{softgray}IEEE Trans.\ Wireless Commun.\ 23(7), 7456--7470, Jul.\ 2024.}
+  \end{itemize}
+
+  \vspace{0.2em}
+  \centering
+  {\scriptsize Image licences and page-level provenance: \texttt{figure/SOURCES.md}\par}
+\end{frame}
