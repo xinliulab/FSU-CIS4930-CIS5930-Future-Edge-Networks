@@ -148,15 +148,48 @@ svg.ladder text{font-family:"IBM Plex Sans",sans-serif}
 
 .readout{
   border:1px solid var(--hair); border-top:none; background:var(--sunk);
-  padding:14px 18px; font-size:13.5px; min-height:70px;
+  padding:14px 18px 16px; font-size:13.5px; min-height:70px;
 }
 .readout .k{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
 .readout .m{font-family:"IBM Plex Mono",monospace; font-size:14px; margin-top:3px}
-.readout .n{color:var(--muted); margin-top:3px; max-width:80ch}
+.readout .n{color:var(--muted); margin-top:3px; max-width:82ch}
+
+/* teaching layer */
+.say{
+  margin-top:6px; padding-left:13px; border-left:2px solid var(--garnet);
+  font-size:14.5px; line-height:1.62; color:var(--ink); max-width:74ch;
+}
+.readout .bi{margin-top:12px; padding-top:12px; border-top:1px solid var(--hair)}
+
+/* teacher script */
+.script{margin:44px 0 0}
+.scripthead{display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:12px}
+.script .lede{color:var(--muted); max-width:64ch; margin:6px 0 22px; font-size:14.5px}
+.entries{border:1px solid var(--hair); background:var(--panel)}
+.ph{
+  background:var(--sunk); border-top:1px solid var(--hair); padding:11px 18px;
+  display:flex; gap:12px; align-items:baseline;
+}
+.entries .ph:first-child{border-top:none}
+.ph .no{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--muted)}
+.ph .ti{font-family:Archivo,sans-serif; font-weight:600; font-size:12.5px; letter-spacing:.05em; color:var(--garnet); text-transform:uppercase}
+.en{
+  border-top:1px solid var(--hair); padding:15px 18px 17px; cursor:pointer;
+  display:grid; grid-template-columns:34px minmax(0,1fr); gap:2px 14px;
+}
+.en:hover{background:var(--sunk)}
+.en.on{background:var(--sunk); box-shadow:inset 3px 0 0 var(--garnet)}
+.en .sn{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--muted); padding-top:4px; font-variant-numeric:tabular-nums}
+.en .mg{font-family:"IBM Plex Mono",monospace; font-size:12.5px; margin-bottom:7px}
+.en .mg.data{color:var(--ran)}
+.en .mg.gap{color:var(--warn); font-family:Archivo,sans-serif; font-weight:600; font-size:13px}
+.en .mg.note{color:var(--gold); font-family:Archivo,sans-serif; font-weight:600; font-size:13px}
+.en .who{font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--muted); letter-spacing:.06em}
 
 /* closing */
 .close{margin:56px 0 0; border-top:1px solid var(--hair); padding-top:34px}
-h2{font-family:Archivo,sans-serif; font-weight:700; font-size:26px; letter-spacing:-.015em; margin:0 0 6px}
+h2{font-family:Archivo,sans-serif; font-weight:700; font-size:26px; letter-spacing:-.015em; margin:0}
+.close h2{margin-bottom:6px}
 .close p.lede{color:var(--muted); max-width:58ch; margin:0 0 24px}
 .splits{display:grid; gap:1px; background:var(--hair); border:1px solid var(--hair)}
 .split{
@@ -176,6 +209,12 @@ h2{font-family:Archivo,sans-serif; font-weight:700; font-size:26px; letter-spaci
 .kicker b{color:var(--garnet); font-weight:600}
 footer{margin:44px 0 0; padding-top:18px; border-top:1px solid var(--hair); font-size:12.5px; color:var(--muted); max-width:70ch}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  .rail,.walker,.legend,.ladderhead,.readout{display:none}
+  .scroller{border:none}
+  body{background:#fff}
+  .en{page-break-inside:avoid}
+}
 </style>
 
 <div class="wrap">
@@ -183,7 +222,8 @@ footer{margin:44px 0 0; padding-top:18px; border-top:1px solid var(--hair); font
   <h1>The Call Ladder<br><em>1G to 5G</em></h1>
   <p class="standfirst">Every generation answers the same six questions: find a cell, ask for access,
     prove identity, get radio resources, carry the traffic, and move without dropping. What changes is
-    which box answers which question. Pick a generation and walk the messages one at a time.</p>
+    which box answers which question. Pick a generation, walk the messages one at a time, and read the
+    teaching script underneath.</p>
   <div class="rule"></div>
 
   <div class="rail" id="rail" role="group" aria-label="Choose a generation"></div>
@@ -208,6 +248,16 @@ footer{margin:44px 0 0; padding-top:18px; border-top:1px solid var(--hair); font
     <div class="scroller"><svg class="ladder" id="ladder" role="img" aria-label="Sequence of signalling and traffic messages between the phone, the base station and the core network"></svg></div>
     <div class="readout" id="readout"></div>
   </div>
+
+  <section class="script">
+    <div class="scripthead">
+      <h2>Teaching script</h2>
+      <span class="eyebrow" id="scriptgen" style="margin:0"></span>
+    </div>
+    <p class="lede">One entry per message: the words you could actually say out loud in class.
+      Click any entry to light up the matching arrow in the ladder above.</p>
+    <div class="entries" id="entries"></div>
+  </section>
 
   <section class="close">
     <h2>One rule, four times</h2>
@@ -254,27 +304,48 @@ var GENS = [
   lanes:[{id:"ue",l:"Phone",s:"the handset"},{id:"bs",l:"Cell site",s:"radio",k:"ran"},
          {id:"mtso",l:"MTSO",s:"the switch",k:"core"},{id:"pstn",l:"PSTN",s:"landline network"}],
   steps:[
-    {p:"Find a cell"},
-    {f:"ue",t:"ue",k:"self",m:"scan the control channels, camp on the strongest"},
-    {f:"ue",t:"bs",k:"sig",m:"Registration (MIN + ESN)",n:"your number and your serial number, in the clear"},
-    {f:"bs",t:"mtso",k:"sig",m:"forward the registration"},
-    {p:"Prove identity"},
-    {k:"gap",m:"There is nothing to prove.",n:"The MTSO compares MIN and ESN against a list. Transmit the right pair and you are that subscriber, which is why cloning became an industry."},
-    {p:"Set up the path"},
-    {f:"ue",t:"bs",k:"sig",m:"Origination (MIN, ESN, dialled digits)"},
-    {f:"bs",t:"mtso",k:"sig",m:"call request"},
-    {f:"mtso",t:"pstn",k:"sig",m:"seize a trunk, dial out"},
-    {f:"mtso",t:"bs",k:"sig",m:"assign a voice channel"},
-    {f:"bs",t:"ue",k:"sig",m:"Channel Designation",n:"the phone retunes to an FM pair and keeps it"},
-    {p:"Carry the call"},
-    {f:"ue",t:"bs",k:"data",m:"analog FM voice",n:"the channel is yours for the whole call, talking or not"},
-    {f:"bs",t:"mtso",k:"data",m:"voice trunk"},
-    {f:"mtso",t:"pstn",k:"data",m:"through to the called party"},
-    {p:"Move"},
-    {f:"bs",t:"mtso",k:"sig",m:"signal strength measurements"},
-    {f:"mtso",t:"ue",k:"sig",m:"handoff: retune now",n:"a burst that interrupts the audio, which is the click you used to hear"},
-    {p:"Send data"},
-    {k:"gap",m:"There is no data path at all.",n:"Everything you can do is a voice channel. A modem could ride on top of it, badly."}
+    {p:"Find a cell",
+     say:"Let's start with the simplest network anybody ever shipped. Watch for six jobs, because every generation after this one does the same six in the same order."},
+    {f:"ue",t:"ue",k:"self",m:"scan the control channels, camp on the strongest",
+     say:"The phone sweeps a handful of channels and camps on the loudest one. Notice what it is optimizing for: signal strength. Not honesty. That comes back to bite us in about forty minutes."},
+    {f:"ue",t:"bs",k:"sig",m:"Registration (MIN + ESN)",n:"your number and your serial number, in the clear",
+     say:"It shouts two numbers: your phone number, and your handset's serial number. In the clear, over FM. Anybody with a scanner and a notepad has both."},
+    {f:"bs",t:"mtso",k:"sig",m:"forward the registration",
+     say:"The cell site decides nothing here. It just passes it inland. Hold onto that, because the tower relaying instead of deciding is a pattern you will see in all five generations."},
+    {p:"Prove identity",
+     say:"Second job: prove who you are. This is where I would normally walk you through a handshake. There isn't one."},
+    {k:"gap",m:"There is nothing to prove.",n:"The MTSO compares MIN and ESN against a list. Transmit the right pair and you are that subscriber, which is why cloning became an industry.",
+     say:"There is no authentication. The switch checks your two numbers against a list, and that is the entire security model. So if I record your numbers off the air and put them into my phone, the network believes I am you, and you get the bill. In the early nineties that was a billion-dollar fraud industry. Every single thing in 2G security exists because of this slide."},
+    {p:"Set up the path",
+     say:"Okay. You are registered. Now you actually press Call."},
+    {f:"ue",t:"bs",k:"sig",m:"Origination (MIN, ESN, dialled digits)",
+     say:"Your digits go up on the same control channel. Still no crypto. Still in the clear."},
+    {f:"bs",t:"mtso",k:"sig",m:"call request",
+     say:"Tower relays it again. Same pattern."},
+    {f:"mtso",t:"pstn",k:"sig",m:"seize a trunk, dial out",
+     say:"And here is where the mobile network ends. The switch grabs a trunk into the ordinary telephone network. From this point on, your call is just a landline call that happens to start in a car."},
+    {f:"mtso",t:"bs",k:"sig",m:"assign a voice channel",
+     say:"The switch picks a channel for you. Two frequencies, one up, one down."},
+    {f:"bs",t:"ue",k:"sig",m:"Channel Designation",n:"the phone retunes to an FM pair and keeps it",
+     say:"The tower tells your phone where to go, and your phone physically retunes. And now it owns that channel until you hang up."},
+    {p:"Carry the call",
+     say:"Fourth job: actually carry the audio. Watch the line get thick. Thick means user traffic, not signalling. Every ladder in this deck uses that convention."},
+    {f:"ue",t:"bs",k:"data",m:"analog FM voice",n:"the channel is yours for the whole call, talking or not",
+     say:"That channel is yours for the whole call, whether you are talking or sitting there thinking. Pause for five seconds and thirty kilohertz of licensed spectrum does absolutely nothing. That waste is the reason digital had to happen."},
+    {f:"bs",t:"mtso",k:"data",m:"voice trunk",
+     say:"Through to the switch on a reserved circuit."},
+    {f:"mtso",t:"pstn",k:"data",m:"through to the called party",
+     say:"And out to the far end. One continuous circuit, your mouth to their ear, held open the entire time."},
+    {p:"Move",
+     say:"Sixth job, and this is the genuinely clever part of 1G. Everything else was a radio. This part was the idea."},
+    {f:"bs",t:"mtso",k:"sig",m:"signal strength measurements",
+     say:"The towers measure you. Look at the direction of that arrow. Your phone is not reporting anything. It has no idea it is about to be moved."},
+    {f:"mtso",t:"ue",k:"sig",m:"handoff: retune now",n:"a burst that interrupts the audio, which is the click you used to hear",
+     say:"The switch decides, then interrupts your audio to tell your phone to retune. That interruption is the click your parents heard when they drove past a tower. That click is cellular architecture leaking into the sound."},
+    {p:"Send data",
+     say:"And one more section, so you notice what is not here."},
+    {k:"gap",m:"There is no data path at all.",n:"Everything you can do is a voice channel. A modem could ride on top of it, badly.",
+     say:"No data path. None. Not slow data, not expensive data. There is nothing in this architecture that carries anything but audio. You could bolt a modem on top and make noises at each other, and people did, and it was terrible. The mobile internet is still eleven years away."}
   ]
 },
 {
@@ -292,40 +363,74 @@ var GENS = [
          {id:"msc",l:"MSC / VLR",s:"voice switch",k:"core"},{id:"hlr",l:"HLR / AuC",s:"the key vault",k:"core"},
          {id:"gprs",l:"SGSN / GGSN",s:"packet sidecar",k:"core"},{id:"ext",l:"PSTN / Internet",s:"destination"}],
   steps:[
-    {p:"Find a cell"},
-    {f:"ms",t:"ms",k:"self",m:"read the broadcast channel, pick a cell"},
-    {f:"ms",t:"bss",k:"sig",m:"Channel Request (RACH)"},
-    {f:"bss",t:"ms",k:"sig",m:"Immediate Assignment (a signalling channel)"},
-    {f:"ms",t:"msc",k:"sig",m:"Location Update (TMSI, or IMSI)",n:"with no temporary identity yet, the permanent IMSI goes out in the clear"},
-    {p:"Prove identity"},
-    {f:"msc",t:"hlr",k:"sig",m:"send authentication triplets"},
-    {f:"hlr",t:"msc",k:"sig",m:"RAND, SRES, Kc",n:"the subscriber key Ki never leaves the AuC or the SIM"},
-    {f:"msc",t:"ms",k:"sig",m:"Authentication Request (RAND)"},
-    {f:"ms",t:"ms",k:"self",m:"the SIM computes SRES and the cipher key Kc from Ki"},
-    {f:"ms",t:"msc",k:"sig",m:"Authentication Response (SRES)"},
-    {f:"msc",t:"ms",k:"sig",m:"Cipher Mode Command (A5, key Kc)"},
-    {k:"gap",m:"One direction only.",n:"The phone proved itself; the network proved nothing. A fake tower can ask for your IMSI and then tell you to switch ciphering off."},
-    {p:"Set up the call"},
-    {f:"ms",t:"msc",k:"sig",m:"Setup (dialled digits)"},
-    {f:"msc",t:"bss",k:"sig",m:"Assignment Request"},
-    {f:"bss",t:"ms",k:"sig",m:"Assignment Command (traffic channel)"},
-    {f:"msc",t:"ext",k:"sig",m:"call setup over SS7"},
-    {f:"msc",t:"ms",k:"sig",m:"Connect"},
-    {p:"Carry the call"},
-    {f:"ms",t:"bss",k:"data",m:"13 kbit/s coded voice, ciphered"},
-    {f:"bss",t:"msc",k:"data",m:"a circuit, held for the whole call"},
-    {f:"msc",t:"ext",k:"data",m:"through to the called party"},
-    {p:"Send data (GPRS)"},
-    {f:"ms",t:"gprs",k:"sig",m:"GPRS Attach",n:"a second attach, to a second set of boxes, with its own state"},
-    {f:"ms",t:"gprs",k:"sig",m:"Activate PDP Context"},
-    {f:"gprs",t:"ms",k:"sig",m:"IP address, allocated by the GGSN"},
-    {f:"ms",t:"bss",k:"data",m:"IP packets"},
-    {f:"bss",t:"gprs",k:"data",m:"tunnelled to the SGSN, then the GGSN"},
-    {f:"gprs",t:"ext",k:"data",m:"out to the Internet"},
-    {k:"note",m:"Voice and data are now two different networks.",n:"Different boxes, different state, different billing. Everything after this is an attempt to merge them again."},
-    {p:"Move"},
-    {f:"ms",t:"bss",k:"sig",m:"measurement reports"},
-    {f:"bss",t:"ms",k:"sig",m:"Handover Command",n:"the network decides; the phone only reports what it hears"}
+    {p:"Find a cell",
+     say:"Same six jobs. But count the lifelines and something changed. The base station is now two boxes, and there is a brand new box whose only job in life is holding secrets."},
+    {f:"ms",t:"ms",k:"self",m:"read the broadcast channel, pick a cell",
+     say:"The tower now broadcasts a proper description of itself. Which cell, which operator, how to get in. Your phone reads all of that before it transmits a single bit."},
+    {f:"ms",t:"bss",k:"sig",m:"Channel Request (RACH)",
+     say:"First transmission. It is a shout on a channel everybody shares, so two phones can collide and both have to back off and retry. Twenty-five years later, 5G still starts exactly this way."},
+    {f:"bss",t:"ms",k:"sig",m:"Immediate Assignment (a signalling channel)",
+     say:"The network hands you a small channel, and it is for signalling only. You do not get a voice channel yet. You have not earned it."},
+    {f:"ms",t:"msc",k:"sig",m:"Location Update (TMSI, or IMSI)",n:"with no temporary identity yet, the permanent IMSI goes out in the clear",
+     say:"Now you say who you are. Ideally with a temporary identity. But the first time, or on a new network, or any time the network simply asks, you send the permanent one, the IMSI, in the clear. Circle that message. That one arrow is why IMSI catchers work, and it is still not properly fixed in 4G."},
+    {p:"Prove identity",
+     say:"Here is 2G's big idea, and it fits on a piece of plastic in your pocket."},
+    {f:"msc",t:"hlr",k:"sig",m:"send authentication triplets",
+     say:"The switch does not know your secret. It has to go and ask the key vault."},
+    {f:"hlr",t:"msc",k:"sig",m:"RAND, SRES, Kc",n:"the subscriber key Ki never leaves the AuC or the SIM",
+     say:"Back comes a challenge, the expected answer, and a session key. Now look at what did not come back: your actual key, Ki. Ki exists in exactly two places on this planet. The vault, and your SIM. It never moves. Nobody transmits it, ever. That constraint is the whole design."},
+    {f:"msc",t:"ms",k:"sig",m:"Authentication Request (RAND)",
+     say:"The network throws a random number at you and waits."},
+    {f:"ms",t:"ms",k:"self",m:"the SIM computes SRES and the cipher key Kc from Ki",
+     say:"And the SIM does the math. Not the phone. The card. Your phone cannot see Ki either. It hands the challenge to the card and gets an answer back, and that is all it is allowed to know."},
+    {f:"ms",t:"msc",k:"sig",m:"Authentication Response (SRES)",
+     say:"You send back the answer. Only the correct card could have produced it, and listening to the air gets an attacker nothing reusable. That is 2G killing 1G's fraud problem in one round trip."},
+    {f:"msc",t:"ms",k:"sig",m:"Cipher Mode Command (A5, key Kc)",
+     say:"And the same computation already produced a cipher key, so now the air link gets encrypted too. You got that for free, out of the same handshake. Good engineering is usually one thing doing two jobs."},
+    {k:"gap",m:"One direction only.",n:"The phone proved itself; the network proved nothing. A fake tower can ask for your IMSI and then tell you to switch ciphering off.",
+     say:"Now stop and ask the question that matters. Who proved something to whom? You proved yourself to the network. What did the network prove to you? Nothing. Zero. So I stand up a fake tower, broadcast louder than the real one, your phone picks the loudest, remember, and I ask you for your IMSI. Then I send you a Cipher Mode Command that says let's not encrypt today. And your phone says: fine. That is the whole attack. It is thirty-four years old and it still works on any phone that will still speak 2G."},
+    {p:"Set up the call",
+     say:"Third and fourth job. And this time your dialling is protected."},
+    {f:"ms",t:"msc",k:"sig",m:"Setup (dialled digits)",
+     say:"You dial, and the digits ride inside encrypted signalling instead of being shouted."},
+    {f:"msc",t:"bss",k:"sig",m:"Assignment Request",
+     say:"The switch asks the radio side for a traffic channel. Notice it asks. It does not reach in and take one."},
+    {f:"bss",t:"ms",k:"sig",m:"Assignment Command (traffic channel)",
+     say:"And the radio side is what actually gives you one. Two boxes, two jobs: decide, then allocate. Keep an eye on that split, it is the theme of the whole lecture."},
+    {f:"msc",t:"ext",k:"sig",m:"call setup over SS7",
+     say:"Out to the telephone network over SS7, which is its own global signalling network with its own famous security disasters. Different lecture, but look it up, it is worth an evening."},
+    {f:"msc",t:"ms",k:"sig",m:"Connect",
+     say:"Far end picks up, you get Connect, and audio starts."},
+    {p:"Carry the call",
+     say:"Now the payoff for going digital, and it is not sound quality."},
+    {f:"ms",t:"bss",k:"data",m:"13 kbit/s coded voice, ciphered",
+     say:"Your voice is compressed down to thirteen kilobits per second. Which means eight of you fit in roughly the space one 1G call used to take. Same spectrum, eight times the customers. That is the business case. The engineering was in service of that number."},
+    {f:"bss",t:"msc",k:"data",m:"a circuit, held for the whole call",
+     say:"But look at it. It is still a circuit. Still reserved end to end. Still yours whether you talk or not. Digital, but not packet."},
+    {f:"msc",t:"ext",k:"data",m:"through to the called party",
+     say:"And through to the other person."},
+    {p:"Send data (GPRS)",
+     say:"Now data. And I want you to watch this part carefully, because what happens here shapes the next twenty years of this industry."},
+    {f:"ms",t:"gprs",k:"sig",m:"GPRS Attach",n:"a second attach, to a second set of boxes, with its own state",
+     say:"To get data, you attach again. A second attach. To different boxes. With its own state, its own authentication, its own billing system. Data is not a feature of this network. Data is a second network wearing the same radio."},
+    {f:"ms",t:"gprs",k:"sig",m:"Activate PDP Context",
+     say:"Then you ask for a context. Ignore the acronym and read it as: please open me a pipe to the internet."},
+    {f:"gprs",t:"ms",k:"sig",m:"IP address, allocated by the GGSN",
+     say:"And here is a question I am going to ask you in every single generation, so get used to it. Who gave you your IP address? Not the tower. Not the switch. The gateway at the far edge of the core, the box that touches the internet. The box closest to the internet is the box that hands out internet addresses. That never changes. Only the name does."},
+    {f:"ms",t:"bss",k:"data",m:"IP packets",
+     say:"Your packets go up over the air."},
+    {f:"bss",t:"gprs",k:"data",m:"tunnelled to the SGSN, then the GGSN",
+     say:"Get wrapped in a tunnel and hauled across the operator's own network."},
+    {f:"gprs",t:"ext",k:"data",m:"out to the Internet",
+     say:"And pop out at the gateway. Completely separate path from your voice. Different wires, different boxes, in some operators a different department."},
+    {k:"note",m:"Voice and data are now two different networks.",n:"Different boxes, different state, different billing. Everything after this is an attempt to merge them again.",
+     say:"So step back and look at what you are carrying around in 2001. Two networks. Two attaches, two sets of boxes, two bills. And everything from here to 5G is engineers trying to merge these back into one thing. When you watch 4G delete the circuit switch, that is this slide finally being cleaned up, fifteen years later."},
+    {p:"Move",
+     say:"Last job. And one thing has flipped since 1G."},
+    {f:"ms",t:"bss",k:"sig",m:"measurement reports",
+     say:"Now the phone measures and reports. It tells the network what it can hear."},
+    {f:"bss",t:"ms",k:"sig",m:"Handover Command",n:"the network decides; the phone only reports what it hears",
+     say:"But look who still decides. The network. You report, it decides, you obey. Your phone is never in charge of where it goes. That is still true on the phone in your hand right now."}
   ]
 },
 {
@@ -343,35 +448,64 @@ var GENS = [
          {id:"msc",l:"MSC",s:"voice domain",k:"core"},{id:"hlr",l:"HLR / AuC",s:"the key vault",k:"core"},
          {id:"ps",l:"SGSN / GGSN",s:"packet domain",k:"core"},{id:"ext",l:"PSTN / Internet",s:"destination"}],
   steps:[
-    {p:"Find a cell"},
-    {f:"ue",t:"ue",k:"self",m:"read system information, pick a cell"},
-    {f:"ue",t:"ran",k:"sig",m:"RRC Connection Request"},
-    {f:"ran",t:"ue",k:"sig",m:"RRC Connection Setup"},
-    {p:"Prove identity, both ways"},
-    {f:"msc",t:"hlr",k:"sig",m:"request authentication vectors"},
-    {f:"hlr",t:"msc",k:"sig",m:"RAND, XRES, CK, IK, AUTN",n:"five values now instead of three, and AUTN is the network's own proof"},
-    {f:"msc",t:"ue",k:"sig",m:"Authentication Request (RAND, AUTN)"},
-    {f:"ue",t:"ue",k:"self",m:"the USIM checks AUTN: is this network real, and is this challenge fresh?"},
-    {f:"ue",t:"msc",k:"sig",m:"Authentication Response (RES)"},
-    {f:"msc",t:"ue",k:"sig",m:"Security Mode Command (ciphering + integrity)"},
-    {k:"note",m:"The phone can now refuse a fake network.",n:"Integrity protection also means a signalling message cannot be quietly rewritten in flight."},
-    {k:"gap",m:"First contact is still unprotected.",n:"Broadcasts are unauthenticated, and the network can still ask for the permanent identity in the clear."},
-    {p:"Make a call (still circuit switched)"},
-    {f:"ue",t:"ran",k:"sig",m:"call setup"},
-    {f:"ran",t:"msc",k:"sig",m:"through to the voice switch"},
-    {f:"msc",t:"ext",k:"sig",m:"trunk to the PSTN"},
-    {f:"ue",t:"ran",k:"data",m:"AMR voice on a dedicated channel"},
-    {f:"ran",t:"msc",k:"data",m:"a circuit, exactly as in 2G"},
-    {f:"msc",t:"ext",k:"data",m:"through to the called party"},
-    {p:"Send data (packet switched)"},
-    {f:"ue",t:"ps",k:"sig",m:"Activate PDP Context"},
-    {f:"ps",t:"ue",k:"sig",m:"IP address, allocated by the GGSN"},
-    {f:"ue",t:"ran",k:"data",m:"IP packets"},
-    {f:"ran",t:"ps",k:"data",m:"tunnelled through the core"},
-    {f:"ps",t:"ext",k:"data",m:"out to the Internet"},
-    {k:"note",m:"Two networks in one trench coat.",n:"The circuit domain and the packet domain run side by side on the same radio, with separate boxes and separate state."},
-    {p:"Move"},
-    {f:"ue",t:"ran",k:"sig",m:"soft handover: two NodeBs at once",n:"the RNC combines both copies, so there is no break in the call"}
+    {p:"Find a cell",
+     say:"3G was sold to you as speed. Mobile internet, video calls, the lot. The architecturally interesting change is one message long, and it is in the security section."},
+    {f:"ue",t:"ue",k:"self",m:"read system information, pick a cell",
+     say:"Front door is unchanged. Read the broadcast, pick a cell."},
+    {f:"ue",t:"ran",k:"sig",m:"RRC Connection Request",
+     say:"New acronym, and this one you should actually memorize: RRC, Radio Resource Control. It is the protocol that owns the radio link, and it is still called RRC in 5G. Learn it once, use it for the rest of the course."},
+    {f:"ran",t:"ue",k:"sig",m:"RRC Connection Setup",
+     say:"Radio link is up. Nothing has been proved by anybody yet."},
+    {p:"Prove identity, both ways",
+     say:"And now the part that justifies the whole generation."},
+    {f:"msc",t:"hlr",k:"sig",m:"request authentication vectors",
+     say:"Core goes to the vault, same as 2G."},
+    {f:"hlr",t:"msc",k:"sig",m:"RAND, XRES, CK, IK, AUTN",n:"five values now instead of three, and AUTN is the network's own proof",
+     say:"Last generation the vault sent back three values. Now it sends five. Two are new, and one of them changes the balance of power in this entire conversation."},
+    {f:"msc",t:"ue",k:"sig",m:"Authentication Request (RAND, AUTN)",
+     say:"There it is. AUTN. That is the network's own proof of identity, signed with a key only your real operator has, and stamped with a sequence number so it cannot be recorded and replayed tomorrow."},
+    {f:"ue",t:"ue",k:"self",m:"the USIM checks AUTN: is this network real, and is this challenge fresh?",
+     say:"And now your card checks it, and it asks two questions. Is this actually my operator? And is this challenge fresh, or is somebody replaying one from last week? If either answer is no, the phone refuses to go any further. That is the fix. One extra field, and the fake tower from the 2G slide stops working."},
+    {f:"ue",t:"msc",k:"sig",m:"Authentication Response (RES)",
+     say:"Only then do you answer. Same shape as 2G, but now it is a conversation between two parties who have both shown ID."},
+    {f:"msc",t:"ue",k:"sig",m:"Security Mode Command (ciphering + integrity)",
+     say:"And you get two protections now instead of one. Ciphering, so nobody can read your signalling. And integrity protection, so nobody can quietly change it. Think back to the 2G attack, where a fake tower sent a message saying turn encryption off. Integrity protection is exactly what stops that message being forged."},
+    {k:"note",m:"The phone can now refuse a fake network.",n:"Integrity protection also means a signalling message cannot be quietly rewritten in flight.",
+     say:"So write this down as your 3G takeaway, and it is not the data rate. Mutual authentication. From 2001 onward your phone is a peer in this negotiation instead of a supplicant that does what it is told."},
+    {k:"gap",m:"First contact is still unprotected.",n:"Broadcasts are unauthenticated, and the network can still ask for the permanent identity in the clear.",
+     say:"But here is the pattern for the rest of this course, so notice it now. The fix does not cover first contact. Broadcasts are still unauthenticated, anybody can pretend to be a cell. And the network can still ask you for your permanent identity before any of this crypto has started. So the identity leak survives 3G. It survives 4G. It does not get addressed until 5G, and even then only partly. Fixing a protocol is easy. Fixing the moment before the protocol starts is hard."},
+    {p:"Make a call (still circuit switched)",
+     say:"Now the disappointing half of 3G."},
+    {f:"ue",t:"ran",k:"sig",m:"call setup",
+     say:"You dial, and it goes to the circuit-switched side."},
+    {f:"ran",t:"msc",k:"sig",m:"through to the voice switch",
+     say:"The MSC is still here. Still the same box, doing the same job it did in 1991."},
+    {f:"msc",t:"ext",k:"sig",m:"trunk to the PSTN",
+     say:"Out on a trunk to the telephone network."},
+    {f:"ue",t:"ran",k:"data",m:"AMR voice on a dedicated channel",
+     say:"Better codec, better radio. Same idea."},
+    {f:"ran",t:"msc",k:"data",m:"a circuit, exactly as in 2G",
+     say:"And it is a reserved circuit, exactly as in 2G. Voice architecture did not move at all in this generation. The radio got a rebuild; the voice path got a new codec."},
+    {f:"msc",t:"ext",k:"data",m:"through to the called party",
+     say:"Through to the far end."},
+    {p:"Send data (packet switched)",
+     say:"And data. Which you have already seen, because it is inherited whole from GPRS."},
+    {f:"ue",t:"ps",k:"sig",m:"Activate PDP Context",
+     say:"Same PDP context. Same words. Same request: open me a pipe."},
+    {f:"ps",t:"ue",k:"sig",m:"IP address, allocated by the GGSN",
+     say:"And who gives you your address? Say it with me. The gateway. Same box, same job, second generation running."},
+    {f:"ue",t:"ran",k:"data",m:"IP packets",
+     say:"Packets up."},
+    {f:"ran",t:"ps",k:"data",m:"tunnelled through the core",
+     say:"Tunnelled across the core."},
+    {f:"ps",t:"ext",k:"data",m:"out to the Internet",
+     say:"Out to the internet."},
+    {k:"note",m:"Two networks in one trench coat.",n:"The circuit domain and the packet domain run side by side on the same radio, with separate boxes and separate state.",
+     say:"So look at the shape of this ladder. Two domains, side by side, on one radio, with separate boxes and separate state and separate everything. Two networks in a trench coat pretending to be one phone. And that is precisely the thing 4G walks in and deletes."},
+    {p:"Move",
+     say:"One nice piece of engineering before we leave, and it is something 4G actually made worse."},
+    {f:"ue",t:"ran",k:"sig",m:"soft handover: two NodeBs at once",n:"the RNC combines both copies, so there is no break in the call",
+     say:"Soft handover. You are connected to two towers at the same time, and the controller combines both copies of your signal. So when you move, there is no break, because you were never on only one cell to begin with. This is a property of CDMA. It stops being possible in 4G, and 4G has to work quite hard to hide that."}
   ]
 },
 {
@@ -390,37 +524,68 @@ var GENS = [
          {id:"gw",l:"S-GW / P-GW",s:"user plane",k:"core"},{id:"ims",l:"IMS",s:"voice as a service",k:"core"},
          {id:"net",l:"Internet",s:"destination"}],
   steps:[
-    {p:"Find a cell"},
-    {f:"ue",t:"ue",k:"self",m:"sync on the sync signals, read the broadcast"},
-    {f:"ue",t:"enb",k:"sig",m:"RACH preamble, then RRC Connection Setup"},
-    {f:"ue",t:"mme",k:"sig",m:"Attach Request",n:"carried inside RRC and then over S1; the eNodeB only relays it"},
-    {p:"Prove identity"},
-    {f:"mme",t:"hss",k:"sig",m:"Authentication Information Request"},
-    {f:"hss",t:"mme",k:"sig",m:"RAND, AUTN, XRES, K_ASME"},
-    {f:"mme",t:"ue",k:"sig",m:"Authentication Request (RAND, AUTN)"},
-    {f:"ue",t:"mme",k:"sig",m:"Authentication Response (RES)"},
-    {f:"mme",t:"ue",k:"sig",m:"NAS Security Mode Command",n:"the keys are tied to this serving network, so they cannot be replayed elsewhere"},
-    {f:"mme",t:"enb",k:"sig",m:"turn on ciphering for the radio bearers"},
-    {p:"Set up the path"},
-    {f:"mme",t:"hss",k:"sig",m:"Update Location"},
-    {f:"hss",t:"mme",k:"sig",m:"subscription profile"},
-    {f:"mme",t:"gw",k:"sig",m:"Create Session Request",n:"the S-GW passes it on to the P-GW"},
-    {f:"gw",t:"mme",k:"sig",m:"your IP address + tunnel endpoints",n:"the P-GW allocates the address and applies the policy rules"},
-    {f:"mme",t:"enb",k:"sig",m:"Initial Context Setup",n:"the MME hands the tunnel IDs to the base station and steps out of the way"},
-    {f:"enb",t:"ue",k:"sig",m:"RRC Reconfiguration: your data bearer is up"},
-    {k:"note",m:"The MME never touches a user packet.",n:"That is the whole point of 4G. Decisions go one way, packets go another, and each side scales on its own."},
-    {p:"Send data"},
-    {f:"ue",t:"enb",k:"data",m:"IP packets on the radio bearer"},
-    {f:"enb",t:"gw",k:"data",m:"GTP tunnel to the S-GW"},
-    {f:"gw",t:"net",k:"data",m:"out through the P-GW"},
-    {p:"Make a call"},
-    {f:"ue",t:"ims",k:"sig",m:"SIP INVITE on a guaranteed bearer",n:"VoLTE: a phone call is now an IP session with a reserved lane"},
-    {f:"ims",t:"ue",k:"sig",m:"session established"},
-    {f:"ue",t:"gw",k:"data",m:"voice packets, through the same gateways"},
-    {f:"gw",t:"ims",k:"data",m:"on towards the far end"},
-    {k:"gap",m:"Early LTE could not carry a call at all.",n:"The phone dropped down to 2G or 3G to dial, then climbed back. That fallback is part of why the old generations stayed switched on for years."},
-    {p:"Move"},
-    {f:"enb",t:"ue",k:"sig",m:"Handover Command",n:"two eNodeBs can hand you over directly and tell the MME afterwards"}
+    {p:"Find a cell",
+     say:"Before I say anything, count the lifelines and tell me what is missing. There is no circuit switch. Not hidden, not simplified away for the slide. It is actually gone. Everything on this screen is IP."},
+    {f:"ue",t:"ue",k:"self",m:"sync on the sync signals, read the broadcast",
+     say:"Same opening move as 1991: find the cell, read what it says about itself."},
+    {f:"ue",t:"enb",k:"sig",m:"RACH preamble, then RRC Connection Setup",
+     say:"Same shout on the shared channel, same RRC setup. Twenty years of progress and the front door is identical."},
+    {f:"ue",t:"mme",k:"sig",m:"Attach Request",n:"carried inside RRC and then over S1; the eNodeB only relays it",
+     say:"Now this one is worth stopping on. Your Attach Request is addressed to the MME, not to the tower. It rides inside RRC to the base station, and the base station relays it without being able to read most of it. That is called NAS: signalling that travels through the radio network without being for the radio network. Your phone and the core are talking past the tower, and the tower is fine with that."},
+    {p:"Prove identity",
+     say:"Authentication is 3G's handshake again, so I will go fast. There is exactly one new thing."},
+    {f:"mme",t:"hss",k:"sig",m:"Authentication Information Request",
+     say:"Core asks the subscriber database. The HSS is this generation's vault. New name, old job."},
+    {f:"hss",t:"mme",k:"sig",m:"RAND, AUTN, XRES, K_ASME",
+     say:"Challenge, network proof, expected answer, and a key called K_ASME. That last one is the new thing."},
+    {f:"mme",t:"ue",k:"sig",m:"Authentication Request (RAND, AUTN)",
+     say:"Challenge out. Your card checks AUTN, exactly like 3G."},
+    {f:"ue",t:"mme",k:"sig",m:"Authentication Response (RES)",
+     say:"Answer back. Nothing new."},
+    {f:"mme",t:"ue",k:"sig",m:"NAS Security Mode Command",n:"the keys are tied to this serving network, so they cannot be replayed elsewhere",
+     say:"And here is what K_ASME buys you. In 3G, if somebody got hold of your key material, they could use it on any network. In 4G the keys are cryptographically bound to the specific network you are standing in. Steal them in Berlin and they are useless in Tallahassee. Quiet improvement, real one."},
+    {f:"mme",t:"enb",k:"sig",m:"turn on ciphering for the radio bearers",
+     say:"Then a second layer of security, this one for the radio itself. So you now have two layers: one between you and the core, one between you and the tower. Two layers, two different key sets, two different things they protect."},
+    {p:"Set up the path",
+     say:"And now the section that makes 4G worth a lecture. Watch where the MME is, and more importantly watch where it is not."},
+    {f:"mme",t:"hss",k:"sig",m:"Update Location",
+     say:"Core writes down where you are, so it can find you later."},
+    {f:"hss",t:"mme",k:"sig",m:"subscription profile",
+     say:"And pulls your subscription. What are you allowed to do, how fast, in which countries, and have you paid."},
+    {f:"mme",t:"gw",k:"sig",m:"Create Session Request",n:"the S-GW passes it on to the P-GW",
+     say:"Now the MME tells the gateways to build you a path. Read that arrow carefully. It is asking. It is not building anything."},
+    {f:"gw",t:"mme",k:"sig",m:"your IP address + tunnel endpoints",n:"the P-GW allocates the address and applies the policy rules",
+     say:"And your IP address comes back, from the gateway at the far edge, applying policy rules as it goes. Third generation in a row. I told you that one never changes."},
+    {f:"mme",t:"enb",k:"sig",m:"Initial Context Setup",n:"the MME hands the tunnel IDs to the base station and steps out of the way",
+     say:"This is the single most important arrow in the 4G ladder. The MME hands the tunnel identifiers to the base station, and then it steps out. It is done. It will not appear again until you move, or you need a new session, or you detach."},
+    {f:"enb",t:"ue",k:"sig",m:"RRC Reconfiguration: your data bearer is up",
+     say:"Tower configures your radio bearer, and you are live."},
+    {k:"note",m:"The MME never touches a user packet.",n:"That is the whole point of 4G. Decisions go one way, packets go another, and each side scales on its own.",
+     say:"So here is the exam question, and honestly the point of this whole class. How many of your packets pass through the MME? None. Ever. Not one. The MME decides, the gateways carry, and they are physically different machines. Now ask why anybody cares. Because you can now buy them separately. Ten thousand cheap sensors that attach constantly and send almost no data hammer the MME and barely touch the gateways. A stadium full of people streaming video is the exact opposite. In 2G those two workloads sat in the same box, so you had to buy enough box for the worse one. Split them, and you buy what you actually need on each side. Every architecture change left in this course is a version of that sentence."},
+    {p:"Send data",
+     say:"And here is your traffic, finally."},
+    {f:"ue",t:"enb",k:"data",m:"IP packets on the radio bearer",
+     say:"Up over the air."},
+    {f:"enb",t:"gw",k:"data",m:"GTP tunnel to the S-GW",
+     say:"Into a tunnel across the operator's network."},
+    {f:"gw",t:"net",k:"data",m:"out through the P-GW",
+     say:"And out the far gateway. Trace that path with your finger and notice it never touches a control box on the way. That is the separation, drawn."},
+    {p:"Make a call",
+     say:"So if there is no circuit switch, what is a phone call now? This."},
+    {f:"ue",t:"ims",k:"sig",m:"SIP INVITE on a guaranteed bearer",n:"VoLTE: a phone call is now an IP session with a reserved lane",
+     say:"A SIP invite. The same protocol any internet voice app uses. Over a bearer with reserved capacity. And that reservation is the only real difference between VoLTE and some random calling app. Your phone call is data with a priority lane. That is it. That is the whole thing."},
+    {f:"ims",t:"ue",k:"sig",m:"session established",
+     say:"Session comes up."},
+    {f:"ue",t:"gw",k:"data",m:"voice packets, through the same gateways",
+     say:"And your voice packets ride through exactly the same gateways as your web traffic. Same wires. Different priority tag."},
+    {f:"gw",t:"ims",k:"data",m:"on towards the far end",
+     say:"On towards the other person."},
+    {k:"gap",m:"Early LTE could not carry a call at all.",n:"The phone dropped down to 2G or 3G to dial, then climbed back. That fallback is part of why the old generations stayed switched on for years.",
+     say:"Now the embarrassing history, and it is a useful lesson about standards versus deployments. When LTE launched, none of this voice stuff existed yet. Carriers had shipped a data network that could not make a phone call. So when you dialled, your phone dropped down to 3G, made the call there, and climbed back to LTE afterwards. It was called CSFB, and it took years to go away. It is a big part of why 2G and 3G stayed switched on for another decade. A standard existing and a network having it are very different facts."},
+    {p:"Move",
+     say:"Last job, and there is a real shift here."},
+    {f:"enb",t:"ue",k:"sig",m:"Handover Command",n:"two eNodeBs can hand you over directly and tell the MME afterwards",
+     say:"Two base stations can hand you over between themselves, directly, over a link between them, and tell the core afterwards. Compare that to 1G, where the switch decided everything, and 2G, where the switch still decided. In 4G the towers decide and file the paperwork later. Decisions moved outward, towards the edge. Which, if you look at the name of this course, is the entire plot."}
   ]
 },
 {
@@ -439,39 +604,66 @@ var GENS = [
          {id:"smf",l:"SMF",s:"sessions",k:"core"},{id:"upf",l:"UPF",s:"carries packets",k:"core"},
          {id:"dn",l:"Data network",s:"destination"}],
   steps:[
-    {p:"Find a cell"},
-    {f:"gnb",t:"gnb",k:"self",m:"sweep the sync beams across the sector"},
-    {f:"ue",t:"gnb",k:"sig",m:"RACH on the best beam, then RRC Setup"},
-    {f:"ue",t:"amf",k:"sig",m:"Registration Request (SUCI)",n:"the permanent identity, encrypted with the home network public key"},
-    {p:"Prove identity"},
-    {f:"amf",t:"ausf",k:"sig",m:"start authentication"},
-    {f:"ausf",t:"ausf",k:"self",m:"the UDM unwraps SUCI back to the real identity and builds a vector"},
-    {f:"amf",t:"ue",k:"sig",m:"Authentication Request (RAND, AUTN)"},
-    {f:"ue",t:"amf",k:"sig",m:"Authentication Response (RES*)"},
-    {f:"amf",t:"ausf",k:"sig",m:"confirm the response",n:"the home network decides, not just the network you happen to be standing in"},
-    {f:"amf",t:"ue",k:"sig",m:"NAS security up, temporary identity assigned"},
-    {k:"note",m:"This is the IMSI catcher fix.",n:"The permanent identity never crosses the air unencrypted. Forcing the phone down to an older generation still works."},
-    {p:"Set up the path"},
-    {f:"ue",t:"amf",k:"sig",m:"PDU Session Establishment Request"},
-    {f:"amf",t:"smf",k:"sig",m:"forward it to the session manager",n:"the AMF does not manage sessions any more, it only forwards"},
-    {f:"smf",t:"upf",k:"sig",m:"install the forwarding rules (N4)",n:"the SMF decides where packets go, the UPF is what actually moves them"},
-    {f:"smf",t:"ue",k:"sig",m:"your IP address"},
-    {f:"amf",t:"gnb",k:"sig",m:"set up the radio bearer and the N3 tunnel"},
-    {p:"Send data"},
-    {f:"ue",t:"gnb",k:"data",m:"IP packets"},
-    {f:"gnb",t:"upf",k:"data",m:"N3 tunnel"},
-    {f:"upf",t:"dn",k:"data",m:"out through N6"},
-    {k:"note",m:"This is where the word edge earns its keep.",n:"Nothing says the UPF sits in a central data centre. Put it beside the tower and the round trip collapses."},
-    {p:"Make a call"},
-    {f:"ue",t:"upf",k:"data",m:"voice over NR, to the IMS behind the UPF",n:"where the operator has not deployed it, the phone falls back to LTE just to make the call"},
-    {p:"The catch"},
-    {k:"gap",m:"On a non-standalone network none of this runs.",n:"NSA keeps LTE and the 4G core for control and bolts the 5G radio on for extra capacity. The icon still says 5G."}
+    {p:"Find a cell",
+     say:"Two things happen in 5G, and by the end of this ladder you should recognize them as the same move applied twice. The core turns into software services. And the base station stops being a box."},
+    {f:"gnb",t:"gnb",k:"self",m:"sweep the sync beams across the sector",
+     say:"Brand new first step, and it is the first time the tower does something before you do. It is not broadcasting in all directions anymore. It is sweeping a narrow beam across the sector, like a lighthouse. Your phone sits there and waits for the beam to point at it. That is what beamforming costs you: you have to be found before you can be served."},
+    {f:"ue",t:"gnb",k:"sig",m:"RACH on the best beam, then RRC Setup",
+     say:"So you answer on whichever beam was loudest, and as a side effect you have just told the tower roughly which direction you are in. Access and location are the same message now."},
+    {f:"ue",t:"amf",k:"sig",m:"Registration Request (SUCI)",n:"the permanent identity, encrypted with the home network public key",
+     say:"And here is the fix we have been waiting three generations for. Remember the IMSI going out in the clear back in 2G? Now the permanent identity goes out encrypted, with your home operator's public key. The tower cannot read it. The visited network cannot read it. Only your home network can. It is called SUCI, and it is the first real answer to the IMSI catcher."},
+    {p:"Prove identity",
+     say:"Authentication. And watch how the boxes talk to each other, because that is the new part, not the crypto."},
+    {f:"amf",t:"ausf",k:"sig",m:"start authentication",
+     say:"The AMF kicks it off, but notice it does not do it. It calls another function. In 5G the core is a set of services that call each other, more like a cloud application than a switch."},
+    {f:"ausf",t:"ausf",k:"self",m:"the UDM unwraps SUCI back to the real identity and builds a vector",
+     say:"Because only the home network can unwrap that concealed identity. It decrypts it, finds out who you actually are, and builds the challenge."},
+    {f:"amf",t:"ue",k:"sig",m:"Authentication Request (RAND, AUTN)",
+     say:"Challenge out. Structurally the same AKA you have now seen three times, so you should be bored, which is the point."},
+    {f:"ue",t:"amf",k:"sig",m:"Authentication Response (RES*)",
+     say:"Answer back."},
+    {f:"amf",t:"ausf",k:"sig",m:"confirm the response",n:"the home network decides, not just the network you happen to be standing in",
+     say:"But look where that answer gets checked. In 4G, whichever network you happened to be standing in decided whether you passed. In 5G it forwards the answer home, and your own operator makes the call. Which matters enormously when you are roaming on a network you have no particular reason to trust."},
+    {f:"amf",t:"ue",k:"sig",m:"NAS security up, temporary identity assigned",
+     say:"Security comes up, you get a temporary identity, you are registered."},
+    {k:"note",m:"This is the IMSI catcher fix.",n:"The permanent identity never crosses the air unencrypted. Forcing the phone down to an older generation still works.",
+     say:"So, is the IMSI catcher dead? No. And this is my favourite security lesson in the course. Your phone still supports 2G. An attacker does not attack SUCI, that is hard. They force your phone down to a generation that never had SUCI, which is easy. So the mitigation that is actually shipping on phones right now is not cryptography. It is a switch in Settings that says never use 2G. Sometimes the fix for a protocol problem is refusing to speak the old protocol at all."},
+    {p:"Set up the path",
+     say:"Now sessions. New name, and I want you to notice it is the third new name for the same thing."},
+    {f:"ue",t:"amf",k:"sig",m:"PDU Session Establishment Request",
+     say:"PDP context in 2000. EPS bearer in 2009. PDU session now. All three mean: open me a pipe to the network. If a slide ever confuses you, translate the acronym into that sentence."},
+    {f:"amf",t:"smf",k:"sig",m:"forward it to the session manager",n:"the AMF does not manage sessions any more, it only forwards",
+     say:"And watch what the AMF does with that request. Nothing. It forwards it. Now ask why, and predict the answer before I give it. In 4G the MME did access, mobility, and sessions, all three. But those loads look nothing alike. Checking who you are happens once a day. Tracking where you are happens constantly. Opening a session happens every time an app on your phone wakes up. Same box, three completely different workloads. So 5G split the control plane itself. That is the third time we have seen this exact cut."},
+    {f:"smf",t:"upf",k:"sig",m:"install the forwarding rules (N4)",n:"the SMF decides where packets go, the UPF is what actually moves them",
+     say:"And here is the seam again, one layer down. The SMF decides where your packets should go. The UPF is the thing that actually moves them. The SMF programs the UPF and then gets out of the way. If that sounds exactly like the MME and the gateways, good. It is the same idea. By this point in the lecture you should be able to guess the architecture before I show it."},
+    {f:"smf",t:"ue",k:"sig",m:"your IP address",
+     say:"Your address. Fourth time. GGSN, then P-GW, then the SMF and UPF between them. Three sets of names, one job, twenty-five years."},
+    {f:"amf",t:"gnb",k:"sig",m:"set up the radio bearer and the N3 tunnel",
+     say:"AMF tells the tower to build the radio side and the tunnel, and you are on."},
+    {p:"Send data",
+     say:"Traffic. And this part should look familiar."},
+    {f:"ue",t:"gnb",k:"data",m:"IP packets",
+     say:"Up over the air."},
+    {f:"gnb",t:"upf",k:"data",m:"N3 tunnel",
+     say:"Through the N3 tunnel to the UPF. N3 is what S1-U was called in 4G. The interface names are new; the shape is not."},
+    {f:"upf",t:"dn",k:"data",m:"out through N6",
+     say:"And out to wherever you were actually going."},
+    {k:"note",m:"This is where the word edge earns its keep.",n:"Nothing says the UPF sits in a central data centre. Put it beside the tower and the round trip collapses.",
+     say:"And now the part this whole course is named after, so put your pens down for thirty seconds. Nothing in the standard says where the UPF sits. In 4G your gateway lived in one of a handful of enormous data centres, so your packets drove across two states before they went anywhere. In 5G the SMF can pick a UPF in a cabinet at the bottom of the tower. Your traffic exits two kilometres from your phone instead of two hundred. That is not a faster radio. That is the same radio with the exit moved. When somebody at a conference says edge computing, that sentence is what they mean, and this arrow is where it happens."},
+    {p:"Make a call",
+     say:"Voice, quickly, because it is VoLTE's idea one generation on."},
+    {f:"ue",t:"upf",k:"data",m:"voice over NR, to the IMS behind the UPF",n:"where the operator has not deployed it, the phone falls back to LTE just to make the call",
+     say:"SIP to the IMS, over a flow with reserved capacity, through the UPF. And where the operator has not deployed it, your phone still drops down to LTE just to make a call. It is 2026 and we are still doing fallback. Standards move faster than deployments, every single time."},
+    {p:"The catch",
+     say:"Last thing. And of everything today, this is the one I want you to walk out with."},
+    {k:"gap",m:"On a non-standalone network none of this runs.",n:"NSA keeps LTE and the 4G core for control and bolts the 5G radio on for extra capacity. The icon still says 5G.",
+     say:"Everything on this screen assumes standalone 5G. And most 5G in the world is not standalone. In non-standalone, the control plane runs over LTE to a 4G core, and the 5G radio is bolted on the side purely for extra bandwidth. So: no slicing. No edge UPF. No new quality of service. None of it. Now take your phone out and look at it. If it says 5G, what have you actually learned? That the radio is 5G. That is the entire content of that icon. The icon reports the radio. The features come from the core. If you remember one sentence from today, make it that one."}
   ]
 }
 ];
 
 var W=980, PAD=56, HDR_H=46, ROW=32, ROW_N=46, PH=30, CALL=50, CALL_N=64;
-var cur=0, walk=-1, stepEls=[], stepData=[];
+var cur=0, walk=-1, stepEls=[], stepData=[], entryEls=[];
 
 function el(n,a,txt){
   var e=document.createElementNS("http://www.w3.org/2000/svg",n);
@@ -504,6 +696,7 @@ function render(){
   var btns=document.querySelectorAll(".gen");
   for(var i=0;i<btns.length;i++) btns[i].setAttribute("aria-pressed", i===cur?"true":"false");
   document.getElementById("thesis").textContent=g.thesis;
+  document.getElementById("scriptgen").textContent=g.name+" · "+g.years;
 
   var f=document.getElementById("facts");
   f.innerHTML="";
@@ -520,6 +713,8 @@ function render(){
   f.appendChild(dp);
 
   drawLadder(g);
+  buildScript(g);
+  paint();
 }
 
 function drawLadder(g){
@@ -607,14 +802,71 @@ function drawLadder(g){
     stepEls.push(grp); stepData.push({s:s,n:sn});
     svg.appendChild(grp);
   });
-  paint();
+}
+
+function laneName(g,id){
+  for(var i=0;i<g.lanes.length;i++) if(g.lanes[i].id===id) return g.lanes[i].l;
+  return id;
+}
+
+function buildScript(g){
+  var box=document.getElementById("entries");
+  box.innerHTML=""; entryEls=[];
+  var pn=0, sn=0;
+
+  g.steps.forEach(function(s){
+    if(s.p){
+      pn++;
+      var ph=document.createElement("div");
+      ph.className="ph";
+      ph.innerHTML="<span class=\"no\">"+pn+"</span><span class=\"ti\">"+s.p+"</span>";
+      box.appendChild(ph);
+      if(s.say){
+        var pe=document.createElement("div");
+        pe.className="en";
+        pe.innerHTML="<span class=\"sn\">&mdash;</span><div>"+
+          "<div class=\"say\">"+s.say+"</div></div>";
+        pe.style.cursor="default";
+        box.appendChild(pe);
+      }
+      return;
+    }
+    sn++;
+    var idx=entryEls.length;
+    var kindWord = s.k==="data" ? "user plane"
+                 : s.k==="sig"  ? "control plane"
+                 : s.k==="self" ? "inside one box"
+                 : s.k==="gap"  ? "what is missing" : "what it means";
+    var who = (s.k==="sig"||s.k==="data") ? laneName(g,s.f)+" → "+laneName(g,s.t)
+            : (s.k==="self" ? laneName(g,s.f) : "");
+    var mcls = s.k==="data"?"data":(s.k==="gap"?"gap":(s.k==="note"?"note":""));
+
+    var e=document.createElement("div");
+    e.className="en";
+    e.innerHTML="<span class=\"sn\">"+sn+"</span><div>"+
+      "<div class=\"mg "+mcls+"\">"+s.m+"</div>"+
+      "<div class=\"who\">"+(who?who+" · ":"")+kindWord+"</div>"+
+      (s.say?"<div class=\"say\" style=\"margin-top:8px\">"+s.say+"</div>":"")+"</div>";
+    e.addEventListener("click",function(){ walk=idx; paint(); scrollLadderIntoView(); });
+    entryEls.push(e);
+    box.appendChild(e);
+  });
+}
+
+function scrollLadderIntoView(){
+  var s=document.getElementById("ladder").getBoundingClientRect();
+  if(s.top<0||s.top>window.innerHeight*0.6)
+    document.querySelector(".scroller").scrollIntoView({block:"center",behavior:"smooth"});
 }
 
 function paint(){
   var svg=document.getElementById("ladder");
   if(walk>=0) svg.classList.add("walking"); else svg.classList.remove("walking");
   stepEls.forEach(function(e,i){
-    if(i===walk) e.setAttribute("class","step active"); else e.setAttribute("class","step");
+    e.setAttribute("class", i===walk ? "step active" : "step");
+  });
+  entryEls.forEach(function(e,i){
+    e.className = i===walk ? "en on" : "en";
   });
   document.getElementById("prev").disabled = walk<=0;
   document.getElementById("next").disabled = walk>=stepEls.length-1;
@@ -626,7 +878,8 @@ function showReadout(){
   if(walk<0){
     r.innerHTML="<div class=\"k\">"+stepEls.length+" messages in this exchange</div>"+
       "<div class=\"n\">Click any arrow to isolate it, or press <b>step</b> to walk the whole "+
-      "exchange one message at a time. The left and right arrow keys work too.</div>";
+      "exchange one message at a time. Arrow keys work too. The teaching script for every "+
+      "message is in the section below.</div>";
     return;
   }
   var d=stepData[walk], s=d.s;
@@ -636,7 +889,8 @@ function showReadout(){
            : s.k==="gap"  ? "what is missing"
            : "what it means";
   r.innerHTML="<div class=\"k\">step "+d.n+" of "+stepEls.length+" &middot; "+kind+"</div>"+
-    "<div class=\"m\">"+s.m+"</div>"+(s.n?"<div class=\"n\">"+s.n+"</div>":"");
+    "<div class=\"m\">"+s.m+"</div>"+(s.n?"<div class=\"n\">"+s.n+"</div>":"")+
+    (s.say ? "<div class=\"bi\"><div class=\"say\">"+s.say+"</div></div>" : "");
 }
 
 document.getElementById("next").onclick=function(){ walk=Math.min(walk+1,stepEls.length-1); paint(); };
