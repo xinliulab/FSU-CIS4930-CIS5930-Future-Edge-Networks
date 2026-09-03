@@ -61,10 +61,11 @@
   \source{https://standards.ieee.org/ieee/802.11/10548/}{IEEE Std 802.11; Cisco 802.11ax white paper; Keysight 802.11ad concepts}
 \end{frame}
 
-% Teaching note (150 s): treat the maxima as comparison anchors, not promises. The
-% years are standard milestones; certification and shipping dates differ. Standards
-% allow configurations beyond what typical phones and APs implement. Point at how each
-% row's "key PHY idea" maps back to the resource-dimension table from slide one.
+% Teaching note (150 s): this table's job is TALLY COLLECTION, not review -- the gray
+% "spent" column cashes the tally planted on slide one, row by row. Walk that column,
+% not the numbers (students have seen every number already). Say "anchors, not
+% promises" out loud once; the takeaway carries it. Years are standard milestones;
+% certification and shipping dates differ.
 \begin{frame}{The mainstream branch, b to be}
   \centering
   % SOURCES for years, bands, widths, and headline maxima:
@@ -72,36 +73,49 @@
   % https://standards.ieee.org/ieee/802.11/10548/
   % https://standards.ieee.org/ieee/802.11be/7516/
   % https://www.cisco.com/c/en/us/support/docs/wireless-mobility/wireless-lan-wlan/212892-802-11ac-wireless-throughput-testing-and.html
-  \small
-  \setlength{\tabcolsep}{4pt}%
-  \begin{tabular}{@{}llllll@{}}
+  \scriptsize
+  \setlength{\tabcolsep}{3.5pt}%
+  \begin{tabular}{@{}lllllll@{}}
     \toprule
     \textbf{802.11} & \textbf{year} & \textbf{GHz} & \textbf{MHz} &
-      \textbf{key PHY idea} & \textbf{headline max} \\
+      \textbf{key PHY idea} & \textbf{headline max} &
+      \textcolor{softgray}{\textbf{dimension spent}} \\
     \midrule
-    % The "key PHY idea" column is ranblue on purpose: it is the reading path.
-    b  & 1999 & 2.4     & $\approx$22 & \textcolor{ranblue}{CCK}             & 11 Mb/s \\
-    a  & 1999 & 5       & 20          & \textcolor{ranblue}{OFDM}            & 54 Mb/s \\
-    g  & 2003 & 2.4     & 20          & \textcolor{ranblue}{OFDM}            & 54 Mb/s \\
-    n  & 2009 & 2.4/5   & 20/40       & \textcolor{ranblue}{OFDM + MIMO}     & 600 Mb/s \\
-    ac & 2013 & 5       & 20--160     & \textcolor{ranblue}{OFDM + MU-MIMO}  & 6.9 Gb/s \\
-    ax & 2021 & 2.4/5/6* & 20--160    & \textcolor{ranblue}{OFDMA + MU-MIMO} & 9.6 Gb/s \\
-    be & 2024 & 2.4/5/6 & 20--320     & \textcolor{ranblue}{EHT + MLO}       & $\geq$30 Gb/s$^\dagger$ \\
+    % "key PHY idea" is ranblue (the reading path); "dimension spent" is softgray
+    % and cashes the tally planted on the frame-1 resource table.
+    b  & 1999 & 2.4     & $\approx$22 & \textcolor{ranblue}{CCK}             & 11 Mb/s
+       & \textcolor{softgray}{spectrum} \\
+    a  & 1999 & 5       & 20          & \textcolor{ranblue}{OFDM}            & 54 Mb/s
+       & \textcolor{softgray}{spectrum, const.} \\
+    g  & 2003 & 2.4     & 20          & \textcolor{ranblue}{OFDM}            & 54 Mb/s
+       & \textcolor{softgray}{---} \\
+    n  & 2009 & 2.4/5   & 20/40       & \textcolor{ranblue}{OFDM + MIMO}     & 600 Mb/s
+       & \textcolor{softgray}{space, BW} \\
+    ac & 2013 & 5       & 20--160     & \textcolor{ranblue}{OFDM + MU-MIMO}  & 6.9 Gb/s
+       & \textcolor{softgray}{BW, const., space} \\
+    ax & 2021 & 2.4/5/6* & 20--160    & \textcolor{ranblue}{OFDMA + MU-MIMO} & 9.6 Gb/s
+       & \textcolor{softgray}{scheduling} \\
+    be & 2024 & 2.4/5/6 & 20--320     & \textcolor{ranblue}{EHT + MLO}       & $\geq$30 Gb/s$^\dagger$
+       & \textcolor{softgray}{links, BW, const.} \\
     \bottomrule
   \end{tabular}
 
-  \vspace{0.4em}
+  \vspace{0.3em}
   % SOURCE (EHT peak PHY rate ~46 Gb/s at 16 streams x 320 MHz x 4096-QAM):
   % https://standards.ieee.org/ieee/802.11be/7516/
   % NOTE: years are amendment approval years; 802.11be was published July 2025.
-  {\scriptsize\textcolor{softgray}{Years are amendment approval; 802.11be published
-    July 2025. \enspace * 6 GHz operation is in 802.11ax-2021; availability depends
-    on national regulation (Wi-Fi 6E). \enspace $\dagger$ Required mode at the MAC
-    data SAP; peak PHY rate $\approx$46 Gb/s.}\par}
+  % \color (not \textcolor): the block contains a \par, which \textcolor rejects.
+  {\scriptsize\color{softgray}Years = amendment approval (802.11be published
+    July 2025). \enspace * 6 GHz operation is in 802.11ax-2021; availability varies
+    by national regulation (Wi-Fi 6E). \enspace spent = new dimension from the
+    opening table (BW = bandwidth, const.\ = constellation).\par
+    $\dagger$ Required at the MAC data SAP --- the honest counter: what survives
+    preambles, ACKs, and retries. The $\approx$46 Gb/s PHY peak counts raw
+    on-air bits.\par}
 
-  \vspace{0.5em}
-  \takeaway{Maxima are comparison anchors, not promised throughput.\\
-    Standards allow more than typical devices ever implement.}
+  \vspace{0.35em}
+  \takeaway{Anchors, not promises --- and the opening tally collected:\\
+    all six dimensions from slide one, spent.}
   \source{https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html}{IEEE 802.11 timeline; IEEE Std 802.11; IEEE Std 802.11be-2024; Cisco}
 \end{frame}
 

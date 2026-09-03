@@ -32,6 +32,9 @@ Q: What two existing things did 802.11g combine, and what recurring cost do mixe
 ### [04_mimo_era.tex] 802.11n: multipath becomes an asset
 Q: List the four levers 802.11n combines to reach its 600 Mb/s ceiling, and state what changed about the role of multipath.
 
+### [04_mimo_era.tex] What "tighter modulation" means
+Q: Why does packing more bits into each symbol (a denser constellation) require a higher SNR?
+
 ### [04_mimo_era.tex] 802.11ac: wider, tighter, more users
 Q: Summarize 802.11ac's four dimensions of improvement, and explain why no laptop will ever measure the 6.9 Gb/s figure.
 

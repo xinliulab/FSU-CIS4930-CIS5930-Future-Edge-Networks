@@ -35,7 +35,7 @@
   \begin{itemize}\itemsep3pt
     % SOURCE: https://standards.ieee.org/ieee/802.11/10548/
     \item \textbf{1 / 2 Mb/s:} Barker spreading, as in 1997
-    \item \textbf{5.5 / 11 Mb/s:} CCK --- bits live in code-word \emph{phases}
+    \item \textbf{5.5 / 11 Mb/s:} CCK --- the chosen pattern \emph{is} the data
     \item Receiver knows the pattern --- it digs the signal out of noise
   \end{itemize}
 
@@ -43,9 +43,12 @@
   \takeaway{$\approx$22 MHz-wide channels on 5 MHz centers is why\\
     North America gets only three clean 2.4 GHz channels.}
 
+  % "Pattern choice is the data": each bit group selects a code word; technically
+  % the bits ride in the code words' phases -- kept here, off the bullet.
   \glossline{DSSS = Direct-Sequence Spread Spectrum \quad
-    CCK = Complementary Code Keying \quad chip = one element of the spreading
-    pattern \quad processing gain = the technical name for that noise-digging}
+    CCK = Complementary Code Keying --- bits ride in the code words' phases \quad
+    chip = one element of the pattern \quad processing gain = the technical name
+    for that noise-digging}
   \source{https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html}{IEEE 802.11 interactive timeline; IEEE Std 802.11}
 \end{frame}
 
@@ -61,10 +64,10 @@
   % SOURCE for 54 Mb/s, 20 MHz, 5 GHz, 64-pt FFT, 48+4 subcarriers:
   % https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html
   % https://standards.ieee.org/ieee/802.11/10548/
-  {\large\textbf{\textcolor{ranblue}{54 Mb/s}} max rate \quad
+  {\normalsize\textbf{\textcolor{ranblue}{54 Mb/s}} max rate \quad
    \textbf{20 MHz}\ channel \quad \textbf{5 GHz}\ band\par}
 
-  \vspace{0.15em}
+  \vspace{0.05em}
   \begin{tikzpicture}[scale=0.9,transform shape]
     \draw[flow] (-1.1,0) -- (4.6,0) node[right,font=\scriptsize]{frequency};
     % Dashed sampling lines: the sampled carrier peaks (green dot) exactly where
@@ -83,36 +86,27 @@
   \end{tikzpicture}
 
   \vspace{0.1em}
-  {\scriptsize\textcolor{softgray}{You met OFDM in Class 3 (LTE). Wi-Fi got there
-    in 1999 --- same idea, 20 MHz at a time.}\par}
+  % Orthogonality mechanism, not just assertion -- kills the "magic coincidence" read.
+  {\scriptsize\textcolor{softgray}{No magic: spacing = 1 / symbol time, so between
+    samples each neighbor completes exactly one extra full cycle and sums to zero.
+    You met OFDM in Class 3 (LTE) --- same idea, 20 MHz at a time.}\par}
 
   \vspace{0.1em}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.47\textwidth}
-      \small
-      \begin{itemize}\itemsep2pt
-        \item 64-point FFT
-        \item 48 data + 4 pilot subcarriers
-      \end{itemize}
-    \column{0.47\textwidth}
-      \small
-      \begin{itemize}\itemsep2pt
-        \item BPSK up to 64-QAM
-        \item 6--54 Mb/s rate set
-      \end{itemize}
-  \end{columns}
+  {\small 64-point FFT \,\textperiodcentered\, 48 data + 4 pilot subcarriers
+    \,\textperiodcentered\, BPSK--64-QAM \,\textperiodcentered\, 6--54 Mb/s\par}
 
   \vspace{0.1em}
   % SOURCE (first 802.11a products / Atheros silicon arrived ~2 years after 11b, late 2001):
   % https://standards.ieee.org/wp-content/uploads/interactive/web/wi-fi-timeline/index.html
   \qa{If OFDM was better, why did 802.11b win the first round?}
-     {11a silicon shipped $\sim$2 years later (Atheros, late 2001), cost more,
-      crossed walls worse at 5 GHz, and could not talk to the installed 11b
-      base. A great waveform loses to a cheap, entrenched ecosystem --- for
-      a while.}
+     {11a silicon came $\sim$2 years late (Atheros, late 2001), cost more,
+      crossed walls worse, and couldn't talk to 11b. A great waveform loses
+      to a cheap, entrenched ecosystem --- for a while.}
 
-  \glossline{OFDM = Orthogonal Frequency-Division Multiplexing \quad
-    FFT = Fast Fourier Transform \quad BPSK = Binary Phase-Shift Keying}
+  % BPSK left unexpanded: the constellation frame in section 4 covers modulation.
+  \glossline{OFDM = Orthogonal Frequency-Division Multiplexing \quad FFT = Fast
+    Fourier Transform \quad pilots = known reference tones that keep the receiver
+    calibrated}
   \source{https://standards.ieee.org/ieee/802.11/10548/}{IEEE Std 802.11 (OFDM PHY); IEEE 802.11 timeline}
 \end{frame}
 
@@ -123,10 +117,9 @@
 % (one-tap frequency-domain equalization). This intuition is reused by every OFDM
 % generation after 11a, so spend the minutes here.
 \begin{frame}{Why OFDM needs a cyclic prefix}
-  \vspace{0.1em}
   {\large\textbf{Problem:} indoor echoes smear one symbol into the next.\par}
 
-  \vspace{0.3em}
+  \vspace{0.2em}
   \centering
   % SOURCE (CP role, guard interval intuition): https://standards.ieee.org/ieee/802.11/10548/
   \begin{tikzpicture}[scale=0.9,transform shape]
@@ -143,20 +136,22 @@
       {echoes land inside the CP, which the receiver discards (conceptual)};
   \end{tikzpicture}
 
-  \vspace{0.3em}
+  \vspace{0.2em}
   \begin{itemize}\itemsep2pt
     \item Delay spread becomes a bounded guard region
     \item Each subcarrier sees one complex gain
     \item Equalization = one multiply per subcarrier
   \end{itemize}
 
-  \vspace{0.1em}
+  \vspace{0.05em}
   \takeaway{The cyclic prefix turns multipath smearing into a fixed,\\
     budgeted overhead --- paid by every OFDM Wi-Fi since 11a.}
 
   % The alias matters: 802.11n's "short GI" lands cold unless GI is named here first.
   \glossline{CP = Cyclic Prefix --- Wi-Fi calls this the guard interval (GI) \quad
-    delay spread = arrival-time spread of echoes}
+    delay spread = arrival-time spread of echoes \quad equalization = undoing what
+    the channel did; here, one multiply per subcarrier \quad complex gain = the
+    channel's single scale-and-shift per tone}
   \source{https://standards.ieee.org/ieee/802.11/10548/}{IEEE Std 802.11 (OFDM PHY, guard interval)}
 \end{frame}
 

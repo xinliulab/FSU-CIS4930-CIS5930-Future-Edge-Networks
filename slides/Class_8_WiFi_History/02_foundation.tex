@@ -13,7 +13,7 @@
 \begin{frame}{The 802.11 stack: stable MAC, moving PHY}
   \centering
   % SOURCE: https://standards.ieee.org/ieee/802.11/10548/
-  \begin{tikzpicture}[scale=0.84,transform shape]
+  \begin{tikzpicture}[scale=0.80,transform shape]
     \node[draw=softgray,fill=gray!8,rounded corners=3pt,minimum width=8.2cm,
           minimum height=0.85cm,align=center] (llc) at (0,0)
       {\textbf{LLC / IP / applications}\\[-2pt]{\scriptsize outside 802.11}};
@@ -34,19 +34,20 @@
       {\textbf{PHY: rebuilt}\\\textbf{every generation}};
   \end{tikzpicture}
 
-  \vspace{0.4em}
+  \vspace{0.25em}
   \plainterm{PPDU}{= the PHY-layer transmission unit placed on air:
     preamble + header + payload.}
 
-  \vspace{0.25em}
+  \vspace{0.2em}
   \takeaway{Same family behavior above, different ways to turn\\
     bits into radio energy below. That split is Wi-Fi's longevity.}
 
   % PLCP/PMD is the classic 1997-era split; 802.11-2016+ folds both into a unified
   % PHY clause, and PPDU now expands to "PHY protocol data unit".
+  % "association" glossed here at first use; it unblocks 11be's "one association".
   \glossline{MAC = Medium Access Control \quad PLCP = Physical Layer Convergence
-    Procedure \quad PMD = Physical Medium Dependent \quad (1997 split; later
-    revisions fold PLCP/PMD into one PHY)}
+    Procedure \quad PMD = Physical Medium Dependent \quad association = joining an
+    AP's network \quad (1997 split; later revisions fold PLCP/PMD into one PHY)}
   \source{https://standards.ieee.org/ieee/802.11/10548/}{IEEE Std 802.11 (MAC and PHY specifications)}
 \end{frame}
 
