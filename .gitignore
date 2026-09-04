@@ -4,3 +4,4 @@
 .DS_Store
 tmp/
 .canvas_token
+.codex_tmp/
