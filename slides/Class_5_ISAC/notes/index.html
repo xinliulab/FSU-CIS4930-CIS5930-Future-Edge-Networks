@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Class 5 ISAC · 讲稿</title>
+<title>Class 5 ISAC · Speaker Notes</title>
 <style>
   :root{
     --bg:#f5f6f8; --panel:#ffffff; --ink:#1a1f26; --muted:#6b7280;
@@ -24,10 +24,6 @@
     padding:0 18px; background:var(--panel); border-bottom:1px solid var(--line);
   }
   #bar b{font-size:14px; color:var(--blue); letter-spacing:.02em}
-  #sec{
-    font-size:12.5px; color:var(--muted); padding:2px 9px;
-    border:1px solid var(--line); border-radius:99px; white-space:nowrap;
-  }
   #count{margin-left:auto; font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums}
   #prog{height:3px; background:var(--line)}
   #prog>i{display:block; height:100%; background:var(--blue); width:0; transition:width .18s}
@@ -49,7 +45,6 @@
 
   /* ---- notes typography ---- */
   h2{margin:0 0 4px; font-size:20px; line-height:1.4; color:#132b52}
-  .en{margin:0 0 18px; font-size:13px; color:var(--muted); font-family:Georgia,serif; font-style:italic}
   h3{
     margin:22px 0 8px; font-size:14px; color:var(--blue);
     padding-left:9px; border-left:3px solid var(--blue);
@@ -111,10 +106,9 @@
   }
   #lang button:first-child{border-left:0}
   #lang button.on{background:var(--blue); color:#fff}
-  /* EN mode keeps the headings so you still know which slide you are on. */
-  body.only-en #note>*:not(#script):not(h2):not(.en){display:none}
-  body.only-en #script{margin-top:12px; margin-bottom:6px}
-  body.only-zh #script{display:none}
+  /* One language at a time, everywhere on the page — including the hint bar. */
+  body.only-en .h-zh{display:none}
+  body.only-zh .h-en{display:none}
 
   /* ---- footer hint ---- */
   #hint{
@@ -141,11 +135,9 @@
 
 <div id="bar">
   <b>Class 5 · ISAC</b>
-  <span id="sec"></span>
   <span id="lang">
-    <button data-m="both" class="on">双语</button>
+    <button data-m="en" class="on">English</button>
     <button data-m="zh">中文</button>
-    <button data-m="en">EN</button>
   </span>
   <span id="count"></span>
 </div>
@@ -157,8 +149,10 @@
 </div>
 
 <div id="hint">
-  <kbd>Enter</kbd> <kbd>→</kbd> <kbd>↓</kbd> <kbd>空格</kbd> 下一页 &nbsp;·&nbsp;
-  <kbd>←</kbd> <kbd>↑</kbd> 上一页 &nbsp;·&nbsp; <kbd>Home</kbd> 回到开头 &nbsp;·&nbsp; 输入数字跳页
+  <span class="h-en"><kbd>Enter</kbd> <kbd>→</kbd> <kbd>↓</kbd> <kbd>Space</kbd> next &nbsp;·&nbsp;
+  <kbd>←</kbd> <kbd>↑</kbd> previous &nbsp;·&nbsp; <kbd>Home</kbd> first slide &nbsp;·&nbsp; type a number to jump</span>
+  <span class="h-zh"><kbd>Enter</kbd> <kbd>→</kbd> <kbd>↓</kbd> <kbd>空格</kbd> 下一页 &nbsp;·&nbsp;
+  <kbd>←</kbd> <kbd>↑</kbd> 上一页 &nbsp;·&nbsp; <kbd>Home</kbd> 回到开头 &nbsp;·&nbsp; 输入数字跳页</span>
 </div>
 
 <script>
@@ -1054,40 +1048,45 @@ const EN = [
 ];
 
 const img=document.getElementById('slide'), note=document.getElementById('note'),
-      sec=document.getElementById('sec'), cnt=document.getElementById('count'),
+      cnt=document.getElementById('count'),
       bar=document.querySelector('#prog>i'), right=document.getElementById('right');
-let i=0, buf='', bufT=0;
+let i=0, buf='', bufT=0, mode='en';
 
 function pad(n){return String(n).padStart(2,'0')}
 
 function draw(){
-  const d=S[i];
+  const d=S[i], en=(mode==='en');
   img.src='pages/p-'+pad(i+1)+'.png';
-  img.alt=d.t;
-  sec.textContent=d.s;
+  img.alt=en?d.e:d.t;
   cnt.textContent=(i+1)+' / '+S.length;
   bar.style.width=((i+1)/S.length*100)+'%';
-  note.innerHTML='<h2>'+d.t+'</h2><p class="en">'+d.e+'</p>'
-    +'<div id="script"><h3 class="hdr">SAY THIS IN CLASS</h3>'+(EN[i]||'')+'</div>'
-    +d.n;
+  // Never mix the two: the English view is English throughout, title included.
+  note.innerHTML = en
+    ? '<h2>'+d.e+'</h2>'
+      +'<div id="script"><h3 class="hdr">SAY THIS IN CLASS</h3>'+(EN[i]||'')+'</div>'
+    : '<h2>'+d.t+'</h2>'+d.n;
   right.scrollTop=0;
   try{localStorage.setItem('isac-note-page',i)}catch(e){}
 }
 
-// ---- language toggle ----
+// ---- language switch: English or Chinese, never both ----
 function setLang(m){
-  document.body.classList.toggle('only-en', m==='en');
-  document.body.classList.toggle('only-zh', m==='zh');
-  document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('on', b.dataset.m===m));
-  try{localStorage.setItem('isac-note-lang',m)}catch(e){}
+  mode = (m==='zh') ? 'zh' : 'en';
+  document.body.classList.toggle('only-en', mode==='en');
+  document.body.classList.toggle('only-zh', mode==='zh');
+  document.documentElement.lang = (mode==='en') ? 'en' : 'zh-CN';
+  document.title = (mode==='en') ? 'Class 5 ISAC · Speaker Notes' : 'Class 5 ISAC · 讲稿';
+  document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('on', b.dataset.m===mode));
+  try{localStorage.setItem('isac-note-lang',mode)}catch(e){}
+  draw();
 }
 document.querySelectorAll('#lang button').forEach(b=>{
   // blur, or the button keeps focus and Space/Enter re-triggers it instead of paging
   b.addEventListener('click',()=>{setLang(b.dataset.m); b.blur();});
 });
-let lang='both';
-try{ lang=localStorage.getItem('isac-note-lang')||'both'; }catch(e){}
-setLang(lang);
+let lang='en';
+try{ lang=localStorage.getItem('isac-note-lang')||'en'; }catch(e){}
+setLang(lang);  // anything other than 'zh' (including the old 'both') lands on English
 
 function go(n){ i=Math.max(0,Math.min(S.length-1,n)); draw(); }
 
