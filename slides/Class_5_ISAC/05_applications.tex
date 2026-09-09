@@ -2,10 +2,29 @@
 
 \section[Allocation]{Choosing a Point on the Curve}
 
-% SECTION TIMING: 41:00--52:00 (5 frames).
+% SECTION TIMING: 41:00--54:00 (7 frames; the tour-map frame and the peak explainer
+% are short beats, ~1 min each).
 % SOURCE: "Cross-Domain Dual-Functional OFDM Waveform Design for Accurate
 % Sensing/Positioning," IEEE JSAC, 2024. Simulation parameters on the results frame are
 % quoted from that work; do not round them.
+
+% Inserted 2026-09-09. The back half of this deck is five papers, and the seams
+% between them read as unexplained jumps. This frame announces the route once;
+% a one-slide reprise (\tourmap) marks each later stop. Say the rule out loud:
+% every remaining topic is the SAME trade-off carried somewhere new.
+\begin{frame}{Five places the curve must survive}
+  \vspace{0.35em}
+  {\small So far the trade-off lives on a whiteboard. The rest of today takes it
+   into the field --- five stops, and at every one the question is the same:
+   \textbf{where on the curve do you stand, and who gets to decide?}\par}
+
+  \vspace{0.9em}
+  \centering
+  \tourmap{1}
+
+  \vspace{1.0em}
+  \takeaway{One curve, five stops.\\When a new topic appears, find it on this map first.}
+\end{frame}
 
 \begin{frame}{The grid is the budget}
   \vspace{0.3em}
@@ -39,6 +58,55 @@
   \glossline{RE = Resource Element, one subcarrier during one OFDM symbol\\
     PSLR = Peak-to-SideLobe Ratio; RoI = Region of Interest in the delay--Doppler plane}
   \source{https://ieeexplore.ieee.org/document/10683983}{Cross-Domain Dual-Functional OFDM Waveform Design, IEEE JSAC 2024}
+\end{frame}
+
+% Inserted 2026-09-09. PSLR grades the next three frames, but "peak", "sidelobe"
+% and "clutter" were never defined -- students do not know what the peak of a
+% signal is. Define all three with one picture before anything gets graded.
+\begin{frame}{What a peak is, before we grade one}
+  \vspace{0.2em}
+  \centering
+  \begin{tikzpicture}[scale=0.94,transform shape]
+    % axes: matched-filter output against delay
+    \draw[-{Latex[length=2.2mm]},softgray] (0,0) -- (8.6,0)
+      node[anchor=north,font=\scriptsize,xshift=-9mm] {delay (= distance)};
+    \draw[-{Latex[length=2.2mm]},softgray] (0,0) -- (0,3.0);
+    \node[font=\scriptsize,rotate=90,anchor=south] at (-0.2,1.4) {receiver output};
+    % clutter floor
+    \draw[thick,draw=softgray!80]
+      (0.15,0.16) .. controls (0.7,0.34) and (1.0,0.08) .. (1.5,0.22)
+      .. controls (1.9,0.34) .. (2.3,0.14)
+      -- (2.3,0.14)
+      (5.6,0.20) .. controls (6.1,0.10) and (6.6,0.36) .. (7.1,0.16)
+      .. controls (7.6,0.30) .. (8.2,0.18);
+    % left sidelobe, main peak, right sidelobe
+    \draw[very thick,draw=ranblue]
+      (2.3,0.14) .. controls (2.55,0.14) .. (2.75,0.62)
+      .. controls (2.95,0.14) and (3.15,0.14) .. (3.35,0.14)
+      .. controls (3.7,0.2) .. (3.95,2.45)
+      .. controls (4.2,0.2) and (4.4,0.14) .. (4.65,0.14)
+      .. controls (4.85,0.14) .. (5.05,0.62)
+      .. controls (5.25,0.14) .. (5.6,0.20);
+    % labels
+    \node[font=\scriptsize\bfseries,text=ranblue,anchor=south] at (3.95,2.5) {the peak: a target};
+    \node[font=\scriptsize,text=ranblue,anchor=south] at (2.45,0.66) {sidelobes};
+    \node[font=\scriptsize,text=softgray,anchor=south] at (1.1,0.4) {clutter};
+    % PSLR arrow
+    \draw[{Latex[length=1.8mm]}-{Latex[length=1.8mm]},coreorange,thick]
+      (6.4,0.62) -- node[font=\scriptsize\bfseries,text=coreorange,right=2pt]{PSLR}
+      (6.4,2.45);
+    \draw[dotted,coreorange] (3.95,2.45) -- (6.4,2.45);
+    \draw[dotted,coreorange] (5.05,0.62) -- (6.4,0.62);
+  \end{tikzpicture}
+
+  \vspace{0.45em}
+  {\small The receiver slides a copy of its own waveform across the echo.
+   Where a target sits, everything lines up and adds --- that spike is
+   \textbf{the peak}. \textbf{Sidelobes} are ghosts of our own waveform;
+   \textbf{clutter} is every echo we never asked for.\par}
+
+  \vspace{0.35em}
+  \takeaway{PSLR = how far the true peak stands above the tallest ghost.\\That number is the sensing grade on the next slide.}
 \end{frame}
 
 \begin{frame}{Two scores, graded in two rooms}

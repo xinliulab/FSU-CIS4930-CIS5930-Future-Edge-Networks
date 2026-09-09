@@ -161,7 +161,7 @@ const S = [
 <p>这门课到目前为止,网络一直在做一件事:<b>把比特从一头搬到另一头</b>。今天这节课要讲的是一件完全不同的事 —— 网络开始<b>看东西</b>。</p>
 <div class="say">前面几节课我们讲的都是怎么把信息送出去。今天我们问一个别的问题:同一个信号,能不能在送信息的同时,顺便告诉我们外面的世界长什么样?<br><br>副标题里那五个词 —— 波形、资源分配、攻击、原型、标准 —— 就是今天的五站。你们会发现它们其实是<b>同一个问题的五个版本</b>。</div>
 <h3>你自己心里要有的一句话</h3>
-<p>整节课只有一个核心思想,后面 38 页全是它的推论:</p>
+<p>整节课只有一个核心思想,后面 45 页全是它的推论:</p>
 <p class="t">ISAC 不是在网络旁边装一个雷达,而是把网络自己发出去的信号当雷达来读。</p>
 <p>如果学生下课只记住一句话,就是这句。你在第 3 页会正式说出来,但心里从现在就要瞄着它。</p>
 `},
@@ -204,7 +204,7 @@ const S = [
 </ul>
 <div class="say">这六个场景表面上八竿子打不着 —— 车、VR、数人、卫星、救灾、种地。但它们是<b>同一件事</b>:网络自己注意到了什么,而不是等某个 App 上报。<br><br>你们现在手机上所有的定位数据,都是手机<b>主动上传</b>的。ISAC 是反过来的:网络自己就知道了。</div>
 <h3>这里要埋一颗钉子</h3>
-<p>"不用摄像头就能数人" 听起来是个隐私优点,但反过来想 —— <b>网络在你完全不知情、也没装任何 App 的情况下,知道你在哪个房间、有没有摔倒</b>。这颗钉子第 23 页(不发射的干扰机)会拔出来。现在只需要让学生心里有点不舒服就够了,不用展开。</p>
+<p>"不用摄像头就能数人" 听起来是个隐私优点,但反过来想 —— <b>网络在你完全不知情、也没装任何 App 的情况下,知道你在哪个房间、有没有摔倒</b>。这颗钉子第 27 页(不发射的干扰机)会拔出来。现在只需要让学生心里有点不舒服就够了,不用展开。</p>
 <div class="ask">网络能测到什么,是 App 测不到的?<br><br>(值得接的答案:房间里有没有人、有人摔倒了、两个街区外有辆车、下雨了。)</div>
 `},
 
@@ -215,14 +215,14 @@ const S = [
 <div class="say">你们可能会想,标准组织写不写有什么关系?一个技术好就是好啊。<br><br>关系大了。一个东西被写进"使用场景",意味着三件事会为它发生:<b>分频谱、定性能指标、写测试流程</b>。<br><br>在 ISAC 被正式点名之前,<b>没有任何一台无线设备有义务是"可测量的"</b>。厂商可以说"我这个也能感知",但没人能验证,也没人必须支持。写进去之后,它从"某些人的研究方向"变成了"要交付的东西"。</div>
 <h3>和前面课程的连接</h3>
 <p>这跟我们讲 O-RAN 的时候是一个道理:一个接口只有被标准化了,你才能分开采购。同理,一个能力只有被标准化了,才有人真的去建。</p>
-<div class="warn">2027 年之后的时间点(第 32 页那条时间轴)是<b>演讲者的预测</b>,不是 ITU 或 3GPP 发布的日程。这一页说 M.2160 是事实,那是真的;但不要把预测讲成已定的时间表。</div>
+<div class="warn">2027 年之后的时间点(第 39 页那条时间轴)是<b>演讲者的预测</b>,不是 ITU 或 3GPP 发布的日程。这一页说 M.2160 是事实,那是真的;但不要把预测讲成已定的时间表。</div>
 `},
 
 {s:"两个盒子", t:"两个盒子变成一个盒子", e:"Two boxes became one box", n:`
 <p>这一节要把上一节的想法落到硬件上。左边:传统做法 —— 通信一套、雷达一套,各有各的频段和天线。右边:DFRC,<b>一条发射链</b>,比特出去、回波进来。</p>
 <h3>DFRC 这个词</h3>
 <p>Dual-Function Radar Communication,双功能雷达通信。学生第一次见,要念全称。</p>
-<div class="say">左边那两个盒子,各自都很成熟,几十年的工程积累。把它们合成右边那一个盒子,<b>省下来的东西是实打实的</b>:一张频谱牌照、一个功放、一个天线面、一份功率预算。<br><br>但代价也是实打实的,而且这个代价是这节课剩下 30 页的全部内容 —— <b>一个波形,现在要同时满足两套规格</b>。<br><br>这就像让一个人同时当翻译和测量员。省了一个人的工资,但这个人现在很难做。</div>
+<div class="say">左边那两个盒子,各自都很成熟,几十年的工程积累。把它们合成右边那一个盒子,<b>省下来的东西是实打实的</b>:一张频谱牌照、一个功放、一个天线面、一份功率预算。<br><br>但代价也是实打实的,而且这个代价是这节课剩下三十多页的全部内容 —— <b>一个波形,现在要同时满足两套规格</b>。<br><br>这就像让一个人同时当翻译和测量员。省了一个人的工资,但这个人现在很难做。</div>
 <h3>节奏提示</h3>
 <p>"What it buys / What it costs" 这两栏,一定要<b>都讲</b>。只讲省钱,学生会觉得这是白捡的便宜,后面讲权衡的时候就接不上了。这两栏是在为第 14–16 页那个 Pareto 前沿铺路。</p>
 `},
@@ -262,9 +262,9 @@ const S = [
 <h3>左栏:技术手段(后面会展开)</h3>
 <ul>
   <li>波形设计 → 第 10–13 页</li>
-  <li>MIMO、波束成形 → 第 22、26 页</li>
-  <li>共享射频硬件 → 第 29–31 页</li>
-  <li>编码与资源分配 → 第 17–21 页</li>
+  <li>MIMO、波束成形 → 第 26、31 页</li>
+  <li>共享射频硬件 → 第 36–38 页</li>
+  <li>编码与资源分配 → 第 18–23 页</li>
 </ul>
 <h3>右栏:四个挑战</h3>
 <ul>
@@ -321,7 +321,7 @@ const S = [
 </ul>
 <div class="say">两个糊点和两个尖点,估计器为什么在乎?<br><br>泄漏就是<b>跑错格子的能量</b>。它造成三个后果:<br><br>一,<b>抬高旁瓣</b> —— 你的"背景噪声"变高了。<br>二,<b>一个强目标旁边的弱目标会被埋掉</b>。想象一辆大卡车旁边有个行人,卡车的回波泄漏一圈,行人就消失了。这在自动驾驶里是要命的。<br>三,在多用户系统里,<b>它直接变成用户之间的干扰</b>。</div>
 <h3>连到后面</h3>
-<p>第三点是通往第 21 页的桥:那页会说 "Sparser echoes mean less interference, and less interference is rate you keep."(回波越稀疏,干扰越少;干扰越少,你保住的速率越多。)这一页的"泄漏"和那一页的"速率",是同一件事的两头。</p>
+<p>第三点是通往第 23 页的桥:那页会说 "Sparser echoes mean less interference, and less interference is rate you keep."(回波越稀疏,干扰越少;干扰越少,你保住的速率越多。)这一页的"泄漏"和那一页的"速率",是同一件事的两头。</p>
 `},
 
 {s:"权衡", t:"它们想要的东西相反 (1/2)", e:"They want opposite things (1/2)", n:`
@@ -337,7 +337,7 @@ const S = [
 </table>
 <h3>只要讲透一行,就讲"信号"那行</h3>
 <div class="say">看第二行。这一行是整个矛盾的<b>数学根源</b>,其他四行都是它的表现。<br><br>通信要的信号是什么样?<b>随机的</b>。为什么?因为随机才携带信息 —— 如果我发的东西你能猜到,那我就没告诉你任何新东西。信息量的定义就是不可预测性。<br><br>雷达要的信号是什么样?<b>确定性的</b>。为什么?因为雷达要拿收到的回波去和它<b>原本发出去的东西</b>做相关。你必须精确知道自己发了什么,才能认出回来的是不是它。<br><br>所以:<b>随机性携带信息,同时毁掉自相关。</b><br><br>这一句话就是全部冲突。不是工程没做好,是两个需求在信息论层面上就朝着相反方向拉。</div>
-<div class="warn">这一行讲不透,后面 20 页学生都会觉得"那优化一下不就好了"。要让他们理解这是<b>原理性的</b>冲突,不是实现上的缺陷。</div>
+<div class="warn">这一行讲不透,后面二十多页学生都会觉得"那优化一下不就好了"。要让他们理解这是<b>原理性的</b>冲突,不是实现上的缺陷。</div>
 `},
 
 {s:"权衡", t:"它们想要的东西相反 (2/2)", e:"They want opposite things (2/2)", n:`
@@ -354,7 +354,7 @@ const S = [
 `},
 
 {s:"权衡", t:"前沿,画一次", e:"The frontier, drawn once", n:`
-<p>上一页说了有条前沿,这一页把它画出来。<b>这张图后面会反复回来</b>(第 21、28、33、35 页),所以这里要讲到学生真的看懂。</p>
+<p>上一页说了有条前沿,这一页把它画出来。<b>这张图后面会反复回来</b>(第 23、34、40、42 页),所以这里要讲到学生真的看懂。</p>
 <h3>两根轴,而且横轴是反的</h3>
 <ul>
   <li><b>纵轴</b>:可达速率(achievable rate)。<b>越高越好</b>,这个符合直觉。</li>
@@ -374,6 +374,14 @@ const S = [
 <p>橙框那句是本节的总结,也是给后半节课定调:"后面每一个结果,都是关于这样一条曲线上某一个点的声明。"</p>
 `},
 
+{s:"路线图", t:"五个考场,一条曲线", e:"Five places the curve must survive", n:`
+<p><b>新加的页,整个下半场的地图。</b>前 16 页把权衡讲成了一条曲线;从这页起,剩下的全部内容只做一件事:带着这条曲线去五个地方,看它活不活得下来。</p>
+<div class="say">到现在为止,这条曲线活在黑板上。接下来我们带它出门,一共五站:一张资源格子、一个攻击者、一列 350 公里的高铁、一束光、一张实验台。<br><br>每一站的问题都一样:<b>你站在曲线的哪个点上?谁说了算?</b><br><br>记住这张地图。后面每次换话题,我都会把它拿回来,告诉你我们到了哪一站。</div>
+<h3>为什么要有这页</h3>
+<p>下半场其实是五篇论文。没有这张图,话题会像瞬移(以前就是这样);有了它,每个新话题出现之前都有一页"Stop N"路标,先回答"为什么现在讲这个",再讲内容。</p>
+<div class="warn">别跳过这页,它只要 40 秒,但它是后面所有路标页的锚。第 40 页那张五行总结表,就是这张地图的"答案版"。</div>
+`},
+
 {s:"资源分配", t:"格子就是预算", e:"The grid is the budget", n:`
 <p>前面讲的是"有个权衡",从这一节开始讲"<b>那具体怎么分</b>"。这是最工程的一节。</p>
 <h3>图在说什么</h3>
@@ -383,10 +391,22 @@ const S = [
 <h3>两个缩写先埋下,后面要用</h3>
 <ul>
   <li><b>RE</b> = Resource Element,资源元。</li>
-  <li><b>PSLR</b> = Peak-to-SideLobe Ratio,峰值旁瓣比。第 18 页会用它当感知的评分。</li>
-  <li><b>RoI</b> = Region of Interest,感兴趣区域。<b>第 19 页那个"几乎没有损失"的魔术全靠这个词</b>,现在先让学生见一面。</li>
+  <li><b>PSLR</b> = Peak-to-SideLobe Ratio,峰值旁瓣比。下一页先用一张图讲清楚"峰"是什么,第 20 页用它当感知的评分。</li>
+  <li><b>RoI</b> = Region of Interest,感兴趣区域。<b>第 21 页那个"几乎没有损失"的魔术全靠这个词</b>,现在先让学生见一面。</li>
 </ul>
-<p>这一节的数据来自 IEEE JSAC 2024 那篇跨域双功能 OFDM 波形设计。仿真参数在第 20 页,别改数字。</p>
+<p>这一节的数据来自 IEEE JSAC 2024 那篇跨域双功能 OFDM 波形设计。仿真参数在第 22 页,别改数字。</p>
+`},
+
+{s:"资源分配", t:"先讲清楚什么是峰", e:"What a peak is, before we grade one", n:`
+<p><b>新加的页。</b>下一页要用 PSLR 给感知打分,但"峰"、"旁瓣"、"杂波"以前从没定义过 —— 学生连一个信号的 peak 是什么都不知道,后面三页就全是空中楼阁。这页用一张图把三个词钉死。</p>
+<h3>图怎么讲</h3>
+<ul>
+  <li><b>峰(peak)</b>:接收机拿着自己发过的波形副本,在回波上从左到右滑动做相关。滑到目标所在的时延,所有能量对齐相加,冒出一个尖 —— <b>那个尖就是目标</b>。</li>
+  <li><b>旁瓣(sidelobes)</b>:峰两侧的小包。它们不是目标,是<b>我们自己波形的鬼影</b>,是选了这个波形形状要付的价。</li>
+  <li><b>杂波(clutter)</b>:底下那条起伏的灰线,<b>所有没人要的回波</b> —— 地面、墙、雨。</li>
+</ul>
+<div class="say">一句话:峰是目标,旁瓣是自己吓自己,杂波是世界的背景音。<br><br>PSLR 就是一个诚实的问题:<b>真峰比最高的那个鬼影高多少?</b>高得多,目标一眼可见;差不多高,目标就被淹了。下一页给感知打分,用的就是这个数。</div>
+<div class="warn">旁瓣和杂波别混为一谈:旁瓣是你自己的波形造成的,换个波形能压下去(第 13 页 ODDM 干的就是这件事);杂波是世界给的,换什么波形都消不掉。</div>
 `},
 
 {s:"资源分配", t:"两份评分,在两个房间打分", e:"Two scores, graded in two rooms", n:`
@@ -442,8 +462,21 @@ const S = [
 <p>这是本节最好的一个闭环:一个抽象的数学性质,一路走到了可测量的系统指标。值得指出来给学生看。</p>
 `},
 
+{s:"现场", t:"Stop 2:有人想让波形失败", e:"Stop 2: someone wants the waveform to fail", n:`
+<p>20 秒路标页,不展开内容。它只做一件事:把"资源分配 → 攻击"这次换挡讲成必然,而不是瞬移。指着地图说"我们从第一站挪到第二站了"。</p>
+<div class="say">第一站的一切有个隐含假设:所有人都在合作。无线电从来没有这种运气。<br><br>所以在把 ISAC 交给汽车和火车之前,必须先问一句:<b>攻击者能对它做什么?</b><br><br>我们要看的这个攻击,需要先认识一个新零件 —— 一个"表面"。两页认识零件,然后看攻击。</div>
+`},
+
+{s:"现场", t:"这个表面,长什么样", e:"The surface, physically", n:`
+<p><b>新加的页。</b>以前 RIS 直接以一个抽象方框出场,学生不知道它物理上是什么东西。先看实物,再看系统图。</p>
+<h3>图怎么讲</h3>
+<p>左边就是 RIS 本体:一面平板,螺丝固定在墙上,表面是几百个厘米级的小格子。右边放大其中一格:<b>一格 = 一个可编程的相位旋钮 φ</b>。</p>
+<div class="say">这块板子自己不产生任何信号。打到它身上的波,它原样反射出去,只是给每一格加上一个你设定的相位。<br><br>把几百个相位调对,反射波在你选的方向上同相叠加 —— <b>一面墙,就变成了一个波束。</b><br><br>用一个画面记住它:<b>迪斯科球,只不过每一面小镜子都能转向。</b>抓住这个画面,两页之后这个名字会回来。</div>
+<div class="warn">别把它说成"有源天线阵"。它没有功放、没有发射机、不需要频谱牌照 —— 正因为它什么都不发射,后面那个攻击才无从检测。这页埋的就是这颗钉子。</div>
+`},
+
 {s:"现场", t:"一面能改写信道的墙", e:"A surface that edits the channel", n:`
-<p>这一节开始讲真实场景。第一个是 RIS,而它同时是本课<b>安全部分的引子</b>。</p>
+<p>上一页认识了实物;这一页把它放进网络,先看它被<b>诚实使用</b>的样子。它同时是本课<b>安全部分的引子</b>。</p>
 <h3>RIS 是什么</h3>
 <p>Reconfigurable Intelligent Surface,可重构智能表面。一面贴满可调单元的板子。基站到用户的直射路径被挡住了(图上灰虚线),信号绕道打到 RIS 上,RIS 把它反射给用户。</p>
 <div class="say">关键是图上标的两个词:<b>passive(无源)</b>、<b>no amplifier(没有功放)</b>。<br><br>它<b>不发射任何信号</b>。它只是改变打到它身上的波的相位,像一面能编程的镜子。因为不发射,它几乎不耗电,也不需要频谱牌照。</div>
@@ -469,7 +502,7 @@ const S = [
   <li><b>伪基站</b>:必须发射,而且要比真基站更响。所以它<b>留下证据</b> —— 你可以去找那个信号。</li>
   <li><b>DISCO RIS</b>:什么都不发。<b>没有任何发射可以被检测</b>。</li>
 </ul>
-<p>橙框那句(第 24 页)把这个说透了:"一个无源攻击者不留下任何可检测的发射。你唯一的证据是你自己在下降的 SINR。"</p>
+<p>橙框那句(第 28 页)把这个说透了:"一个无源攻击者不留下任何可检测的发射。你唯一的证据是你自己在下降的 SINR。"</p>
 `},
 
 {s:"现场", t:"这个攻击到底破坏了什么", e:"What the attack actually breaks", n:`
@@ -484,6 +517,11 @@ const S = [
 <h3>第三栏为什么重要 —— 这是本页的落点</h3>
 <div class="say">"损害是统计性的,所以可以被量化。"<br><br>这不是安慰。这是工程上唯一有用的方向。<br><br>你没法检测这个攻击者 —— 它不发射。但你可以说:在这种攻击下,我的 SINR 分布会变成什么样,我的速率期望会掉多少。<br><br>一旦你能写出这个数,你就能<b>为它留余量</b> —— 设计的时候就假设有人在这么干,然后确保系统在那个条件下还能工作。<br><br>这是安全工程里一个很常见的转向:<b>从"检测并阻止"转到"假设它存在并留出预算"。</b></div>
 <p>三个缩写:ACA = Active Channel Aging,CSI = Channel State Information,MUI = Multi-User Interference。</p>
+`},
+
+{s:"现场", t:"Stop 3:载客最快的东西", e:"Stop 3: the fastest thing that carries the public", n:`
+<p>20 秒路标页。"攻击 → 高铁"是全 deck 以前最突兀的一次跳跃,这页把它讲成一句话的逻辑:攻守互换,题目不变。</p>
+<div class="say">第二站,表面攻击了<b>我们</b>。它留下一个教训:安全从此是波形分内的事,没有一个单独的"安全盒子"可以事后再装上去。<br><br>第三站带着这个教训,加上速度。350 公里的高铁,链路要载客,感知要看轨道 —— 而且这次轮到<b>我们</b>来整形波束,把窃听者关在外面。<br><br>一句话带过去:上一站是别人用波束打我们,这一站是我们用波束防别人。</div>
 `},
 
 {s:"现场", t:"350 公里每小时是个恶劣的无线环境", e:"350 km/h is a hostile radio environment", n:`
@@ -513,7 +551,12 @@ const S = [
 </ul>
 <div class="say">"恒模"(constant modulus)这个约束值得说一句,因为它是个硬件现实:功放最省电、最线性的工作方式是<b>幅度恒定</b>。所以很多波形设计被强制要求"每个样点的幅度都一样",只能动相位。<br><br>这是一个典型的例子:优化问题里那些看起来很数学的约束,背后往往是<b>某个具体的器件不答应</b>。</div>
 <h3>落点</h3>
-<p>第 33 页那张总结表里,这一行写的是 "Secrecy is bought with coverage"(保密是用覆盖换来的)。这一页就是那句话的具体版本 —— 你为了不让窃听者听见,主动放弃了那片区域的服务能力。<b>又是一次在前沿上选点。</b></p>
+<p>第 40 页那张总结表里,这一行写的是 "Secrecy is bought with coverage"(保密是用覆盖换来的)。这一页就是那句话的具体版本 —— 你为了不让窃听者听见,主动放弃了那片区域的服务能力。<b>又是一次在前沿上选点。</b></p>
+`},
+
+{s:"现场", t:"Stop 4:换物理,不换问题", e:"Stop 4: same question, different physics", n:`
+<p>20 秒路标页。任务有两个:把"突然讲光"变成一次有预告的实验;把"光强不能为负"这句话提前说出口,让下一页的 DC bias 问答作为<b>答案</b>出现,而不是天外飞仙。</p>
+<div class="say">到这里为止,每一页都骑在无线电上。但如果"一束波干两份工"是条真原理,它就不应该在乎波是什么做的。<br><br>所以换成光试试。而且一半的活是现成的:LiDAR 早就在用光测距,光通信链路早就在用光带数据。<br><br>出发前只提醒一条规矩,这条规矩是接下来两页的钥匙:<b>无线电波可以摆到负值,光强不能为负</b> —— 你没法发出"负的亮度"。盯着看这一条规矩会花掉我们什么。</div>
 `},
 
 {s:"现场", t:"同样的论证,换成光", e:"The same argument, in light", n:`
@@ -529,7 +572,7 @@ const S = [
 <h3>那个 DC 偏置的问答很值得讲</h3>
 <p>问:为什么光系统需要一个直流偏置?</p>
 <p><b>答:因为光强不能是负的。</b></p>
-<div class="say">无线电的信号可以在零上下摆动,正负都行。光不行 —— 你没法发出"负数的亮度"。<br><br>所以你必须先把整个波形<b>抬到零以上</b>,加一个直流偏置。<br><br>代价是:<b>那个偏置消耗的每一瓦功率,都不携带任何信息。</b>它纯粹是为了让波形合法而付的税。<br><br>这一句话到第 28 页会变成一条设计变量,到第 33 页会变成总结表里的一行。</div>
+<div class="say">无线电的信号可以在零上下摆动,正负都行。光不行 —— 你没法发出"负数的亮度"。<br><br>所以你必须先把整个波形<b>抬到零以上</b>,加一个直流偏置。<br><br>代价是:<b>那个偏置消耗的每一瓦功率,都不携带任何信息。</b>它纯粹是为了让波形合法而付的税。<br><br>这一句话到第 34 页会变成一条设计变量,到第 40 页会变成总结表里的一行。</div>
 <p>缩写:FSO = Free Space Optics 自由空间光通信;IM/DD = 强度调制/直接检测;DCO-OFDM = 直流偏置光 OFDM。</p>
 `},
 
@@ -548,6 +591,11 @@ const S = [
 <h3>为什么"悬崖"是这一页的重点</h3>
 <div class="say">看这条曲线。左边那一段很平 —— 意思是,<b>在这一段里,你多要一点测距精度,几乎不花钱</b>。频谱效率掉一丁点而已。<br><br>然后到了某个位置,它<b>崖了</b>。再往右一点点,频谱效率断崖式下跌。<br><br>所以橙框那句话:<b>正确的问题从来不是"哪个更好",而是"悬崖在曲线的哪个位置"。</b><br><br>这是我希望你们从这节课带走的第二个思维方式。当有人问你"感知和通信哪个重要",这个问题本身就是错的。对的问法是:我要的那个精度,落在悬崖的哪一边?<br><br>如果在平的那一段,那就拿,几乎免费。如果在悬崖那边,你得非常清楚自己在买什么。</div>
 <p>两个指标都饱和,意味着<b>两头都不划算</b>:太靠左,精度白扔;太靠右,速率断崖。好点在中间。</p>
+`},
+
+{s:"台面", t:"Stop 5:走出仿真器", e:"Stop 5: out of the simulator", n:`
+<p>20 秒路标页。前四站全是数学和仿真,学生此刻心里的问题是"这些东西真的存在吗?"。这页把这个问题替他们说出口,然后用最后一站回答。</p>
+<div class="say">四站优化问题讲下来,你们有权利问一个直白的问题:<b>这些东西在论文之外存在吗?</b><br><br>最后一站就是答案:一张实验台,两个波束都是真的 —— 一个对着用户,一个对着目标。<br><br>提前剧透:实测数字会比仿真谦虚得多。那个落差不丢人,<b>那是这节课最诚实的部分。</b></div>
 `},
 
 {s:"台面", t:"真有人把它搭出来了", e:"Somebody actually built one", n:`
@@ -679,7 +727,7 @@ const S = [
   <li><b>CRLB</b>:由 Fisher 信息求逆得到</li>
   <li><b>PSLR</b>:峰值比旁瓣高多少</li>
 </ul>
-<div class="say">如果有人问"这些是要背的吗" —— 第一个和第二个你应该认识,因为它们说明了物理在哪里。<br><br><code>R = cτ/2</code> 告诉你为什么测距就是测时间。<br><br><code>log₂(1 + SINR)</code> 告诉你为什么干扰会直接吃掉速率 —— 干扰在分母上。这就是第 21 页那个结论的数学形式。<br><br>CRLB 和 Fisher 信息的关系,知道"求逆"这个方向就够了:Fisher 信息越大,CRLB 越小,估计越准。信息多,误差小,符合直觉。</div>
+<div class="say">如果有人问"这些是要背的吗" —— 第一个和第二个你应该认识,因为它们说明了物理在哪里。<br><br><code>R = cτ/2</code> 告诉你为什么测距就是测时间。<br><br><code>log₂(1 + SINR)</code> 告诉你为什么干扰会直接吃掉速率 —— 干扰在分母上。这就是第 23 页那个结论的数学形式。<br><br>CRLB 和 Fisher 信息的关系,知道"求逆"这个方向就够了:Fisher 信息越大,CRLB 越小,估计越准。信息多,误差小,符合直觉。</div>
 `},
 
 {s:"附录", t:"附录:什么问题该用什么波形", e:"Appendix: which waveform for which problem", n:`
@@ -692,15 +740,15 @@ const S = [
 <p>最后一页。这节课的内容来自 Zhu Han 教授(休斯顿大学)的 ISAC 报告,以及几篇具体论文。</p>
 <h3>这节课引用的主要工作</h3>
 <ul>
-  <li><b>跨域双功能 OFDM 波形设计</b>,IEEE JSAC 2024 —— 第 17–20 页那一节。</li>
-  <li><b>H. Huang 等,DISCO 物理层干扰下的 ISAC</b>,IEEE WCL 13(11), 2024 —— 第 23–24 页那个攻击。</li>
-  <li><b>P. Li 等,通过 ISAC 实现安全的高铁-地面通信</b>,IEEE IoT J. 11(19), 2024 —— 第 25–26 页。</li>
-  <li><b>IEEE/CIC ICCC 2024 最佳演示奖</b> —— 第 29–31 页那个台面。</li>
+  <li><b>跨域双功能 OFDM 波形设计</b>,IEEE JSAC 2024 —— 第 18–22 页那一节。</li>
+  <li><b>H. Huang 等,DISCO 物理层干扰下的 ISAC</b>,IEEE WCL 13(11), 2024 —— 第 27–28 页那个攻击。</li>
+  <li><b>P. Li 等,通过 ISAC 实现安全的高铁-地面通信</b>,IEEE IoT J. 11(19), 2024 —— 第 30–31 页。</li>
+  <li><b>IEEE/CIC ICCC 2024 最佳演示奖</b> —— 第 36–38 页那个台面。</li>
   <li><b>ITU-R M.2160</b>,IMT-2030 框架 (2023) —— 第 5 页。</li>
 </ul>
-<div class="say">下课前一句话:如果这节课里有一件事让你想再往下挖,我建议是第 23 页那个不发射的干扰机。<br><br>那是一个已经被发表、已经被证明可行,而<b>现在还没有好防御手段</b>的攻击。这种题目对本科生做研究是最合适的 —— 问题是真的,而且门还开着。</div>
+<div class="say">下课前一句话:如果这节课里有一件事让你想再往下挖,我建议是第 27 页那个不发射的干扰机。<br><br>那是一个已经被发表、已经被证明可行,而<b>现在还没有好防御手段</b>的攻击。这种题目对本科生做研究是最合适的 —— 问题是真的,而且门还开着。</div>
 <h3>给自己的备注</h3>
-<p>第 32 页那条时间轴是演讲者的预测,每学期讲之前值得重新核一遍 3GPP 的进度。第 20 页那些仿真参数和第 31 页那些实测数字<b>不要动</b>,它们是引用的原始数据。</p>
+<p>第 39 页那条时间轴是演讲者的预测,每学期讲之前值得重新核一遍 3GPP 的进度。第 22 页那些仿真参数和第 38 页那些实测数字<b>不要动</b>,它们是引用的原始数据。</p>
 `}
 ];
 
@@ -745,7 +793,7 @@ const EN = [
 <p>Left side: the traditional way. Communication is one system, radar is another. Each has its own band, its own antenna.</p>
 <p>Right side: DFRC — Dual-Function Radar Communication. <b>One transmit chain.</b> Bits out, echo in.</p>
 <p>Those two boxes on the left are both mature. Decades of engineering in each. And when you merge them into that one box on the right, what you save is real: <b>one spectrum licence, one amplifier, one aperture, one power budget.</b></p>
-<p>But the cost is also real, and that cost is the other thirty slides of this lecture. <b>One waveform now has to satisfy two specifications at the same time.</b></p>
+<p>But the cost is also real, and that cost is the rest of this lecture. <b>One waveform now has to satisfy two specifications at the same time.</b></p>
 <p>It's like asking one person to be both your translator and your surveyor. You saved a salary. That person now has a very hard job.</p>`,
 
 `<p>I want to fix a confusion before it starts, because everybody makes this one.</p>
@@ -836,11 +884,24 @@ const EN = [
 <p>Green point, up and left: a sensing-first design. Orange point, down and right: a communication-first design. Both are on the frontier. Both are legitimate. They're different <b>choices</b>.</p>
 <p>And that's the frame for the rest of the hour: <b>every result after this is a claim about one point on a curve like this one.</b></p>`,
 
+`<p>New rule for the rest of today, so give me forty seconds on this one.</p>
+<p>Up to now, the trade-off lives on a whiteboard. It's a curve — clean, theoretical. The rest of this lecture does exactly one thing: it takes that curve <b>into the field</b>. Five stops.</p>
+<p>Stop one: a resource grid — who gets each cell. Stop two: an adversary who wants the waveform to fail. Stop three: a train at 350 kilometres an hour. Stop four: we swap radio for light. Stop five: a lab bench, where we find out what actually works.</p>
+<p>And at every stop the question never changes: <b>where on the curve do you stand, and who gets to decide?</b></p>
+<p>Whenever a new topic shows up from here on, I'll bring this map back and point at where we are. If you ever feel lost, ask me to put the map up.</p>`,
+
 `<p>Up to now we've said there's a tradeoff. From here we ask: <b>so how do you actually divide things up?</b> This is the most hands-on section of the day.</p>
 <p>Same grid as before, except now <b>every cell is coloured</b>. Blue cells go to communication, orange cells to sensing.</p>
 <p>One RE is one cell: one subcarrier during one OFDM symbol. Each cell carries two things — <b>a symbol and an amount of power</b>. So allocation is two decisions: <b>first who gets the cell, then how much power it gets.</b></p>
 <p>This is where the budget metaphor comes from. That grid is your money, and the total is fixed. One more cell for sensing is one fewer cell for bits. There's no third option.</p>
-<p>Three acronyms to plant now because we need them shortly. <b>RE</b>, resource element. <b>PSLR</b>, peak-to-sidelobe ratio — that'll be our sensing score. And <b>RoI</b>, region of interest. Remember that last one especially; in two slides it's going to explain a magic trick.</p>`,
+<p>Three acronyms to plant now because we need them shortly. <b>RE</b>, resource element. <b>PSLR</b>, peak-to-sidelobe ratio — that'll be our sensing score. And <b>RoI</b>, region of interest. Remember that last one especially; a few slides from now it's going to explain a magic trick.</p>`,
+
+`<p>Before anything gets graded, three words and one picture. The next slide grades sensing with a number called PSLR — and that number means nothing until you know what a peak is.</p>
+<p>Here's what the receiver actually does. It keeps a copy of the waveform it transmitted, and it slides that copy along the echo, asking at every delay: how well do you line up? At the delay where a target sits, everything lines up at once and adds — and you get that tall spike. <b>The spike is the peak. The peak is the target.</b></p>
+<p>The two smaller bumps beside it are <b>sidelobes</b>. They are not targets. They're ghosts of our own waveform — the price of the transmit shape we chose.</p>
+<p>And the low wobbly floor is <b>clutter</b>: every echo we never asked for. The ground. Walls. Rain.</p>
+<p>So PSLR — peak-to-sidelobe ratio — is one honest question: <b>how far does the true peak stand above the tallest ghost?</b> Stands tall, the target is unmissable. Stands level, the target is buried.</p>
+<p>And keep the two failure modes apart: sidelobes are self-inflicted — a better waveform pushes them down. Clutter is the world's fault — no waveform removes it.</p>`,
 
 `<p>Same grid, but it gets <b>graded twice, by two examiners using completely different standards</b>.</p>
 <p><b>Communication score:</b> achievable data rate, summed over every RE assigned to communication. Measured in <b>time-frequency</b>. The strategy is: put bits where the channel is good.</p>
@@ -881,7 +942,18 @@ const EN = [
 <p>So: <b>sparser echoes mean less interference, and less interference is rate you keep.</b></p>
 <p>I want to point at what just happened. Orthogonality looked like a purely mathematical property fifteen minutes ago. It just turned into bits per second. That's a complete loop, and those are the satisfying ones.</p>`,
 
-`<p>Now we go out into the field. First stop is RIS — and it's also our way into the security part of today.</p>
+`<p><i>[Twenty-second signpost. Point at the map.]</i></p>
+<p>We move from stop one to stop two. Everything at stop one had a hidden assumption: <b>everybody cooperates</b>. Radio never gets that luxury.</p>
+<p>So before anyone trusts ISAC with cars and trains, we have to ask what an <b>attacker</b> can do to it.</p>
+<p>The attack we're about to meet is built out of one new piece of hardware — a <b>surface</b>. Two slides to meet the part. Then the attack itself.</p>`,
+
+`<p>Before the system diagram, the object itself.</p>
+<p>This is what a RIS physically is: a flat panel, bolted to a wall, covered in a few hundred centimetre-sized cells. Zoom in on one cell, and there is exactly one thing you can do to it: <b>set a phase shift</b>.</p>
+<p>The panel generates nothing. Whatever wave lands on it gets reflected back out — with the phase you programmed, cell by cell. Set a few hundred phases correctly, and the reflections add up in one chosen direction. <b>A wall becomes a beam.</b></p>
+<p>One image to keep: <b>a disco ball — except every little mirror is steerable.</b> Hold onto that image. In two slides, the name comes back.</p>
+<p>And one thing it is not: an antenna array. No amplifier, no transmitter, no spectrum licence. Remember that — it is exactly why the attack you're about to see cannot be detected.</p>`,
+
+`<p>You've met the panel. Now put it into the network — used honestly first. It's also our way into the security part of today.</p>
 <p>Reconfigurable Intelligent Surface. It's a panel covered in tunable elements. The direct path from base station to user is blocked — that's the grey dashed line. So the signal goes to the surface instead, and the surface reflects it to the user.</p>
 <p>The key words are on the diagram: <b>passive</b>, and <b>no amplifier</b>. It <b>transmits nothing</b>. All it does is change the phase of whatever lands on it. Like a programmable mirror. Which is why it barely uses power and doesn't need a spectrum licence.</p>
 <p>Used honestly, it gives you coverage, energy efficiency, and <b>a second look at a target</b> — that last one is free value for sensing.</p>
@@ -912,6 +984,11 @@ const EN = [
 <p>You cannot detect this attacker; it doesn't transmit. But you <b>can</b> say: under this attack, here's what my SINR distribution looks like, here's how much expected rate I lose. And once you can write that number down, you can <b>design for it</b> — assume from the start that somebody is doing this, and make sure the system still works under that assumption.</p>
 <p>That's a very common move in security engineering, and it's worth naming: <b>you shift from "detect and block" to "assume it's there and leave headroom."</b></p>`,
 
+`<p><i>[Signpost. Point: stop two to stop three.]</i></p>
+<p>At stop two, the surface attacked <b>us</b>. And it left a lesson: security is now part of the waveform's job. There is no separate security box you bolt on afterwards.</p>
+<p>Stop three keeps that lesson and adds speed. A train at 350 kilometres an hour needs the link for its passengers and the sensing for its track — and this time <b>we</b> are the ones shaping the beam, to shut an eavesdropper out.</p>
+<p>One sentence to carry across: last stop, someone used a beam against us. This stop, we use the beam to defend. Attack and defence swapped seats — the problem stayed the same.</p>`,
+
 `<p>New setting, and a more relaxed one. That's a CR400AF trainset.</p>
 <p>Four things make this a nasty radio environment.</p>
 <p><b>mmWave blocks on anything</b> — a tunnel, a line of trees, a noise barrier, and you're gone.</p>
@@ -930,6 +1007,12 @@ const EN = [
 <p>Two variables in the problem: the <b>beamforming matrix</b>, for where the energy points, and the <b>waveform</b>, for what the energy says. Four constraints: transmit power, constant modulus, sensing SINR, and the blind region.</p>
 <p>"Constant modulus" is worth a sentence, because it's a hardware fact leaking into the maths. An amplifier is most efficient and most linear when the <b>amplitude is constant</b>. So a lot of waveform designs are forced to hold every sample at the same amplitude and are only allowed to move the phase. That's a good example of something to watch for: the constraints in these optimisation problems usually exist because <b>some specific component refuses to cooperate</b>.</p>
 <p>And note what's being traded here. You gave up service in that region so the eavesdropper couldn't hear. <b>Secrecy was bought with coverage.</b> Another point chosen on a frontier.</p>`,
+
+`<p><i>[Signpost. Stop three to stop four.]</i></p>
+<p>Every slide so far has ridden on radio. But if "one beam, two jobs" is a real principle, it can't care what the beam is made of.</p>
+<p>So swap radio for <b>light</b>. And half the job is already done for us: LiDAR already senses with light, and optical links already carry data with it.</p>
+<p>One warning before we go — and it's the key to the next two slides. Light plays by one rule radio does not. A radio wave can swing negative. <b>Light intensity cannot.</b> You can't shine a negative amount of light.</p>
+<p>Watch what that one rule costs us.</p>`,
 
 `<p>Now something that shows this idea isn't about radio at all.</p>
 <p>LiDAR already ranges with light. An optical link already carries data. They use <b>the same aperture, the same detector, the same beam</b>. And there's no RF licence to argue about.</p>
@@ -951,6 +1034,11 @@ const EN = [
 <p>So: <b>the right question is never "which is better." It's "where on the curve is the cliff."</b></p>
 <p>That's the second habit of mind I want you to leave with. When somebody asks you "which matters more, sensing or communication," the question itself is malformed. The right question is: <b>the precision I need — which side of the cliff is it on?</b></p>
 <p>If it's on the flat part, take it, it's nearly free. If it's past the cliff, you had better know exactly what you're buying.</p>`,
+
+`<p><i>[Last signpost. Stop four to stop five — end of the line.]</i></p>
+<p>Four stops of optimisation problems. By now you've earned a blunt question: <b>does any of this exist outside a paper?</b></p>
+<p>Last stop is the answer: a lab bench where both beams are real — one aimed at a user, one at a target.</p>
+<p>And a spoiler: the measured numbers will come out much humbler than the simulated ones. That gap is not embarrassing. <b>That gap is the honest part of this lecture.</b></p>`,
 
 `<p>Forty minutes of optimisation and curves. Here's the part where somebody actually built the thing.</p>
 <p>The bench: a host PC drives everything, an FPGA steers the surface, a USRP plus a converter generates the signal, <b>transmit happens on the surface</b>, <b>receive on a separate horn antenna</b>, and a target module fakes the echoes.</p>

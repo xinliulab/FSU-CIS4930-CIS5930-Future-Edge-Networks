@@ -2,9 +2,71 @@
 
 \section[In the Field]{Surfaces, Trains, and Lasers}
 
-% SECTION TIMING: 52:00--64:00 (7 frames).
-% The DISCO frames are the security payoff of the lecture. If time is short, cut the
-% two FSO frames instead -- the attack is the part students remember.
+% SECTION TIMING: 54:00--68:00 (10 frames; the two Stop reprises are 20-second
+% beats and "The surface, physically" is ~1 min). If time is short, cut the two
+% FSO frames AND their Stop-4 reprise -- the attack is the part students remember.
+
+% Inserted 2026-09-09. Reprise of the tour map: names the seam between the
+% allocation section and this one, and explains why a "surface" appears before
+% the attack does.
+\begin{frame}{Stop 2: someone wants the waveform to fail}
+  \vspace{0.4em}
+  \centering
+  \tourmap{2}
+
+  \vspace{0.9em}
+  {\small\raggedright Stop 1 assumed everybody cooperates. Radio never gets that
+   luxury --- before ISAC is trusted with cars and trains, we have to ask what an
+   \textbf{attacker} can do to it.\par}
+
+  \vspace{0.4em}
+  {\small\raggedright The attack we are about to meet is built from one new piece
+   of hardware: a \textbf{surface}. Two slides to meet the part, then the attack
+   itself.\par}
+\end{frame}
+
+% Inserted 2026-09-09. Students met "RIS" as an abstract box in a system diagram
+% and asked what it physically is. Show the object before using it.
+\begin{frame}{The surface, physically}
+  \vspace{0.3em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.46\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.9,transform shape]
+        % the panel
+        \draw[rounded corners=3pt,fill=purple!4,draw=ranpurple,thick]
+          (0,0) rectangle (3.55,2.75);
+        \foreach \x in {0,...,6}
+          \foreach \y in {0,...,4}
+            \fill[purple!22,draw=ranpurple!45]
+              (0.24+\x*0.47,0.24+\y*0.47) rectangle ++(0.36,0.36);
+        % one highlighted cell, zoomed
+        \fill[orange!45,draw=coreorange,thick]
+          (0.24+4*0.47,0.24+2*0.47) rectangle ++(0.36,0.36);
+        \draw[coreorange,thick] (2.3,1.36) -- (4.35,2.2);
+        \node[draw=coreorange,thick,circle,fill=orange!8,minimum size=1.25cm,
+          font=\large] (z) at (4.75,2.35) {$\varphi$};
+        \node[font=\scriptsize,align=center,anchor=north] at (4.75,1.65)
+          {one cell =\\[-2pt]one adjustable\\[-2pt]phase shift};
+        \node[font=\scriptsize,text=softgray,anchor=north] at (1.78,-0.08)
+          {a flat panel, bolted to a wall};
+      \end{tikzpicture}
+    \column{0.50\textwidth}
+      \small
+      \begin{itemize}\itemsep5pt
+        \item Hundreds of centimetre-sized cells.
+        \item Each one \textbf{reflects} what hits it, with a phase shift you program.
+        \item No amplifier, no transmitter --- it only redirects other people's signals.
+        \item Set the phases right and the reflections \textbf{add up into a beam}.
+      \end{itemize}
+
+      \vspace{0.5em}
+      {\small\textcolor{ranpurple}{\textbf{A disco ball --- except every mirror is
+       steerable.}} Hold that image; the name comes back in two slides.\par}
+  \end{columns}
+
+  \glossline{RIS = Reconfigurable Intelligent Surface --- the panel on the left}
+\end{frame}
 
 \begin{frame}{A surface that edits the channel}
   \vspace{0.4em}
@@ -92,6 +154,26 @@
   \takeaway{A passive attacker leaves no emission to detect.\\Your only evidence is your own falling SINR.}
 \end{frame}
 
+% Inserted 2026-09-09. Reprise of the tour map: the seam from the DISCO attack to
+% high-speed rail was the most-complained-about jump in the deck. The logical link:
+% stop 2 = a surface attacks us; stop 3 = we design the defence in ourselves.
+\begin{frame}{Stop 3: the fastest thing that carries the public}
+  \vspace{0.4em}
+  \centering
+  \tourmap{3}
+
+  \vspace{0.9em}
+  {\small\raggedright At stop 2 the surface attacked \textbf{us}, and it left a
+   lesson: security is now part of the waveform's job --- there is no separate
+   box to bolt on afterwards.\par}
+
+  \vspace{0.4em}
+  {\small\raggedright Stop 3 keeps that lesson and adds speed. A train at
+   350\,km/h needs the link for passengers and the sensing for the track --- and
+   this time \textbf{we} are the ones shaping the beam, to shut an eavesdropper
+   out.\par}
+\end{frame}
+
 % SOURCE: Panpan Li, Yong Niu, Hao Wu, Zhu Han, Ning Wang, Lei Xiong, Bo Ai, Chau Yuen,
 % "Secure High-Speed Train-to-Ground Communications Through ISAC," IEEE Internet of
 % Things Journal, vol. 11, no. 19, pp. 31235-31248, October 2024.
@@ -151,6 +233,27 @@
   \end{columns}
 
   \source{https://ieeexplore.ieee.org/document/10557622}{P. Li et al., Secure High-Speed Train-to-Ground Communications Through ISAC, IEEE IoT J. 11(19), 2024}
+\end{frame}
+
+% Inserted 2026-09-09. Reprise of the tour map: the jump from rail beamforming to
+% optics had no stated motive. The link: if "one beam, two jobs" is a real principle,
+% it cannot depend on what the beam is made of. Also pre-loads the DC-bias question
+% (intensity cannot be negative) so it lands as an answer, not a surprise.
+\begin{frame}{Stop 4: same question, different physics}
+  \vspace{0.4em}
+  \centering
+  \tourmap{4}
+
+  \vspace{0.9em}
+  {\small\raggedright Every slide so far rode on radio. If ``one beam, two jobs''
+   is a real principle, it cannot care what the beam is made of --- so swap radio
+   for \textbf{light}. LiDAR already senses with light; optical links already
+   carry data with it.\par}
+
+  \vspace{0.4em}
+  {\small\raggedright One warning before we go: light plays by a rule radio does
+   not. A radio wave swings negative; \textbf{light intensity cannot}. Watch what
+   that single rule costs.\par}
 \end{frame}
 
 % SOURCE: FSO-ISAC section. Research gap as stated in the source talk: existing FSO-ISAC
