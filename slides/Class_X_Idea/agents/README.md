@@ -5,7 +5,7 @@ root; this folder holds the shared state they pass between each other.
 
 Deck-specific conventions for Class 5:
 
-- Macros live in `slides/Class_5_Idea/idea_macros.tex`. Everything from the Class 3/4
+- Macros live in `slides/Class_X_Idea/idea_macros.tex`. Everything from the Class 3/4
   deck (`\qa`, `\ask`, `\takeaway`, `\source`, `\glossline`, `\expand`, TikZ styles)
   plus three lecture-specific macros: `\papercard` (one citation card per paper),
   `\watch` (official talk video link with a suggested clip), and `\brokenassumption`

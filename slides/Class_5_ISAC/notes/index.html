@@ -90,7 +90,7 @@
 
   /* ---- English spoken script ---- */
   #script{
-    margin-top:30px; padding:20px 22px 6px;
+    margin:6px 0 24px; padding:20px 22px 6px;
     background:#f4f8f4; border:1px solid #cfe0cf; border-radius:7px;
     font-family:Georgia,"Times New Roman",serif; font-size:16.5px; line-height:1.78;
   }
@@ -113,7 +113,7 @@
   #lang button.on{background:var(--blue); color:#fff}
   /* EN mode keeps the headings so you still know which slide you are on. */
   body.only-en #note>*:not(#script):not(h2):not(.en){display:none}
-  body.only-en #script{margin-top:12px}
+  body.only-en #script{margin-top:12px; margin-bottom:6px}
   body.only-zh #script{display:none}
 
   /* ---- footer hint ---- */
@@ -1067,8 +1067,9 @@ function draw(){
   sec.textContent=d.s;
   cnt.textContent=(i+1)+' / '+S.length;
   bar.style.width=((i+1)/S.length*100)+'%';
-  note.innerHTML='<h2>'+d.t+'</h2><p class="en">'+d.e+'</p>'+d.n
-    +'<div id="script"><h3 class="hdr">SAY THIS IN CLASS</h3>'+(EN[i]||'')+'</div>';
+  note.innerHTML='<h2>'+d.t+'</h2><p class="en">'+d.e+'</p>'
+    +'<div id="script"><h3 class="hdr">SAY THIS IN CLASS</h3>'+(EN[i]||'')+'</div>'
+    +d.n;
   right.scrollTop=0;
   try{localStorage.setItem('isac-note-page',i)}catch(e){}
 }
