@@ -314,7 +314,7 @@ const S = [
 `},
 
 {s:"权衡", t:"前沿,画一次", e:"The frontier, drawn once", n:`
-<p>上一页说了有条前沿,这一页把它画出来。<b>这张图后面会反复回来</b>(第 19、21 页),所以这里要讲到学生真的看懂。</p>
+<p>上一页说了有条前沿,这一页把它画出来。<b>这张图后面会反复回来</b>(第 23、25 页),所以这里要讲到学生真的看懂。</p>
 <h3>两根轴,而且横轴是反的</h3>
 <ul>
   <li><b>纵轴</b>:可达速率(achievable rate)。<b>越高越好</b>,这个符合直觉。</li>
@@ -334,8 +334,39 @@ const S = [
 <p>橙框那句是本节的总结,也是给后半节课定调:"后面每一个结果,都是关于这样一条曲线上某一个点的声明。"</p>
 `},
 
+{s:"波形", t:"第一步:比特变成点", e:"Step 1: bits become points", n:`
+<p><b>第二个问题:用哪个信号。</b>答案是 OFDM,但学生对 OFDM 了解不多,所以先用四页、一个例子,把它从头走一遍。不讲细节,只走例子。</p>
+<h3>这一页</h3>
+<p>左边一串比特 1011 0010 1110 0001……每四个一组,每组在右边地图上挑 16 个点中的一个 —— 这就是 16-QAM。橙色那个点就是 1011 挑中的。</p>
+<div class="say">一个点就是两个数 (x, y)。所以四个比特变成了一个点,一长串比特变成了<b>一串点</b>。<br><br>注意:到这儿什么都还没发出去。我们只是决定了"要说什么"。</div>
+<div class="warn">别展开 QAM 的映射规则(格雷码之类)。学生只需要一句:一组比特 → 一个点。</div>
+`},
+
+{s:"波形", t:"第二步:描述一个点,坐标轴必须互相垂直", e:"Step 2: describing a point needs perpendicular axes", n:`
+<p>这一页是整个入门的核心比喻,也是你惯用的那个:<b>坐标轴为什么要垂直</b>。</p>
+<div class="say">平面上任何一个点,用 x 和 y 两个数就能写出来;三维空间用 x、y、z。这三根轴互相垂直。<br><br>为什么不用歪着的轴?看右边:轴 a 和轴 b 有夹角,那么点在 a 上的读数里已经"含着"一部分 b 的信息 —— 两个数互相重叠,互相漏。只有互相垂直,每个数才说的是别的数没说过的事。<br><br>一个信号也是一个"点",只是它住的空间维度很高 —— 可能一百维、一千维。要干净地描述它,我们需要很多根轴,而且两两垂直。</div>
+<div class="ask">怎么给一个信号找一组互相垂直的轴?<br><br>(留着,下一页答:FFT。)</div>
+`},
+
+{s:"波形", t:"第三步:FFT 就是一组现成的垂直轴", e:"Step 3: the FFT is a set of perpendicular axes", n:`
+<p>把矩阵写出来给学生看 —— 这是这页的全部意义。他们看到行与行互相垂直,就认出来了。</p>
+<h3>二维</h3>
+<p>2 点 FFT 就是矩阵 [[1, 1], [1, −1]]。乘上 (a, b):第一行给 a+b(两个数的"共同部分"),第二行给 a−b("差别")。两行点乘 = 1·1 + 1·(−1) = 0,互相垂直,所以这两个答案不重叠 —— 二维的信息被拆成了两个互相垂直的分量。</p>
+<h3>四维</h3>
+<p>4 点 FFT 矩阵里出现了 j(虚数单位),它的作用只是让轴能"转"。任取两行,逐项相乘(其中一行把 j 变号)再相加,结果是 0。每一行都跟其他行垂直。</p>
+<div class="say">每一行就是一个频率。用这个矩阵去乘一个信号,就是在问它:"你在每个频率上有多少?"这就是 FFT —— 本质上是<b>提取分量</b>。<br><br>IFFT 反过来:告诉它每根轴上放多少,它把信号拼出来。4 维是这样,64 维、4096 维一模一样。</div>
+<div class="warn">j 那一句别多讲。学生问"为什么有虚数",答"为了让轴能旋转,不然只有正、负两个方向"就够了。</div>
+`},
+
+{s:"波形", t:"第四步:一个 OFDM 符号就是一次 IFFT", e:"Step 4: an OFDM symbol is just an IFFT", n:`
+<p>把前三步串起来,这一页出来的就是 OFDM。</p>
+<div class="say">把 64 个 QAM 点,一个放到一根垂直轴上。做一次 IFFT,它们被叠成一小段时间上的信号 —— 这就是<b>一个 OFDM 符号</b>。<br><br>每根轴是一个<b>子载波</b>:一个自己的窄带小载波。因为它们互相垂直,所以互不干扰 —— 哪怕在频率上挨得很紧。<br><br>能挨多紧?间隔 = 1/T,T 是一个符号的时长。这个数是标准定的:5G 用 15、30、60 或 120 kHz,Wi-Fi 用 312.5 kHz。<br><br>一个符号接一个符号发出去,就得到一张<b>格子</b>:纵向是子载波,横向是符号。一个格子 = 一个子载波在一个符号时间里。</div>
+<p>橙框那句就是过桥句:这张格子就是你们天天在用的 OFDM。下一页把同一张格子当雷达看。</p>
+<div class="warn">"间隔是实验测出来的"这种说法不要用 —— 间隔是 1/T 的设计结果,数值由标准选定。</div>
+`},
+
 {s:"波形", t:"OFDM 里面本来就藏着一个雷达", e:"OFDM already carries a radar inside it", n:`
-<p><b>第二个问题:用哪个信号。</b>答案是现成的:OFDM。翻到这页先把这句点出来。</p>
+<p><b>四页入门讲完了。</b>现在把学生刚亲手"搭"出来的那张格子,当雷达看。</p>
 
 <p>波形这一节开始。第一个消息是好消息:<b>你不需要新东西就能开始</b>。</p>
 <h3>左边那张格子图</h3>
@@ -358,8 +389,8 @@ const S = [
 <h3>两个缩写先埋下,后面要用</h3>
 <ul>
   <li><b>RE</b> = Resource Element,资源元。</li>
-  <li><b>PSLR</b> = Peak-to-SideLobe Ratio,峰值旁瓣比。下一页先用一张图讲清楚"峰"是什么,第 17 页用它当感知的评分。</li>
-  <li><b>RoI</b> = Region of Interest,感兴趣区域。<b>第 18 页那个"几乎没有损失"的魔术全靠这个词</b>,现在先让学生见一面。</li>
+  <li><b>PSLR</b> = Peak-to-SideLobe Ratio,峰值旁瓣比。下一页先用一张图讲清楚"峰"是什么,第 21 页用它当感知的评分。</li>
+  <li><b>RoI</b> = Region of Interest,感兴趣区域。<b>第 22 页那个"几乎没有损失"的魔术全靠这个词</b>,现在先让学生见一面。</li>
 </ul>
 <p>这一节的数据来自 IEEE JSAC 2024 那篇跨域双功能 OFDM 波形设计。两种分法和"几乎没有损失"的结论都引自那篇论文。</p>
 `},
@@ -469,12 +500,12 @@ const S = [
 <p>最后一页。这节课的内容来自 Zhu Han 教授(休斯顿大学)的 ISAC 报告,以及几篇具体论文。</p>
 <h3>这节课引用的主要工作</h3>
 <ul>
-  <li><b>跨域双功能 OFDM 波形设计</b>,IEEE JSAC 2024 —— 第 15–18 页那一节。</li>
+  <li><b>跨域双功能 OFDM 波形设计</b>,IEEE JSAC 2024 —— 第 19–22 页那一节。</li>
   <li><b>ITU-R M.2160</b>,IMT-2030 框架 (2023) —— 第 5 页。</li>
 </ul>
-<div class="say">下课前一句话:如果这节课里有一件事让你想再往下挖,我建议是第 18 页那四个字 ——"几乎没有损失"。<br><br>每次论文里出现这四个字,先问一句:<b>你把要求缩到多小了?</b>拿着这个问题就能去读论文了 —— 问题是真的,而且门还开着。</div>
+<div class="say">下课前一句话:如果这节课里有一件事让你想再往下挖,我建议是第 22 页那四个字 ——"几乎没有损失"。<br><br>每次论文里出现这四个字,先问一句:<b>你把要求缩到多小了?</b>拿着这个问题就能去读论文了 —— 问题是真的,而且门还开着。</div>
 <h3>给自己的备注</h3>
-<p>第 6 页那条时间轴是演讲者的预测,每学期讲之前值得重新核一遍 3GPP 的进度。第 18 页两种分法的结论引自论文,<b>别改措辞</b>。</p>
+<p>第 6 页那条时间轴是演讲者的预测,每学期讲之前值得重新核一遍 3GPP 的进度。第 22 页两种分法的结论引自论文,<b>别改措辞</b>。</p>
 `}
 ];
 
@@ -584,7 +615,31 @@ const EN = [
 <p>Green point, up and left: a sensing-first design. Orange point, down and right: a communication-first design. Both are on the frontier. Both are legitimate. They're different <b>choices</b>.</p>
 <p>And that's the frame for the rest of the hour: <b>every result after this is a claim about one point on a curve like this one.</b></p>`,
 
-`<p>Question two from the roadmap: which signal do we actually use? Short answer — the one we already have.</p>
+`<p>Question two from the roadmap: which signal do we use? OFDM — and since most of you have only heard the name, let's build one from scratch. Four slides, one worked example, nothing harder than a small matrix.</p>
+<p>Here's a string of bits we want to send: 1011, 0010, 1110, 0001, and so on. Cut them into groups of four. Each group picks one of the sixteen points on this map. The step has a name, 16-QAM, but the name doesn't matter. The orange point is what 1011 picked.</p>
+<p>A point is just two numbers, x and y. So four bits have become one point, and a long string of bits has become a <b>list of points</b>.</p>
+<p>Notice: nothing has been transmitted yet. We have only decided what to say.</p>`,
+
+`<p>Now the one idea everything else hangs on: <b>axes have to be perpendicular</b>.</p>
+<p>Any point on a plane is two numbers, x and y. In 3-D, three numbers, x, y, z. And those axes are at right angles to each other.</p>
+<p>Why not tilt them? Look at the right-hand picture. Axes a and b lean toward each other, so the reading along a already contains part of what b is about to tell you. The two numbers overlap. Reading one leaks into the other. Only when the axes are perpendicular does each number say something the others haven't said.</p>
+<p>Now the leap. A signal is also a point — it just lives in a space with a lot of dimensions. A hundred, a thousand. To describe it cleanly we need a lot of axes, and every pair of them has to be perpendicular.</p>
+<p>So: how do you find a set of perpendicular axes for a signal? <i>[Leave it hanging. The next slide answers it.]</i></p>`,
+
+`<p>Here's the answer, and I want you to actually look at the matrix rather than take my word for it.</p>
+<p>Two dimensions first. The 2-point FFT is this little matrix: one, one on top; one, minus one below. Multiply it into a pair of numbers a and b. Row one gives a plus b — the part they have in common. Row two gives a minus b — the difference. Dot the two rows together: one times one, plus one times minus one, is zero. <b>Perpendicular.</b> So the two answers don't overlap. We just split two numbers into two perpendicular pieces.</p>
+<p>Four dimensions, same trick, bigger matrix. The j's — j is the square root of minus one — are only there so an axis can rotate instead of just flip. Take any two rows, multiply entry by entry, flip the sign of j in one of them, add up: zero. Every row is perpendicular to every other row.</p>
+<p>And each row is one frequency. Multiplying a signal by this matrix asks it: <b>how much of you lies along each frequency?</b> That's all the FFT is — pulling out the components.</p>
+<p>The IFFT is the reverse. Tell it how much to put on each axis, and it builds the signal. Four axes here; 64 or 4096 in a real radio; identical idea.</p>`,
+
+`<p>Now put the three steps together, and out comes OFDM.</p>
+<p>Take 64 QAM points and put one on each of 64 perpendicular axes. Run one IFFT. They get added up into a short burst in time — <b>one OFDM symbol</b>.</p>
+<p>Each axis is a <b>subcarrier</b>: a narrow little carrier of its own. And because the axes are perpendicular, the subcarriers don't interfere with each other — even when they sit very close together in frequency.</p>
+<p>How close? The spacing is one over T, where T is how long one symbol lasts. The standard picks the number: 5G uses 15, 30, 60 or 120 kilohertz; Wi-Fi uses 312.5.</p>
+<p>Send one symbol after another and you get a <b>grid</b>: subcarriers down the side, symbols across. One cell is one subcarrier for one symbol.</p>
+<p>That grid is the OFDM you use every day. Next slide, we read the very same grid as a radar.</p>`,
+
+`<p>Four slides of primer done — you just built that grid yourselves. Now read the very same grid as a radar.</p>
 <p>Waveforms. And the first piece of news is good news: <b>you don't need anything new to start.</b></p>
 <p>This grid — you've seen it before, in the physical layer lecture. Horizontal axis is time, one OFDM symbol per column. Vertical is frequency, one subcarrier per row. Each little cell is a <b>resource element</b>.</p>
 <p>OFDM is already deployed in Wi-Fi, 4G, 5G, 6G. It is the most mature waveform we have.</p>
