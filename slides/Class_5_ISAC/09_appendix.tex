@@ -2,7 +2,7 @@
 
 \section[Appendix]{Appendix}
 
-% BACKUP ONLY: four reference slides; do not include in the planned 75-minute path.
+% BACKUP ONLY: three reference slides; not part of the planned lecture path.
 
 \begin{frame}{Appendix: the acronym decoder ring}
   \vspace{-0.2em}
@@ -16,14 +16,9 @@
     System & DFRC & Dual-Function Radar Communication; ISAC inside one radio \\
     System & IMT-2030 & The ITU framework naming ISAC as a 6G usage scenario \\
     Waveform & OFDM & Orthogonal Frequency Division Multiplexing \\
-    Waveform & OTFS & Orthogonal Time Frequency Space; delay--Doppler via ISFFT \\
-    Waveform & ODDM & Orthogonal Delay-Doppler Division Multiplexing \\
-    Waveform & ISFFT & Inverse Symplectic Finite Fourier Transform \\
-    Metric & CRLB & Cram\'er--Rao Lower Bound; sensing error floor, lower is better \\
     Metric & PSLR & Peak-to-SideLobe Ratio; true peak above the clutter \\
     Metric & SINR & Signal to Interference-plus-Noise Ratio \\
-    Metric & PAPR & Peak-to-Average Power Ratio; sets amplifier headroom \\
-    Resource & RE / RoI & Resource Element; Region of Interest in delay--Doppler \\
+    Resource & RE / RoI & Resource Element (one grid cell); Region of Interest (the distances and speeds we care about) \\
     \bottomrule
   \end{tabularx}
 \end{frame}
@@ -44,44 +39,17 @@
       \small
       \plainterm{Rate}{$\sum \log_2(1 + \mathrm{SINR})$ over REs}
       \par\vspace{0.75em}
-      \plainterm{CRLB}{inverse of the Fisher information}
+      \plainterm{Sensing error}{has a hard floor set by bandwidth, power and time}
       \par\vspace{0.75em}
       \plainterm{PSLR}{peak over worst sidelobe, in the RoI}
       \par\vspace{0.75em}
-      \textcolor{softgray}{Rate is a sum you maximise. CRLB is a floor you cannot
-      go below.}
+      \textcolor{softgray}{Rate is a sum you maximise. Sensing error has a floor
+      you cannot go below.}
     \end{column}
   \end{columns}
 
   \vspace{0.7em}
   \takeaway{Sensing accuracy is bounded from below.\\That is why the frontier bends.}
-\end{frame}
-
-\begin{frame}{Appendix: which waveform for which problem}
-  \scriptsize
-  \renewcommand{\arraystretch}{1.24}
-  \vspace{0.15em}
-  \begin{tabularx}{\textwidth}{
-      >{\raggedright\arraybackslash}p{1.35cm}
-      >{\raggedright\arraybackslash}X
-      >{\raggedright\arraybackslash}X
-      >{\raggedright\arraybackslash}p{2.2cm}}
-    \toprule
-    \textbf{Waveform} & \textbf{Best when} & \textbf{Avoid when} & \textbf{Maturity} \\
-    \midrule
-    OFDM & You must ship on existing 5G hardware & Doppler spread is large &
-      Deployed \\
-    OTFS & Mobility is high and you want an OFDM front end & Sidelobes must be
-      clean & Prototypes \\
-    ODDM & Sensing accuracy and multiuser separation both matter & You need it this
-      year & Research \\
-    \bottomrule
-  \end{tabularx}
-
-  \vspace{0.5em}
-  \qa{Why would anyone still choose OFDM for sensing?}
-     {Because the alternative costs a new modem in every device. A worse waveform
-      that exists beats a better one that does not.}
 \end{frame}
 
 \begin{frame}{Sources and further reading}

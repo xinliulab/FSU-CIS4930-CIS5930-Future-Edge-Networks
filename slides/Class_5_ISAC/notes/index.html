@@ -215,7 +215,26 @@ const S = [
 <div class="say">你们可能会想,标准组织写不写有什么关系?一个技术好就是好啊。<br><br>关系大了。一个东西被写进"使用场景",意味着三件事会为它发生:<b>分频谱、定性能指标、写测试流程</b>。<br><br>在 ISAC 被正式点名之前,<b>没有任何一台无线设备有义务是"可测量的"</b>。厂商可以说"我这个也能感知",但没人能验证,也没人必须支持。写进去之后,它从"某些人的研究方向"变成了"要交付的东西"。</div>
 <h3>和前面课程的连接</h3>
 <p>这跟我们讲 O-RAN 的时候是一个道理:一个接口只有被标准化了,你才能分开采购。同理,一个能力只有被标准化了,才有人真的去建。</p>
-<div class="warn">2027 年之后的时间点(第 23 页那条时间轴)是<b>演讲者的预测</b>,不是 ITU 或 3GPP 发布的日程。这一页说 M.2160 是事实,那是真的;但不要把预测讲成已定的时间表。</div>
+<div class="warn">2027 年之后的时间点(第 6 页那条时间轴)是<b>演讲者的预测</b>,不是 ITU 或 3GPP 发布的日程。这一页说 M.2160 是事实,那是真的;但不要把预测讲成已定的时间表。</div>
+`},
+
+{s:"台面", t:"被点名,钟就开始走", e:"Being named starts a clock", n:`
+<p><b>这页挪到了第 5 页后面。</b>上一页说 ISAC 被写进了 M.2160;这一页回答"那什么时候能用" —— 被写进框架不等于有产品,它只是启动了一张时间表。页顶新加的那行小字就是这个引子,先念它。</p>
+
+<p>时间轴,五个阶段。这一页要<b>明确标注哪部分是事实、哪部分是预测</b>。</p>
+<h3>五段</h3>
+<ul>
+  <li><b>2020–23</b>:概念和用例</li>
+  <li><b>2024–26</b>:3GPP Rel-19;试验</li>
+  <li><b>2027–28</b>:频谱政策</li>
+  <li><b>2029–30</b>(橙色):规范和认证</li>
+  <li><b>2031+</b>(绿色):商用铺开</li>
+</ul>
+<div class="warn">这条时间轴<b>不是 3GPP 或 ITU 发布的日程</b>。<br><br>真实的部分:3GPP Release 19 里确实有 ISAC 的研究项目;ITU M.2160 确实把 ISAC 列为 IMT-2030 的使用场景之一。<br><br><b>2027 年往右全是演讲者的预测。</b>幻灯片上那行灰字已经写了这一点,你要念出来。</div>
+<div class="say">我特意把这个界线说清楚,因为这是你们以后会反复遇到的情况。<br><br>技术路线图看起来都很权威 —— 有方框、有箭头、有年份。但里面往往一半是已发生的事,一半是猜的。<br><br>判断方法很简单:<b>问这个日期背后有没有一份文件</b>。Rel-19 有文件。2029 年认证没有。</div>
+<h3>橙框那句值得展开一句</h3>
+<p>"标准化就是权衡从一条曲线变成一个必须有人去认证的数字的地方。"</p>
+<div class="say">这句话把整节课收了个口。<br><br>我们花了一小时讲这是一条曲线,你只能在上面选点。<br><br>但产品不能卖一条曲线。你要卖东西,就得说"我这个的测距精度是 X 米",然后有人拿仪器来验。<br><br>那个 X,就是有人在这条曲线上<b>替所有人选了一个点</b>,然后把它写进了标准。这是这节课的技术内容和第 5 页那个"委员会"接上的地方。</div>
 `},
 
 {s:"两个盒子", t:"两个盒子变成一个盒子", e:"Two boxes became one box", n:`
@@ -224,7 +243,7 @@ const S = [
 <p>Dual-Function Radar Communication,双功能雷达通信。学生第一次见,要念全称。</p>
 <div class="say">左边那两个盒子,各自都很成熟,几十年的工程积累。把它们合成右边那一个盒子,<b>省下来的东西是实打实的</b>:一张频谱牌照、一个功放、一个天线面、一份功率预算。<br><br>但代价也是实打实的,而且这个代价是这节课剩下二十多页的全部内容 —— <b>一个波形,现在要同时满足两套规格</b>。<br><br>这就像让一个人同时当翻译和测量员。省了一个人的工资,但这个人现在很难做。</div>
 <h3>节奏提示</h3>
-<p>"What it buys / What it costs" 这两栏,一定要<b>都讲</b>。只讲省钱,学生会觉得这是白捡的便宜,后面讲权衡的时候就接不上了。这两栏是在为第 14–16 页那个 Pareto 前沿铺路。</p>
+<p>"What it buys / What it costs" 这两栏,一定要<b>都讲</b>。只讲省钱,学生会觉得这是白捡的便宜,后面讲权衡的时候就接不上了。这两栏是在为第 11–13 页那个 Pareto 前沿铺路。</p>
 `},
 
 {s:"两个盒子", t:"DFRC 是一个盒子,ISAC 是一个问题", e:"DFRC is one box. ISAC is the question.", n:`
@@ -254,74 +273,13 @@ const S = [
   <li><b>带宽</b>买距离分辨率 —— 信号越宽,时间上的峰越尖,越能分开两个靠得近的目标。</li>
   <li><b>观测时间</b>买速度分辨率 —— 你必须盯得够久,相位才漂移出足够的差别。</li>
 </ul>
-<div class="warn">这两条一定要讲清楚,因为第 14 页"感知要宽带宽、通信要省带宽"那句冲突,学生只有知道<b>带宽是买来干什么用的</b>,才会觉得那个冲突是真冲突,而不是随口一说。</div>
+<div class="warn">这两条一定要讲清楚,因为第 11 页"感知要宽带宽、通信要省带宽"那句冲突,学生只有知道<b>带宽是买来干什么用的</b>,才会觉得那个冲突是真冲突,而不是随口一说。</div>
 `},
 
-{s:"两个盒子", t:"四个难点,先摊在桌上", e:"The four hard parts, named up front", n:`
-<p>这一页是<b>路标</b>,不是内容页。作用是让学生知道后面要去哪,别一条条深讲。</p>
-<h3>左栏:技术手段(后面会展开)</h3>
-<ul>
-  <li>波形设计 → 第 10–13 页</li>
-  <li>MIMO、波束成形 → 今天不展开(第 2 讲讲过)</li>
-  <li>共享射频硬件 → 今天不展开</li>
-  <li>编码与资源分配 → 第 17–22 页</li>
-</ul>
-<h3>右栏:四个挑战</h3>
-<ul>
-  <li><b>权衡:躲不开</b>(第 14–16 页专门讲)</li>
-  <li><b>干扰:互相的</b> —— 雷达那半会污染星座图,通信那半会污染回波</li>
-  <li><b>复杂度:非凸</b> —— 这类优化问题没有保证找到全局最优的算法</li>
-  <li><b>监管:谁说了算</b></li>
-</ul>
-<div class="say">前三个是工程问题,给我足够的时间和聪明人,总能往前推。<br><br><b>第四个是委员会。</b>(等一下笑声)<br><br>我不是在开玩笑。频谱是谁的?雷达频段的规则是航空和军方定的,通信频段的规则是电信监管机构定的。当一个信号同时干两件事,它归谁管?这个问题的答案不在物理里,在会议室里。</div>
-<p>橙框那句 "Three of the four are engineering. The fourth is a committee." 就是这一页的记忆点。</p>
-`},
-
-{s:"波形", t:"OFDM 里面本来就藏着一个雷达", e:"OFDM already carries a radar inside it", n:`
-<p>波形这一节开始。第一个消息是好消息:<b>你不需要新东西就能开始</b>。</p>
-<h3>左边那张格子图</h3>
-<p>横轴是时间(一个个 OFDM 符号),纵轴是频率(一个个子载波)。每个小格子叫一个<b>资源元(RE)</b>。这张图学生在讲 5G 物理层那节课见过,提醒他们一句。</p>
-<div class="say">OFDM 已经部署在 Wi-Fi、4G、5G、6G 里了,是最成熟的波形。<br><br>妙的地方在于:<b>这张格子本身就是一堆旋钮</b>。每个格子你都可以决定它装什么、用多大功率。既然如此,为什么不能让一部分格子装比特,一部分格子专门用来照亮目标?<br><br>而且子载波天生就能当雷达的频率通道用。<b>一个新的调制器都不用做。</b></div>
-<h3>那为什么还要设计新波形?</h3>
-<p>这是这一页下面那个问答,也是通往第 11 页的桥:</p>
-<p>因为 OFDM 是用<b>时间和频率</b>描述的,而一个<b>运动的</b>目标天生是用<b>时延和多普勒</b>描述的。快速移动的目标会把 OFDM 的格子<b>抹花</b>(smear)—— 具体说,多普勒会破坏子载波之间的正交性。而在时延-多普勒的坐标系里,同一个目标是<b>不动的一个点</b>。</p>
-<div class="ask">如果 OFDM 已经够用了,为什么还要设计新波形?<br><br>(这个问题不要马上答,让它悬着,直接翻到下一页用图回答。)</div>
-`},
-
-{s:"波形", t:"时延-多普勒是另一个站位", e:"Delay–Doppler is a different place to stand", n:`
-<p>这一页是整节课<b>最抽象</b>的一页,也是学生最容易掉队的一页。花时间。</p>
-<h3>图在说什么</h3>
-<p>左边蓝框:时间-频率域,五个点散落着 —— 一个运动目标的能量被<b>抹开</b>了。右边橙框:同一个目标,在时延-多普勒域里就是<b>两个干净的点</b>。中间那个箭头标着 ISFFT,是两个域之间的变换。</p>
-<div class="say">这个不好想,我换个说法。<br><br>你去看一张长曝光的照片,一辆开过的车拍出来是一道<b>拖影</b>,糊了一大片。但如果你换一种记录方式,只记"这个东西在哪、以多快的速度动",那辆车就变回<b>一个数据点</b>:位置 + 速度。<br><br>拖影和数据点是<b>同一辆车</b>,只是你站的地方不一样。时间-频率域是那张长曝光照片,时延-多普勒域是那个数据点。<br><br>换个站位,同一个物理现实就从"糊成一片"变成"一个尖锐的点"。而估计器最喜欢尖锐的点。</div>
-<h3>ISFFT 要不要讲</h3>
-<p>Inverse Symplectic Finite Fourier Transform。<b>不要展开讲数学。</b>只说一句:它是两个域之间的换算工具,像坐标变换。学生只要知道"有个数学工具能来回换"就够了,这门课不考它。</p>
-<div class="warn">别说成"时延-多普勒域比时间-频率域更好"。它不是更好,是<b>对不同的东西更方便</b>。通信在时间-频率域里更自然,感知在时延-多普勒域里更自然。这正是矛盾的来源 —— 第 15 页有一行专门讲这个("Domain")。</div>
-`},
-
-{s:"波形", t:"三种波形,三种赌注", e:"Three waveforms, three bets", n:`
-<p>表格页。<b>不要念完 12 个格子。</b>按列读一遍,然后只横着读一行。</p>
-<h3>三行的实质</h3>
-<ul>
-  <li><b>OFDM</b> —— 符号住在时间-频率。<b>优势</b>:到处都部署了,子载波顺便当雷达通道。<b>劣势</b>:多普勒会破坏子载波正交性。</li>
-  <li><b>OTFS</b> —— 符号住在时延-多普勒,但要靠 ISFFT 映射<b>上去</b>到时间-频率再发。<b>优势</b>:抗高速移动,而且能直接挂在现有 OFDM 上。<b>劣势</b>:格子之间会<b>泄漏</b>,而且 PAPR 高。</li>
-  <li><b>ODDM</b> —— 符号<b>原生</b>住在时延-多普勒。<b>优势</b>:脉冲真正正交,回波稀疏干净。<b>劣势</b>:还在研究阶段,硬件不成熟。</li>
-</ul>
-<div class="warn">这里有个精确性问题,很容易讲错。<br><br><b>不要把 ODDM 说成"脉冲更好的 OTFS"。</b>两者的区别不是脉冲质量,是<b>正交性的定义方式</b>:OTFS 是把时延-多普勒的符号<b>映射到</b>时间-频率格子上发,所以它继承了一个类 OFDM 的调制器;ODDM 是直接构造出<b>相对时延-多普勒分辨率就正交</b>的脉冲。那个正交性声明本身就是 ODDM 的全部意义。</div>
-<h3>PAPR 值得多说一句</h3>
-<p>Peak-to-Average Power Ratio,峰均功率比。用大白话讲:<b>它决定功放要多辛苦</b>。PAPR 高意味着信号偶尔会冲出一个很高的峰,功放必须为那个峰留余量,平时就用不满,费电还费钱。这对手机和基站都是真实的成本。</p>
-<p>橙框:"OFDM is what ships. ODDM is what the sensing side wants." —— 一句话概括了工业界和研究界的分歧。</p>
-`},
-
-{s:"波形", t:"正交性为什么值得费这个劲", e:"Why orthogonality is worth the trouble", n:`
-<p>上一页说 ODDM 的卖点是"真正交",这一页用图告诉你正交到底买到了什么。</p>
-<h3>两张图</h3>
-<ul>
-  <li><b>左(OTFS,泄漏的基)</b>:两个亮点,但每个周围都糊着一圈淡的。那圈淡的就是<b>泄漏</b> —— 能量跑到了不该去的格子里。</li>
-  <li><b>右(ODDM,正交的基)</b>:两个干干净净的点,周围什么都没有。</li>
-</ul>
-<div class="say">两个糊点和两个尖点,估计器为什么在乎?<br><br>泄漏就是<b>跑错格子的能量</b>。它造成三个后果:<br><br>一,<b>抬高旁瓣</b> —— 你的"背景噪声"变高了。<br>二,<b>一个强目标旁边的弱目标会被埋掉</b>。想象一辆大卡车旁边有个行人,卡车的回波泄漏一圈,行人就消失了。这在自动驾驶里是要命的。<br>三,在多用户系统里,<b>它直接变成用户之间的干扰</b>。</div>
-<h3>连到后面</h3>
-<p>第三点是通往第 22 页的桥:那页会说 "Sparser echoes mean less interference, and less interference is rate you keep."(回波越稀疏,干扰越少;干扰越少,你保住的速率越多。)这一页的"泄漏"和那一页的"速率",是同一件事的两头。</p>
+{s:"路标", t:"剩下的课只回答三个问题", e:"Three questions for the rest of today", n:`
+<p><b>路标页(改写过)。</b>原来这里是"四个难点"清单,列了一堆后面根本不讲的东西(MIMO、射频硬件)。现在它就是接下来的目录,而且顺序和后面一模一样。</p>
+<div class="say">前面讲清楚了三件事:雷达和基站要抢同一片天;一个信号可以同时干两份工;回波能告诉我们距离、速度、方向。剩下的课只回答三个问题:<br><br><b>一,为什么一个信号很难两头都好?</b>因为这两份工要的东西相反 —— 这会给我们一条"取舍曲线",而不是一个修好的答案。<br><br><b>二,那我们到底用哪个信号?</b>OFDM。Wi-Fi、4G、5G 已经在发的那个。不造新收音机。<br><br><b>三,怎么在比特和回波之间分这个信号?</b>OFDM 的格子就是一份预算,总得有人决定每个格子给谁。</div>
+<div class="warn">后面每翻到一个新话题,先说一句"这是第几个问题"。学生的反馈就是"不知道现在在讲什么、跟上一页什么关系" —— 这一页就是治这个的。</div>
 `},
 
 {s:"权衡", t:"它们想要的东西相反 (1/2)", e:"They want opposite things (1/2)", n:`
@@ -344,7 +302,7 @@ const S = [
 <p>后五行。同样别念完,挑两行。</p>
 <h3>建议挑这两行</h3>
 <ul>
-  <li><b>Domain(域)</b>:感知要时延-多普勒的分辨率,通信要时间-频率的复用。<b>这一行直接回收第 11 页</b> —— 那页讲的"两个站位",在这里变成了一条设计冲突。</li>
+  <li><b>Domain(域)</b>:感知要时延-多普勒的分辨率,通信要时间-频率的复用。<b>这一行直接回收第 ??11 页</b> —— 那页讲的"两个站位",在这里变成了一条设计冲突。</li>
   <li><b>Latency(时延)</b>:感知要低时延的跟踪反馈(你要实时知道那辆车在哪);而通信的很多业务其实<b>能容忍延迟</b>(视频缓冲、后台同步)。这一行有点反直觉 —— 学生一般以为通信才是急的那个。</li>
 </ul>
 <h3>下面那个问答是这一节的落点</h3>
@@ -354,7 +312,7 @@ const S = [
 `},
 
 {s:"权衡", t:"前沿,画一次", e:"The frontier, drawn once", n:`
-<p>上一页说了有条前沿,这一页把它画出来。<b>这张图后面会反复回来</b>(第 22、24、26 页),所以这里要讲到学生真的看懂。</p>
+<p>上一页说了有条前沿,这一页把它画出来。<b>这张图后面会反复回来</b>(第 ??22、19、21 页),所以这里要讲到学生真的看懂。</p>
 <h3>两根轴,而且横轴是反的</h3>
 <ul>
   <li><b>纵轴</b>:可达速率(achievable rate)。<b>越高越好</b>,这个符合直觉。</li>
@@ -374,6 +332,17 @@ const S = [
 <p>橙框那句是本节的总结,也是给后半节课定调:"后面每一个结果,都是关于这样一条曲线上某一个点的声明。"</p>
 `},
 
+{s:"波形", t:"OFDM 里面本来就藏着一个雷达", e:"OFDM already carries a radar inside it", n:`
+<p>波形这一节开始。第一个消息是好消息:<b>你不需要新东西就能开始</b>。</p>
+<h3>左边那张格子图</h3>
+<p>横轴是时间(一个个 OFDM 符号),纵轴是频率(一个个子载波)。每个小格子叫一个<b>资源元(RE)</b>。这张图学生在讲 5G 物理层那节课见过,提醒他们一句。</p>
+<div class="say">OFDM 已经部署在 Wi-Fi、4G、5G、6G 里了,是最成熟的波形。<br><br>妙的地方在于:<b>这张格子本身就是一堆旋钮</b>。每个格子你都可以决定它装什么、用多大功率。既然如此,为什么不能让一部分格子装比特,一部分格子专门用来照亮目标?<br><br>而且子载波天生就能当雷达的频率通道用。<b>一个新的调制器都不用做。</b></div>
+<h3>那为什么还要设计新波形?</h3>
+<p>这是这一页下面那个问答,也是通往第 ??11 页的桥:</p>
+<p>因为 OFDM 是用<b>时间和频率</b>描述的,而一个<b>运动的</b>目标天生是用<b>时延和多普勒</b>描述的。快速移动的目标会把 OFDM 的格子<b>抹花</b>(smear)—— 具体说,多普勒会破坏子载波之间的正交性。而在时延-多普勒的坐标系里,同一个目标是<b>不动的一个点</b>。</p>
+<div class="ask">如果 OFDM 已经够用了,为什么还要设计新波形?<br><br>(这个问题不要马上答,让它悬着,直接翻到下一页用图回答。)</div>
+`},
+
 {s:"资源分配", t:"格子就是预算", e:"The grid is the budget", n:`
 <p>前面讲的是"有个权衡",从这一节开始讲"<b>那具体怎么分</b>"。这是最工程的一节。</p>
 <h3>图在说什么</h3>
@@ -383,10 +352,10 @@ const S = [
 <h3>两个缩写先埋下,后面要用</h3>
 <ul>
   <li><b>RE</b> = Resource Element,资源元。</li>
-  <li><b>PSLR</b> = Peak-to-SideLobe Ratio,峰值旁瓣比。下一页先用一张图讲清楚"峰"是什么,第 19 页用它当感知的评分。</li>
-  <li><b>RoI</b> = Region of Interest,感兴趣区域。<b>第 20 页那个"几乎没有损失"的魔术全靠这个词</b>,现在先让学生见一面。</li>
+  <li><b>PSLR</b> = Peak-to-SideLobe Ratio,峰值旁瓣比。下一页先用一张图讲清楚"峰"是什么,第 17 页用它当感知的评分。</li>
+  <li><b>RoI</b> = Region of Interest,感兴趣区域。<b>第 18 页那个"几乎没有损失"的魔术全靠这个词</b>,现在先让学生见一面。</li>
 </ul>
-<p>这一节的数据来自 IEEE JSAC 2024 那篇跨域双功能 OFDM 波形设计。仿真参数在第 21 页,别改数字。</p>
+<p>这一节的数据来自 IEEE JSAC 2024 那篇跨域双功能 OFDM 波形设计。仿真参数在第 ??21 页,别改数字。</p>
 `},
 
 {s:"资源分配", t:"先讲清楚什么是峰", e:"What a peak is, before we grade one", n:`
@@ -398,7 +367,7 @@ const S = [
   <li><b>杂波(clutter)</b>:底下那条起伏的灰线,<b>所有没人要的回波</b> —— 地面、墙、雨。</li>
 </ul>
 <div class="say">一句话:峰是目标,旁瓣是自己吓自己,杂波是世界的背景音。<br><br>PSLR 就是一个诚实的问题:<b>真峰比最高的那个鬼影高多少?</b>高得多,目标一眼可见;差不多高,目标就被淹了。下一页给感知打分,用的就是这个数。</div>
-<div class="warn">旁瓣和杂波别混为一谈:旁瓣是你自己的波形造成的,换个波形能压下去(第 13 页 ODDM 干的就是这件事);杂波是世界给的,换什么波形都消不掉。</div>
+<div class="warn">旁瓣和杂波别混为一谈:旁瓣是你自己的波形造成的,换个波形能压下去(第 ??13 页 ODDM 干的就是这件事);杂波是世界给的,换什么波形都消不掉。</div>
 `},
 
 {s:"资源分配", t:"两份评分,在两个房间打分", e:"Two scores, graded in two rooms", n:`
@@ -408,7 +377,7 @@ const S = [
   <li><b>通信分</b>:可达速率,把所有分给通信的 RE 加起来。<b>在时间-频率域里量</b> —— 策略是"把比特放在信道好的地方"。</li>
   <li><b>感知分</b>:RoI 内的 PSLR —— <b>真峰比杂波高出多少</b>。<b>在时延-多普勒域里量</b> —— 策略是"在目标所在的地方把自相关的形状修好"。</li>
 </ul>
-<div class="say">PSLR 用大白话说:你想找的那个目标,它的回波峰值,比周围那些乱七八糟的杂波高出多少。高得多,就容易认出来;差不多高,就淹了。<br><br>关键在于最后那两句:<b>这两个分数不在同一个域里打。</b><br><br>通信分在时间-频率域,感知分在时延-多普勒域。这不是两个人对同一份卷子给了不同分数 —— 是<b>同一张格子被翻译成两种语言,然后各自批改</b>。<br><br>所以优化难在哪?你在一个域里动一下,另一个域里所有格子都跟着变。这就是第 9 页说的"非凸"。</div>
+<div class="say">PSLR 用大白话说:你想找的那个目标,它的回波峰值,比周围那些乱七八糟的杂波高出多少。高得多,就容易认出来;差不多高,就淹了。<br><br>关键在于最后那两句:<b>这两个分数不在同一个域里打。</b><br><br>通信分在时间-频率域,感知分在时延-多普勒域。这不是两个人对同一份卷子给了不同分数 —— 是<b>同一张格子被翻译成两种语言,然后各自批改</b>。<br><br>所以优化难在哪?你在一个域里动一下,另一个域里所有格子都跟着变。这就是第 10 页说的"非凸"。</div>
 <p>橙框:"同一张格子被打两次分,由两个考官在两个不同的域里。" —— 这是这一页的记忆点。</p>
 `},
 
@@ -426,60 +395,10 @@ const S = [
 <div class="say">这是这节课最实用的一个思维方式,我希望你们带走。<br><br>"几乎没有损失"听起来像免费的午餐,像是有人绕过了我们刚才说躲不开的权衡。但没有人绕过它。<br><br>他们做的是:<b>把要求变窄了。</b><br><br>我不要求整个时延-多普勒平面都干净,我只要求那辆车可能出现的那一小块区域干净。那一小块之外,随便。于是那一大片就都能拿去发比特。<br><br>所以每次你在论文里看到"几乎没有损失",第一个要问的问题是:<b>你把要求缩到多小了?</b></div>
 `},
 
-{s:"资源分配", t:"仿真到底显示了什么", e:"What the simulation actually showed", n:`
-<p>上一页是策略,这一页是结果。内容不多,但有两件事值得停一下。</p>
-<h3>结果本身</h3>
-<ul>
-  <li><b>通信优先</b>:保住最优可达速率,而且 RoI 内的自相关<b>依然不错</b>。</li>
-  <li><b>感知优先</b>:逼近最优速率,同时<b>保证</b>局部完美的自相关。</li>
-</ul>
-<h3>下面那行灰字才是这页的重点</h3>
-<p class="t">载波 240 GHz,子载波间隔 240 kHz,32 个连续 OFDM 符号,128 个子载波,符号长度 4.1470 μs,循环前缀 1.0368 μs。</p>
-<div class="ask">240 GHz,240 kHz 间隔 —— 这里假设的是什么样的链路?<br><br>(想引出的:240 GHz 是太赫兹频段,不是现在的 5G。这意味着<b>极短距离、几乎必须视距、大气衰减严重</b>。也就是说这个仿真描述的是一个未来场景,不是你今天手机连的那个网。)</div>
-<div class="say">我想让你们养成一个习惯:看到漂亮的结果,先翻到参数那一行。<br><br>这个结果是真的,但它是在 240 GHz 上做出来的。240 GHz 的波连一片叶子都绕不过去。所以"几乎没有损失"这个结论,成立的前提是一个非常特定的、目前还不存在的部署环境。<br><br>这不是说这篇论文有问题 —— 研究就是这么做的。但从"仿真里成立"到"你手机上成立",中间隔着很多东西。</div>
-`},
-
-{s:"资源分配", t:"多个用户,一份回波", e:"Many users, one echo", n:`
-<p>前面都是单用户。真实网络里一个基站要服务很多用户,这一页加上这一层。</p>
-<h3>图在说什么</h3>
-<p>横轴 CRLB(越右越差),纵轴 sum-rate(总速率,越高越好)。两条曲线:绿色 ODDM 在上,灰色虚线 OTFS 在下。<b>ODDM 在整个范围内都压着 OTFS</b>。</p>
-<h3>右边四点</h3>
-<ul>
-  <li>功率要在子载波之间分配;</li>
-  <li><b>其他用户就是干扰</b> —— 这是多用户带来的新问题;</li>
-  <li>CRLB 给估计精度设了界;</li>
-  <li>整个问题可以<b>拆成两个子问题</b>(这是那篇工作的方法论贡献)。</li>
-</ul>
-<div class="say">为什么 ODDM 整条线都在 OTFS 上面?回到第 13 页那两张图。<br><br>OTFS 的基是<b>泄漏</b>的,能量会跑到隔壁格子。在单用户的时候,泄漏只是让你的目标看起来糊一点。<br><br>但在多用户的时候,<b>跑到隔壁格子的能量就是别人的干扰</b>。而干扰直接吃掉速率 —— 香农公式里 SINR 的分母变大,速率就下来了。<br><br>所以橙框那句话:<b>回波越稀疏,干扰越少;干扰越少,就是你保住的速率。</b><br><br>第 13 页那个看起来纯理论的"正交性",在这里变成了实实在在的 bit/s。</div>
-<p>这是本节最好的一个闭环:一个抽象的数学性质,一路走到了可测量的系统指标。值得指出来给学生看。</p>
-`},
-
-{s:"台面", t:"时钟,截至这次演讲", e:"The clock, as of this talk", n:`
-<p>时间轴,五个阶段。这一页要<b>明确标注哪部分是事实、哪部分是预测</b>。</p>
-<h3>五段</h3>
-<ul>
-  <li><b>2020–23</b>:概念和用例</li>
-  <li><b>2024–26</b>:3GPP Rel-19;试验</li>
-  <li><b>2027–28</b>:频谱政策</li>
-  <li><b>2029–30</b>(橙色):规范和认证</li>
-  <li><b>2031+</b>(绿色):商用铺开</li>
-</ul>
-<div class="warn">这条时间轴<b>不是 3GPP 或 ITU 发布的日程</b>。<br><br>真实的部分:3GPP Release 19 里确实有 ISAC 的研究项目;ITU M.2160 确实把 ISAC 列为 IMT-2030 的使用场景之一。<br><br><b>2027 年往右全是演讲者的预测。</b>幻灯片上那行灰字已经写了这一点,你要念出来。</div>
-<div class="say">我特意把这个界线说清楚,因为这是你们以后会反复遇到的情况。<br><br>技术路线图看起来都很权威 —— 有方框、有箭头、有年份。但里面往往一半是已发生的事,一半是猜的。<br><br>判断方法很简单:<b>问这个日期背后有没有一份文件</b>。Rel-19 有文件。2029 年认证没有。</div>
-<h3>橙框那句值得展开一句</h3>
-<p>"标准化就是权衡从一条曲线变成一个必须有人去认证的数字的地方。"</p>
-<div class="say">这句话把整节课收了个口。<br><br>我们花了一小时讲这是一条曲线,你只能在上面选点。<br><br>但产品不能卖一条曲线。你要卖东西,就得说"我这个的测距精度是 X 米",然后有人拿仪器来验。<br><br>那个 X,就是有人在这条曲线上<b>替所有人选了一个点</b>,然后把它写进了标准。这是这节课的技术内容和第 5 页那个"委员会"接上的地方。</div>
-`},
-
-{s:"收尾", t:"整节课浓缩成一张地图", e:"The whole lecture in one map", n:`
-<p>两行,把这节课讲过的两个资源分配场景放在一起,用同一组问题去问:优化了什么,代价是什么。</p>
-<h3>怎么读这张表</h3>
-<ul>
-  <li><b>跨域 OFDM</b>(第 17–21 页):优化的是资源元和它们的功率;代价是<b>后挑的那方拿剩下的</b>。</li>
-  <li><b>多用户 ODDM</b>(第 22 页):优化的是每个用户的功率对着 CRLB;代价是<b>复杂度,以及还不存在的硬件</b>。</li>
-</ul>
-<div class="say">两个场景:一个单用户、一个多用户;一个用现成的 OFDM、一个用还在研究的 ODDM。但你竖着读"代价"这一列,会发现它们是同一个形状 —— 每一行都是"我得到了这个,我付出了那个"。没有哪一行写着"我们解决了这个权衡"。<br><br><b>两个场景,一个形状。每一个都是在一条前沿上选了一个点。</b></div>
-<p>如果时间只够讲一页收尾,就讲这一页。它把第 16 页那条曲线和后面的两个案例接在一起 —— 学生如果觉得资源分配那几页"只是在算数",这一页告诉他们算的是曲线上的哪个点。</p>
+{s:"收尾", t:"三件事带回家", e:"Three things to take home", n:`
+<p><b>总结页(改写过)。</b>原来是一张对比几篇论文的表,现在是这节课的三个想法,按讲的顺序。</p>
+<div class="say">三件事带回家。<br><br><b>一,一个波形,两份工。</b>基站本来就在发的信号会弹回来,那个回波就是没人上传过的测量数据。<br><br><b>二,两份工要的东西相反。</b>感知要宽、稳、可预测的信号;数据要高效、突发、随机的信号。所以有的是一条取舍曲线,没有"修好"这回事。<br><br><b>三,在 OFDM 上,选曲线上的哪个点,就是一个调度决定。</b>格子里哪些给比特、哪些给回波、谁先挑。</div>
+<p>橙框那句就是这节课的一句话版本:<b>ISAC 不是一台新收音机,是对着现有收音机问了一个新问题 —— 每个格子给谁?</b>它和第 3 页那句("把网络自己的信号当雷达读")首尾呼应。</p>
 `},
 
 {s:"收尾", t:"什么其实还没完成", e:"What is actually unfinished", n:`
@@ -496,8 +415,8 @@ const S = [
 <p>SAGIN = Space–Air–Ground Integrated Network,空天地一体化网络。</p>
 `},
 
-{s:"收尾", t:"课堂作业:在曲线上选一个点", e:"Exit ticket: pick a point on the curve", n:`
-<p>下课前收的小作业。图就是第 16 页那条前沿曲线,<b>故意画成空白的</b>,让学生自己标点。</p>
+{s:"收尾", t:"课堂作业:在曲线上选一个点", e:"Before you go: pick a point on the curve", n:`
+<p>下课前收的小作业。图就是第 13 页那条前沿曲线,<b>故意画成空白的</b>,让学生自己标点。</p>
 <h3>三道题</h3>
 <ol>
   <li>标出<b>自动驾驶汽车</b>应该坐在哪。再标出<b>车厢 Wi-Fi</b> 应该坐在哪。</li>
@@ -535,25 +454,19 @@ const S = [
   <li><b>CRLB</b>:由 Fisher 信息求逆得到</li>
   <li><b>PSLR</b>:峰值比旁瓣高多少</li>
 </ul>
-<div class="say">如果有人问"这些是要背的吗" —— 第一个和第二个你应该认识,因为它们说明了物理在哪里。<br><br><code>R = cτ/2</code> 告诉你为什么测距就是测时间。<br><br><code>log₂(1 + SINR)</code> 告诉你为什么干扰会直接吃掉速率 —— 干扰在分母上。这就是第 22 页那个结论的数学形式。<br><br>CRLB 和 Fisher 信息的关系,知道"求逆"这个方向就够了:Fisher 信息越大,CRLB 越小,估计越准。信息多,误差小,符合直觉。</div>
-`},
-
-{s:"附录", t:"附录:什么问题该用什么波形", e:"Appendix: which waveform for which problem", n:`
-<p>备用页,也是最实用的一页 —— 三种波形的<b>选型指南</b>:什么时候用、什么时候别用、成熟度如何。</p>
-<div class="say">如果你们以后真要做这个方向,这一页比前面所有曲线都有用。<br><br>大致的判断是:<br><br><b>OFDM</b> —— 你要今天就跑起来、要和现有设备兼容、目标动得不快。绝大多数情况的正确答案。<br><br><b>OTFS</b> —— 高速移动是你的主要痛点,而且你想挂在现有 OFDM 系统上,不想重做调制器。<br><br><b>ODDM</b> —— 你在写论文,或者你的感知性能要求高到 OTFS 的泄漏无法接受。硬件还没准备好。</div>
-<p>可以顺口告诉学生:第 12 页那张"三种波形三种赌注"是理解性的,这一页是操作性的。两页配起来看。</p>
+<div class="say">如果有人问"这些是要背的吗" —— 第一个和第二个你应该认识,因为它们说明了物理在哪里。<br><br><code>R = cτ/2</code> 告诉你为什么测距就是测时间。<br><br><code>log₂(1 + SINR)</code> 告诉你为什么干扰会直接吃掉速率 —— 干扰在分母上。这就是第 ??22 页那个结论的数学形式。<br><br>CRLB 和 Fisher 信息的关系,知道"求逆"这个方向就够了:Fisher 信息越大,CRLB 越小,估计越准。信息多,误差小,符合直觉。</div>
 `},
 
 {s:"附录", t:"来源与延伸阅读", e:"Sources and further reading", n:`
 <p>最后一页。这节课的内容来自 Zhu Han 教授(休斯顿大学)的 ISAC 报告,以及几篇具体论文。</p>
 <h3>这节课引用的主要工作</h3>
 <ul>
-  <li><b>跨域双功能 OFDM 波形设计</b>,IEEE JSAC 2024 —— 第 17–21 页那一节。</li>
+  <li><b>跨域双功能 OFDM 波形设计</b>,IEEE JSAC 2024 —— 第 ??17–??21 页那一节。</li>
   <li><b>ITU-R M.2160</b>,IMT-2030 框架 (2023) —— 第 5 页。</li>
 </ul>
-<div class="say">下课前一句话:如果这节课里有一件事让你想再往下挖,我建议是第 22 页那条 ODDM 曲线。<br><br>它整条线都在 OTFS 上面,但<b>能把它做出来的硬件还不存在</b>。这种题目对本科生做研究是最合适的 —— 问题是真的,而且门还开着。</div>
+<div class="say">下课前一句话:如果这节课里有一件事让你想再往下挖,我建议是第 ??22 页那条 ODDM 曲线。<br><br>它整条线都在 OTFS 上面,但<b>能把它做出来的硬件还不存在</b>。这种题目对本科生做研究是最合适的 —— 问题是真的,而且门还开着。</div>
 <h3>给自己的备注</h3>
-<p>第 23 页那条时间轴是演讲者的预测,每学期讲之前值得重新核一遍 3GPP 的进度。第 21 页那些仿真参数<b>不要动</b>,它们是引用的原始数据。</p>
+<p>第 6 页那条时间轴是演讲者的预测,每学期讲之前值得重新核一遍 3GPP 的进度。第 ??21 页那些仿真参数<b>不要动</b>,它们是引用的原始数据。</p>
 `}
 ];
 
@@ -594,6 +507,17 @@ const EN = [
 <p>Before ISAC was named, <b>no radio was obliged to be measurable</b>. A vendor could claim their box does sensing, but nobody could verify it and nobody had to support it. Once it's in the framework, it stops being somebody's research direction and becomes something you have to ship.</p>
 <p>Same logic as O-RAN. An interface only becomes something you can buy separately once it's standardised. A capability only gets built once it's standardised.</p>`,
 
+`<p>Last slide said ISAC was written into M.2160. Natural next question: so when does it arrive? Being named doesn't ship a product — it starts a schedule: spectrum, requirements, tests, then certification. Here is where that schedule stood when this material was prepared.</p>
+<p>A timeline, five phases. And I'm going to be careful about which parts are facts.</p>
+<p>2020 to 2023: concept and use cases. 2024 to 2026: 3GPP Release 19, and trials. 2027 to 2028: spectrum policy. 2029 to 2030: specifications and certification. 2031 onward: commercial rollout.</p>
+<p>Now — <b>this is not a schedule published by 3GPP or the ITU.</b></p>
+<p>What's real: Release 19 does contain ISAC study work. M.2160 does name ISAC as an IMT-2030 usage scenario. Those are documented.</p>
+<p><b>Everything from 2027 rightward is a forecast.</b> It says so in grey at the bottom of the slide, and I'm reading it out loud on purpose.</p>
+<p>I'm drawing that line clearly because you'll run into this constantly. Technology roadmaps all look authoritative — boxes, arrows, years. And usually half of it has happened and half of it is a guess. The test is simple: <b>ask whether there's a document behind the date.</b> Release 19 has a document. 2029 certification does not.</p>
+<p>And one closing thought on this: <b>standardisation is where the tradeoff stops being a curve and starts being a number somebody has to certify.</b></p>
+<p>We spent an hour saying this is a curve and you can only pick a point on it. But you can't sell a curve. To ship a product somebody has to say "the ranging accuracy of this device is X metres," and then somebody else shows up with instruments to verify it.</p>
+<p>That X is somebody <b>choosing a point on this curve on behalf of everyone</b> and writing it into a standard. Which is where all of today's engineering meets that committee I mentioned at the start.</p>`,
+
 `<p>Now let's put that idea into hardware.</p>
 <p>Left side: the traditional way. Communication is one system, radar is another. Each has its own band, its own antenna.</p>
 <p>Right side: DFRC — Dual-Function Radar Communication. <b>One transmit chain.</b> Bits out, echo in.</p>
@@ -620,48 +544,11 @@ const EN = [
 <p><b>Observation time buys velocity resolution.</b> You have to watch long enough for the phase to drift by a measurable amount.</p>
 <p>Hold on to those two, because in twenty minutes I'm going to tell you that sensing wants wide bandwidth and communication wants to conserve it. That conflict only feels real if you know <b>what the bandwidth was buying</b>.</p>`,
 
-`<p>This is a signpost, not content. I just want you to know where we're going.</p>
-<p>Left column, four techniques — waveform design, MIMO and beamforming, shared RF hardware, coding and allocation. We'll hit all four.</p>
-<p>Right column, four challenges. <b>The tradeoff, which doesn't go away.</b> <b>Interference, which goes both ways</b> — the radar half pollutes your constellation, the communication half pollutes your echo. <b>Complexity</b>, because these optimisation problems are non-convex, meaning no algorithm is guaranteed to find the global optimum. And <b>regulation</b> — who owns this.</p>
-<p>Three of those four are engineering. Give me enough time and enough smart people and we make progress.</p>
-<p><b>The fourth one is a committee.</b></p>
-<p><i>[Wait for the laugh.]</i></p>
-<p>I'm not joking, though. Who owns the spectrum? The rules for radar bands were written by aviation and defence. The rules for communication bands were written by telecom regulators. When one signal does both jobs at once — whose rules apply? That answer isn't in the physics. It's in a meeting room.</p>`,
-
-`<p>Waveforms. And the first piece of news is good news: <b>you don't need anything new to start.</b></p>
-<p>This grid — you've seen it before, in the physical layer lecture. Horizontal axis is time, one OFDM symbol per column. Vertical is frequency, one subcarrier per row. Each little cell is a <b>resource element</b>.</p>
-<p>OFDM is already deployed in Wi-Fi, 4G, 5G, 6G. It is the most mature waveform we have.</p>
-<p>And here's the neat part: <b>that grid is already a set of knobs.</b> For every cell you get to decide what goes in it and how much power it gets. So — why not let some cells carry bits and some cells be there purely to light up a target? The subcarriers naturally double as radar frequency bins. <b>You don't have to build a new modulator at all.</b></p>
-<p>Which raises the obvious question: if OFDM is good enough, why is anyone designing new waveforms?</p>
-<p>Because OFDM is described in <b>time and frequency</b>, and a moving target is naturally described in <b>delay and Doppler</b>. A fast target <b>smears</b> across an OFDM grid — specifically, Doppler breaks the orthogonality between subcarriers. In a delay-Doppler grid, that same target sits still.</p>
-<p><i>[Don't answer further. Turn the page and answer with the picture.]</i></p>`,
-
-`<p>This is the most abstract slide in the lecture. If I lose anybody, it's here. So let me try it twice.</p>
-<p>Left, in blue: time-frequency. Five dots scattered around — one moving target, and its energy is <b>spread out</b>. Right, in orange: the same target, in delay-Doppler, is <b>two clean points</b>. The arrow in the middle is the transform between them.</p>
-<p>Here's the other way to say it.</p>
-<p>Think about a long-exposure photograph. A car drives past, and in the photo it's a <b>streak</b> — smeared across a big region of the image. But if you recorded the scene differently — if you only wrote down "this object is here, moving at this speed" — that car becomes <b>one data point</b>. Position and velocity.</p>
-<p>The streak and the data point are <b>the same car</b>. What changed is where you're standing. Time-frequency is the long-exposure photo. Delay-Doppler is the data point.</p>
-<p>Change where you stand, and the same physical reality goes from smeared-out to a sharp point. And estimators love sharp points.</p>
-<p>That transform is called the ISFFT. I'm not going to do the maths and it's not on the exam. All you need is: <b>there's a tool that converts between the two domains.</b></p>
-<p>One caution. Delay-Doppler is <b>not better</b> than time-frequency. It's better <b>for different things</b>. Communication is natural in time-frequency; sensing is natural in delay-Doppler. That's exactly where the conflict comes from.</p>`,
-
-`<p>Table slide. I'm not reading twelve cells to you. Let's read down the columns and then across one row.</p>
-<p><b>OFDM.</b> Symbols live in time-frequency. Strength: it's deployed everywhere, and the subcarriers double as radar bins. Weakness: Doppler breaks subcarrier orthogonality.</p>
-<p><b>OTFS.</b> Symbols live in delay-Doppler, but get mapped <b>up</b> to time-frequency by the ISFFT before transmission. Strength: robust at high mobility, and you can bolt it onto an existing OFDM system. Weakness: energy <b>leaks</b> between bins, and the PAPR is high.</p>
-<p><b>ODDM.</b> Symbols live in delay-Doppler <b>natively</b>. Strength: the pulses are genuinely orthogonal, so echoes come out sparse and clean. Weakness: it's early research and the hardware isn't there.</p>
-<p>One thing I have to be precise about. <b>ODDM is not "OTFS with better pulses."</b> The difference isn't pulse quality — it's how orthogonality is defined. OTFS maps delay-Doppler symbols onto a time-frequency grid, so it inherits an OFDM-like modulator. ODDM builds pulses that are orthogonal <b>with respect to the delay-Doppler resolution directly</b>. That orthogonality claim is the entire point of ODDM.</p>
-<p>And PAPR — peak-to-average power ratio. In plain terms: <b>it decides how hard the amplifier has to work.</b> High PAPR means the signal occasionally spikes very high, so the amplifier has to leave headroom for that spike and runs underused the rest of the time. That's wasted power and wasted money, on handsets and on base stations.</p>
-<p>So: <b>OFDM is what ships. ODDM is what the sensing side wants.</b></p>`,
-
-`<p>Last slide said ODDM's selling point is real orthogonality. Let's see what that actually buys.</p>
-<p>Left, OTFS, a leaky basis: two bright dots, but each one has a halo of faint dots around it. That halo is <b>leakage</b> — energy that ended up in bins where it doesn't belong.</p>
-<p>Right, ODDM, an orthogonal basis: two clean points. Nothing around them.</p>
-<p>Two blurry dots versus two sharp dots — why does the estimator care?</p>
-<p>Leakage is <b>energy in the wrong bin</b>, and it costs you three things.</p>
-<p>One: <b>it raises the sidelobes.</b> Your effective noise floor went up.</p>
-<p>Two: <b>a weak target next to a strong one disappears.</b> Picture a large truck with a pedestrian standing next to it. The truck's echo leaks out in a halo, and the pedestrian is gone. In an automotive context that is not an academic problem.</p>
-<p>Three: in a multi-user system, <b>that leakage is literally interference between users.</b></p>
-<p>Remember that third one. In about ten slides it turns into bits per second.</p>`,
+`<p>Before we go further, the map for the rest of today. Three questions, in the order we will answer them.</p>
+<p><b>One: why can't a single signal be great at both jobs?</b> Because the two jobs want opposite things. That gives us a curve of compromises — not a fix.</p>
+<p><b>Two: which signal do we actually use?</b> OFDM. The one Wi-Fi, 4G and 5G already transmit. We are not building a new radio.</p>
+<p><b>Three: how do we share that signal between bits and echoes?</b> The OFDM grid is a budget, and somebody has to decide who gets each cell.</p>
+<p>Everything from here is one of those three. If you ever lose the thread, ask me which question we're on.</p>`,
 
 `<p>This section is the intellectual core of the lecture. The table is split across two slides only because ten rows won't fit legibly on one — it's one table, one topic.</p>
 <p>Five rows. Let's read the columns, then I'll take one row properly.</p>
@@ -688,6 +575,14 @@ const EN = [
 <p>So when a paper says "we approach the CRLB," what they mean is: our algorithm is close enough to the theoretical limit that you should stop expecting big gains from better algorithms.</p>
 <p>Green point, up and left: a sensing-first design. Orange point, down and right: a communication-first design. Both are on the frontier. Both are legitimate. They're different <b>choices</b>.</p>
 <p>And that's the frame for the rest of the hour: <b>every result after this is a claim about one point on a curve like this one.</b></p>`,
+
+`<p>Waveforms. And the first piece of news is good news: <b>you don't need anything new to start.</b></p>
+<p>This grid — you've seen it before, in the physical layer lecture. Horizontal axis is time, one OFDM symbol per column. Vertical is frequency, one subcarrier per row. Each little cell is a <b>resource element</b>.</p>
+<p>OFDM is already deployed in Wi-Fi, 4G, 5G, 6G. It is the most mature waveform we have.</p>
+<p>And here's the neat part: <b>that grid is already a set of knobs.</b> For every cell you get to decide what goes in it and how much power it gets. So — why not let some cells carry bits and some cells be there purely to light up a target? The subcarriers naturally double as radar frequency bins. <b>You don't have to build a new modulator at all.</b></p>
+<p>Which raises the obvious question: if OFDM is good enough, why is anyone designing new waveforms?</p>
+<p>Because OFDM is described in <b>time and frequency</b>, and a moving target is naturally described in <b>delay and Doppler</b>. A fast target <b>smears</b> across an OFDM grid — specifically, Doppler breaks the orthogonality between subcarriers. In a delay-Doppler grid, that same target sits still.</p>
+<p><i>[Don't answer further. Turn the page and answer with the picture.]</i></p>`,
 
 `<p>Up to now we've said there's a tradeoff. From here we ask: <b>so how do you actually divide things up?</b> This is the most hands-on section of the day.</p>
 <p>Same grid as before, except now <b>every cell is coloured</b>. Blue cells go to communication, orange cells to sensing.</p>
@@ -722,40 +617,11 @@ const EN = [
 <p>What they did was <b>make the requirement smaller</b>. I don't need the whole delay-Doppler plane to be clean. I only need the little patch where that car might be. Outside that patch, I don't care. And now that big region is available for bits.</p>
 <p>So every time you read "almost no loss" in a paper, the first question is: <b>how small did you make the requirement?</b></p>`,
 
-`<p>Strategy last slide, results here. Two results, and then something more interesting.</p>
-<p>Communication-centric keeps the optimal achievable rate and still shows good autocorrelation inside the RoI. Sensing-centric approaches the optimal rate while guaranteeing a locally perfect autocorrelation. Both work, as advertised.</p>
-<p>But the important thing on this slide is that grey line at the bottom.</p>
-<p>Carrier at <b>240 gigahertz</b>. Subcarrier spacing 240 kilohertz. 32 consecutive OFDM symbols, 128 subcarriers.</p>
-<p>240 gigahertz. What kind of link is being assumed here?</p>
-<p><i>[Wait for it.]</i></p>
-<p>That's terahertz territory. That is not the 5G your phone is on. At 240 gigahertz the wave will not get around a leaf. So this simulation is describing a future deployment that doesn't exist yet.</p>
-<p>I want you to build a habit here. When you see a beautiful result, <b>go find the parameters line first</b>.</p>
-<p>This result is real. But it was produced at 240 gigahertz, and "almost no loss" holds under a very specific set of conditions. That's not a criticism of the paper — that's how research works. But the distance between "true in simulation" and "true on your phone" has a lot in it.</p>`,
-
-`<p>Everything so far has been one user. A real base station serves many, so let's add that.</p>
-<p>Horizontal axis CRLB, worse to the right. Vertical axis sum-rate, higher is better. Green curve is ODDM, grey dashed is OTFS. <b>ODDM sits above OTFS across the whole range.</b></p>
-<p>Four things are going on: power gets split across subcarriers; <b>other users are interference</b>, which is the new problem multi-user brings; CRLB bounds the estimate; and the whole problem decomposes into two subproblems, which is that paper's methodological contribution.</p>
-<p>Now — why is ODDM above OTFS everywhere? Go back to the two pictures of dots.</p>
-<p>OTFS has a <b>leaky</b> basis. Energy spills into neighbouring bins. With one user, that spill just makes your target look a bit fuzzy.</p>
-<p>With many users, <b>the energy that spilled into the neighbouring bin is somebody else's interference</b>. And interference eats rate directly — it's in the denominator of the SINR, and rate is log of one plus SINR.</p>
-<p>So: <b>sparser echoes mean less interference, and less interference is rate you keep.</b></p>
-<p>I want to point at what just happened. Orthogonality looked like a purely mathematical property fifteen minutes ago. It just turned into bits per second. That's a complete loop, and those are the satisfying ones.</p>`,
-
-`<p>A timeline, five phases. And I'm going to be careful about which parts are facts.</p>
-<p>2020 to 2023: concept and use cases. 2024 to 2026: 3GPP Release 19, and trials. 2027 to 2028: spectrum policy. 2029 to 2030: specifications and certification. 2031 onward: commercial rollout.</p>
-<p>Now — <b>this is not a schedule published by 3GPP or the ITU.</b></p>
-<p>What's real: Release 19 does contain ISAC study work. M.2160 does name ISAC as an IMT-2030 usage scenario. Those are documented.</p>
-<p><b>Everything from 2027 rightward is a forecast.</b> It says so in grey at the bottom of the slide, and I'm reading it out loud on purpose.</p>
-<p>I'm drawing that line clearly because you'll run into this constantly. Technology roadmaps all look authoritative — boxes, arrows, years. And usually half of it has happened and half of it is a guess. The test is simple: <b>ask whether there's a document behind the date.</b> Release 19 has a document. 2029 certification does not.</p>
-<p>And one closing thought on this: <b>standardisation is where the tradeoff stops being a curve and starts being a number somebody has to certify.</b></p>
-<p>We spent an hour saying this is a curve and you can only pick a point on it. But you can't sell a curve. To ship a product somebody has to say "the ranging accuracy of this device is X metres," and then somebody else shows up with instruments to verify it.</p>
-<p>That X is somebody <b>choosing a point on this curve on behalf of everyone</b> and writing it into a standard. Which is where all of today's engineering meets that committee I mentioned at the start.</p>`,
-
-`<p>Two settings from today, side by side, asked the same two questions: what got optimised, and what did it cost.</p>
-<p>Cross-domain OFDM: optimises the resource elements and their powers. The cost: whoever picks second gets the leftovers.</p>
-<p>Multiuser ODDM: optimises power per user against the CRLB. The cost: complexity — and hardware that does not exist yet.</p>
-<p>One single-user, one multi-user. One on OFDM you can buy today, one on a waveform still in the lab. But read the cost column downwards and it's the same shape: I got this, I paid that. Neither row says "we solved the tradeoff".</p>
-<p><b>Two settings, one shape. Each of them is a point chosen on a frontier.</b></p>`,
+`<p>Three things to take home, in the order we met them.</p>
+<p><b>One waveform, two jobs.</b> The signal a base station already sends comes back as an echo, and that echo is measurement nobody had to upload.</p>
+<p><b>The two jobs want opposite things.</b> Sensing wants a wide, steady, predictable signal; data wants an efficient, bursty, random one. So what you get is a curve of compromises — not a fix.</p>
+<p><b>On OFDM, picking a point on that curve is a scheduling decision.</b> Which cells carry bits, which carry echoes, and who picks first.</p>
+<p>So here is the whole lecture in one sentence. <b>ISAC is not a new radio. It's a new question asked of the radio we already have: who gets each cell?</b></p>`,
 
 `<p>Let me draw an honest line between what's ready and what isn't.</p>
 <p>Settled enough to build: the tradeoff is understood, OFDM-based ISAC works, and the RE grid can be allocated.</p>
@@ -788,13 +654,6 @@ const EN = [
 <p><span class="t">R = c·tau over 2</span> tells you why measuring distance is really measuring time.</p>
 <p><span class="t">log base 2 of (1 + SINR)</span> tells you why interference eats rate directly — the interference is <b>in the denominator</b>. That's the mathematical form of the ODDM-versus-OTFS result.</p>
 <p>For CRLB and Fisher information, knowing the direction is enough: <b>more Fisher information means a lower CRLB means a better estimate.</b> More information, less error. That one matches intuition.</p>`,
-
-`<p><i>[Backup slide — and honestly the most practical one here.]</i></p>
-<p>Three waveforms: when to use each, when to avoid it, how mature it is.</p>
-<p>If any of you go on to work in this area, this slide is worth more than all the curves.</p>
-<p>Roughly: <b>OFDM</b> if you need it running today, need compatibility with deployed equipment, and your targets aren't moving fast. That's the right answer most of the time.</p>
-<p><b>OTFS</b> if high mobility is your main pain and you want to bolt onto an existing OFDM system without rebuilding the modulator.</p>
-<p><b>ODDM</b> if you're writing a paper, or your sensing requirement is strict enough that OTFS leakage is unacceptable. The hardware isn't ready.</p>`,
 
 `<p>Last slide. Today's material comes from Professor Zhu Han's ISAC talk at the University of Houston, plus the one paper behind the allocation section.</p>
 <p>The cross-domain OFDM work is IEEE JSAC 2024 — that was our resource allocation section. And ITU-R M.2160 is the framework document.</p>
