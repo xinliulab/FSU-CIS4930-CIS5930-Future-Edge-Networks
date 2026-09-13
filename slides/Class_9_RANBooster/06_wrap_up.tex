@@ -1,0 +1,80 @@
+%!TEX root = ./main.tex
+
+\section[Wrap-up]{Concluding Remarks}
+
+% TALK MAPPING: slide 15, transcript 16:54--17:15, followed by the two questions the
+% SIGCOMM audience actually asked (17:35--19:42). The Q&A frames are kept because both
+% questions are the ones a student will ask too, and the speaker answered both.
+
+% Teaching note (60 s): the authors' own summary, in their order. Do not add claims.
+\begin{frame}{Concluding remarks}
+  \vspace{0.8em}
+  {\small\textbf{RANBooster: a fronthaul middlebox framework}\par}
+  \vspace{0.2em}
+  {\small\hspace{1.0em}$\cdot$~Build novel monitoring and control use cases\par}
+  {\small\hspace{1.0em}$\cdot$~Accelerate innovation in the RAN space\par}
+
+  \vspace{0.7em}
+  {\small\textbf{Open source reference implementation}\par}
+
+  \vspace{0.7em}
+  \centering
+  \begin{tcolorbox}[colback=white,colframe=softgreen,boxrule=0.8pt,arc=2pt,
+    left=6pt,right=6pt,top=4pt,bottom=4pt,width=0.78\textwidth]
+    \centering\small
+    \href{https://github.com/microsoft/RANBooster}{\texttt{github.com/microsoft/RANBooster}}
+  \end{tcolorbox}
+
+  \vspace{0.6em}
+  \takeaway{Four primitives on an interface every vendor already speaks\\
+    were enough to add features the vendors never shipped.}
+\end{frame}
+
+% Teaching note (90 s): ask the class the question before revealing the answer. Both
+% of these came from the room at SIGCOMM, and both are good instincts.
+\begin{frame}[t]{Questions the SIGCOMM audience asked}
+  \vspace{0.5em}
+  \qa{The DU and the RUs are connected through a fronthaul switch. Where does
+      this software actually run?}
+     {In software on a server today. Offloading to SmartNICs or programmable
+      switches is the obvious next step --- but packet \emph{caching} (A3) is the
+      action that is not clearly implementable on a switch. Open problem.}
+
+  \vspace{0.6em}
+  \only<2->{%
+    \qa{You said a middlebox on a latency-sensitive path might be a problem.
+        Was it?}
+       {No. The actions mostly rewrite header fields, which costs microseconds.
+        That is what allowed scaling to eight or nine radios, and chaining one
+        middlebox per floor underneath a building-wide DAS.}}
+\end{frame}
+
+% Teaching note (180 s): the discussion frame. Nothing here is in the authors' deck;
+% these are the questions this course wants students to carry out of the paper.
+\begin{frame}{What this paper is really arguing}
+  \vspace{0.5em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      {\small\textbf{\textcolor{ranblue}{The move}}\par}
+      \vspace{0.3em}
+      {\small
+       \begin{itemize}\itemsep4pt
+         \item The official extension point (the RIC) went unsupported.
+         \item So use the interface vendors \emph{had} to implement.
+         \item Middleboxes: the Internet's own answer to a frozen architecture.
+       \end{itemize}\par}
+    \column{0.47\textwidth}
+      {\small\textbf{\textcolor{coreorange}{Worth arguing about}}\par}
+      \vspace{0.3em}
+      {\small
+       \begin{itemize}\itemsep4pt
+         \item Middleboxes made the Internet hard to evolve. Same trap here?
+         \item Who operates a box that sees every user's raw waveform?
+         \item Does this scale past one enterprise floor?
+       \end{itemize}\par}
+  \end{columns}
+
+  \vspace{0.7em}
+  \ask{Where else in this course have we seen a closed interface\\
+    pried open by someone standing on the wire?}
+\end{frame}

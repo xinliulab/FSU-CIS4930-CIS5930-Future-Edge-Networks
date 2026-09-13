@@ -1,0 +1,114 @@
+%!TEX root = ./main.tex
+
+\section[Background]{Background: The Disaggregated RAN}
+
+% TALK MAPPING: this section is slides 2--3 of the authors' SIGCOMM'25 deck,
+% transcript 00:48--04:14. Two ideas only:
+%   (1) the 5G RAN is now three separable, softwarized boxes with open interfaces;
+%   (2) that openness has NOT produced the features it promised.
+% COLOR CONVENTION for the whole deck -- do not break it:
+%   ranblue    = RAN network functions (CU/DU/RU)
+%   softgreen  = anything spliced into the path (the RIC, a RANBooster middlebox)
+%   talkred    = the one claim the slide is really making
+%   coreorange = the cellular core, and the cost side of a tradeoff
+% LAYOUT RULES: a frame title must fit one line in the title bar (~44 characters).
+
+% Teaching note (90 s): build the chain left to right and say what the chain is FOR --
+% packets in from the core, radio signals out of the antenna. Do not name E2/O1 yet.
+\begin{frame}{Recent trends in cellular RAN technologies}
+  \vspace{0.2em}
+  {\small\textbf{5G RAN characteristics:}\par}
+  \vspace{0.15em}
+  {\small
+   \begin{itemize}\itemsep1pt
+     \item Standardized and open interfaces
+     \item Softwarized on commodity hardware \expand{x86, ARM, GPUs}
+   \end{itemize}\par}
+
+  \vspace{0.4em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \node[cloud,draw=coreorange,fill=orange!8,cloud puffs=11,cloud ignores aspect,
+          minimum width=1.9cm,minimum height=1.0cm,align=center,
+          font=\scriptsize\bfseries] (core) at (0,0) {Cellular\\core};
+    \node[netnode,minimum width=1.5cm] (cu) at (3.0,0) {CU};
+    \node[netnode,minimum width=1.5cm] (du) at (6.0,0) {DU};
+    \runode{ru}{(8.7,0)}{RU}
+
+    \draw[wire] (core.east) -- (cu.west);
+    \node[font=\tiny,text=softgray] at (1.8,0.32) {NG-C};
+    \node[font=\tiny,text=softgray] at (1.8,-0.32) {NG-U};
+    \draw[wire] (cu) -- node[font=\tiny,text=softgray,above]{F1} (du);
+    \draw[wire] (du) -- node[font=\tiny,text=softgray,above]{Fronthaul} (ru);
+
+    \begin{scope}[on background layer]
+      \node[draw=softgray,dashed,inner sep=8pt,fit=(cu)(du)(ru)] (ranbox) {};
+    \end{scope}
+    \node[font=\scriptsize\bfseries,text=softgray,below=1pt of ranbox]
+      {Radio Access Network};
+
+    % Overlay 2: the RIC, and the applications it was supposed to host.
+    \node[ricnode,visible on=<2->] (ric) at (4.5,1.9) {RIC};
+    \draw[wire,softgreen,visible on=<2->] (ric.south) -- (4.5,1.15);
+    \draw[wire,softgreen,visible on=<2->] (3.0,1.15) -- (6.0,1.15);
+    \draw[wire,softgreen,visible on=<2->] (3.0,1.15) -- (cu.north);
+    \draw[wire,softgreen,visible on=<2->] (6.0,1.15) -- (du.north);
+    \node[font=\tiny,text=softgray,visible on=<2->] at (6.3,1.42)
+      {E2, O1 (KPIs, control)};
+    \node[draw=ranblue,fill=blue!14,rounded corners=2pt,minimum width=1.0cm,
+          minimum height=0.5cm,font=\scriptsize,visible on=<2->]
+          (apps) at (3.45,3.05) {Apps};
+    \node[font=\scriptsize,align=left,visible on=<2->] (applist) at (5.6,3.05)
+      {$\cdot$~Interference\\[-1pt]$\cdot$~Mobility\\[-1pt]$\cdot$~Security};
+    \begin{scope}[on background layer]
+      \node[draw=softgray,dashed,inner sep=4pt,fit=(apps)(applist),
+            visible on=<2->] {};
+    \end{scope}
+  \end{tikzpicture}
+
+  \glossline{CU / DU / RU = Centralized / Distributed / Radio Unit \quad
+    RIC = RAN Intelligent Controller}
+\end{frame}
+
+% Teaching note (120 s): this is the slide the whole paper hangs on. Read the plus
+% line, then the minus line, then ask the room the question the authors ask -- "so
+% build a RIC app?" -- and only then show the trade-press headline. The joke lands
+% because the RIC was the official answer.
+\begin{frame}[t]{Opportunities and challenges for new players}
+  \vspace{0.2em}
+  {\small Disaggregation, virtualization and open interfaces:\par}
+  \vspace{0.3em}
+  {\small\color{softgreen}\textbf{+}~~Opportunity to open the closed cellular
+    ecosystem\par}
+  \vspace{0.2em}
+  {\small\color{talkred}\textbf{--}~~Cannot match the performance of integrated
+    end-to-end solutions\par}
+
+  \vspace{0.5em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \foreach \i/\t in {0/{Interference\\mitigation?},
+                       1/{Mobility\\management?},
+                       2/{Radio and spectrum\\sharing?}}{
+      \node[draw=ranblue!35,fill=blue!5,rounded corners=2pt,minimum width=2.5cm,
+            minimum height=1.05cm,align=center,font=\scriptsize,text=talkred]
+            at (\i*2.9,0) {\t};
+    }
+    \node[font=\Large,text=talkred] at (8.5,0) {$\cdots$};
+  \end{tikzpicture}
+
+  \vspace{0.5em}
+  \only<2->{%
+    \begin{tcolorbox}[colback=white,colframe=black,boxrule=0.7pt,arc=1pt,
+      left=5pt,right=5pt,top=3pt,bottom=3pt,width=0.72\textwidth]
+      \centering\normalsize\textbf{Build RIC apps to enable advanced features?}
+    \end{tcolorbox}}
+
+  \vspace{0.35em}
+  \only<3->{%
+    {\small\textbf{``Open RAN xApps look stillborn''}\par}
+    \vspace{0.1em}
+    {\scriptsize\color{softgray}The lack of support from Ericsson and Samsung for
+      the near-real-time RIC has left xApps with nowhere to go.\par}
+    \source{https://www.lightreading.com/open-ran}{Iain Morris, Light Reading, December 5, 2024 --- the headline the authors put on this slide}}
+\end{frame}

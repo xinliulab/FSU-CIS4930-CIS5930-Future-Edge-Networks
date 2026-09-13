@@ -1,0 +1,109 @@
+%!TEX root = ./main.tex
+
+\section[The idea]{The Idea: Middleboxes on the Fronthaul}
+
+% TALK MAPPING: slides 4--5 of the authors' deck, transcript 04:14--07:38.
+% The first frame is one slide with three overlays, in the order the speaker revealed
+% them:
+%   (1) the idea -- middleboxes, as on the Internet;
+%   (2) the interface -- fronthaul, because every vendor already speaks it;
+%   (3) the objection -- "the fronthaul is worthless", which the paper then refutes.
+% Do NOT collapse (2) and (3): the objection is what makes the paper a paper.
+
+% Teaching note (150 s): pause on overlay 1 and ask where else this pattern appears --
+% NAT, firewall, load balancer, CDN, TLS terminator. None of those needed the endpoint
+% vendors' permission either. That is the whole analogy.
+\begin{frame}[t]{How can we help democratize the RAN?}
+  \vspace{0.3em}
+  {\small\textbf{Leverage open interfaces to deploy new features as software
+    middleboxes}\par}
+  \vspace{0.1em}
+  {\small\hspace{1.0em}$\cdot$~Mirror the evolution of the Internet architecture\par}
+
+  \vspace{0.45em}
+  \only<2->{%
+    {\small\textbf{Our focus: the fronthaul interface}\par}
+    \vspace{0.1em}
+    {\small\hspace{1.0em}$\cdot$~Supported by \emph{all} RAN vendors, large and
+      small\par}
+    {\small\hspace{1.0em}$\cdot$~Limited state, simple semantics\par}}
+
+  \vspace{0.45em}
+  \only<3->{%
+    {\small\headline{Common perception:} \small the fronthaul is of limited value\par}
+    \vspace{0.1em}
+    {\small\hspace{1.0em}$\cdot$~Low-level data --- digitized radio signals
+      (IQ samples)\par}
+    {\small\hspace{1.0em}$\cdot$~Carries latency-sensitive traffic\par}}
+
+  \vspace{0.3em}
+  \raggedleft
+  \begin{tikzpicture}[scale=0.62,transform shape]
+    \node[cloud,draw=coreorange,fill=orange!8,cloud puffs=11,cloud ignores aspect,
+          minimum width=1.9cm,minimum height=1.0cm,align=center,
+          font=\scriptsize\bfseries] (core) at (0,0) {Cellular\\core};
+    \node[netnode,minimum width=1.5cm] (cu) at (3.0,0) {CU};
+    \node[netnode,minimum width=1.5cm] (du) at (6.0,0) {DU};
+    \runode{ru}{(8.7,0)}{RU}
+    \draw[wire] (core.east) -- (cu.west);
+    \draw[wire] (cu) -- node[font=\tiny,text=softgray,above]{F1} (du);
+    \draw[draw=talkred,line width=2.2pt,visible on=<2->] (du.east) -- (ru.west);
+    \draw[wire] (du) -- node[font=\tiny,text=softgray,above]{Fronthaul} (ru);
+    \node[ricnode] (ric) at (4.5,1.9) {RIC};
+    \draw[wire,softgreen] (ric.south) -- (4.5,1.15);
+    \draw[wire,softgreen] (3.0,1.15) -- (6.0,1.15);
+    \draw[wire,softgreen] (3.0,1.15) -- (cu.north);
+    \draw[wire,softgreen] (6.0,1.15) -- (du.north);
+    \node[font=\tiny,text=softgray] at (6.4,1.42) {E2, O1};
+    \node[draw=ranblue,fill=blue!14,rounded corners=2pt,minimum width=0.95cm,
+          minimum height=0.45cm,font=\tiny] at (3.6,2.75) {xApps};
+    \node[draw=coreorange,fill=orange!14,rounded corners=2pt,minimum width=0.95cm,
+          minimum height=0.45cm,font=\tiny] at (4.9,2.75) {rApps};
+  \end{tikzpicture}
+\end{frame}
+
+% Teaching note (60 s): the authors' own framing of their contribution. Say the word
+% "first" out loud -- it is a claim, and the class should learn to notice claims.
+% The left column is what they built and measured; the right column is what they only
+% sketch in the paper. Students routinely conflate the two when they present a paper.
+\begin{frame}[t]{RANBooster fronthaul middlebox framework}
+  \vspace{0.3em}
+  \centering
+  {\large\headline{The first middlebox framework for the RAN}\par}
+
+  \vspace{0.7em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \begin{tcolorbox}[colback=white,colframe=ranblue,boxrule=0.8pt,arc=1pt,
+        left=4pt,right=4pt,top=3pt,bottom=3pt,
+        title={\centering 4 reference middleboxes and\\enterprise-scale deployment},
+        colbacktitle=ranblue,coltitle=white,fonttitle=\small\bfseries]
+        \small
+        \begin{itemize}\itemsep5pt
+          \item Distributed Antenna System
+          \item Distributed MIMO
+          \item RU sharing
+          \item Radio resource block monitoring
+        \end{itemize}
+        \vspace{2pt}
+      \end{tcolorbox}
+    \column{0.47\textwidth}
+      \only<2->{%
+      \begin{tcolorbox}[colback=white,colframe=ranblue!55,boxrule=0.8pt,arc=1pt,
+        left=4pt,right=4pt,top=3pt,bottom=3pt,
+        title={\centering Other applications\\ \phantom{x}},
+        colbacktitle=ranblue!55,coltitle=white,fonttitle=\small\bfseries]
+        \small
+        \begin{itemize}\itemsep5pt
+          \item Sensing
+          \item Security
+          \item Failover and resilience
+        \end{itemize}
+        \vspace{2pt}
+      \end{tcolorbox}}
+  \end{columns}
+
+  \vspace{0.3em}
+  {\scriptsize\color{softgray}Left column: built, measured, deployed.
+   Right column: sketched in the paper, not built.\par}
+\end{frame}
