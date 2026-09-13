@@ -2,7 +2,7 @@
 
 \section[OFDM]{The Waveform We Already Have}
 
-% SECTION TIMING: 32:00--43:00 (6 frames). Question 2 of the roadmap frame.
+% SECTION TIMING: 32:00--60:00 (17 frames). Question 2 of the roadmap frame.
 % The four "Step" frames are the OFDM primer the author asked for on 2026-09-13:
 % students know little OFDM, so walk one worked example (bits -> 16-QAM points ->
 % perpendicular axes -> the FFT matrix as those axes -> IFFT builds the symbol and
@@ -10,9 +10,18 @@
 % The OTFS / ODDM / delay-Doppler frames that used to follow were removed on 2026-09-13
 % (CS audience, no signal-processing background); see parked/03_otfs_oddm_frames.tex.
 
-% Added 2026-09-13 after the author pointed out that Step 1 began with no lead-in:
-% OFDM had never been named on a slide. This frame closes question 1, poses question 2,
-% answers it, and announces the four steps that follow.
+% OFDM primer, 16 frames (2026-09-13, third pass, at the author's request: one idea per
+% frame, each motivated by the gap the previous frame leaves; nothing crammed).
+%   A. what a radio sends           A1 transition, A2 a wave and its two knobs,
+%                                   A3 two knobs = one point, A4 bits pick a point
+%   B. many waves, perpendicular    B1 one wave is slow, B2 why not one fast wave (echoes),
+%                                   B3 add 64 waves -- how to separate?, B4 perpendicular
+%                                   axes, B5 perpendicular waves drawn, B6 the family k/T
+%   C. the FFT                      C1 two machines, C2 the 2x2 with numbers, C3 the 4x4,
+%                                   C4 why "fast" matters
+%   D. assemble OFDM                D1 transmitter, D2 receiver, D3 the grid
+
+% ---------- A1 ----------
 \begin{frame}{Question 2: which signal do we actually use?}
   \vspace{0.3em}
   {\small Question 1 is answered: the two jobs want opposite things, so there is a
@@ -24,36 +33,104 @@
    Multiplexing} --- the signal Wi-Fi, 4G and 5G already transmit. No new radio.\par}
 
   \vspace{0.45em}
-  {\small Before we can read OFDM as a radar we need to know what it actually is.
-   Most of you have only heard the name, so we build one from scratch, in four
-   steps:\par}
+  {\small Before we can read OFDM as a radar we need to understand it properly. Most
+   of you have only heard the name, so we build it from the ground up, in four parts:\par}
   \vspace{0.2em}
   {\small
   \begin{enumerate}\itemsep0pt
-    \item Bits become points.
-    \item Describing a point needs perpendicular axes.
-    \item The FFT is a set of perpendicular axes.
-    \item An OFDM symbol is one IFFT --- and symbols make the grid.
+    \item What a radio actually sends --- and why that is a \emph{point}.
+    \item Why we send many waves at once, and why they must be \emph{perpendicular}.
+    \item Why the FFT --- the machine that adds waves up and takes them apart.
+    \item Putting it together: transmitter, receiver, and the \emph{grid}.
   \end{enumerate}}
 
   \vspace{0.15em}
-  \takeaway{Four steps, one example: by the end you have built the grid this lecture is about.}
+  \takeaway{By the end of part 4 you will have built the grid this whole lecture is about.}
 \end{frame}
 
-\begin{frame}{Step 1: bits become points}
+% ---------- A2 ----------
+\begin{frame}{A radio sends a wave, not bits}
+  \vspace{0.2em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \draw[-{Latex[length=2mm]},softgray] (0,0) -- (7.6,0) node[anchor=west,font=\scriptsize]{time};
+    \draw[very thick,ranblue,domain=0:7.2,samples=160,smooth] plot (\x,{1.0*sin(360*\x/2.4)});
+    \draw[very thick,coreorange,domain=0:7.2,samples=160,smooth] plot (\x,{0.55*sin(360*\x/2.4)});
+    \draw[very thick,softgreen,dashed,domain=0:7.2,samples=160,smooth] plot (\x,{1.0*sin(360*\x/2.4+90)});
+    \draw[<->,softgray] (7.35,0) -- (7.35,1.0) node[midway,right,font=\scriptsize]{how tall};
+    \draw[<->,softgray] (0,-1.35) -- (0.6,-1.35) node[midway,below,font=\scriptsize]{where it starts};
+  \end{tikzpicture}
+
+  \vspace{0.2em}
+  {\scriptsize\textcolor{ranblue}{\textbf{blue}: tall, starts at 0} \quad
+   \textcolor{coreorange}{\textbf{orange}: half as tall} \quad
+   \textcolor{softgreen}{\textbf{green}: tall, starts a quarter cycle early}\par}
+
+  \vspace{0.6em}
+  {\small An antenna cannot emit a 0 or a 1. It emits a \textbf{wave} at some
+   frequency. At one frequency a wave has exactly two things you can change:
+   \textbf{how tall it is} (amplitude) and \textbf{where in its cycle it starts}
+   (phase). Everything else about it is fixed by the frequency.\par}
+
+  \vspace{0.3em}
+  \takeaway{Two knobs. To send information, we turn the knobs.}
+\end{frame}
+
+% ---------- A3 ----------
+\begin{frame}{Two knobs are one point}
   \vspace{0.2em}
   \begin{columns}[T,onlytextwidth]
-    \column{0.50\textwidth}
-      {\small Say we want to send these bits:\par}
-      \vspace{0.35em}
+    \column{0.55\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.78,transform shape]
+        \draw[-{Latex[length=2mm]},softgray] (0,0) -- (5.2,0) node[anchor=west,font=\scriptsize]{time};
+        \draw[thick,softgray!70,domain=0:4.8,samples=120,smooth] plot (\x,{0.9*cos(360*\x/2.4)});
+        \node[font=\scriptsize,text=softgray,anchor=west] at (4.3,0.85) {cosine};
+        \draw[thick,softgray!70,dashed,domain=0:4.8,samples=120,smooth] plot (\x,{0.9*sin(360*\x/2.4)});
+        \node[font=\scriptsize,text=softgray,anchor=west] at (4.3,-0.75) {sine};
+        \draw[very thick,coreorange,domain=0:4.8,samples=120,smooth]
+          plot (\x,{-1.35*cos(360*\x/2.4)+1.35*sin(360*\x/2.4)});
+        \node[font=\scriptsize\bfseries,text=coreorange,anchor=north] at (2.4,-2.05)
+          {orange $= -1.5\times$cosine $+\;1.5\times$sine};
+      \end{tikzpicture}
+    \column{0.41\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.62,transform shape]
+        \draw[-{Latex[length=2mm]},softgray] (-2.6,0) -- (2.6,0) node[anchor=west,font=\scriptsize]{$x$ (cosine)};
+        \draw[-{Latex[length=2mm]},softgray] (0,-2.6) -- (0,2.6) node[anchor=south,font=\scriptsize]{$y$ (sine)};
+        \draw[dashed,softgray] (-1.5,1.5) -- (-1.5,0) node[anchor=north,font=\scriptsize]{$-1.5$};
+        \draw[dashed,softgray] (-1.5,1.5) -- (0,1.5) node[anchor=west,font=\scriptsize]{$1.5$};
+        \fill[coreorange] (-1.5,1.5) circle (4.4pt);
+        \node[font=\scriptsize\bfseries,text=coreorange,anchor=south east] at (-1.6,1.6) {the wave};
+      \end{tikzpicture}
+  \end{columns}
+
+  \vspace{0.5em}
+  {\small Any wave of the chosen frequency --- any height, any starting point --- can be
+   written as ``$x$ parts of a cosine plus $y$ parts of a sine''. So the two knobs are
+   just two numbers, and two numbers are a \textbf{point} $(x, y)$.\par}
+
+  \vspace{0.3em}
+  \takeaway{One point $=$ one wave. From now on, when you see a dot, think ``a wave''.}
+\end{frame}
+
+% ---------- A4 ----------
+\begin{frame}{Bits pick the point}
+  \vspace{0.1em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.52\textwidth}
+      {\small Agree on 16 allowed points --- 16 allowed waves (the scheme is called
+       16-QAM; the name does not matter). Cut the bits into groups of four:\par}
+      \vspace{0.2em}
       {\centering\ttfamily\small 1011\ \ 0010\ \ 1110\ \ 0001\ \ \ldots\par}
-      \vspace{0.7em}
-      {\small Cut them into groups of four. Each group picks \textbf{one of 16 points}
-       on the map at right. That step is called \textbf{16-QAM}.\par}
-      \vspace{0.6em}
-      {\small A point is just two numbers, $(x, y)$. So four bits became one point,
-       and a long bit string became a \textbf{list of points}.\par}
-    \column{0.46\textwidth}
+      \vspace{0.3em}
+      {\small Each group names one point. The radio sends that wave for one
+       \textbf{symbol time} $T$, then the next group's wave, and so on.\par}
+      \vspace{0.4em}
+      {\small The receiver measures $(x, y)$, picks the \textbf{nearest} allowed point,
+       and reads four bits back. Noise nudges the measurement, so allowed points must
+       keep their distance --- hence 16, not thousands.\par}
+    \column{0.44\textwidth}
       \centering
       \begin{tikzpicture}[scale=0.62,transform shape]
         \draw[-{Latex[length=2mm]},softgray] (-2.7,0) -- (2.7,0) node[anchor=west,font=\scriptsize]{$x$};
@@ -63,115 +140,420 @@
             \fill[ranblue!60] (\x,\y) circle (2.6pt);
         \fill[coreorange] (-1.5,1.5) circle (4.4pt);
         \node[font=\scriptsize\bfseries,text=coreorange,anchor=south west] at (-1.38,1.62) {1011};
-        \node[font=\scriptsize,text=softgray,anchor=north] at (0,-2.85) {16 points, 4 bits each};
+        \fill[softgray] (-1.3,1.25) circle (1.8pt);
+        \node[font=\tiny,text=softgray,anchor=west] at (-1.2,1.15) {measured};
+        \node[font=\scriptsize,text=softgray,anchor=north] at (0,-2.85) {16 allowed waves, 4 bits each};
       \end{tikzpicture}
   \end{columns}
 
-  \vspace{0.3em}
-  \takeaway{Bits $\rightarrow$ points. Nothing has been transmitted yet;\\we have only chosen what to say.}
+  \vspace{0.2em}
+  \takeaway{One wave carries 4 bits every $T$: slow.\\Part 2: send much more at the same time.}
 \end{frame}
 
-\begin{frame}{Step 2: describing a point needs perpendicular axes}
+% ---------- B1 ----------
+\begin{frame}{Part 2: one wave is slow --- so use many}
+  \vspace{0.3em}
+  {\small Four bits per symbol time is nowhere near a video stream. Two ways to go
+   faster:\par}
+  \vspace{0.5em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      {\small\textbf{\textcolor{ranpurple}{Option A: one wave, shorter symbols.}}\par}
+      \vspace{0.3em}
+      {\small Keep one wave and switch points 64 times faster. Symbol time shrinks
+       from $T$ to $T/64$.\par}
+    \column{0.47\textwidth}
+      {\small\textbf{\textcolor{softgreen}{Option B: 64 waves at once.}}\par}
+      \vspace{0.3em}
+      {\small Use 64 different frequencies at the same time, each carrying its own
+       point for the full time $T$. Add them up and send the sum.\par}
+  \end{columns}
+
+  \vspace{0.8em}
+  {\small Both give 64 times the bits. Every modern radio --- Wi-Fi, 4G, 5G --- chose
+   \textbf{B}. The next slide is the reason, and it is the same physics this whole
+   lecture is about.\par}
+
+  \vspace{0.3em}
+  \takeaway{Same speed. So why does everyone pick many slow waves over one fast one?}
+\end{frame}
+
+% ---------- B2 ----------
+\begin{frame}{Why not one fast wave? Echoes.}
+  \vspace{0.2em}
+  \centering
+  \begin{tikzpicture}[scale=0.86,transform shape]
+    % option A: short symbols and a late echo
+    \node[font=\scriptsize\bfseries,text=ranpurple,anchor=east] at (-0.2,1.55) {A: short symbols};
+    \foreach \i in {0,...,6}
+      \fill[ranpurple!55] (\i*0.9,1.2) rectangle ++(0.8,0.55);
+    \foreach \i in {0,...,6}
+      \fill[ranpurple!25,draw=ranpurple,dashed] (\i*0.9+0.45,1.2) rectangle ++(0.8,0.55);
+    \node[font=\scriptsize,text=ranpurple,anchor=west] at (7.3,1.47) {echo lands on the \emph{next} symbol};
+    % option B: one long symbol and the same echo
+    \node[font=\scriptsize\bfseries,text=softgreen,anchor=east] at (-0.2,0.0) {B: long symbols};
+    \fill[softgreen!55] (0,-0.28) rectangle (6.2,0.27);
+    \fill[softgreen!25,draw=softgreen,dashed] (0.45,-0.28) rectangle (6.65,0.27);
+    \node[font=\scriptsize,text=softgreen,anchor=west] at (7.3,0.0) {echo mostly lands on \emph{itself}};
+    \draw[<->,softgray] (0,-0.75) -- (0.45,-0.75) node[midway,below,font=\scriptsize]{echo delay};
+  \end{tikzpicture}
+
+  \vspace{0.6em}
+  {\small Radio bounces. A copy of your signal arrives a little late off a wall or a
+   building --- about 1\,$\mu$s later for every 300\,m of extra path. With short
+   symbols (A) that echo is a smeared copy of the \emph{previous} symbol on top of the
+   current one: garbage. With long symbols (B) the echo overlaps the same symbol
+   almost entirely; it just makes the wave a bit taller or shorter, which the receiver
+   can undo.\par}
+
+  \vspace{0.25em}
+  \takeaway{Echoes are why we send many slow waves instead of one fast one.\\(Keep that sentence: later today the echo becomes the radar.)}
+\end{frame}
+
+% ---------- B3 ----------
+\begin{frame}{Add 64 waves and send the sum --- then what?}
+  \vspace{0.2em}
+  \centering
+  \begin{tikzpicture}[scale=0.88,transform shape]
+    \draw[thick,ranblue,domain=0:3.2,samples=120,smooth] plot (\x,{2.6+0.45*sin(360*\x/3.2)});
+    \draw[thick,coreorange,domain=0:3.2,samples=120,smooth] plot (\x,{1.7+0.45*sin(360*2*\x/3.2+40)});
+    \draw[thick,softgreen,domain=0:3.2,samples=120,smooth] plot (\x,{0.8+0.45*sin(360*3*\x/3.2+110)});
+    \node[font=\scriptsize,anchor=west] at (3.3,2.6) {wave 1, its point};
+    \node[font=\scriptsize,anchor=west] at (3.3,1.7) {wave 2, its point};
+    \node[font=\scriptsize,anchor=west] at (3.3,0.8) {wave 3, its point \ldots\ (64 of them)};
+    \node[font=\Large] at (1.6,-0.05) {$+$};
+    \draw[very thick,ranpurple,domain=0:3.2,samples=200,smooth]
+      plot (\x,{-1.3+0.45*sin(360*\x/3.2)+0.45*sin(360*2*\x/3.2+40)+0.45*sin(360*3*\x/3.2+110)});
+    \node[font=\scriptsize\bfseries,text=ranpurple,anchor=west] at (3.3,-1.3) {the sum: this is what the antenna sends};
+  \end{tikzpicture}
+
+  \vspace{0.6em}
+  {\small The receiver gets only the purple line. It has to recover \textbf{each}
+   wave's $(x, y)$ from it --- 64 pairs of numbers out of one squiggle. Looking at
+   the squiggle, that seems hopeless.\par}
+
+  \vspace{0.25em}
+  \takeaway{When can you pull one wave back out of a sum of many?\\That is the question the word ``orthogonal'' answers.}
+\end{frame}
+
+% ---------- B4 ----------
+\begin{frame}{Perpendicular axes: reading one ignores the other}
   \vspace{0.2em}
   \begin{columns}[T,onlytextwidth]
     \column{0.48\textwidth}
       \centering
-      \begin{tikzpicture}[scale=0.72,transform shape]
+      \begin{tikzpicture}[scale=0.66,transform shape]
         \draw[-{Latex[length=2mm]},ranblue,thick] (0,0) -- (3.2,0) node[anchor=west,font=\scriptsize]{$x$};
         \draw[-{Latex[length=2mm]},ranblue,thick] (0,0) -- (0,3.2) node[anchor=south,font=\scriptsize]{$y$};
         \fill[coreorange] (2,2.2) circle (3pt);
         \draw[dashed,softgray] (2,2.2) -- (2,0) node[anchor=north,font=\scriptsize]{2};
         \draw[dashed,softgray] (2,2.2) -- (0,2.2) node[anchor=east,font=\scriptsize]{2.2};
-        \node[font=\scriptsize,text=softgreen,align=center,anchor=north] at (1.6,-0.65)
-          {perpendicular:\\two numbers, no overlap};
+        \node[font=\scriptsize,text=softgreen,align=center,anchor=north] at (1.6,-0.6)
+          {perpendicular: reading $x$\\picks up nothing of $y$};
       \end{tikzpicture}
     \column{0.48\textwidth}
       \centering
-      \begin{tikzpicture}[scale=0.72,transform shape]
+      \begin{tikzpicture}[scale=0.66,transform shape]
         \draw[-{Latex[length=2mm]},ranpurple,thick] (0,0) -- (3.2,0) node[anchor=west,font=\scriptsize]{$a$};
         \draw[-{Latex[length=2mm]},ranpurple,thick] (0,0) -- (2.77,1.6) node[anchor=west,font=\scriptsize]{$b$};
         \fill[coreorange] (2,2.2) circle (3pt);
         \draw[dashed,softgray] (2,2.2) -- (2,0);
         \draw[dashed,softgray] (2,2.2) -- (2.45,1.42);
-        \node[font=\scriptsize,text=ranpurple,align=center,anchor=north] at (1.6,-0.65)
-          {tilted:\\$a$ and $b$ repeat each other};
+        \node[font=\scriptsize,text=ranpurple,align=center,anchor=north] at (1.6,-0.6)
+          {tilted: reading $a$\\picks up part of $b$};
       \end{tikzpicture}
   \end{columns}
 
   \vspace{0.6em}
-  {\small In 2-D you need two axes, in 3-D three --- and they must be
-   \textbf{perpendicular}. Tilt them and each axis partly repeats what the other
-   already said: the two numbers overlap, and reading one leaks into the other.\par}
+  {\small Think of a point on a plane. With perpendicular axes, its $x$-reading does
+   not change when you slide it along $y$: the two numbers are independent, each can be
+   read on its own. Tilt the axes and that breaks --- moving along $b$ changes the
+   $a$-reading. The two numbers leak into each other.\par}
 
   \vspace{0.3em}
-  \takeaway{A signal is a point in a space with many dimensions.\\To describe it cleanly we need many axes, all perpendicular to each other.}
+  \takeaway{Separable $\Leftrightarrow$ perpendicular. Now we need the same idea for waves.}
 \end{frame}
 
-\begin{frame}{Step 3: the FFT is a set of perpendicular axes}
+% ---------- B5 ----------
+\begin{frame}{Perpendicular waves, drawn}
   \vspace{0.1em}
   \begin{columns}[T,onlytextwidth]
-    \column{0.42\textwidth}
-      {\small\textbf{Two dimensions.} The 2-point FFT:\par}
-      \vspace{-0.6em}
+    \column{0.49\textwidth}
+      \centering
+      {\small\textbf{\textcolor{softgreen}{1 cycle $\times$ 2 cycles in time $T$}}\par}
+      \begin{tikzpicture}[scale=0.66,transform shape]
+        \draw[softgray] (0,0) -- (4,0);
+        \draw[thick,ranblue,domain=0:4,samples=100,smooth] plot (\x,{0.5*sin(360*\x/4)});
+        \draw[thick,coreorange,domain=0:4,samples=100,smooth] plot (\x,{0.5*sin(360*2*\x/4)});
+        \draw[softgray] (0,-1.9) -- (4,-1.9);
+        \fill[softgreen!35,domain=0:4,samples=120,smooth] plot (\x,{-1.9+0.7*sin(360*\x/4)*sin(360*2*\x/4)}) -- (4,-1.9) -- (0,-1.9) -- cycle;
+        \draw[thick,softgreen,domain=0:4,samples=120,smooth] plot (\x,{-1.9+0.7*sin(360*\x/4)*sin(360*2*\x/4)});
+        \node[font=\scriptsize,anchor=west] at (4.1,-1.9) {product};
+        \node[font=\scriptsize\bfseries,text=softgreen,anchor=north] at (2,-2.75) {area above $=$ area below: total 0};
+      \end{tikzpicture}
+    \column{0.49\textwidth}
+      \centering
+      {\small\textbf{\textcolor{ranpurple}{1 cycle $\times$ 1.5 cycles in time $T$}}\par}
+      \begin{tikzpicture}[scale=0.66,transform shape]
+        \draw[softgray] (0,0) -- (4,0);
+        \draw[thick,ranblue,domain=0:4,samples=100,smooth] plot (\x,{0.5*sin(360*\x/4)});
+        \draw[thick,coreorange,domain=0:4,samples=100,smooth] plot (\x,{0.5*sin(360*1.5*\x/4)});
+        \draw[softgray] (0,-1.9) -- (4,-1.9);
+        \fill[ranpurple!30,domain=0:4,samples=120,smooth] plot (\x,{-1.9+0.7*sin(360*\x/4)*sin(360*1.5*\x/4)}) -- (4,-1.9) -- (0,-1.9) -- cycle;
+        \draw[thick,ranpurple,domain=0:4,samples=120,smooth] plot (\x,{-1.9+0.7*sin(360*\x/4)*sin(360*1.5*\x/4)});
+        \node[font=\scriptsize,anchor=west] at (4.1,-1.9) {product};
+        \node[font=\scriptsize\bfseries,text=ranpurple,anchor=north] at (2,-2.75) {more above than below: total $\neq 0$};
+      \end{tikzpicture}
+  \end{columns}
+
+  \vspace{0.5em}
+  {\small To measure ``how much of wave 1 is in the sum'', the receiver multiplies the
+   sum by wave 1 and adds up over the symbol time $T$. Two waves are
+   \textbf{perpendicular} when that product adds up to \textbf{zero}: measuring one
+   picks up nothing of the other. Left: it works. Right: it does not --- wave 2 leaks
+   into the reading.\par}
+
+  \vspace{0.2em}
+  \takeaway{Whole cycles in $T$: perpendicular. Fractional cycles: leak.}
+\end{frame}
+
+% ---------- B6 ----------
+\begin{frame}{The perpendicular family: frequencies $k/T$}
+  \vspace{0.3em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \draw[-{Latex[length=2mm]},softgray] (0,0) -- (9.4,0) node[anchor=west,font=\scriptsize]{frequency};
+    \foreach \k/\lab in {1/{$1/T$},2/{$2/T$},3/{$3/T$},4/{$4/T$},5/{$5/T$},6/{$6/T$},7/{$7/T$},8/{$8/T$}}
+      { \draw[very thick,ranblue] (\k*1.05,0) -- (\k*1.05,1.4);
+        \fill[ranblue] (\k*1.05,1.4) circle (2.4pt);
+        \node[font=\scriptsize,anchor=north] at (\k*1.05,-0.08) {\lab}; }
+    \node[font=\scriptsize,text=softgray,anchor=west] at (8.7,1.4) {\ldots\ 64 of them};
+    \draw[<->,coreorange,thick] (1.05,1.75) -- (2.1,1.75) node[midway,above,font=\scriptsize\bfseries,text=coreorange]{spacing $1/T$};
+  \end{tikzpicture}
+
+  \vspace{0.6em}
+  {\small A wave fits a whole number of cycles into $T$ exactly when its frequency is
+   a multiple of $1/T$. So the waves at $1/T,\ 2/T,\ 3/T,\ldots$ are \textbf{all
+   perpendicular to each other}. That is the family OFDM uses. Each member is called
+   a \textbf{subcarrier}, and their spacing is $1/T$ --- not a design choice, a
+   consequence.\par}
+
+  \vspace{0.3em}
+  {\small\textbf{Real numbers.} 5G: $T\approx 67\,\mu$s, so subcarriers 15\,kHz apart
+   (30, 60, 120\,kHz variants exist). Wi-Fi: $T = 3.2\,\mu$s, spacing 312.5\,kHz.\par}
+
+  \vspace{0.3em}
+  \takeaway{We now know \emph{which} 64 waves to use.\\Part 3: the machine that adds them up and takes them apart.}
+\end{frame}
+
+% ---------- C1 ----------
+\begin{frame}{Part 3: we need two machines}
+  \vspace{0.4em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape,
+      mbox/.style={draw=ranblue,fill=blue!5,rounded corners=3pt,minimum width=3.0cm,
+        minimum height=1.05cm,align=center,font=\small}]
+    \node[font=\small,align=center] (pts) at (0,0) {64 points\\[-2pt]{\scriptsize $(x_1,y_1)\ldots(x_{64},y_{64})$}};
+    \node[mbox,draw=coreorange,fill=orange!8] (add) at (4.0,0.9) {\textbf{Machine 1}\\[-1pt]{\scriptsize add the 64 waves, each with its amount}};
+    \node[mbox] (sep) at (4.0,-0.9) {\textbf{Machine 2}\\[-1pt]{\scriptsize measure how much of each wave is in a sum}};
+    \node[font=\small,align=center] (sum) at (8.2,0) {the sum\\[-2pt]{\scriptsize one squiggle, time $T$}};
+    \draw[flow] (pts) |- (add); \draw[flow] (add) -| (sum);
+    \draw[flow] (sum) |- (sep); \draw[flow] (sep) -| (pts);
+    \node[font=\scriptsize,text=coreorange] at (2.0,1.55) {transmitter};
+    \node[font=\scriptsize,text=ranblue] at (6.2,-1.55) {receiver};
+  \end{tikzpicture}
+
+  \vspace{0.7em}
+  {\small Both machines work on the same 64 waves. To put them in a computer, sample
+   each wave at 64 instants during $T$: a wave becomes a row of 64 numbers, and 64
+   waves become a 64$\times$64 table. \textbf{Machine 2 is that table.} Machine 1 is
+   the same table run backwards.\par}
+
+  \vspace{0.3em}
+  \takeaway{That table has a name: the FFT matrix. Let us look at a tiny one.}
+\end{frame}
+
+% ---------- C2 ----------
+\begin{frame}{Two waves: the $2\times2$ FFT, with numbers}
+  \vspace{0.1em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.50\textwidth}
+      {\small\textbf{Machine 2} --- measure. Two waves sampled at two instants: a flat
+       one $(1,\,1)$ and a flipping one $(1,\,-1)$. Stack them as rows:\par}
+      \vspace{-0.5em}
       {\small\[ \begin{pmatrix} 1 & \phantom{-}1 \\ 1 & -1 \end{pmatrix}
-          \begin{pmatrix} a \\ b \end{pmatrix} =
-          \begin{pmatrix} a+b \\ a-b \end{pmatrix} \]}
-      \vspace{0.15em}
-      {\footnotesize Row one: the \textbf{common part}. Row two: the \textbf{difference}.
-       The rows are perpendicular --- $1\cdot 1 + 1\cdot(-1) = 0$ --- so the two
-       answers do not overlap.\par}
-    \column{0.54\textwidth}
-      {\small\textbf{Four dimensions.} Same idea; $j=\sqrt{-1}$ lets an axis rotate:\par}
-      \vspace{-0.6em}
+          \begin{pmatrix} 3 \\ 1 \end{pmatrix} =
+          \begin{pmatrix} 4 \\ 2 \end{pmatrix} \]}
+      \vspace{-0.2em}
+      {\small The sum $(3, 1)$ contains 4 units of the flat wave and 2 of the flipping
+       one. Rows perpendicular: $1\cdot1 + 1\cdot(-1) = 0$.\par}
+    \column{0.46\textwidth}
+      {\small\textbf{Machine 1} --- add. Same table, run backwards (divide by 2):\par}
+      \vspace{-0.5em}
+      {\small\[ \tfrac{1}{2}\begin{pmatrix} 1 & \phantom{-}1 \\ 1 & -1 \end{pmatrix}
+          \begin{pmatrix} 4 \\ 2 \end{pmatrix} =
+          \begin{pmatrix} 3 \\ 1 \end{pmatrix} \]}
+      \vspace{-0.2em}
+      {\small Give it the amounts $(4, 2)$ and it rebuilds the sum $(3, 1)$. Round trip
+       complete, nothing lost --- \emph{because} the rows are perpendicular.\par}
+  \end{columns}
+
+  \vspace{0.4em}
+  \takeaway{FFT $=$ measure each wave. IFFT $=$ add the waves back.\\Perpendicular rows are what make the round trip exact.}
+\end{frame}
+
+% ---------- C3 ----------
+\begin{frame}{Four waves: the $4\times4$ FFT}
+  \vspace{0.1em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.46\textwidth}
+      {\small Four waves at $0,\ 1/T,\ 2/T,\ 3/T$, each sampled at four instants:\par}
+      \vspace{-0.5em}
       {\small\[ \begin{pmatrix} 1 & \phantom{-}1 & \phantom{-}1 & \phantom{-}1 \\
                                 1 & -j & -1 & \phantom{-}j \\
                                 1 & -1 & \phantom{-}1 & -1 \\
                                 1 & \phantom{-}j & -1 & -j \end{pmatrix} \]}
-      \vspace{0.15em}
-      {\footnotesize Any two rows: multiply entry by entry (flip the sign of $j$ in
-       one of them), add --- you get 0. \textbf{Every row is perpendicular to every
-       other.} Each row is one frequency.\par}
+      \vspace{-0.2em}
+      {\footnotesize Row $k$ is the wave at frequency $k/T$. The $j$ ($=\sqrt{-1}$) is
+       only there so a wave can \emph{rotate} through its cycle instead of merely
+       flipping sign.\par}
+    \column{0.50\textwidth}
+      {\small\textbf{Check one pair.} Row 2 against row 4 (flip the sign of $j$ in one
+       of them, multiply entry by entry, add):\par}
+      \vspace{0.2em}
+      {\small\[ \begin{aligned} &1\cdot1 + (-j)(-j) + (-1)(-1) + j\cdot j \\ &\quad= 1 - 1 + 1 - 1 = 0 \end{aligned} \]}
+      \vspace{-0.2em}
+      {\small Zero. Try any other pair --- also zero. \textbf{Every wave is
+       perpendicular to every other}, exactly as the drawing promised.\par}
+      \vspace{0.3em}
+      {\small The $64\times64$ table is the same thing, bigger. The $4096\times4096$
+       one too.\par}
   \end{columns}
 
-  \vspace{0.35em}
-  \takeaway{FFT asks a signal: how much of you lies along each frequency?\\IFFT is the reverse: give it the amounts, it builds the signal.}
+  \vspace{0.3em}
+  \takeaway{The FFT matrix is the list of perpendicular waves, written as numbers.}
 \end{frame}
 
-\begin{frame}{Step 4: an OFDM symbol is just an IFFT}
-  \vspace{0.2em}
+% ---------- C4 ----------
+\begin{frame}{Why ``Fast'' is the important letter}
+  \vspace{0.3em}
+  {\small Multiplying a signal by an $N\times N$ table costs $N^2$ multiplications.
+   The FFT gets the identical answer in about $N\log_2 N$ --- by reusing the halves of
+   the table, which are copies of each other.\par}
+
+  \vspace{0.6em}
+  \centering
+  {\small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{r r r r}
+    \toprule
+    waves $N$ & plain table $N^2$ & FFT $N\log_2 N$ & saving \\
+    \midrule
+    64    & 4\,096       & 384    & $11\times$ \\
+    1\,024 & 1\,048\,576 & 10\,240 & $100\times$ \\
+    4\,096 & 16\,777\,216 & 49\,152 & $340\times$ \\
+    \bottomrule
+  \end{tabular}}
+
+  \vspace{0.7em}
+  {\small A 5G phone runs this for every symbol, tens of thousands of times a second,
+   on a battery. With the plain table it could not. The FFT algorithm dates from 1965;
+   the first paper proposing OFDM built on it is from 1971. That is not a
+   coincidence.\par}
+
+  \vspace{0.3em}
+  \takeaway{OFDM is practical \emph{because} the FFT is fast.\\Part 4: put the pieces together.}
+\end{frame}
+
+% ---------- D1 ----------
+\begin{frame}{Part 4: the transmitter}
+  \vspace{0.3em}
   \centering
   \begin{tikzpicture}[scale=0.84,transform shape,
       pbox/.style={draw=ranblue,fill=blue!5,rounded corners=3pt,minimum width=2.05cm,
         minimum height=0.95cm,align=center,font=\scriptsize}]
     \node[pbox] (bits) at (0,0) {bits\\[-1pt]{\tiny 1011 0010 \ldots}};
-    \node[pbox] (qam) at (2.9,0) {16-QAM\\[-1pt]{\tiny 64 points}};
-    \node[pbox,draw=coreorange,fill=orange!8] (ifft) at (5.8,0) {IFFT\\[-1pt]{\tiny 64 perpendicular axes}};
-    \node[pbox,minimum width=2.6cm] (sym) at (8.9,0) {one OFDM symbol\\[-1pt]{\tiny 64 subcarriers, a burst in time}};
+    \node[pbox] (qam) at (2.9,0) {64 points\\[-1pt]{\tiny 4 bits each}};
+    \node[pbox,draw=coreorange,fill=orange!8] (ifft) at (5.8,0) {IFFT\\[-1pt]{\tiny adds the 64 waves}};
+    \node[pbox,minimum width=2.6cm] (sym) at (8.9,0) {one OFDM symbol\\[-1pt]{\tiny the sum, time $T$}};
     \foreach \a/\b in {bits/qam,qam/ifft,ifft/sym} \draw[flow] (\a) -- (\b);
   \end{tikzpicture}
 
-  \vspace{0.6em}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.50\textwidth}
-      \small
-      \begin{itemize}\itemsep4pt
-        \item Put one QAM point on each of 64 perpendicular axes.
-        \item The IFFT adds them into one burst of time: a \textbf{symbol}.
-        \item Each axis is a \textbf{subcarrier}, a narrow carrier of its own.
-        \item Perpendicular $\Rightarrow$ no interference, even packed tight.
-      \end{itemize}
-    \column{0.46\textwidth}
-      \small
-      \textbf{How tight?} Spacing $= 1/T$, one over the symbol length. The standard
-      picks the number: 5G uses 15, 30, 60 or 120\,kHz; Wi-Fi uses 312.5\,kHz.
+  \vspace{0.7em}
+  {\small
+  \begin{itemize}\itemsep5pt
+    \item Take 256 bits. Cut into 64 groups of four; each group picks a point.
+    \item Put point $k$ on the wave at frequency $k/T$ --- on \textbf{subcarrier} $k$.
+    \item One IFFT adds the 64 waves into one burst of length $T$: the \textbf{symbol}.
+    \item Send it. Then the next 256 bits, the next symbol, and so on.
+  \end{itemize}}
 
-      \vspace{0.4em}
-      Send symbol after symbol and you get a \textbf{grid}: subcarriers down the
-      side, symbols across. \textbf{One cell = one subcarrier for one symbol.}
-  \end{columns}
+  \vspace{0.3em}
+  \takeaway{256 bits in, one symbol out --- 64 times what one wave could do.}
+\end{frame}
+
+% ---------- D2 ----------
+\begin{frame}{The receiver}
+  \vspace{0.3em}
+  \centering
+  \begin{tikzpicture}[scale=0.84,transform shape,
+      pbox/.style={draw=ranblue,fill=blue!5,rounded corners=3pt,minimum width=2.05cm,
+        minimum height=0.95cm,align=center,font=\scriptsize}]
+    \node[pbox,minimum width=2.6cm] (sym) at (0,0) {received symbol\\[-1pt]{\tiny the sum, plus noise and echoes}};
+    \node[pbox,draw=coreorange,fill=orange!8] (fft) at (3.1,0) {FFT\\[-1pt]{\tiny measures each wave}};
+    \node[pbox] (qam) at (6.0,0) {64 points\\[-1pt]{\tiny nearest allowed one}};
+    \node[pbox] (bits) at (8.9,0) {bits\\[-1pt]{\tiny 1011 0010 \ldots}};
+    \foreach \a/\b in {sym/fft,fft/qam,qam/bits} \draw[flow] (\a) -- (\b);
+  \end{tikzpicture}
+
+  \vspace{0.7em}
+  {\small
+  \begin{itemize}\itemsep5pt
+    \item One FFT on the received burst: out come 64 $(x, y)$ pairs, one per subcarrier
+      --- cleanly, because the waves are perpendicular.
+    \item Each pair is nudged by noise; snap it to the nearest allowed point; read 4 bits.
+    \item The echo from slide ``Why not one fast wave'' is in here too. It makes each
+      subcarrier's point a little larger or rotated --- a per-subcarrier correction,
+      then forgotten. \emph{Or} kept: that echo is what the radar half of ISAC reads.
+  \end{itemize}}
 
   \vspace{0.2em}
-  \takeaway{That grid is the OFDM you already use every day.\\Next slide: the same grid, read as a radar.}
+  \takeaway{Same 64 waves, same FFT, read the other way round.}
+\end{frame}
+
+% ---------- D3 ----------
+\begin{frame}{Symbol after symbol: the grid}
+  \vspace{0.2em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.46\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.82,transform shape]
+        \foreach \x in {0,...,5}
+          \foreach \y in {0,...,3}
+            \draw[draw=softgray!50,fill=blue!6] (\x*0.62+0.12,\y*0.52+0.10) rectangle ++(0.58,0.48);
+        \fill[orange!45,draw=coreorange] (2*0.62+0.12,2*0.52+0.10) rectangle ++(0.58,0.48);
+        \draw[-{Latex[length=2mm]},softgray] (0,0) -- (4.0,0)
+          node[anchor=north,font=\scriptsize] {time (one column = one symbol)};
+        \draw[-{Latex[length=2mm]},softgray] (0,0) -- (0,2.4);
+        \node[font=\scriptsize,rotate=90,anchor=south] at (-0.16,1.2) {frequency (subcarriers)};
+      \end{tikzpicture}
+    \column{0.50\textwidth}
+      \small
+      \begin{itemize}\itemsep5pt
+        \item Each column is one symbol; each row is one subcarrier.
+        \item The orange cell: subcarrier 3 during symbol 3 --- \textbf{one wave, one
+          symbol time, one point, four bits}.
+        \item 5G calls a cell a \textbf{resource element}. A base station schedules by
+          handing out cells: these to you, those to your neighbour.
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.4em}
+  {\small Every OFDM radio --- Wi-Fi, 4G, 5G --- fills and reads this grid, symbol
+   after symbol.\par}
+
+  \vspace{0.2em}
+  \takeaway{Question 2 answered: OFDM is a grid of cells, one wave per cell.\\Next slide: the same grid, read as a radar.}
 \end{frame}
 
 \begin{frame}{OFDM already carries a radar inside it}

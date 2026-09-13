@@ -314,7 +314,7 @@ const S = [
 `},
 
 {s:"权衡", t:"前沿,画一次", e:"The frontier, drawn once", n:`
-<p>上一页说了有条前沿,这一页把它画出来。<b>这张图后面会反复回来</b>(第 24、26 页),所以这里要讲到学生真的看懂。</p>
+<p>上一页说了有条前沿,这一页把它画出来。<b>这张图后面会反复回来</b>(第 36、38 页),所以这里要讲到学生真的看懂。</p>
 <h3>两根轴,而且横轴是反的</h3>
 <ul>
   <li><b>纵轴</b>:可达速率(achievable rate)。<b>越高越好</b>,这个符合直觉。</li>
@@ -335,40 +335,94 @@ const S = [
 `},
 
 {s:"波形", t:"第二个问题:我们到底用哪个信号?", e:"Question 2: which signal do we actually use?", n:`
-<p><b>过渡页(新加)。</b>之前第 13 页画完曲线直接跳到"Step 1",OFDM 这个词在 slide 上从没出场过 —— 学生不知道为什么突然开始"造信号"。这一页做三件事:收第一个问题,提第二个问题,预告四步。</p>
-<div class="say">第一个问题回答完了:两份工要的东西相反,所以有一条取舍曲线。那么不管我们选哪个信号,它都得同时干两份工,并且落在这条曲线的某一点上。<br><br>第二个问题:到底用哪个信号?<br><br><b>答案是 OFDM</b> —— Orthogonal Frequency Division Multiplexing,正交频分复用。就是 Wi-Fi、4G、5G 现在正在发的那个信号。不造新收音机。<br><br>但要把 OFDM 当雷达读,得先知道它是什么。你们大多数人只听过这个名字,所以接下来四页,我们从零把一个 OFDM 信号搭出来:比特变成点;描述一个点需要垂直的坐标轴;FFT 就是一组垂直轴;一次 IFFT 就是一个 OFDM 符号,符号排起来就是格子。</div>
-<div class="warn">这四步念出来就行,别在这页解释任何一步。它是目录,不是内容。</div>
+<p><b>过渡页。</b>收第一个问题,提第二个问题,预告四个部分。四个部分的名字就是四个"为什么":为什么是点、为什么要很多波且垂直、为什么是 FFT、怎么拼成格子。念出来即可,别解释。</p>
+<div class="say">第一个问题回答完了:两份工要的东西相反,所以有一条取舍曲线。那不管选哪个信号,它都得同时干两份工、落在曲线的某一点上。<br><br>第二个问题:到底用哪个信号?<br><br><b>答案是 OFDM</b> —— 正交频分复用,Wi-Fi、4G、5G 现在正在发的那个信号。不造新收音机。<br><br>但要把 OFDM 当雷达读,得先真正搞懂它。你们大多数人只听过名字,所以我们从地基开始,分四部分搭:收音机到底发什么、为什么它是一个"点";为什么要很多个波同时发、为什么必须互相垂直;为什么是 FFT;最后把发射机、接收机和格子拼起来。</div>
 `},
 
-{s:"波形", t:"第一步:比特变成点", e:"Step 1: bits become points", n:`
-<p>上一页宣布了四步,这是第一步。不讲细节,只走例子。</p>
-<h3>这一页</h3>
-<p>左边一串比特 1011 0010 1110 0001……每四个一组,每组在右边地图上挑 16 个点中的一个 —— 这就是 16-QAM。橙色那个点就是 1011 挑中的。</p>
-<div class="say">一个点就是两个数 (x, y)。所以四个比特变成了一个点,一长串比特变成了<b>一串点</b>。<br><br>注意:到这儿什么都还没发出去。我们只是决定了"要说什么"。</div>
-<div class="warn">别展开 QAM 的映射规则(格雷码之类)。学生只需要一句:一组比特 → 一个点。</div>
+{s:"波形", t:"收音机发的是波,不是比特", e:"A radio sends a wave, not bits", n:`
+<p><b>第一部分第一页:先把"波"立起来。</b>学生对 0/1 很熟,对"天线发的是什么"没有概念。这页只讲一件事:波有两个旋钮。</p>
+<div class="say">天线发不出 0 和 1。它发的是某个频率上的一个<b>波</b>。频率一定下来,这个波只剩两样东西可以改:<b>多高</b>(幅度),<b>从周期的哪儿开始</b>(相位)。图上蓝线是基准;橙线只有一半高;绿线一样高,但提前了四分之一个周期。<br><br>别的都被频率钉死了。所以要传信息,只能转这两个旋钮。</div>
+<div class="warn">这页不要出现"载波""调制"这类词。就说"波"和"两个旋钮"。</div>
 `},
 
-{s:"波形", t:"第二步:描述一个点,坐标轴必须互相垂直", e:"Step 2: describing a point needs perpendicular axes", n:`
-<p>这一页是整个入门的核心比喻,也是你惯用的那个:<b>坐标轴为什么要垂直</b>。</p>
-<div class="say">平面上任何一个点,用 x 和 y 两个数就能写出来;三维空间用 x、y、z。这三根轴互相垂直。<br><br>为什么不用歪着的轴?看右边:轴 a 和轴 b 有夹角,那么点在 a 上的读数里已经"含着"一部分 b 的信息 —— 两个数互相重叠,互相漏。只有互相垂直,每个数才说的是别的数没说过的事。<br><br>一个信号也是一个"点",只是它住的空间维度很高 —— 可能一百维、一千维。要干净地描述它,我们需要很多根轴,而且两两垂直。</div>
-<div class="ask">怎么给一个信号找一组互相垂直的轴?<br><br>(留着,下一页答:FFT。)</div>
+{s:"波形", t:"两个旋钮就是一个点", e:"Two knobs are one point", n:`
+<p><b>回答"点是什么"</b>——上一版最大的漏洞。这页把波和点画在一起:左边一个波,右边它对应的点。</p>
+<div class="say">这个频率上任何一个波 —— 随便多高、随便从哪开始 —— 都能写成"x 份余弦加 y 份正弦"。左边橙色那条波就是 −1.5 份余弦加 1.5 份正弦。所以两个旋钮其实就是两个数,两个数就是一个<b>点</b> (x, y)。右边那个橙点,就是左边那条橙波。<br><br><b>一个点 = 一个波。</b>从现在起,看到一个点,脑子里想的是一条波。</div>
+<div class="warn">不要推三角恒等式。"任何波都能写成余弦份数加正弦份数"直接给,学生接受这个陈述就够了。</div>
 `},
 
-{s:"波形", t:"第三步:FFT 就是一组现成的垂直轴", e:"Step 3: the FFT is a set of perpendicular axes", n:`
-<p>把矩阵写出来给学生看 —— 这是这页的全部意义。他们看到行与行互相垂直,就认出来了。</p>
-<h3>二维</h3>
-<p>2 点 FFT 就是矩阵 [[1, 1], [1, −1]]。乘上 (a, b):第一行给 a+b(两个数的"共同部分"),第二行给 a−b("差别")。两行点乘 = 1·1 + 1·(−1) = 0,互相垂直,所以这两个答案不重叠 —— 二维的信息被拆成了两个互相垂直的分量。</p>
-<h3>四维</h3>
-<p>4 点 FFT 矩阵里出现了 j(虚数单位),它的作用只是让轴能"转"。任取两行,逐项相乘(其中一行把 j 变号)再相加,结果是 0。每一行都跟其他行垂直。</p>
-<div class="say">每一行就是一个频率。用这个矩阵去乘一个信号,就是在问它:"你在每个频率上有多少?"这就是 FFT —— 本质上是<b>提取分量</b>。<br><br>IFFT 反过来:告诉它每根轴上放多少,它把信号拼出来。4 维是这样,64 维、4096 维一模一样。</div>
-<div class="warn">j 那一句别多讲。学生问"为什么有虚数",答"为了让轴能旋转,不然只有正、负两个方向"就够了。</div>
+{s:"波形", t:"比特来选点", e:"Bits pick the point", n:`
+<p>现在才轮到比特。有了"点 = 波",这页顺理成章。</p>
+<div class="say">事先约好 16 个允许的点,也就是 16 个允许的波。比特四个一组:1011、0010、1110、0001……每组点名一个点。收音机把那条波发一个<b>符号时间</b> T,然后换下一组的波。<br><br>接收方量出 (x, y),挑<b>最近的</b>允许点,读回四个比特。噪声会把量出来的点推偏一点(图上灰点),所以允许点之间不能太挤 —— 这就是为什么是 16 个,不是一万六千个。<br><br>这套约定叫 16-QAM,名字不重要,图重要。</div>
+<p>橙框留下缺口:一个波每 T 只带 4 比特,太慢。第二部分解决它。</p>
 `},
 
-{s:"波形", t:"第四步:一个 OFDM 符号就是一次 IFFT", e:"Step 4: an OFDM symbol is just an IFFT", n:`
-<p>把前三步串起来,这一页出来的就是 OFDM。</p>
-<div class="say">把 64 个 QAM 点,一个放到一根垂直轴上。做一次 IFFT,它们被叠成一小段时间上的信号 —— 这就是<b>一个 OFDM 符号</b>。<br><br>每根轴是一个<b>子载波</b>:一个自己的窄带小载波。因为它们互相垂直,所以互不干扰 —— 哪怕在频率上挨得很紧。<br><br>能挨多紧?间隔 = 1/T,T 是一个符号的时长。这个数是标准定的:5G 用 15、30、60 或 120 kHz,Wi-Fi 用 312.5 kHz。<br><br>一个符号接一个符号发出去,就得到一张<b>格子</b>:纵向是子载波,横向是符号。一个格子 = 一个子载波在一个符号时间里。</div>
-<p>橙框那句就是过桥句:这张格子就是你们天天在用的 OFDM。下一页把同一张格子当雷达看。</p>
-<div class="warn">"间隔是实验测出来的"这种说法不要用 —— 间隔是 1/T 的设计结果,数值由标准选定。</div>
+{s:"波形", t:"第二部分:一个波太慢 —— 那就用很多个", e:"Part 2: one wave is slow — so use many", n:`
+<p>第二部分开场。先把"快 64 倍"的两条路摆出来,让学生自己觉得两条都行 —— 下一页才揭晓为什么所有人都选了 B。</p>
+<div class="say">每 T 四个比特,离视频流差得远。要快 64 倍有两条路:<br><br><b>A:一个波,符号变短。</b>还是一个波,换点换得快 64 倍,符号时间从 T 变成 T/64。<br><br><b>B:64 个波同时发。</b>64 个不同频率,每个带自己的点,各发满 T,加起来发出去。<br><br>两条路速度一样。可 Wi-Fi、4G、5G 全都选了 B。下一页是原因,而且这个原因就是今天整节课的物理。</div>
+`},
+
+{s:"波形", t:"为什么不用一个快波?因为回波。", e:"Why not one fast wave? Echoes.", n:`
+<p><b>这是"为什么用 OFDM"的真正答案</b>,也是这节课最重要的埋线:回波在这里是敌人,后半场它会变成雷达。</p>
+<div class="say">无线电会反弹。你的信号有一份拷贝会从墙上、楼上弹回来,晚到一点 —— 多走 300 米就晚 1 微秒。<br><br>看图。A 是短符号:那份晚到的拷贝落在了<b>下一个</b>符号上面,是上一个符号的糊影盖住了现在这个 —— 垃圾。B 是长符号:同样的延迟,拷贝几乎全部落在<b>它自己</b>身上,只是让这条波高一点或矮一点,接收方一乘就修回来了。<br><br>所以我们用很多慢波,不用一个快波。这句话记住 —— 今天后面,这个回波就是雷达。</div>
+<div class="warn">数字:300 米 ↔ 1 µs 是光速算的,准确。别说成"多径衰落"之类术语。</div>
+`},
+
+{s:"波形", t:"把 64 个波加起来发出去 —— 然后呢?", e:"Add 64 waves and send the sum — then what?", n:`
+<p>提出接收端的问题。这页的作用是让学生真的觉得"从一团紫线里拆回 64 个点"看起来不可能 —— 这样"正交"出场才有分量。</p>
+<div class="say">上面三条:波 1 带它的点,波 2 带它的点,波 3……一共 64 个。加起来,就是下面那条紫线 —— 天线发出去的就是它。<br><br>接收方拿到的<b>只有</b>紫线。它得从这一根弯弯曲曲的线里,把 64 个波各自的 (x, y) 都找回来 —— 一团东西里抠出 64 对数。光看这条线,像是没希望。<br><br>什么时候能从一堆波的和里把一个波单独拿出来?"正交"这个词回答的就是这个问题。</div>
+`},
+
+{s:"波形", t:"垂直坐标轴:读一个,不带上另一个", e:"Perpendicular axes: reading one ignores the other", n:`
+<p>你惯用的比喻,现在有了明确的用途:解释"可分离"到底是什么条件。</p>
+<div class="say">先看平面上的点。左边 x、y 垂直:把点沿着 y 滑动,它的 x 读数不变 —— 两个数互相独立,各读各的。右边 a、b 歪着:沿 b 移动,a 的读数也跟着变了 —— 两个数互相漏。<br><br>可分离 ⇔ 垂直。现在我们要把同样的想法搬到波上。</div>
+`},
+
+{s:"波形", t:"画出来:什么叫两个波垂直", e:"Perpendicular waves, drawn", n:`
+<p><b>这页把"波的垂直"变成看得见的东西</b>,是第二部分的核心。两张图:左边 1 个周期 × 2 个周期,乘积正负面积抵消;右边 1 个周期 × 1.5 个周期,抵不掉。</p>
+<div class="say">接收方要量"和里有多少波 1",做法是拿和去乘波 1,再在一个符号时间 T 里加起来。<br><br>左边:波 1 一个周期,波 2 两个周期。它们的乘积是下面绿色那条,上面的面积和下面的面积一样多 —— 加起来是零。也就是说量波 1 的时候,波 2 一点都没混进来。这就叫两个波<b>垂直</b>。<br><br>右边:波 2 只有 1.5 个周期。乘积上面多下面少,加起来不是零 —— 波 2 漏进了波 1 的读数里。<br><br>规律:在 T 里转整数个周期,垂直;转半个,漏。</div>
+`},
+
+{s:"波形", t:"垂直的那一家:频率是 k/T", e:"The perpendicular family: frequencies k/T", n:`
+<p>把上一页的规律收成一句话,并第一次给出"子载波""间隔 1/T"和真实数字。间隔在这里是<b>结论</b>,不是参数。</p>
+<div class="say">一个波在 T 里转整数个周期,当且仅当它的频率是 1/T 的整数倍。所以 1/T、2/T、3/T……这些波<b>两两垂直</b>。OFDM 用的就是这一家。每一个成员叫一个<b>子载波</b>,它们的间隔是 1/T —— 这不是设计选择,是推出来的结果。<br><br>真实数字:5G 的 T 约 67 微秒,所以子载波间隔 15 kHz(还有 30、60、120 kHz 的档);Wi-Fi 的 T 是 3.2 微秒,间隔 312.5 kHz。<br><br>现在我们知道用<b>哪</b> 64 个波了。第三部分:把它们加起来、再拆开的那台机器。</div>
+`},
+
+{s:"波形", t:"第三部分:我们需要两台机器", e:"Part 3: we need two machines", n:`
+<p>第三部分开场:先说清楚我们要的是什么,再给它名字。FFT 在这里是被"需要"出来的,不是凭空掉下来的。</p>
+<div class="say">发射端需要一台机器:把 64 个波按各自的量加起来。接收端需要另一台:从一个和里量出每个波有多少。<br><br>要让计算机干这事,先把每个波在 T 里采 64 个点 —— 一个波就变成一行 64 个数,64 个波就是一张 64×64 的表。<b>第二台机器就是这张表。</b>第一台是同一张表倒着用。<br><br>这张表有名字:FFT 矩阵。我们先看一个最小的。</div>
+`},
+
+{s:"波形", t:"两个波:2×2 的 FFT,带数字", e:"Two waves: the 2×2 FFT, with numbers", n:`
+<p>用具体数字走一个来回,让"量"和"加"两台机器都真的转一次。</p>
+<div class="say">机器二,量。两个波,各采两个点:平的 (1, 1),翻号的 (1, −1)。叠成两行。拿它去乘和 (3, 1):第一行给 4,第二行给 2 —— 这个和里有 4 份平波、2 份翻号波。两行点乘 1·1 + 1·(−1) = 0,垂直。<br><br>机器一,加。同一张表倒着用,除以 2:给它 (4, 2),它把 (3, 1) 重建出来。一个来回,什么都没丢 —— <b>正是因为</b>两行垂直。</div>
+<p>橙框:FFT = 量每个波;IFFT = 把波加回去;垂直的行让来回精确。</p>
+`},
+
+{s:"波形", t:"四个波:4×4 的 FFT", e:"Four waves: the 4×4 FFT", n:`
+<p>放大到四个波,并且当场验一对行的点乘,让学生看到 0 是算出来的,不是宣布的。</p>
+<div class="say">四个波,频率 0、1/T、2/T、3/T,各采四个点。第 k 行就是频率 k/T 的波。里面的 j 是 √−1,它只干一件事:让波能<b>转</b>过它的周期,而不只是翻个号。<br><br>验一对:第 2 行对第 4 行 —— 其中一行把 j 变号,逐项相乘再加:1·1 + (−j)(−j) + (−1)(−1) + j·j = 1 − 1 + 1 − 1 = 0。零。换任何一对也是零。<b>每个波都跟其他波垂直</b>,和画出来的一样。<br><br>64×64 的表是同一个东西,大一点;4096×4096 也是。</div>
+<div class="warn">j 不展开。学生追问就答"为了让波能旋转,不然只有正负两个方向"。</div>
+`},
+
+{s:"波形", t:"为什么 Fast 那个字母最重要", e:"Why 'Fast' is the important letter", n:`
+<p>CS 学生的主场:复杂度。这页回答"为什么是 FFT 而不是随便一个矩阵乘法",顺带解释 OFDM 为什么到 1971 年才可行。</p>
+<div class="say">拿一个信号去乘 N×N 的表,要 N² 次乘法。FFT 算出<b>一模一样</b>的答案,只要大约 N log₂N 次 —— 靠的是表的两半互为拷贝,可以复用。<br><br>看表:64 个波,4096 次对 384 次;4096 个波,一千六百八十万对四万九千,省 340 倍。<br><br>一部 5G 手机每个符号都要跑一次,一秒钟几万次,靠电池。用原始的表做不到。FFT 算法 1965 年发表,第一篇用它做 OFDM 的论文 1971 年 —— 不是巧合。</div>
+`},
+
+{s:"波形", t:"第四部分:发射机", e:"Part 4: the transmitter", n:`
+<p>把三部分拼起来。这页只讲发射方向,一步一步。</p>
+<div class="say">拿 256 个比特,切成 64 组四个,每组选一个点。第 k 个点放到频率 k/T 的波上 —— 第 k 个<b>子载波</b>。一次 IFFT 把 64 个波加成一段长 T 的信号:<b>一个符号</b>。发出去。然后下 256 个比特、下一个符号。<br><br>256 比特进,一个符号出 —— 是一个波能做的 64 倍。</div>
+`},
+
+{s:"波形", t:"接收机", e:"The receiver", n:`
+<p>镜像的一页,并且把第二部分埋的回波钉子在这里轻轻碰一下 —— 只碰一下,不展开,留给雷达部分。</p>
+<div class="say">收到的一段信号做一次 FFT,出来 64 对 (x, y),每个子载波一对 —— 干干净净,因为波两两垂直。每一对被噪声推偏了一点,吸到最近的允许点上,读四个比特。<br><br>"为什么不用一个快波"那页的回波也在这里面。它让每个子载波的点变大一点或转一点 —— 每个子载波乘一个修正,然后忘掉它。<b>或者不忘</b>:那个回波,就是 ISAC 雷达那一半要读的东西。<br><br>同样 64 个波,同一个 FFT,反过来读。</div>
+`},
+
+{s:"波形", t:"一个符号接一个符号:格子", e:"Symbol after symbol: the grid", n:`
+<p>第二个问题的落点。格子在这里第一次以"我们自己搭出来的东西"出现,下一页把它当雷达看就顺了。</p>
+<div class="say">每一列是一个符号,每一行是一个子载波。橙色那格:第 3 个子载波在第 3 个符号里 —— <b>一条波、一个符号时间、一个点、四个比特</b>。5G 把一格叫一个资源元(resource element)。基站调度就是发格子:这些给你,那些给你邻居。<br><br>这就是格子。每一台 OFDM 收音机 —— Wi-Fi、4G、5G —— 都是一台一个符号接一个符号地填格子、读格子的机器。<br><br>第二个问题回答完了:OFDM 是一张格子,每一格是一条波发一个符号时间。下一页,同一张格子,当雷达读。</div>
 `},
 
 {s:"波形", t:"OFDM 里面本来就藏着一个雷达", e:"OFDM already carries a radar inside it", n:`
@@ -395,8 +449,8 @@ const S = [
 <h3>两个缩写先埋下,后面要用</h3>
 <ul>
   <li><b>RE</b> = Resource Element,资源元。</li>
-  <li><b>PSLR</b> = Peak-to-SideLobe Ratio,峰值旁瓣比。下一页先用一张图讲清楚"峰"是什么,第 22 页用它当感知的评分。</li>
-  <li><b>RoI</b> = Region of Interest,感兴趣区域。<b>第 23 页那个"几乎没有损失"的魔术全靠这个词</b>,现在先让学生见一面。</li>
+  <li><b>PSLR</b> = Peak-to-SideLobe Ratio,峰值旁瓣比。下一页先用一张图讲清楚"峰"是什么,第 34 页用它当感知的评分。</li>
+  <li><b>RoI</b> = Region of Interest,感兴趣区域。<b>第 35 页那个"几乎没有损失"的魔术全靠这个词</b>,现在先让学生见一面。</li>
 </ul>
 <p>这一节的数据来自 IEEE JSAC 2024 那篇跨域双功能 OFDM 波形设计。两种分法和"几乎没有损失"的结论都引自那篇论文。</p>
 `},
@@ -506,12 +560,12 @@ const S = [
 <p>最后一页。这节课的内容来自 Zhu Han 教授(休斯顿大学)的 ISAC 报告,以及几篇具体论文。</p>
 <h3>这节课引用的主要工作</h3>
 <ul>
-  <li><b>跨域双功能 OFDM 波形设计</b>,IEEE JSAC 2024 —— 第 20–23 页那一节。</li>
+  <li><b>跨域双功能 OFDM 波形设计</b>,IEEE JSAC 2024 —— 第 32–35 页那一节。</li>
   <li><b>ITU-R M.2160</b>,IMT-2030 框架 (2023) —— 第 5 页。</li>
 </ul>
-<div class="say">下课前一句话:如果这节课里有一件事让你想再往下挖,我建议是第 23 页那四个字 ——"几乎没有损失"。<br><br>每次论文里出现这四个字,先问一句:<b>你把要求缩到多小了?</b>拿着这个问题就能去读论文了 —— 问题是真的,而且门还开着。</div>
+<div class="say">下课前一句话:如果这节课里有一件事让你想再往下挖,我建议是第 35 页那四个字 ——"几乎没有损失"。<br><br>每次论文里出现这四个字,先问一句:<b>你把要求缩到多小了?</b>拿着这个问题就能去读论文了 —— 问题是真的,而且门还开着。</div>
 <h3>给自己的备注</h3>
-<p>第 6 页那条时间轴是演讲者的预测,每学期讲之前值得重新核一遍 3GPP 的进度。第 23 页两种分法的结论引自论文,<b>别改措辞</b>。</p>
+<p>第 6 页那条时间轴是演讲者的预测,每学期讲之前值得重新核一遍 3GPP 的进度。第 35 页两种分法的结论引自论文,<b>别改措辞</b>。</p>
 `}
 ];
 
@@ -621,35 +675,89 @@ const EN = [
 <p>Green point, up and left: a sensing-first design. Orange point, down and right: a communication-first design. Both are on the frontier. Both are legitimate. They're different <b>choices</b>.</p>
 <p>And that's the frame for the rest of the hour: <b>every result after this is a claim about one point on a curve like this one.</b></p>`,
 
-`<p>Question one is answered: the two jobs want opposite things, so there is a curve of compromises. Which means whatever signal we pick has to carry <b>both</b> jobs, and it will sit somewhere on that curve.</p>
-<p>So, question two: which signal do we actually use?</p>
-<p><b>The answer is OFDM</b> — Orthogonal Frequency Division Multiplexing. It is the signal Wi-Fi, 4G and 5G already transmit, right now. We are not building a new radio.</p>
-<p>But before we can read OFDM as a radar, we need to know what it actually is. Most of you have only heard the name. So over the next four slides we build one from scratch: bits become points; describing a point needs perpendicular axes; the FFT is exactly such a set of axes; and one IFFT gives one OFDM symbol — line the symbols up and you have the grid.</p>
-<p><i>[Just read the four steps. Don't explain any of them here — this slide is a table of contents.]</i></p>`,
+`<p>Question one is answered: the two jobs want opposite things, so there is a curve of compromises. Whatever signal we pick has to carry <b>both</b> jobs and sit somewhere on that curve.</p>
+<p>Question two: which signal do we actually use?</p>
+<p><b>The answer is OFDM</b> — Orthogonal Frequency Division Multiplexing. The signal Wi-Fi, 4G and 5G already transmit, right now. We are not building a new radio.</p>
+<p>But to read OFDM as a radar we need to understand it properly, and most of you have only heard the name. So we build it from the ground up, in four parts: what a radio actually sends and why that is a point; why we send many waves at once and why they must be perpendicular; why the FFT; and then transmitter, receiver, and the grid.</p>
+<p><i>[Read the four parts. Don't explain them here.]</i></p>`,
 
-`<p>Step one of the four.</p>
-<p>Here's a string of bits we want to send: 1011, 0010, 1110, 0001, and so on. Cut them into groups of four. Each group picks one of the sixteen points on this map. The step has a name, 16-QAM, but the name doesn't matter. The orange point is what 1011 picked.</p>
-<p>A point is just two numbers, x and y. So four bits have become one point, and a long string of bits has become a <b>list of points</b>.</p>
-<p>Notice: nothing has been transmitted yet. We have only decided what to say.</p>`,
+`<p>Part one. Start with what an antenna can actually do.</p>
+<p>An antenna cannot emit a zero or a one. It emits a <b>wave</b> at some frequency. And once the frequency is fixed, there are exactly two things about that wave you can still change: <b>how tall it is</b> — the amplitude — and <b>where in its cycle it starts</b> — the phase.</p>
+<p>Look at the three curves. Blue is the reference. Orange is half as tall. Green is just as tall as blue but starts a quarter of a cycle early. Everything else about them is pinned down by the frequency.</p>
+<p>Two knobs. If we want to send information, we turn the knobs.</p>`,
 
-`<p>Now the one idea everything else hangs on: <b>axes have to be perpendicular</b>.</p>
-<p>Any point on a plane is two numbers, x and y. In 3-D, three numbers, x, y, z. And those axes are at right angles to each other.</p>
-<p>Why not tilt them? Look at the right-hand picture. Axes a and b lean toward each other, so the reading along a already contains part of what b is about to tell you. The two numbers overlap. Reading one leaks into the other. Only when the axes are perpendicular does each number say something the others haven't said.</p>
-<p>Now the leap. A signal is also a point — it just lives in a space with a lot of dimensions. A hundred, a thousand. To describe it cleanly we need a lot of axes, and every pair of them has to be perpendicular.</p>
-<p>So: how do you find a set of perpendicular axes for a signal? <i>[Leave it hanging. The next slide answers it.]</i></p>`,
+`<p>Now — what is a point? Because I'm going to draw dots for the rest of the hour, and you need to know what a dot is.</p>
+<p>Here is a fact you can take on trust: any wave of our chosen frequency — any height, any starting point — can be written as "x parts of a cosine plus y parts of a sine". The orange wave on the left is minus one-and-a-half parts cosine plus one-and-a-half parts sine.</p>
+<p>So the two knobs are really two numbers. And two numbers are a <b>point</b>, (x, y). The orange dot on the right <i>is</i> the orange wave on the left.</p>
+<p><b>One point is one wave.</b> From now on, whenever you see a dot, think "a wave".</p>`,
 
-`<p>Here's the answer, and I want you to actually look at the matrix rather than take my word for it.</p>
-<p>Two dimensions first. The 2-point FFT is this little matrix: one, one on top; one, minus one below. Multiply it into a pair of numbers a and b. Row one gives a plus b — the part they have in common. Row two gives a minus b — the difference. Dot the two rows together: one times one, plus one times minus one, is zero. <b>Perpendicular.</b> So the two answers don't overlap. We just split two numbers into two perpendicular pieces.</p>
-<p>Four dimensions, same trick, bigger matrix. The j's — j is the square root of minus one — are only there so an axis can rotate instead of just flip. Take any two rows, multiply entry by entry, flip the sign of j in one of them, add up: zero. Every row is perpendicular to every other row.</p>
-<p>And each row is one frequency. Multiplying a signal by this matrix asks it: <b>how much of you lies along each frequency?</b> That's all the FFT is — pulling out the components.</p>
-<p>The IFFT is the reverse. Tell it how much to put on each axis, and it builds the signal. Four axes here; 64 or 4096 in a real radio; identical idea.</p>`,
+`<p>Now the bits, finally.</p>
+<p>Agree in advance on sixteen allowed points — sixteen allowed waves. Cut the bits into groups of four: 1011, 0010, 1110, 0001, and so on. Each group names one point. The radio sends that wave for one <b>symbol time</b>, T, then switches to the next group's wave.</p>
+<p>The receiver measures x and y, snaps to the <b>nearest</b> allowed point, and reads four bits back. Noise nudges the measurement a little — that grey dot — so the allowed points can't sit too close together. That's why sixteen, not sixteen thousand.</p>
+<p>The scheme has a name, 16-QAM. The name doesn't matter; the picture does.</p>
+<p>And here's the problem: one wave carries four bits every T. That is slow. Part two is about sending more — a lot more — at the same time.</p>`,
 
-`<p>Now put the three steps together, and out comes OFDM.</p>
-<p>Take 64 QAM points and put one on each of 64 perpendicular axes. Run one IFFT. They get added up into a short burst in time — <b>one OFDM symbol</b>.</p>
-<p>Each axis is a <b>subcarrier</b>: a narrow little carrier of its own. And because the axes are perpendicular, the subcarriers don't interfere with each other — even when they sit very close together in frequency.</p>
-<p>How close? The spacing is one over T, where T is how long one symbol lasts. The standard picks the number: 5G uses 15, 30, 60 or 120 kilohertz; Wi-Fi uses 312.5.</p>
-<p>Send one symbol after another and you get a <b>grid</b>: subcarriers down the side, symbols across. One cell is one subcarrier for one symbol.</p>
-<p>That grid is the OFDM you use every day. Next slide, we read the very same grid as a radar.</p>`,
+`<p>Part two. Four bits per symbol time is nowhere near a video stream. Two ways to go 64 times faster.</p>
+<p><b>Option A: one wave, shorter symbols.</b> Keep one wave, but switch points 64 times faster. The symbol time shrinks from T to T over 64.</p>
+<p><b>Option B: 64 waves at once.</b> Use 64 different frequencies at the same time, each carrying its own point for the full time T. Add them all up and send the sum.</p>
+<p>Both give you 64 times the bits. And every modern radio — Wi-Fi, 4G, 5G — chose B. The next slide is why, and the reason is the same physics this whole lecture is about.</p>`,
+
+`<p>Radio bounces. A copy of your signal comes back off a wall or a building a little late — about one microsecond later for every 300 metres of extra path.</p>
+<p>Top row, option A, short symbols. The late copy lands on the <i>next</i> symbol. So what the receiver sees is the current symbol with a smeared copy of the previous one on top. Garbage.</p>
+<p>Bottom row, option B, long symbols. Same delay, but now the copy overlaps the <i>same</i> symbol almost entirely. All it does is make that wave a little taller or shorter — and a single multiply at the receiver undoes that.</p>
+<p><b>Echoes are why we send many slow waves instead of one fast one.</b> Keep that sentence. Later today, that same echo becomes the radar.</p>`,
+
+`<p>So here is the plan in a picture. Wave one carries its point. Wave two carries its point. Wave three — and so on, 64 of them. Add them up: the purple line at the bottom. That purple line is what the antenna actually sends.</p>
+<p>The receiver gets <b>only</b> the purple line. And from that one squiggle it has to recover each wave's x and y — 64 pairs of numbers out of one wobbly curve. Look at it. That seems hopeless.</p>
+<p>When can you pull one wave back out of a sum of many? That is exactly the question the word "orthogonal" answers.</p>`,
+
+`<p>Let me answer it with a picture you already know.</p>
+<p>A point on a plane. Left: x and y perpendicular. Slide the point along y — its x-reading doesn't move. The two numbers are independent; each can be read on its own.</p>
+<p>Right: tilt the axes. Now move along b and the a-reading changes too. The two numbers leak into each other.</p>
+<p>Separable means perpendicular. Now we need the same idea for waves.</p>`,
+
+`<p>Here's how the receiver measures "how much of wave one is in the sum": multiply the sum by wave one, then add up over the symbol time T.</p>
+<p>Left picture. Wave one does one cycle in T, wave two does two. Their product is the green curve below — and look: the area above the line equals the area below. Add it up: zero. Measuring wave one picks up <b>nothing</b> of wave two. That is what it means for two waves to be <b>perpendicular</b>.</p>
+<p>Right picture. Wave two does one and a half cycles. Now the product has more above than below — it does not add to zero. Wave two leaks into the reading of wave one.</p>
+<p>So the rule: whole cycles in T, perpendicular. Fractional cycles, leak.</p>`,
+
+`<p>A wave fits a whole number of cycles into T exactly when its frequency is a multiple of one over T. So the waves at one over T, two over T, three over T, and so on are <b>all perpendicular to each other</b>. That is the family OFDM uses. Each member is called a <b>subcarrier</b>, and their spacing is one over T — not a design choice, a consequence.</p>
+<p>Real numbers. In 5G, T is about 67 microseconds, so the subcarriers are 15 kilohertz apart; there are also 30, 60 and 120 kilohertz variants. In Wi-Fi, T is 3.2 microseconds and the spacing is 312.5 kilohertz.</p>
+<p>We now know <i>which</i> 64 waves to use. Part three: the machine that adds them up and takes them apart.</p>`,
+
+`<p>Part three. Before I say the letters F-F-T, let me say what we need.</p>
+<p>The transmitter needs a machine that takes 64 amounts and adds up the 64 waves with those amounts. The receiver needs a machine that takes a sum and measures how much of each wave is in it.</p>
+<p>To do either in a computer, sample each wave at 64 instants during T. A wave becomes a row of 64 numbers; 64 waves become a 64-by-64 table. <b>Machine two is that table.</b> Machine one is the same table run backwards.</p>
+<p>That table has a name: the FFT matrix. Let's look at a tiny one.</p>`,
+
+`<p>Two waves, two samples each. A flat one: one, one. A flipping one: one, minus one. Stack them as rows.</p>
+<p>Machine two — measure. Multiply the table into the sum three, one. Row one gives four, row two gives two. So the sum contains four units of the flat wave and two of the flipping one. And the rows are perpendicular: one times one plus one times minus one is zero.</p>
+<p>Machine one — add. Same table, run backwards, divide by two. Give it four, two — it rebuilds three, one. Round trip complete, nothing lost. And it's exact <i>because</i> the rows are perpendicular.</p>
+<p>So: FFT measures each wave. IFFT adds the waves back. Perpendicular rows are what make the round trip exact.</p>`,
+
+`<p>Four waves now — frequencies zero, one over T, two over T, three over T — each sampled at four instants. Row k is the wave at frequency k over T. The j's, square root of minus one, are there for one reason: so a wave can <i>rotate</i> through its cycle instead of merely flipping sign.</p>
+<p>Let's check one pair rather than take it on faith. Row two against row four: flip the sign of j in one of them, multiply entry by entry, add. One, minus one, one, minus one. Zero. Try any other pair — also zero. <b>Every wave is perpendicular to every other</b>, exactly as the drawing promised.</p>
+<p>The 64-by-64 table is the same thing, bigger. So is the 4096-by-4096 one.</p>`,
+
+`<p>Now the letter that matters: F, for fast.</p>
+<p>Multiplying a signal by an N-by-N table costs N-squared multiplications. The FFT gets the <b>identical</b> answer in about N log N — by noticing that the two halves of the table are copies of each other and reusing them.</p>
+<p>Look at the numbers. 64 waves: four thousand versus 384. 4096 waves: sixteen million versus forty-nine thousand. A 340-fold saving.</p>
+<p>A 5G phone does this for every symbol, tens of thousands of times a second, on a battery. With the plain table it could not. The FFT algorithm was published in 1965; the first paper proposing OFDM built on it is from 1971. That is not a coincidence.</p>
+<p>OFDM is practical <i>because</i> the FFT is fast. Part four: put the pieces together.</p>`,
+
+`<p>Part four, the transmitter, one step at a time.</p>
+<p>Take 256 bits. Cut them into 64 groups of four; each group picks a point. Put point k on the wave at frequency k over T — on <b>subcarrier</b> k. One IFFT adds the 64 waves into a single burst of length T: the <b>symbol</b>. Send it. Then the next 256 bits, the next symbol, and so on.</p>
+<p>256 bits in, one symbol out — 64 times what a single wave could do.</p>`,
+
+`<p>And the receiver is the mirror image.</p>
+<p>One FFT on the received burst, and out come 64 pairs of x and y, one per subcarrier — cleanly, because the waves are perpendicular. Each pair has been nudged by noise; snap it to the nearest allowed point and read four bits.</p>
+<p>One more thing is in that burst: the echo from the "why not one fast wave" slide. It makes each subcarrier's point a little larger or a little rotated. The receiver applies one correction per subcarrier and forgets it. <i>Or</i> it keeps it — because that echo is exactly what the radar half of ISAC reads.</p>
+<p>Same 64 waves, same FFT, read the other way round.</p>`,
+
+`<p>And here is where question two lands.</p>
+<p>Each column is one symbol; each row is one subcarrier. The orange cell is subcarrier three during symbol three: <b>one wave, one symbol time, one point, four bits</b>. 5G calls a cell a <b>resource element</b>. A base station schedules by handing out cells — these to you, those to your neighbour.</p>
+<p>This is the grid. Every OFDM radio — Wi-Fi, 4G, 5G — is a machine for filling this grid and reading it, symbol after symbol.</p>
+<p>Question two answered: OFDM is a grid of cells, each one a wave for one symbol. Next slide: the same grid, read as a radar.</p>`,
 
 `<p>Four slides of primer done — you just built that grid yourselves. Now read the very same grid as a radar.</p>
 <p>Waveforms. And the first piece of news is good news: <b>you don't need anything new to start.</b></p>
