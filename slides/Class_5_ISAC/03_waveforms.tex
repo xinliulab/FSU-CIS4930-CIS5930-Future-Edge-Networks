@@ -2,9 +2,147 @@
 
 \section[OFDM]{The Waveform We Already Have}
 
-% SECTION TIMING: 32:00--35:00 (1 frame). Question 2 of the roadmap frame.
+% SECTION TIMING: 32:00--42:00 (5 frames). Question 2 of the roadmap frame.
+% The four "Step" frames are the OFDM primer the author asked for on 2026-09-13:
+% students know little OFDM, so walk one worked example (bits -> 16-QAM points ->
+% perpendicular axes -> the FFT matrix as those axes -> IFFT builds the symbol and
+% the grid). Keep it at the level of a 2x2 and a 4x4 matrix; no formulas beyond that.
 % The OTFS / ODDM / delay-Doppler frames that used to follow were removed on 2026-09-13
 % (CS audience, no signal-processing background); see parked/03_otfs_oddm_frames.tex.
+
+\begin{frame}{Step 1: bits become points}
+  \vspace{0.2em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.50\textwidth}
+      {\small Say we want to send these bits:\par}
+      \vspace{0.35em}
+      {\centering\ttfamily\small 1011\ \ 0010\ \ 1110\ \ 0001\ \ \ldots\par}
+      \vspace{0.7em}
+      {\small Cut them into groups of four. Each group picks \textbf{one of 16 points}
+       on the map at right. That step is called \textbf{16-QAM}.\par}
+      \vspace{0.6em}
+      {\small A point is just two numbers, $(x, y)$. So four bits became one point,
+       and a long bit string became a \textbf{list of points}.\par}
+    \column{0.46\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.62,transform shape]
+        \draw[-{Latex[length=2mm]},softgray] (-2.7,0) -- (2.7,0) node[anchor=west,font=\scriptsize]{$x$};
+        \draw[-{Latex[length=2mm]},softgray] (0,-2.7) -- (0,2.7) node[anchor=south,font=\scriptsize]{$y$};
+        \foreach \x in {-1.5,-0.5,0.5,1.5}
+          \foreach \y in {-1.5,-0.5,0.5,1.5}
+            \fill[ranblue!60] (\x,\y) circle (2.6pt);
+        \fill[coreorange] (-1.5,1.5) circle (4.4pt);
+        \node[font=\scriptsize\bfseries,text=coreorange,anchor=south west] at (-1.38,1.62) {1011};
+        \node[font=\scriptsize,text=softgray,anchor=north] at (0,-2.85) {16 points, 4 bits each};
+      \end{tikzpicture}
+  \end{columns}
+
+  \vspace{0.3em}
+  \takeaway{Bits $\rightarrow$ points. Nothing has been transmitted yet;\\we have only chosen what to say.}
+\end{frame}
+
+\begin{frame}{Step 2: describing a point needs perpendicular axes}
+  \vspace{0.2em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.72,transform shape]
+        \draw[-{Latex[length=2mm]},ranblue,thick] (0,0) -- (3.2,0) node[anchor=west,font=\scriptsize]{$x$};
+        \draw[-{Latex[length=2mm]},ranblue,thick] (0,0) -- (0,3.2) node[anchor=south,font=\scriptsize]{$y$};
+        \fill[coreorange] (2,2.2) circle (3pt);
+        \draw[dashed,softgray] (2,2.2) -- (2,0) node[anchor=north,font=\scriptsize]{2};
+        \draw[dashed,softgray] (2,2.2) -- (0,2.2) node[anchor=east,font=\scriptsize]{2.2};
+        \node[font=\scriptsize,text=softgreen,align=center,anchor=north] at (1.6,-0.65)
+          {perpendicular:\\two numbers, no overlap};
+      \end{tikzpicture}
+    \column{0.48\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.72,transform shape]
+        \draw[-{Latex[length=2mm]},ranpurple,thick] (0,0) -- (3.2,0) node[anchor=west,font=\scriptsize]{$a$};
+        \draw[-{Latex[length=2mm]},ranpurple,thick] (0,0) -- (2.77,1.6) node[anchor=west,font=\scriptsize]{$b$};
+        \fill[coreorange] (2,2.2) circle (3pt);
+        \draw[dashed,softgray] (2,2.2) -- (2,0);
+        \draw[dashed,softgray] (2,2.2) -- (2.45,1.42);
+        \node[font=\scriptsize,text=ranpurple,align=center,anchor=north] at (1.6,-0.65)
+          {tilted:\\$a$ and $b$ repeat each other};
+      \end{tikzpicture}
+  \end{columns}
+
+  \vspace{0.6em}
+  {\small In 2-D you need two axes, in 3-D three --- and they must be
+   \textbf{perpendicular}. Tilt them and each axis partly repeats what the other
+   already said: the two numbers overlap, and reading one leaks into the other.\par}
+
+  \vspace{0.3em}
+  \takeaway{A signal is a point in a space with many dimensions.\\To describe it cleanly we need many axes, all perpendicular to each other.}
+\end{frame}
+
+\begin{frame}{Step 3: the FFT is a set of perpendicular axes}
+  \vspace{0.1em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.42\textwidth}
+      {\small\textbf{Two dimensions.} The 2-point FFT:\par}
+      \vspace{-0.6em}
+      {\small\[ \begin{pmatrix} 1 & \phantom{-}1 \\ 1 & -1 \end{pmatrix}
+          \begin{pmatrix} a \\ b \end{pmatrix} =
+          \begin{pmatrix} a+b \\ a-b \end{pmatrix} \]}
+      \vspace{0.15em}
+      {\footnotesize Row one: the \textbf{common part}. Row two: the \textbf{difference}.
+       The rows are perpendicular --- $1\cdot 1 + 1\cdot(-1) = 0$ --- so the two
+       answers do not overlap.\par}
+    \column{0.54\textwidth}
+      {\small\textbf{Four dimensions.} Same idea; $j=\sqrt{-1}$ lets an axis rotate:\par}
+      \vspace{-0.6em}
+      {\small\[ \begin{pmatrix} 1 & \phantom{-}1 & \phantom{-}1 & \phantom{-}1 \\
+                                1 & -j & -1 & \phantom{-}j \\
+                                1 & -1 & \phantom{-}1 & -1 \\
+                                1 & \phantom{-}j & -1 & -j \end{pmatrix} \]}
+      \vspace{0.15em}
+      {\footnotesize Any two rows: multiply entry by entry (flip the sign of $j$ in
+       one of them), add --- you get 0. \textbf{Every row is perpendicular to every
+       other.} Each row is one frequency.\par}
+  \end{columns}
+
+  \vspace{0.35em}
+  \takeaway{FFT asks a signal: how much of you lies along each frequency?\\IFFT is the reverse: give it the amounts, it builds the signal.}
+\end{frame}
+
+\begin{frame}{Step 4: an OFDM symbol is just an IFFT}
+  \vspace{0.2em}
+  \centering
+  \begin{tikzpicture}[scale=0.84,transform shape,
+      pbox/.style={draw=ranblue,fill=blue!5,rounded corners=3pt,minimum width=2.05cm,
+        minimum height=0.95cm,align=center,font=\scriptsize}]
+    \node[pbox] (bits) at (0,0) {bits\\[-1pt]{\tiny 1011 0010 \ldots}};
+    \node[pbox] (qam) at (2.9,0) {16-QAM\\[-1pt]{\tiny 64 points}};
+    \node[pbox,draw=coreorange,fill=orange!8] (ifft) at (5.8,0) {IFFT\\[-1pt]{\tiny 64 perpendicular axes}};
+    \node[pbox,minimum width=2.6cm] (sym) at (8.9,0) {one OFDM symbol\\[-1pt]{\tiny 64 subcarriers, a burst in time}};
+    \foreach \a/\b in {bits/qam,qam/ifft,ifft/sym} \draw[flow] (\a) -- (\b);
+  \end{tikzpicture}
+
+  \vspace{0.6em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.50\textwidth}
+      \small
+      \begin{itemize}\itemsep4pt
+        \item Put one QAM point on each of 64 perpendicular axes.
+        \item The IFFT adds them into one burst of time: a \textbf{symbol}.
+        \item Each axis is a \textbf{subcarrier}, a narrow carrier of its own.
+        \item Perpendicular $\Rightarrow$ no interference, even packed tight.
+      \end{itemize}
+    \column{0.46\textwidth}
+      \small
+      \textbf{How tight?} Spacing $= 1/T$, one over the symbol length. The standard
+      picks the number: 5G uses 15, 30, 60 or 120\,kHz; Wi-Fi uses 312.5\,kHz.
+
+      \vspace{0.4em}
+      Send symbol after symbol and you get a \textbf{grid}: subcarriers down the
+      side, symbols across. \textbf{One cell = one subcarrier for one symbol.}
+  \end{columns}
+
+  \vspace{0.2em}
+  \takeaway{That grid is the OFDM you already use every day.\\Next slide: the same grid, read as a radar.}
+\end{frame}
 
 \begin{frame}{OFDM already carries a radar inside it}
   \vspace{0.3em}
@@ -34,7 +172,7 @@
   \vspace{0.4em}
   \qa{If OFDM is already good enough, what is left to design?}
      {Which cells go to bits and which go to echoes. Every cell handed to sensing
-      is a cell taken from data --- and that choice is the rest of this lecture.}
+      is a cell taken from data.}
 
   \glossline{OFDM = Orthogonal Frequency Division Multiplexing}
 \end{frame}
