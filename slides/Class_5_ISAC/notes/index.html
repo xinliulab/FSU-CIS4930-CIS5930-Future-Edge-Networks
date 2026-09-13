@@ -259,7 +259,7 @@ const S = [
 `},
 
 {s:"两个盒子", t:"回波到底告诉你什么", e:"What an echo actually tells you", n:`
-<p><b>这一页是全课的技术地基,绝对不能省。</b>后面讲波形、讲时延-多普勒域,全靠这一页。这页原始演讲里没有,是专门加进来的。</p>
+<p><b>这一页是全课的技术地基,绝对不能省。</b>后面讲冲突、讲 OFDM 格子怎么分,全靠这一页。这页原始演讲里没有,是专门加进来的。</p>
 <h3>三个量,建议边讲边在黑板上画三个箭头</h3>
 <ul>
   <li><b>时延(Delay)→ 距离</b>。公式 <code>R = cτ/2</code>。信号跑过去再跑回来,走了两倍距离,所以除以 2。c 是光速。</li>
@@ -283,6 +283,8 @@ const S = [
 `},
 
 {s:"权衡", t:"它们想要的东西相反 (1/2)", e:"They want opposite things (1/2)", n:`
+<p><b>第一个问题:为什么一个信号很难两头都好。</b>路标页说好了三个问题;这一节三页一次讲完,后面不再绕回来讲冲突。</p>
+
 <p>这一节是全课的<b>思想核心</b>。表格分成两页是因为十行放一页看不清,不是两个话题。</p>
 <h3>五行,按列读再横着读一行</h3>
 <table style="width:100%;border-collapse:collapse;font-size:14.5px;margin-bottom:12px">
@@ -294,7 +296,7 @@ const S = [
 <tr><td style="padding:5px"><b>空间</b></td><td style="padding:5px">宽波束或扫描波束</td><td style="padding:5px">窄波束,一人一个</td></tr>
 </table>
 <h3>只要讲透一行,就讲"信号"那行</h3>
-<div class="say">看第二行。这一行是整个矛盾的<b>数学根源</b>,其他四行都是它的表现。<br><br>通信要的信号是什么样?<b>随机的</b>。为什么?因为随机才携带信息 —— 如果我发的东西你能猜到,那我就没告诉你任何新东西。信息量的定义就是不可预测性。<br><br>雷达要的信号是什么样?<b>确定性的</b>。为什么?因为雷达要拿收到的回波去和它<b>原本发出去的东西</b>做相关。你必须精确知道自己发了什么,才能认出回来的是不是它。<br><br>所以:<b>随机性携带信息,同时毁掉自相关。</b><br><br>这一句话就是全部冲突。不是工程没做好,是两个需求在信息论层面上就朝着相反方向拉。</div>
+<div class="say">看第二行。这一行是整个矛盾的<b>数学根源</b>,其他四行都是它的表现。<br><br>通信要的信号是什么样?<b>随机的</b>。为什么?因为随机才携带信息 —— 如果我发的东西你能猜到,那我就没告诉你任何新东西。信息量的定义就是不可预测性。<br><br>雷达要的信号是什么样?<b>确定性的</b>。为什么?因为雷达要拿收到的回波去和它<b>原本发出去的东西</b>做相关。你必须精确知道自己发了什么,才能认出回来的是不是它。<br><br>所以:<b>随机性携带信息,同时毁掉干净的回波。</b><br><br>这一句话就是全部冲突。不是工程没做好,是两个需求在信息论层面上就朝着相反方向拉。</div>
 <div class="warn">这一行讲不透,后面每一页学生都会觉得"那优化一下不就好了"。要让他们理解这是<b>原理性的</b>冲突,不是实现上的缺陷。</div>
 `},
 
@@ -302,7 +304,7 @@ const S = [
 <p>后五行。同样别念完,挑两行。</p>
 <h3>建议挑这两行</h3>
 <ul>
-  <li><b>Domain(域)</b>:感知要时延-多普勒的分辨率,通信要时间-频率的复用。<b>这一行直接回收第 ??11 页</b> —— 那页讲的"两个站位",在这里变成了一条设计冲突。</li>
+  <li><b>Domain(域)</b>:感知要在距离和速度上分得细,通信要在时间和频率上切得细。两边都想要"更细的格子",只是方向不同 —— 而信号的总资源只有一份。</li>
   <li><b>Latency(时延)</b>:感知要低时延的跟踪反馈(你要实时知道那辆车在哪);而通信的很多业务其实<b>能容忍延迟</b>(视频缓冲、后台同步)。这一行有点反直觉 —— 学生一般以为通信才是急的那个。</li>
 </ul>
 <h3>下面那个问答是这一节的落点</h3>
@@ -312,15 +314,15 @@ const S = [
 `},
 
 {s:"权衡", t:"前沿,画一次", e:"The frontier, drawn once", n:`
-<p>上一页说了有条前沿,这一页把它画出来。<b>这张图后面会反复回来</b>(第 ??22、19、21 页),所以这里要讲到学生真的看懂。</p>
+<p>上一页说了有条前沿,这一页把它画出来。<b>这张图后面会反复回来</b>(第 19、21 页),所以这里要讲到学生真的看懂。</p>
 <h3>两根轴,而且横轴是反的</h3>
 <ul>
   <li><b>纵轴</b>:可达速率(achievable rate)。<b>越高越好</b>,这个符合直觉。</li>
-  <li><b>横轴</b>:CRLB,感知的误差下限。<b>越小越好</b> —— 所以<b>越往右越差</b>。</li>
+  <li><b>横轴:感知误差 —— 测出来的距离和速度离真值差多少。越小越好,所以越往右越差。</li>
 </ul>
 <div class="warn">这一页最大的教学陷阱:<b>学生看任何曲线图都默认"右上角最好"。这张图不是。</b><br><br>这张图的好角落在<b>左上</b>:速率高(上)+ 感知误差小(左)。<br><br>你必须<b>明确地说出来</b>,而且最好用手在屏幕上指一下左上角。不说,一半的学生会理解成相反的。</div>
-<h3>CRLB 是什么</h3>
-<p>Cramér–Rao Lower Bound,克拉美-罗下界。大白话:<b>任何无偏估计器能达到的最小方差</b>。也就是"你再聪明也不可能比这个更准"的那条线。</p>
+<h3>为什么会有一条底线</h3>
+<p>这条横轴在原论文里叫 CRLB(Cramér–Rao 下界),幻灯片上刻意没写这个缩写。只需要告诉学生一件事:给定这个信号、这个信噪比,不管算法多聪明,误差都不可能小于某个数 —— 物理划了一条地板线。所以曲线才会弯:越往左,每多挤出一点精度,付出的速率就越多。</p>
 <div class="say">CRLB 不是某个算法的性能,是<b>物理和信息给你划的天花板</b> —— 或者说地板。它说的是:给定这个信号、这个信噪比,不管你用多神的算法,估出来的误差都不可能小于这个数。<br><br>所以当一篇论文说"我们逼近了 CRLB",意思是"我们的算法已经好到接近理论极限了,别再指望算法上能有大改进"。</div>
 <h3>图上四个标注</h3>
 <ul>
@@ -333,17 +335,21 @@ const S = [
 `},
 
 {s:"波形", t:"OFDM 里面本来就藏着一个雷达", e:"OFDM already carries a radar inside it", n:`
+<p><b>第二个问题:用哪个信号。</b>答案是现成的:OFDM。翻到这页先把这句点出来。</p>
+
 <p>波形这一节开始。第一个消息是好消息:<b>你不需要新东西就能开始</b>。</p>
 <h3>左边那张格子图</h3>
 <p>横轴是时间(一个个 OFDM 符号),纵轴是频率(一个个子载波)。每个小格子叫一个<b>资源元(RE)</b>。这张图学生在讲 5G 物理层那节课见过,提醒他们一句。</p>
 <div class="say">OFDM 已经部署在 Wi-Fi、4G、5G、6G 里了,是最成熟的波形。<br><br>妙的地方在于:<b>这张格子本身就是一堆旋钮</b>。每个格子你都可以决定它装什么、用多大功率。既然如此,为什么不能让一部分格子装比特,一部分格子专门用来照亮目标?<br><br>而且子载波天生就能当雷达的频率通道用。<b>一个新的调制器都不用做。</b></div>
-<h3>那为什么还要设计新波形?</h3>
-<p>这是这一页下面那个问答,也是通往第 ??11 页的桥:</p>
-<p>因为 OFDM 是用<b>时间和频率</b>描述的,而一个<b>运动的</b>目标天生是用<b>时延和多普勒</b>描述的。快速移动的目标会把 OFDM 的格子<b>抹花</b>(smear)—— 具体说,多普勒会破坏子载波之间的正交性。而在时延-多普勒的坐标系里,同一个目标是<b>不动的一个点</b>。</p>
-<div class="ask">如果 OFDM 已经够用了,为什么还要设计新波形?<br><br>(这个问题不要马上答,让它悬着,直接翻到下一页用图回答。)</div>
+<h3>下面那个问答:那还剩什么要设计?</h3>
+<p>问答改过了。以前这里问"为什么还要设计新波形",答案通向 OTFS/ODDM —— 那条线整个删了。现在问的是:<b>OFDM 已经够用了,那还剩什么要设计?</b></p>
+<p>答:<b>哪些格子给比特、哪些格子给回波。</b>每一个交给感知的格子,都是从数据那里拿走的。这个选择就是剩下的整节课 —— 第三个问题。</p>
+<div class="ask">如果 OFDM 已经够用,那我们还剩下什么要决定的?<br><br>(想引出的答案:格子怎么分。答出来就直接翻下一页 —— 那页标题就是"格子是预算"。)</div>
 `},
 
 {s:"资源分配", t:"格子就是预算", e:"The grid is the budget", n:`
+<p><b>第三个问题,也是最后一个:怎么在比特和回波之间分格子。</b>四页。</p>
+
 <p>前面讲的是"有个权衡",从这一节开始讲"<b>那具体怎么分</b>"。这是最工程的一节。</p>
 <h3>图在说什么</h3>
 <p>又是那张时间-频率格子,但现在<b>每个格子被涂了色</b>:蓝格子分给通信,橙格子分给感知。</p>
@@ -355,7 +361,7 @@ const S = [
   <li><b>PSLR</b> = Peak-to-SideLobe Ratio,峰值旁瓣比。下一页先用一张图讲清楚"峰"是什么,第 17 页用它当感知的评分。</li>
   <li><b>RoI</b> = Region of Interest,感兴趣区域。<b>第 18 页那个"几乎没有损失"的魔术全靠这个词</b>,现在先让学生见一面。</li>
 </ul>
-<p>这一节的数据来自 IEEE JSAC 2024 那篇跨域双功能 OFDM 波形设计。仿真参数在第 ??21 页,别改数字。</p>
+<p>这一节的数据来自 IEEE JSAC 2024 那篇跨域双功能 OFDM 波形设计。两种分法和"几乎没有损失"的结论都引自那篇论文。</p>
 `},
 
 {s:"资源分配", t:"先讲清楚什么是峰", e:"What a peak is, before we grade one", n:`
@@ -367,7 +373,7 @@ const S = [
   <li><b>杂波(clutter)</b>:底下那条起伏的灰线,<b>所有没人要的回波</b> —— 地面、墙、雨。</li>
 </ul>
 <div class="say">一句话:峰是目标,旁瓣是自己吓自己,杂波是世界的背景音。<br><br>PSLR 就是一个诚实的问题:<b>真峰比最高的那个鬼影高多少?</b>高得多,目标一眼可见;差不多高,目标就被淹了。下一页给感知打分,用的就是这个数。</div>
-<div class="warn">旁瓣和杂波别混为一谈:旁瓣是你自己的波形造成的,换个波形能压下去(第 ??13 页 ODDM 干的就是这件事);杂波是世界给的,换什么波形都消不掉。</div>
+<div class="warn">旁瓣和杂波别混为一谈:旁瓣是你自己的波形造成的,换个波形能压下去;杂波是世界给的,换什么波形都消不掉。</div>
 `},
 
 {s:"资源分配", t:"两份评分,在两个房间打分", e:"Two scores, graded in two rooms", n:`
@@ -375,9 +381,9 @@ const S = [
 <h3>两个评分</h3>
 <ul>
   <li><b>通信分</b>:可达速率,把所有分给通信的 RE 加起来。<b>在时间-频率域里量</b> —— 策略是"把比特放在信道好的地方"。</li>
-  <li><b>感知分</b>:RoI 内的 PSLR —— <b>真峰比杂波高出多少</b>。<b>在时延-多普勒域里量</b> —— 策略是"在目标所在的地方把自相关的形状修好"。</li>
+  <li><b>感知分</b>:RoI 内的 PSLR —— <b>真峰比杂波高出多少</b>。<b>在距离和速度上量</b> —— 策略是"在目标真正会出现的地方,让峰立得高"。</li>
 </ul>
-<div class="say">PSLR 用大白话说:你想找的那个目标,它的回波峰值,比周围那些乱七八糟的杂波高出多少。高得多,就容易认出来;差不多高,就淹了。<br><br>关键在于最后那两句:<b>这两个分数不在同一个域里打。</b><br><br>通信分在时间-频率域,感知分在时延-多普勒域。这不是两个人对同一份卷子给了不同分数 —— 是<b>同一张格子被翻译成两种语言,然后各自批改</b>。<br><br>所以优化难在哪?你在一个域里动一下,另一个域里所有格子都跟着变。这就是第 10 页说的"非凸"。</div>
+<div class="say">PSLR 用大白话说:你想找的那个目标,它的回波峰值,比周围那些乱七八糟的杂波高出多少。高得多,就容易认出来;差不多高,就淹了。<br><br>关键在于最后那两句:<b>这两个分数不在同一个域里打。</b><br><br>通信分在时间和频率上打,感知分在距离和速度上打。这不是两个人对同一份卷子给了不同分数 —— 是<b>同一张格子被翻译成两种语言,然后各自批改</b>。<br><br>所以优化难在哪?你在一个域里动一下,另一个域里所有格子都跟着变。所以这个优化问题才难解。</div>
 <p>橙框:"同一张格子被打两次分,由两个考官在两个不同的域里。" —— 这是这一页的记忆点。</p>
 `},
 
@@ -386,13 +392,13 @@ const S = [
 <h3>两种策略</h3>
 <ul>
   <li><b>通信优先</b>:① 好格子先给比特 ② 再调剩下的功率 ③ 感知拿剩下的。<br><small style="color:#6b7280">结果:速率保持最优;PSLR 在 RoI 内"还不错"。</small></li>
-  <li><b>感知优先</b>:① 先锁死 RoI 里的自相关 ② 再调平面上其余部分 ③ 比特拿剩下的。<br><small style="color:#6b7280">结果:PSLR 局部完美;速率<b>逼近</b>但不<b>达到</b>最优。</small></li>
+  <li><b>感知优先</b>:① 先锁死 RoI 里的峰形 ② 再调格子上其余部分 ③ 比特拿剩下的。<br><small style="color:#6b7280">结果:PSLR 局部完美;速率<b>逼近</b>但不<b>达到</b>最优。</small></li>
 </ul>
 <div class="say">这就是分蛋糕先切的人占便宜。先挑的那一方拿到最优,后挑的拿剩下的。<br><br>注意措辞的差别,这个差别是真的:通信优先时速率是"<b>保持最优</b>",感知优先时速率是"<b>逼近</b>最优"。一个是等号,一个是约等号。</div>
 <h3>下面那个问答是本节最精彩的地方,一定要讲</h3>
 <p>问:两种设计都声称"几乎没有损失",这怎么可能?</p>
 <p><b>答:因为约束只在 RoI 内部强制执行。</b>把"必须完美"的房间缩小,格子的其余部分就自由了,可以全给另一个功能。</p>
-<div class="say">这是这节课最实用的一个思维方式,我希望你们带走。<br><br>"几乎没有损失"听起来像免费的午餐,像是有人绕过了我们刚才说躲不开的权衡。但没有人绕过它。<br><br>他们做的是:<b>把要求变窄了。</b><br><br>我不要求整个时延-多普勒平面都干净,我只要求那辆车可能出现的那一小块区域干净。那一小块之外,随便。于是那一大片就都能拿去发比特。<br><br>所以每次你在论文里看到"几乎没有损失",第一个要问的问题是:<b>你把要求缩到多小了?</b></div>
+<div class="say">这是这节课最实用的一个思维方式,我希望你们带走。<br><br>"几乎没有损失"听起来像免费的午餐,像是有人绕过了我们刚才说躲不开的权衡。但没有人绕过它。<br><br>他们做的是:<b>把要求变窄了。</b><br><br>我不要求整张格子在所有距离、所有速度上都干净,我只要求那辆车可能出现的那一小块区域干净。那一小块之外,随便。于是那一大片就都能拿去发比特。<br><br>所以每次你在论文里看到"几乎没有损失",第一个要问的问题是:<b>你把要求缩到多小了?</b></div>
 `},
 
 {s:"收尾", t:"三件事带回家", e:"Three things to take home", n:`
@@ -416,10 +422,12 @@ const S = [
 `},
 
 {s:"收尾", t:"课堂作业:在曲线上选一个点", e:"Before you go: pick a point on the curve", n:`
+<p>幻灯片顶上加了一行:两分钟、写在纸上、出门时交。学生之前不知道这页是干什么的 —— 先把规则念出来。</p>
+
 <p>下课前收的小作业。图就是第 13 页那条前沿曲线,<b>故意画成空白的</b>,让学生自己标点。</p>
 <h3>三道题</h3>
 <ol>
-  <li>标出<b>自动驾驶汽车</b>应该坐在哪。再标出<b>车厢 Wi-Fi</b> 应该坐在哪。</li>
+  <li>标出<b>自动驾驶汽车</b>应该坐在哪。再标出<b>家里的 Wi-Fi</b> 应该坐在哪。</li>
   <li>说出这两个设计会<b>分配得不一样</b>的一种资源。</li>
   <li>用一句话回答:<b>在你举的例子里,感知让比特付出了什么代价?</b></li>
 </ol>
@@ -427,7 +435,7 @@ const S = [
 <h3>期待的答案大概是</h3>
 <ul>
   <li><b>自动驾驶</b>:靠<b>左上</b> —— 必须感知优先。测错一个障碍物的后果比视频卡一下严重得多。它宁愿牺牲速率。</li>
-  <li><b>车厢 Wi-Fi</b>:靠<b>右下</b> —— 通信优先。乘客要的是带宽,车厢里没有什么需要它去感知的东西。</li>
+  <li><b>家里的 Wi-Fi</b>:靠<b>右下</b> —— 通信优先。你要的是带宽,客厅里没有什么需要它去感知的东西。</li>
   <li><b>第二题</b>可以答:带宽、功率、时间(照射时长)、波束宽度、RE 分配 —— 任何一个都算对,只要说得出为什么两者会分得不一样。</li>
 </ul>
 <div class="say">交上来之前我要求两件事:<b>图上有一个标出来的点,和一句话。</b><br><br>不要给我一段论述。一个点,一句话。因为如果你真的懂了,一句话就够;如果你写了三段还说不清,那就是还没懂。</div>
@@ -438,11 +446,11 @@ const S = [
 <h3>怎么用</h3>
 <p>不要上课念这一页。它的正确用法是:</p>
 <ul>
-  <li>课上有人问"OTFS 到底是什么的缩写",翻到这里指一下,10 秒钟;</li>
+  <li>课上有人问某个缩写的全称,翻到这里指一下,10 秒钟;</li>
   <li>课后告诉学生"所有缩写都在最后几页,别去网上搜"。</li>
 </ul>
-<div class="say">这门课的缩写密度确实高。我把它们都收在最后了。<br><br>但我要说一句:<b>考试不会考你缩写的全称。</b>我在意的是你知道 ODDM 和 OFDM 的区别在哪、为什么有人要造 ODDM,而不是你能不能背出那四个词。</div>
-<p>表格按 Area 分组:System(ISAC、DFRC、IMT-2030)、Waveform(OFDM、OTFS、ODDM)等等。这个分组本身就有教学价值 —— 它告诉学生这些缩写<b>属于不同的层次</b>,不是一堆平铺的名词。</p>
+<div class="say">这门课的缩写密度确实高。我把它们都收在最后了。<br><br>但我要说一句:<b>考试不会考你缩写的全称。</b>我在意的是你知道 PSLR 在量什么、RoI 为什么能让"几乎没有损失"成立,而不是你能不能背出那几个词。</div>
+<p>表格按 Area 分组:System(ISAC、DFRC、IMT-2030)、Waveform(OFDM)、Metric(PSLR、SINR)等等。这个分组本身就有教学价值 —— 它告诉学生这些缩写<b>属于不同的层次</b>,不是一堆平铺的名词。</p>
 `},
 
 {s:"附录", t:"附录:每张图背后的那些量", e:"Appendix: the quantities behind every plot", n:`
@@ -451,22 +459,22 @@ const S = [
 <ul>
   <li><b>时延 → 距离</b>:<code>R = cτ/2</code></li>
   <li><b>速率</b>:<code>log₂(1 + SINR)</code>,在各 RE 上求和</li>
-  <li><b>CRLB</b>:由 Fisher 信息求逆得到</li>
+  <li><b>感知误差</b>:有一条由带宽、功率和观测时间决定的地板线</li>
   <li><b>PSLR</b>:峰值比旁瓣高多少</li>
 </ul>
-<div class="say">如果有人问"这些是要背的吗" —— 第一个和第二个你应该认识,因为它们说明了物理在哪里。<br><br><code>R = cτ/2</code> 告诉你为什么测距就是测时间。<br><br><code>log₂(1 + SINR)</code> 告诉你为什么干扰会直接吃掉速率 —— 干扰在分母上。这就是第 ??22 页那个结论的数学形式。<br><br>CRLB 和 Fisher 信息的关系,知道"求逆"这个方向就够了:Fisher 信息越大,CRLB 越小,估计越准。信息多,误差小,符合直觉。</div>
+<div class="say">如果有人问"这些是要背的吗" —— 第一个和第二个你应该认识,因为它们说明了物理在哪里。<br><br><code>R = cτ/2</code> 告诉你为什么测距就是测时间。<br><br><code>log₂(1 + SINR)</code> 告诉你为什么干扰会直接吃掉速率 —— 干扰在分母上。这就是"干扰是双向的"那句话的数学形式。<br><br>感知误差那一条只要知道方向就够了:带宽越宽、功率越大、看得越久,地板越低,估计越准。</div>
 `},
 
 {s:"附录", t:"来源与延伸阅读", e:"Sources and further reading", n:`
 <p>最后一页。这节课的内容来自 Zhu Han 教授(休斯顿大学)的 ISAC 报告,以及几篇具体论文。</p>
 <h3>这节课引用的主要工作</h3>
 <ul>
-  <li><b>跨域双功能 OFDM 波形设计</b>,IEEE JSAC 2024 —— 第 ??17–??21 页那一节。</li>
+  <li><b>跨域双功能 OFDM 波形设计</b>,IEEE JSAC 2024 —— 第 15–18 页那一节。</li>
   <li><b>ITU-R M.2160</b>,IMT-2030 框架 (2023) —— 第 5 页。</li>
 </ul>
-<div class="say">下课前一句话:如果这节课里有一件事让你想再往下挖,我建议是第 ??22 页那条 ODDM 曲线。<br><br>它整条线都在 OTFS 上面,但<b>能把它做出来的硬件还不存在</b>。这种题目对本科生做研究是最合适的 —— 问题是真的,而且门还开着。</div>
+<div class="say">下课前一句话:如果这节课里有一件事让你想再往下挖,我建议是第 18 页那四个字 ——"几乎没有损失"。<br><br>每次论文里出现这四个字,先问一句:<b>你把要求缩到多小了?</b>拿着这个问题就能去读论文了 —— 问题是真的,而且门还开着。</div>
 <h3>给自己的备注</h3>
-<p>第 6 页那条时间轴是演讲者的预测,每学期讲之前值得重新核一遍 3GPP 的进度。第 ??21 页那些仿真参数<b>不要动</b>,它们是引用的原始数据。</p>
+<p>第 6 页那条时间轴是演讲者的预测,每学期讲之前值得重新核一遍 3GPP 的进度。第 18 页两种分法的结论引自论文,<b>别改措辞</b>。</p>
 `}
 ];
 
@@ -550,16 +558,17 @@ const EN = [
 <p><b>Three: how do we share that signal between bits and echoes?</b> The OFDM grid is a budget, and somebody has to decide who gets each cell.</p>
 <p>Everything from here is one of those three. If you ever lose the thread, ask me which question we're on.</p>`,
 
-`<p>This section is the intellectual core of the lecture. The table is split across two slides only because ten rows won't fit legibly on one — it's one table, one topic.</p>
+`<p>Question one from the roadmap: why can't one signal be great at both jobs? Three slides, all in one place.</p>
+<p>This section is the intellectual core of the lecture. The table is split across two slides only because ten rows won't fit legibly on one — it's one table, one topic.</p>
 <p>Five rows. Let's read the columns, then I'll take one row properly.</p>
 <p>Row two. <b>Signal.</b> This row is the mathematical root of the whole conflict, and the other four are just symptoms of it.</p>
 <p>What does communication want its signal to look like? <b>Random.</b> Why? Because randomness is what carries information. If you can predict what I'm about to send, I haven't told you anything new. Unpredictability <i>is</i> the definition of information content.</p>
 <p>What does radar want its signal to look like? <b>Deterministic.</b> Why? Because radar correlates the echo it receives against <b>what it knows it sent</b>. You have to know your own transmission exactly to recognise it coming back.</p>
-<p>So here it is: <b>randomness carries information, and randomness ruins an autocorrelation.</b></p>
+<p>So here it is: <b>randomness carries information, and randomness ruins a clean echo.</b></p>
 <p>That one sentence is the whole conflict. This isn't sloppy engineering. These two requirements pull in opposite directions at the level of information theory.</p>`,
 
 `<p>Second half of the table. Again, let me take two rows.</p>
-<p><b>Domain.</b> Sensing wants delay-Doppler resolution; communication wants time-frequency multiplexing. This row is where that abstract idea about "where you stand" turns into a concrete design conflict.</p>
+<p><b>Domain.</b> Sensing wants fine steps in distance and speed; communication wants fine slots in time and frequency. Both want a finer grid — in different directions — and there is only one signal to cut up.</p>
 <p><b>Latency.</b> Sensing wants low-latency tracking feedback — you need to know where that car is <i>now</i>. And a lot of communication traffic actually <b>tolerates</b> delay: video buffers, background sync. That one's a bit counterintuitive; most of you would assume communication is the impatient one.</p>
 <p>So — is there a setting where both are optimal?</p>
 <p><b>No.</b> What exists is a <b>Pareto frontier</b>. Past a certain point, every improvement in one is paid for out of the other. The design work is <b>choosing where to sit on the curve</b>, not escaping it.</p>
@@ -569,22 +578,23 @@ const EN = [
 
 `<p>Last slide said there's a frontier. Here it is drawn. And this picture comes back four more times today, so let's make sure it lands.</p>
 <p>Vertical axis: achievable rate. <b>Higher is better</b> — that one's intuitive.</p>
-<p>Horizontal axis: CRLB, the sensing error floor. <b>Lower is better</b> — which means <b>further right is worse</b>.</p>
+<p>Horizontal axis: sensing error — how far off the range and speed estimates are. <b>Lower is better</b>, which means <b>further right is worse</b>.</p>
 <p>So say it with me: the good corner of this plot is <b>up and to the left</b>. <i>[Point at it.]</i> I'm making a point of this because every curve you've ever seen has "up and to the right" as good, and about half of you will read this backwards if I don't say it out loud.</p>
-<p>CRLB is the Cramér-Rao Lower Bound: <b>the smallest variance any unbiased estimator can achieve.</b> It is not the performance of some algorithm. It's the ceiling — or the floor — that physics and information hand you. It says: given this signal and this SNR, no matter how clever your algorithm is, your error cannot be smaller than this.</p>
-<p>So when a paper says "we approach the CRLB," what they mean is: our algorithm is close enough to the theoretical limit that you should stop expecting big gains from better algorithms.</p>
+<p>In the paper this axis is a quantity called the CRLB. I'm deliberately keeping the acronym off the slide. The one thing to know: given this signal and this signal-to-noise ratio, no algorithm, however clever, gets the error below a certain floor. Physics sets that floor — and that's why the curve bends instead of running straight.</p>
 <p>Green point, up and left: a sensing-first design. Orange point, down and right: a communication-first design. Both are on the frontier. Both are legitimate. They're different <b>choices</b>.</p>
 <p>And that's the frame for the rest of the hour: <b>every result after this is a claim about one point on a curve like this one.</b></p>`,
 
-`<p>Waveforms. And the first piece of news is good news: <b>you don't need anything new to start.</b></p>
+`<p>Question two from the roadmap: which signal do we actually use? Short answer — the one we already have.</p>
+<p>Waveforms. And the first piece of news is good news: <b>you don't need anything new to start.</b></p>
 <p>This grid — you've seen it before, in the physical layer lecture. Horizontal axis is time, one OFDM symbol per column. Vertical is frequency, one subcarrier per row. Each little cell is a <b>resource element</b>.</p>
 <p>OFDM is already deployed in Wi-Fi, 4G, 5G, 6G. It is the most mature waveform we have.</p>
 <p>And here's the neat part: <b>that grid is already a set of knobs.</b> For every cell you get to decide what goes in it and how much power it gets. So — why not let some cells carry bits and some cells be there purely to light up a target? The subcarriers naturally double as radar frequency bins. <b>You don't have to build a new modulator at all.</b></p>
-<p>Which raises the obvious question: if OFDM is good enough, why is anyone designing new waveforms?</p>
-<p>Because OFDM is described in <b>time and frequency</b>, and a moving target is naturally described in <b>delay and Doppler</b>. A fast target <b>smears</b> across an OFDM grid — specifically, Doppler breaks the orthogonality between subcarriers. In a delay-Doppler grid, that same target sits still.</p>
-<p><i>[Don't answer further. Turn the page and answer with the picture.]</i></p>`,
+<p>Which raises the obvious question: if OFDM is already good enough, what's left to design?</p>
+<p>This: <b>which cells go to bits and which go to echoes.</b> Every cell you hand to sensing is a cell you took from data. That decision is the rest of this lecture — question three from the roadmap.</p>
+<p><i>[Let them answer. Then turn the page — the next title is literally "the grid is the budget".]</i></p>`,
 
-`<p>Up to now we've said there's a tradeoff. From here we ask: <b>so how do you actually divide things up?</b> This is the most hands-on section of the day.</p>
+`<p>Question three, the last one: how do we share the grid between bits and echoes? Four slides.</p>
+<p>Up to now we've said there's a tradeoff. From here we ask: <b>so how do you actually divide things up?</b> This is the most hands-on section of the day.</p>
 <p>Same grid as before, except now <b>every cell is coloured</b>. Blue cells go to communication, orange cells to sensing.</p>
 <p>One RE is one cell: one subcarrier during one OFDM symbol. Each cell carries two things — <b>a symbol and an amount of power</b>. So allocation is two decisions: <b>first who gets the cell, then how much power it gets.</b></p>
 <p>This is where the budget metaphor comes from. That grid is your money, and the total is fixed. One more cell for sensing is one fewer cell for bits. There's no third option.</p>
@@ -599,7 +609,7 @@ const EN = [
 
 `<p>Same grid, but it gets <b>graded twice, by two examiners using completely different standards</b>.</p>
 <p><b>Communication score:</b> achievable data rate, summed over every RE assigned to communication. Measured in <b>time-frequency</b>. The strategy is: put bits where the channel is good.</p>
-<p><b>Sensing score:</b> PSLR inside the region of interest — <b>how far the true peak stands above the clutter</b>. Measured in <b>delay-Doppler</b>. The strategy is: shape the autocorrelation where the targets actually live.</p>
+<p><b>Sensing score:</b> PSLR inside the region of interest — <b>how far the true peak stands above the clutter</b>. Measured in <b>distance and speed</b>. The strategy is: make the peak stand tall where the targets actually are.</p>
 <p>PSLR in plain language: the thing you're looking for produces a peak, and there's junk all around it. How much higher is your peak than the junk? A lot higher, easy to find. About the same, it's buried.</p>
 <p>Now the crucial bit is those last two lines. <b>These two scores are not graded in the same domain.</b></p>
 <p>This isn't two people giving different marks to the same exam. It's <b>the same grid translated into two different languages and marked separately in each</b>.</p>
@@ -607,14 +617,14 @@ const EN = [
 
 `<p>This one's easy, because it's just a question of who goes first.</p>
 <p><b>Communication-centric:</b> give the good REs to bits, then tune the leftover powers, and sensing takes the remainder. Result: rate stays optimal, and PSLR is merely <i>good</i> inside the RoI.</p>
-<p><b>Sensing-centric:</b> lock the RoI autocorrelation first, then tune the rest of the plane, and bits take the remainder. Result: PSLR is locally perfect, and rate <i>approaches</i> optimal without reaching it.</p>
+<p><b>Sensing-centric:</b> lock the peak shape inside the RoI first, then tune the rest of the grid, and bits take the remainder. Result: PSLR is locally perfect, and rate <i>approaches</i> optimal without reaching it.</p>
 <p>It's cake. Whoever cuts first does better. And notice the wording difference is real: one design <b>keeps</b> the optimal rate, the other <b>approaches</b> it. One is an equals sign, the other is an approximately-equals.</p>
 <p>Now — both designs claim "almost no loss." How can that be?</p>
 <p><i>[Let them think.]</i></p>
 <p><b>Because the constraint is only enforced inside the region of interest.</b> Narrow the room you have to be perfect in, and the rest of the grid is free for the other function.</p>
 <p>This is the most useful habit of mind in the whole lecture, so I'll say it slowly.</p>
 <p>"Almost no loss" sounds like a free lunch. It sounds like somebody got around the tradeoff we just spent ten minutes saying is inescapable. Nobody got around it.</p>
-<p>What they did was <b>make the requirement smaller</b>. I don't need the whole delay-Doppler plane to be clean. I only need the little patch where that car might be. Outside that patch, I don't care. And now that big region is available for bits.</p>
+<p>What they did was <b>make the requirement smaller</b>. I don't need a clean echo at every distance and every speed. I only need the little patch where that car might be. Outside that patch, I don't care. And now that big region is available for bits.</p>
 <p>So every time you read "almost no loss" in a paper, the first question is: <b>how small did you make the requirement?</b></p>`,
 
 `<p>Three things to take home, in the order we met them.</p>
@@ -636,8 +646,9 @@ const EN = [
 <p>Which is the same conversation we had about carrier economics: every architecture change needs somebody for whom the numbers work. For ISAC, those numbers aren't in yet.</p>
 <p>That doesn't mean it fails. Nobody could name 5G's killer app when 5G launched either. But as engineers you should carry this awareness: <b>a technology maturing and a technology being adopted are two different events, and the second one is usually decided by things outside the technology.</b></p>`,
 
-`<p>Before you go. Same frontier curve as before, except I've left it blank, and you're going to mark it up.</p>
-<p>One: mark where a <b>self-driving car</b> should sit. Then mark where a <b>cabin Wi-Fi link</b> should sit.</p>
+`<p>Two minutes, on paper, handed in on the way out — so I can see what actually landed.</p>
+<p>Before you go. Same frontier curve as before, except I've left it blank, and you're going to mark it up.</p>
+<p>One: mark where a <b>self-driving car</b> should sit. Then mark where a <b>home Wi-Fi link</b> should sit.</p>
 <p>Two: name one resource the two designs would allocate differently.</p>
 <p>Three: in one sentence — <b>what does sensing cost the bits in your example?</b></p>
 <p>And to be clear: <b>"both" is not an answer to part three.</b> The entire point of today is that you cannot have both. If your instinct is to write "both," go back and look at the frontier again.</p>
@@ -645,20 +656,20 @@ const EN = [
 
 `<p><i>[Backup slide — not in the planned seventy-five minutes.]</i></p>
 <p>All the acronyms from today are collected here. Don't go searching online for them, they're on this slide.</p>
-<p>The density of acronyms in this material is genuinely high, and I know that. But let me say one thing: <b>I will not examine you on what the letters stand for.</b> What I care about is that you know the difference between ODDM and OFDM and why somebody bothered inventing ODDM — not whether you can recite four words.</p>
+<p>The density of acronyms in this material is genuinely high, and I know that. But let me say one thing: <b>I will not examine you on what the letters stand for.</b> What I care about is that you know what PSLR measures and why the region of interest makes "almost no loss" possible — not whether you can recite the words.</p>
 <p>Notice the table is grouped by area: system, waveform, and so on. That grouping is doing real work — it tells you these acronyms <b>live at different layers</b>. They're not one flat pile of jargon.</p>`,
 
 `<p><i>[Backup slide.]</i></p>
 <p>Every quantity behind every plot today, in one place.</p>
 <p>If somebody asks whether these need memorising — the first two you should recognise, because they tell you where the physics is.</p>
 <p><span class="t">R = c·tau over 2</span> tells you why measuring distance is really measuring time.</p>
-<p><span class="t">log base 2 of (1 + SINR)</span> tells you why interference eats rate directly — the interference is <b>in the denominator</b>. That's the mathematical form of the ODDM-versus-OTFS result.</p>
-<p>For CRLB and Fisher information, knowing the direction is enough: <b>more Fisher information means a lower CRLB means a better estimate.</b> More information, less error. That one matches intuition.</p>`,
+<p><span class="t">log base 2 of (1 + SINR)</span> tells you why interference eats rate directly — the interference is <b>in the denominator</b>. That's the mathematical form of "interference is mutual".</p>
+<p>For the sensing-error floor, knowing the direction is enough: more bandwidth, more power, or a longer look all push the floor down. More signal, less error. That one matches intuition.</p>`,
 
 `<p>Last slide. Today's material comes from Professor Zhu Han's ISAC talk at the University of Houston, plus the one paper behind the allocation section.</p>
 <p>The cross-domain OFDM work is IEEE JSAC 2024 — that was our resource allocation section. And ITU-R M.2160 is the framework document.</p>
-<p>One last thing before you go. If anything today made you want to dig further, I'd point you at <b>the ODDM curve on the many-users slide</b>.</p>
-<p>It sits above OTFS across the whole range, and <b>the hardware to build it does not exist yet</b>. Which makes it close to ideal for undergraduate research: the problem is real, and the door is still open.</p>`
+<p>One last thing before you go. If anything today made you want to dig further, I'd point you at <b>the phrase "almost no loss" on the allocation slide</b>.</p>
+<p>Every time a paper says it, ask one question: <b>how small did you make the requirement?</b> That question alone is enough to read this literature critically. The problem is real, and the door is still open.</p>`
 ];
 
 const img=document.getElementById('slide'), note=document.getElementById('note'),
