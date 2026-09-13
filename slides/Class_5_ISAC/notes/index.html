@@ -314,7 +314,7 @@ const S = [
 `},
 
 {s:"权衡", t:"前沿,画一次", e:"The frontier, drawn once", n:`
-<p>上一页说了有条前沿,这一页把它画出来。<b>这张图后面会反复回来</b>(第 23、25 页),所以这里要讲到学生真的看懂。</p>
+<p>上一页说了有条前沿,这一页把它画出来。<b>这张图后面会反复回来</b>(第 24、26 页),所以这里要讲到学生真的看懂。</p>
 <h3>两根轴,而且横轴是反的</h3>
 <ul>
   <li><b>纵轴</b>:可达速率(achievable rate)。<b>越高越好</b>,这个符合直觉。</li>
@@ -334,8 +334,14 @@ const S = [
 <p>橙框那句是本节的总结,也是给后半节课定调:"后面每一个结果,都是关于这样一条曲线上某一个点的声明。"</p>
 `},
 
+{s:"波形", t:"第二个问题:我们到底用哪个信号?", e:"Question 2: which signal do we actually use?", n:`
+<p><b>过渡页(新加)。</b>之前第 13 页画完曲线直接跳到"Step 1",OFDM 这个词在 slide 上从没出场过 —— 学生不知道为什么突然开始"造信号"。这一页做三件事:收第一个问题,提第二个问题,预告四步。</p>
+<div class="say">第一个问题回答完了:两份工要的东西相反,所以有一条取舍曲线。那么不管我们选哪个信号,它都得同时干两份工,并且落在这条曲线的某一点上。<br><br>第二个问题:到底用哪个信号?<br><br><b>答案是 OFDM</b> —— Orthogonal Frequency Division Multiplexing,正交频分复用。就是 Wi-Fi、4G、5G 现在正在发的那个信号。不造新收音机。<br><br>但要把 OFDM 当雷达读,得先知道它是什么。你们大多数人只听过这个名字,所以接下来四页,我们从零把一个 OFDM 信号搭出来:比特变成点;描述一个点需要垂直的坐标轴;FFT 就是一组垂直轴;一次 IFFT 就是一个 OFDM 符号,符号排起来就是格子。</div>
+<div class="warn">这四步念出来就行,别在这页解释任何一步。它是目录,不是内容。</div>
+`},
+
 {s:"波形", t:"第一步:比特变成点", e:"Step 1: bits become points", n:`
-<p><b>第二个问题:用哪个信号。</b>答案是 OFDM,但学生对 OFDM 了解不多,所以先用四页、一个例子,把它从头走一遍。不讲细节,只走例子。</p>
+<p>上一页宣布了四步,这是第一步。不讲细节,只走例子。</p>
 <h3>这一页</h3>
 <p>左边一串比特 1011 0010 1110 0001……每四个一组,每组在右边地图上挑 16 个点中的一个 —— 这就是 16-QAM。橙色那个点就是 1011 挑中的。</p>
 <div class="say">一个点就是两个数 (x, y)。所以四个比特变成了一个点,一长串比特变成了<b>一串点</b>。<br><br>注意:到这儿什么都还没发出去。我们只是决定了"要说什么"。</div>
@@ -389,8 +395,8 @@ const S = [
 <h3>两个缩写先埋下,后面要用</h3>
 <ul>
   <li><b>RE</b> = Resource Element,资源元。</li>
-  <li><b>PSLR</b> = Peak-to-SideLobe Ratio,峰值旁瓣比。下一页先用一张图讲清楚"峰"是什么,第 21 页用它当感知的评分。</li>
-  <li><b>RoI</b> = Region of Interest,感兴趣区域。<b>第 22 页那个"几乎没有损失"的魔术全靠这个词</b>,现在先让学生见一面。</li>
+  <li><b>PSLR</b> = Peak-to-SideLobe Ratio,峰值旁瓣比。下一页先用一张图讲清楚"峰"是什么,第 22 页用它当感知的评分。</li>
+  <li><b>RoI</b> = Region of Interest,感兴趣区域。<b>第 23 页那个"几乎没有损失"的魔术全靠这个词</b>,现在先让学生见一面。</li>
 </ul>
 <p>这一节的数据来自 IEEE JSAC 2024 那篇跨域双功能 OFDM 波形设计。两种分法和"几乎没有损失"的结论都引自那篇论文。</p>
 `},
@@ -500,12 +506,12 @@ const S = [
 <p>最后一页。这节课的内容来自 Zhu Han 教授(休斯顿大学)的 ISAC 报告,以及几篇具体论文。</p>
 <h3>这节课引用的主要工作</h3>
 <ul>
-  <li><b>跨域双功能 OFDM 波形设计</b>,IEEE JSAC 2024 —— 第 19–22 页那一节。</li>
+  <li><b>跨域双功能 OFDM 波形设计</b>,IEEE JSAC 2024 —— 第 20–23 页那一节。</li>
   <li><b>ITU-R M.2160</b>,IMT-2030 框架 (2023) —— 第 5 页。</li>
 </ul>
-<div class="say">下课前一句话:如果这节课里有一件事让你想再往下挖,我建议是第 22 页那四个字 ——"几乎没有损失"。<br><br>每次论文里出现这四个字,先问一句:<b>你把要求缩到多小了?</b>拿着这个问题就能去读论文了 —— 问题是真的,而且门还开着。</div>
+<div class="say">下课前一句话:如果这节课里有一件事让你想再往下挖,我建议是第 23 页那四个字 ——"几乎没有损失"。<br><br>每次论文里出现这四个字,先问一句:<b>你把要求缩到多小了?</b>拿着这个问题就能去读论文了 —— 问题是真的,而且门还开着。</div>
 <h3>给自己的备注</h3>
-<p>第 6 页那条时间轴是演讲者的预测,每学期讲之前值得重新核一遍 3GPP 的进度。第 22 页两种分法的结论引自论文,<b>别改措辞</b>。</p>
+<p>第 6 页那条时间轴是演讲者的预测,每学期讲之前值得重新核一遍 3GPP 的进度。第 23 页两种分法的结论引自论文,<b>别改措辞</b>。</p>
 `}
 ];
 
@@ -615,7 +621,13 @@ const EN = [
 <p>Green point, up and left: a sensing-first design. Orange point, down and right: a communication-first design. Both are on the frontier. Both are legitimate. They're different <b>choices</b>.</p>
 <p>And that's the frame for the rest of the hour: <b>every result after this is a claim about one point on a curve like this one.</b></p>`,
 
-`<p>Question two from the roadmap: which signal do we use? OFDM — and since most of you have only heard the name, let's build one from scratch. Four slides, one worked example, nothing harder than a small matrix.</p>
+`<p>Question one is answered: the two jobs want opposite things, so there is a curve of compromises. Which means whatever signal we pick has to carry <b>both</b> jobs, and it will sit somewhere on that curve.</p>
+<p>So, question two: which signal do we actually use?</p>
+<p><b>The answer is OFDM</b> — Orthogonal Frequency Division Multiplexing. It is the signal Wi-Fi, 4G and 5G already transmit, right now. We are not building a new radio.</p>
+<p>But before we can read OFDM as a radar, we need to know what it actually is. Most of you have only heard the name. So over the next four slides we build one from scratch: bits become points; describing a point needs perpendicular axes; the FFT is exactly such a set of axes; and one IFFT gives one OFDM symbol — line the symbols up and you have the grid.</p>
+<p><i>[Just read the four steps. Don't explain any of them here — this slide is a table of contents.]</i></p>`,
+
+`<p>Step one of the four.</p>
 <p>Here's a string of bits we want to send: 1011, 0010, 1110, 0001, and so on. Cut them into groups of four. Each group picks one of the sixteen points on this map. The step has a name, 16-QAM, but the name doesn't matter. The orange point is what 1011 picked.</p>
 <p>A point is just two numbers, x and y. So four bits have become one point, and a long string of bits has become a <b>list of points</b>.</p>
 <p>Notice: nothing has been transmitted yet. We have only decided what to say.</p>`,

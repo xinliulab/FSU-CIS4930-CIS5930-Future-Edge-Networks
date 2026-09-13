@@ -2,13 +2,43 @@
 
 \section[OFDM]{The Waveform We Already Have}
 
-% SECTION TIMING: 32:00--42:00 (5 frames). Question 2 of the roadmap frame.
+% SECTION TIMING: 32:00--43:00 (6 frames). Question 2 of the roadmap frame.
 % The four "Step" frames are the OFDM primer the author asked for on 2026-09-13:
 % students know little OFDM, so walk one worked example (bits -> 16-QAM points ->
 % perpendicular axes -> the FFT matrix as those axes -> IFFT builds the symbol and
 % the grid). Keep it at the level of a 2x2 and a 4x4 matrix; no formulas beyond that.
 % The OTFS / ODDM / delay-Doppler frames that used to follow were removed on 2026-09-13
 % (CS audience, no signal-processing background); see parked/03_otfs_oddm_frames.tex.
+
+% Added 2026-09-13 after the author pointed out that Step 1 began with no lead-in:
+% OFDM had never been named on a slide. This frame closes question 1, poses question 2,
+% answers it, and announces the four steps that follow.
+\begin{frame}{Question 2: which signal do we actually use?}
+  \vspace{0.3em}
+  {\small Question 1 is answered: the two jobs want opposite things, so there is a
+   curve of compromises. Whatever signal we pick has to carry \textbf{both} jobs and
+   sit somewhere on that curve.\par}
+
+  \vspace{0.45em}
+  {\large\textbf{The answer is OFDM} \expand{Orthogonal Frequency Division
+   Multiplexing} --- the signal Wi-Fi, 4G and 5G already transmit. No new radio.\par}
+
+  \vspace{0.45em}
+  {\small Before we can read OFDM as a radar we need to know what it actually is.
+   Most of you have only heard the name, so we build one from scratch, in four
+   steps:\par}
+  \vspace{0.2em}
+  {\small
+  \begin{enumerate}\itemsep0pt
+    \item Bits become points.
+    \item Describing a point needs perpendicular axes.
+    \item The FFT is a set of perpendicular axes.
+    \item An OFDM symbol is one IFFT --- and symbols make the grid.
+  \end{enumerate}}
+
+  \vspace{0.15em}
+  \takeaway{Four steps, one example: by the end you have built the grid this lecture is about.}
+\end{frame}
 
 \begin{frame}{Step 1: bits become points}
   \vspace{0.2em}
