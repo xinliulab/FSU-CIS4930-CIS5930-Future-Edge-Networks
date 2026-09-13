@@ -1,0 +1,30 @@
+% Parked 2026-09-13: the "which waveform for which problem" appendix table (OFDM /
+% OTFS / ODDM / DCO-OFDM), removed with the waveform section. Not part of the build.
+
+\begin{frame}{Appendix: which waveform for which problem}
+  \scriptsize
+  \renewcommand{\arraystretch}{1.24}
+  \vspace{0.15em}
+  \begin{tabularx}{\textwidth}{
+      >{\raggedright\arraybackslash}p{1.35cm}
+      >{\raggedright\arraybackslash}X
+      >{\raggedright\arraybackslash}X
+      >{\raggedright\arraybackslash}p{2.2cm}}
+    \toprule
+    \textbf{Waveform} & \textbf{Best when} & \textbf{Avoid when} & \textbf{Maturity} \\
+    \midrule
+    OFDM & You must ship on existing 5G hardware & Doppler spread is large &
+      Deployed \\
+    OTFS & Mobility is high and you want an OFDM front end & Sidelobes must be
+      clean & Prototypes \\
+    ODDM & Sensing accuracy and multiuser separation both matter & You need it this
+      year & Research \\
+    \bottomrule
+  \end{tabularx}
+
+  \vspace{0.5em}
+  \qa{Why would anyone still choose OFDM for sensing?}
+     {Because the alternative costs a new modem in every device. A worse waveform
+      that exists beats a better one that does not.}
+\end{frame}
+

@@ -101,35 +101,20 @@
       must watch long enough for the phase to drift.}
 \end{frame}
 
-\begin{frame}{The four hard parts, named up front}
-  \vspace{0.5em}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.47\textwidth}
-      \large\textbf{\textcolor{ranblue}{Techniques}}
+% Rewritten 2026-09-13: this used to be a "four hard parts" list of techniques the
+% lecture never returned to. It is now the roadmap for exactly what follows, in order.
+\begin{frame}{Three questions for the rest of today}
+  \vspace{0.8em}
+  \begin{enumerate}\itemsep16pt
+    \item {\large\textbf{Why can't one signal be great at both jobs?}}\\
+      {\small The two jobs want opposite things. That gives us a curve of
+       compromises, not a fix.}
+    \item {\large\textbf{Which signal do we actually use?}}\\
+      {\small OFDM --- the one Wi-Fi, 4G and 5G already transmit. No new radio.}
+    \item {\large\textbf{How do we share it between bits and echoes?}}\\
+      {\small The OFDM grid is a budget. Somebody has to decide who gets each cell.}
+  \end{enumerate}
 
-      \vspace{0.5em}
-      \small
-      \begin{itemize}\itemsep4pt
-        \item Waveform design
-        \item MIMO, beamforming
-        \item Shared RF hardware
-        \item Coding and allocation
-      \end{itemize}
-    \column{0.47\textwidth}
-      \large\textbf{\textcolor{coreorange}{Challenges}}
-
-      \vspace{0.5em}
-      \small
-      \begin{itemize}\itemsep4pt
-        \item Tradeoff: unavoidable
-        \item Interference: mutual
-        \item Complexity: non-convex
-        \item Regulation: who owns it
-      \end{itemize}
-  \end{columns}
-
-  \glossline{MIMO = Multiple Input Multiple Output \quad RF = Radio Frequency}
-
-  \vspace{0.4em}
-  \takeaway{Three of the four are engineering.\\The fourth is a committee.}
+  \vspace{1.0em}
+  \takeaway{Everything from here answers one of these three.\\If you lose the thread, ask which one we are on.}
 \end{frame}

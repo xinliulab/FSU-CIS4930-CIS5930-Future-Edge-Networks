@@ -4,7 +4,7 @@
 \input{ran_macros.tex}
 
 \title[ISAC for 6G]{Class 5: Integrated Sensing and Communication}
-\subtitle{Waveforms, Resource Allocation, Standards}
+\subtitle{What it is, why it is hard, and how OFDM does it}
 
 \FSUOSMeta
 
@@ -16,18 +16,18 @@
 
 \addtocounter{framenumber}{-1}
 
-\input{01_motivation.tex}
-\input{02_dfrc.tex}
-\input{03_waveforms.tex}
-\input{04_tradeoff.tex}
-
-\input{05_applications.tex}
-% The per-paper field tour (RIS/DISCO attack, high-speed rail, FSO, USRP bench) was
-% removed from this lecture on 2026-09-13; its frames are kept in parked/ and are
-% not part of the build.
-\input{07_prototype.tex}
-
+% One straight line, each section set up by the one before it (reordered 2026-09-13
+% for a CS audience with no signal-processing background):
+\input{01_motivation.tex}   % what ISAC is, and why it is official (M.2160)
+\input{07_prototype.tex}    % ...and when: the standards clock that M.2160 started
+\input{02_dfrc.tex}         % one box; what an echo tells you; the three questions
+\input{04_tradeoff.tex}     % Q1: why one signal cannot be great at both jobs
+\input{03_waveforms.tex}    % Q2: which signal -- OFDM, the one 4G/5G already send
+\input{05_applications.tex} % Q3: how to share the OFDM grid between bits and echoes
 \input{08_wrap_up.tex}
 \input{09_appendix.tex}
+% Removed from this lecture on 2026-09-13 and kept in parked/ (not built): the
+% per-paper field tour (RIS/DISCO, high-speed rail, FSO, USRP bench) and the
+% OTFS/ODDM/delay-Doppler waveform material.
 
 \end{document}
