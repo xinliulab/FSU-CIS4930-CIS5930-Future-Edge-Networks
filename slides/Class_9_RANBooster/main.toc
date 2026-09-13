@@ -1,0 +1,7 @@
+\beamer@sectionintoc {1}{The Paper}{2}{0}{1}
+\beamer@sectionintoc {2}{Background: The Disaggregated RAN}{3}{0}{2}
+\beamer@sectionintoc {3}{The Idea: Middleboxes on the Fronthaul}{8}{0}{3}
+\beamer@sectionintoc {4}{How the Framework Works}{13}{0}{4}
+\beamer@sectionintoc {5}{Example 1: Distributed Antenna System}{16}{0}{5}
+\beamer@sectionintoc {6}{Example 2: Distributed MIMO, and a Live Deployment}{23}{0}{6}
+\beamer@sectionintoc {7}{Concluding Remarks}{26}{0}{7}
