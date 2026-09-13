@@ -1,0 +1,136 @@
+%!TEX root = ./main.tex
+
+\section[Framework]{How the Framework Works}
+
+% TALK MAPPING: slides 6--7, transcript 07:38--10:28.
+% The whole framework is two facts: (1) the middlebox sits on the wire between DU and
+% RU and sees Ethernet frames full of IQ samples; (2) there are exactly four things it
+% is allowed to do to them. Every application later in the talk is a combination of
+% those four. Say "four" often enough that students can recite them at the end.
+
+% Teaching note (120 s): overlay 1 is the deployment WITHOUT RANBooster -- one DU, two
+% RUs, a wire. Ask what is on that wire before advancing. Answer: not packets of user
+% data, but digitized waveform, already turned into IQ samples by the DU.
+\begin{frame}{High-level RANBooster middlebox operation}
+  \vspace{1.0em}
+  \centering
+  \begin{tikzpicture}[scale=0.92,transform shape]
+    \node[dunode] (du) at (0,0) {DU};
+    \runode{ru1}{(8.4,1.3)}{RU 1}
+    \runode{ru2}{(8.4,-1.3)}{RU 2}
+
+    % Overlay 1: the plain deployment.
+    \only<1>{
+      \draw[wire] (du.east) -- (5.1,0);
+      \draw[wire] (5.1,1.3) -- (5.1,-1.3);
+      \draw[wire] (5.1,1.3) -- (ru1.west);
+      \draw[wire] (5.1,-1.3) -- (ru2.west);
+    }
+
+    % Overlay 2: middleboxes spliced into the same wire, and chained.
+    \only<2->{
+      \node[mbox,minimum width=2.2cm] (m1) at (2.6,0)
+        {RANBooster\\middlebox \#1};
+      \node[mbox,minimum width=2.2cm,draw=ranblue,fill=ranblue] (m2a) at (6.1,1.3)
+        {RANBooster\\middlebox \#2};
+      \node[mbox,minimum width=2.2cm,draw=ranblue,fill=ranblue] (m2b) at (6.1,-1.3)
+        {RANBooster\\middlebox \#2};
+      \draw[wire] (du.east) -- (m1.west);
+      \draw[wire] (m1.east) -- (4.4,0);
+      \draw[wire] (4.4,1.3) -- (4.4,-1.3);
+      \draw[wire] (4.4,1.3) -- (m2a.west);
+      \draw[wire] (4.4,-1.3) -- (m2b.west);
+      \draw[wire] (m2a.east) -- (ru1.west);
+      \draw[wire] (m2b.east) -- (ru2.west);
+      \node[font=\small\bfseries,text=ranblue] at (2.6,-1.0) {Add-on feature \#1};
+      \node[font=\small\bfseries,text=ranblue] at (6.1,-2.1) {Add-on feature \#2};
+    }
+
+    \node[font=\scriptsize\bfseries,align=center] at (-0.1,2.35)
+      {User/Control\\Data};
+    \node[font=\scriptsize\bfseries,align=center] at (4.3,2.35)
+      {Ethernet frames with waveform data\\(IQ samples)};
+    \node[font=\scriptsize\bfseries,align=center] at (8.7,2.35) {Radio signals};
+  \end{tikzpicture}
+
+  \vspace{0.7em}
+  \only<2->{\takeaway{The DU still thinks it is talking to its own radios.\\
+    Nothing above the fronthaul had to change.}}
+\end{frame}
+
+% Teaching note (180 s): go slowly. Name each action, then name a use for it before
+% moving on -- redirection = steer a cell; replication = one signal, many antennas;
+% caching = wait for the other radio's copy; inspection = read or rewrite the samples.
+% Students who hold these four can predict the DAS design on the next slide.
+\begin{frame}{RANBooster packet manipulation primitives}
+  \vspace{0.2em}
+  {\small\textbf{4 supported types of actions}\par}
+  \vspace{0.5em}
+  \centering
+  \begin{tikzpicture}[scale=0.88,transform shape]
+    % ---- A1: redirection / drop -------------------------------------------
+    \begin{scope}[shift={(0,0)}]
+      \node[font=\scriptsize\bfseries,text=talkred] at (1.75,1.3)
+        {A1: Packet redirection/drop};
+      \node[dunode,minimum width=1.05cm,minimum height=0.6cm] (a1du) at (0,0) {DU};
+      \node[mbox,minimum width=0.55cm,minimum height=0.55cm] (a1m) at (1.55,0) {M};
+      \node[draw=softgray,fill=yellow!55,minimum width=1.05cm,minimum height=0.55cm,
+            font=\scriptsize\bfseries] (a1r1) at (3.3,0.5) {RU 1};
+      \node[draw=softgray,fill=gray!25,minimum width=1.05cm,minimum height=0.55cm,
+            font=\scriptsize\bfseries] (a1r2) at (3.3,-0.5) {RU 2};
+      \draw[wire] (a1du) -- (a1m);
+      \draw[wire] (a1m.east) -- (2.3,0);
+      \draw[wire] (2.3,0.5) -- (2.3,-0.5);
+      \draw[wire] (2.3,0.5) -- (a1r1.west);
+      \draw[wire] (2.3,-0.5) -- (a1r2.west);
+    \end{scope}
+    % ---- A2: replication ---------------------------------------------------
+    \begin{scope}[shift={(5.5,0)}]
+      \node[font=\scriptsize\bfseries,text=talkred] at (1.75,1.3)
+        {A2: Packet replication};
+      \node[dunode,minimum width=1.05cm,minimum height=0.6cm] (a2du) at (0,0) {DU};
+      \node[mbox,minimum width=0.55cm,minimum height=0.55cm] (a2m) at (1.55,0) {M};
+      \node[draw=softgray,fill=yellow!55,minimum width=1.05cm,minimum height=0.55cm,
+            font=\scriptsize\bfseries] (a2r1) at (3.3,0.5) {RU 1};
+      \node[draw=softgray,fill=yellow!55,minimum width=1.05cm,minimum height=0.55cm,
+            font=\scriptsize\bfseries] (a2r2) at (3.3,-0.5) {RU 2};
+      \draw[wire] (a2du) -- (a2m);
+      \draw[wire] (a2m.east) -- (2.3,0);
+      \draw[wire] (2.3,0.5) -- (2.3,-0.5);
+      \draw[wire] (2.3,0.5) -- (a2r1.west);
+      \draw[wire] (2.3,-0.5) -- (a2r2.west);
+    \end{scope}
+    \draw[softgray!60,dashed] (4.75,-3.1) -- (4.75,1.45);
+    \draw[softgray!60,dashed] (-0.7,-1.0) -- (10.3,-1.0);
+    % ---- A3: caching -------------------------------------------------------
+    \begin{scope}[shift={(0,-2.55)}]
+      \node[font=\scriptsize\bfseries,text=talkred] at (1.75,0.95)
+        {A3: Packet caching};
+      \node[dunode,minimum width=1.05cm,minimum height=0.6cm] (a3du) at (0,0) {DU};
+      \node[mbox,minimum width=0.55cm,minimum height=0.55cm] (a3m) at (1.55,0) {M};
+      \draw[draw=softgray,fill=gray!18] (1.2,0.42) rectangle (1.9,0.66);
+      \foreach \k in {1,2,3,4}{\draw[softgray] (1.2+\k*0.14,0.42) -- (1.2+\k*0.14,0.66);}
+      \node[draw=softgray,fill=yellow!55,minimum width=1.05cm,minimum height=0.55cm,
+            font=\scriptsize\bfseries] (a3r1) at (3.3,0) {RU 1};
+      \draw[wire] (a3du) -- (a3m);
+      \draw[wire] (a3m) -- (a3r1);
+    \end{scope}
+    % ---- A4: inspection & modification --------------------------------------
+    \begin{scope}[shift={(5.5,-2.55)}]
+      \node[font=\scriptsize\bfseries,text=talkred] at (1.75,0.95)
+        {A4: Packet inspection and modification};
+      \node[dunode,minimum width=1.05cm,minimum height=0.6cm] (a4du) at (0,0) {DU};
+      \node[mbox,minimum width=0.55cm,minimum height=0.55cm] (a4m) at (1.55,0) {M};
+      \draw[coreorange,thick] (1.15,0.54) sin (1.33,0.74) cos (1.51,0.54)
+        sin (1.69,0.34) cos (1.87,0.54);
+      \node[draw=softgray,fill=yellow!55,minimum width=1.05cm,minimum height=0.55cm,
+            font=\scriptsize\bfseries] (a4r1) at (3.3,0) {RU 1};
+      \draw[wire] (a4du) -- (a4m);
+      \draw[wire] (a4m) -- (a4r1);
+    \end{scope}
+  \end{tikzpicture}
+
+  \vspace{0.3em}
+  {\scriptsize\color{softgray}M = a RANBooster middlebox. Every application in the
+   paper is some combination of A1--A4.\par}
+\end{frame}

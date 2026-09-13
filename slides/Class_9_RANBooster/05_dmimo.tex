@@ -1,0 +1,116 @@
+%!TEX root = ./main.tex
+
+\section[Example 2: dMIMO]{Example 2: Distributed MIMO, and a Live Deployment}
+
+% TALK MAPPING: slides 13--14, transcript 15:52--16:54. The speaker spent about
+% forty seconds here, and the frame should not take much longer: its whole job is to
+% show that swapping ONE middlebox binary changes what the network is, with the
+% hardware untouched. Then the deployment slide says it is not a paper experiment.
+
+% Teaching note (90 s): the sentence to land is "no hardware changes". Same four
+% radios, same cabling, same DU, same spectrum -- a different middlebox, and the floor
+% carries more than twice the capacity. Ask why that is possible at all: because the
+% middlebox is the thing that decides what those four antennas jointly mean.
+\begin{frame}{Example 2: Distributed MIMO (dMIMO)}
+  \vspace{0.4em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    % ---- Top: the DAS configuration from the previous section.
+    \node[dunode,minimum width=1.5cm,minimum height=0.62cm,draw=ranblue,
+          fill=ranblue,text=white,align=center,font=\tiny\bfseries] (du1) at (0,1.5)
+      {DU --\\Single Cell};
+    \node[dunode,minimum width=1.5cm,minimum height=0.55cm,font=\scriptsize\bfseries]
+      (mb1) at (0,0.55) {DAS};
+    \draw[wire] (du1) -- (mb1);
+    \node[font=\scriptsize\bfseries] at (4.0,2.2) {DAS --- 4 RUs, 1 antenna each};
+    \begin{scope}[shift={(2.3,0.3)}]
+      \draw[draw=softgray,fill=coreorange!22] (0,0) rectangle (3.4,1.6);
+      \foreach \x in {1.1,2.25}{\draw[softgray!50] (\x,0) -- (\x,1.6);}
+      \draw[softgray!50] (0,0.8) -- (3.4,0.8);
+      \foreach \x/\y/\n in {0.6/1.15/1, 2.35/1.15/2, 0.6/0.35/3, 2.35/0.35/4}{
+        \draw[talkred] (\x-0.09,\y-0.09) -- (\x,\y+0.13) -- (\x+0.09,\y-0.09);
+        \node[font=\tiny,text=talkred] at (\x+0.45,\y) {RU~\n};}
+    \end{scope}
+
+    % ---- Bottom: same hardware, different middlebox.
+    \node[dunode,minimum width=1.5cm,minimum height=0.62cm,draw=ranblue,
+          fill=ranblue,text=white,align=center,font=\tiny\bfseries] (du2) at (0,-1.5)
+      {DU --\\Single Cell};
+    \node[dunode,minimum width=1.5cm,minimum height=0.55cm,font=\scriptsize\bfseries]
+      (mb2) at (0,-2.45) {dMIMO};
+    \draw[wire] (du2) -- (mb2);
+    \node[font=\scriptsize\bfseries] at (3.9,-0.68)
+      {4-layer dMIMO --- same 4 RUs};
+    \begin{scope}[shift={(2.3,-2.7)}]
+      \draw[draw=softgray,fill=softgreen!35] (0,0) rectangle (3.4,1.6);
+      \foreach \x in {1.1,2.25}{\draw[softgray!50] (\x,0) -- (\x,1.6);}
+      \draw[softgray!50] (0,0.8) -- (3.4,0.8);
+      \foreach \x/\y/\n in {0.6/1.15/1, 2.35/1.15/2, 0.6/0.35/3, 2.35/0.35/4}{
+        \draw[talkred] (\x-0.09,\y-0.09) -- (\x,\y+0.13) -- (\x+0.09,\y-0.09);
+        \node[font=\tiny,text=talkred] at (\x+0.45,\y) {RU~\n};}
+    \end{scope}
+
+    % ---- The swap itself.
+    \draw[-{Latex[length=3mm]},very thick,softgray] (-1.0,0.55)
+      to[bend right=45] (-1.0,-1.5);
+    \node[font=\scriptsize\bfseries,text=talkred,align=center] at (-2.3,-0.5)
+      {No HW\\changes};
+
+    % ---- Shared colour key, clear of both panel captions.
+    \shade[bottom color=talkred!45,top color=softgreen!70]
+      (6.5,-1.9) rectangle (6.75,0.8);
+    \draw[softgray,thin] (6.5,-1.9) rectangle (6.75,0.8);
+    \node[font=\tiny,text=softgray] at (6.62,1.0) {high};
+    \node[font=\tiny,text=softgray] at (6.62,-2.1) {low};
+    \node[font=\tiny,text=softgray,rotate=90] at (7.2,-0.55)
+      {Downlink throughput (Mbps)};
+  \end{tikzpicture}
+
+  \vspace{0.4em}
+  \only<2->{\takeaway{Swapping the DAS middlebox for a dMIMO middlebox\\
+    more than doubled the capacity of the floor.}}
+\end{frame}
+
+% Teaching note (60 s): read the two numbers and stop. This is the slide that turns
+% the paper from "we ran an experiment" into "we run a network". Worth asking the
+% class what breaks first when a research prototype has to stay up 24/7.
+\begin{frame}{Real-world deployment}
+  \vspace{0.3em}
+  {\small\textbf{RANBooster is already running 24/7 in our deployments}\par}
+  \vspace{0.2em}
+  {\small\hspace{1.0em}$\cdot$~Cambridge MSR lab: full coverage of 4 floors with
+    16 RUs\par}
+  {\small\hspace{1.0em}$\cdot$~Redmond MSR lab: full coverage of 2 floors with
+    13 RUs\par}
+
+  \vspace{0.7em}
+  \centering
+  \begin{tikzpicture}[scale=0.95,transform shape]
+    % Upper floor: one DAS cell over nine radios.
+    \begin{scope}[shift={(0.9,1.05)}]
+      \fill[talkred,opacity=0.16] (2.6,0.62) ellipse (2.9 and 0.85);
+      \draw[draw=softgray,fill=white,fill opacity=0.35] (0,0) -- (5.2,0)
+        -- (6.0,1.25) -- (0.8,1.25) -- cycle;
+      \foreach \x/\y in {0.9/0.28, 1.9/0.28, 3.1/0.28, 4.2/0.28,
+                         1.7/0.85, 2.8/0.85, 3.9/0.85, 4.9/0.85, 5.5/0.55}{
+        \draw[talkred,thin] (\x-0.09,\y-0.09) -- (\x,\y+0.13) -- (\x+0.09,\y-0.09);}
+      \node[font=\scriptsize\bfseries,text=talkred] at (-0.65,1.1)
+        {2nd floor};
+    \end{scope}
+    % Lower floor: the atrium cell.
+    \begin{scope}[shift={(0,-0.6)}]
+      \fill[ranblue,opacity=0.14] (2.9,0.62) ellipse (2.6 and 0.75);
+      \draw[draw=softgray,fill=white,fill opacity=0.35] (0,0) -- (5.2,0)
+        -- (6.0,1.25) -- (0.8,1.25) -- cycle;
+      \foreach \x/\y in {1.4/0.35, 2.6/0.35, 3.8/0.35, 2.2/0.9}{
+        \draw[ranblue,thin] (\x-0.09,\y-0.09) -- (\x,\y+0.13) -- (\x+0.09,\y-0.09);}
+      \node[font=\scriptsize\bfseries,text=ranblue] at (-0.3,-0.2)
+        {Atrium DAS cell};
+    \end{scope}
+    \node[font=\scriptsize\bfseries,text=softgreen] at (8.0,1.4) {MSR Redmond lab};
+  \end{tikzpicture}
+
+  \vspace{0.5em}
+  {\scriptsize\color{softgray}Chained middleboxes: one per floor, combined by a
+   building-wide DAS. Measured added latency stayed in the microseconds.\par}
+\end{frame}

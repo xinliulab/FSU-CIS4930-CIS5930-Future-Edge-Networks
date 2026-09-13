@@ -1,0 +1,31 @@
+\documentclass[11pt]{beamer}
+
+\input{../variables.tex}
+\input{ran_macros.tex}
+
+\title[RANBooster]{Class 9: RANBooster}
+\subtitle{Democratizing Advanced Cellular Connectivity through Fronthaul Middleboxes}
+
+\FSUOSMeta
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\addtocounter{framenumber}{-1}
+
+% This deck follows the authors' own SIGCOMM'25 talk slide for slide
+% (https://www.youtube.com/watch?v=wutVaZlgTLs). Section order, frame order, and the
+% wording of the headline claims are deliberately theirs; the figures are redrawn in
+% TikZ rather than lifted from their deck.
+\input{00_paper.tex}        % who wrote it, where it appeared, how to read the deck
+\input{01_background.tex}   % talk slides 2--3: the disaggregated RAN, and why it underperforms
+\input{02_idea.tex}         % talk slide 4: middleboxes on the fronthaul
+\input{03_framework.tex}    % talk slides 5--8: framework, operation, four primitives
+\input{04_das.tex}          % talk slides 9--12: Example 1, DAS
+\input{05_dmimo.tex}        % talk slides 13--14: Example 2, dMIMO, and the live deployment
+\input{06_wrap_up.tex}      % talk slide 15 + the Q&A that followed
+
+\end{document}
