@@ -55,9 +55,13 @@
 \end{frame}
 
 % ACCURACY NOTE: the horizontal axis is sensing ERROR, so the good corner of this plot
-% is up and to the LEFT. Students read every curve as "up and to the right is better"
-% and will get this backwards unless you say it. (The axis is the CRLB in the source
-% paper; the acronym is kept out of the main deck for this audience.)
+% is up and to the LEFT -- and the frontier is precisely what keeps that corner out of
+% reach. The curve therefore RISES to the right: allowing a larger sensing error buys a
+% higher rate. Drawing it falling would put the sensing-first point above AND left of the
+% comms-first point, i.e. better on both axes, which is domination, not a tradeoff.
+% Students read every curve as "up and to the right is better" and will get the axis
+% backwards unless you say it. (The axis is the CRLB in the source paper; the acronym is
+% kept out of the main deck for this audience.)
 \begin{frame}{The frontier, drawn once}
   \vspace{0.3em}
   \centering
@@ -66,19 +70,20 @@
       node[anchor=north east,font=\scriptsize] {sensing error $\rightarrow$ worse};
     \draw[-{Latex[length=2.2mm]},softgray] (0,0) -- (0,3.6)
       node[anchor=south,font=\scriptsize] {achievable rate};
-    \draw[very thick,draw=ranblue] (0.7,3.1) .. controls (2.2,2.9) and (3.0,1.9) .. (5.6,1.3);
-    \node[font=\scriptsize,text=ranblue,anchor=north east] at (2.75,2.15) {attainable frontier};
-    \fill[softgreen] (1.3,3.02) circle (2.6pt);
-    \node[font=\scriptsize,text=softgreen,anchor=west] at (1.5,3.15) {sensing-first};
-    \fill[coreorange] (4.7,1.52) circle (2.6pt);
-    \node[font=\scriptsize,text=coreorange,anchor=west] at (4.9,1.75) {comms-first};
-    \node[font=\scriptsize,text=softgray] at (1.8,0.7) {unreachable};
-    \node[font=\scriptsize,text=softgray] at (5.5,3.0) {infeasible};
+    \draw[very thick,draw=ranblue] (0.7,0.9) .. controls (2.0,2.3) and (3.2,2.85) .. (5.6,3.15);
+    \node[font=\scriptsize,text=ranblue,anchor=north west] at (3.15,2.45) {attainable frontier};
+    \fill[softgreen] (1.68,1.80) circle (2.6pt);
+    \node[font=\scriptsize,text=softgreen,anchor=north west] at (1.82,1.68) {sensing-first};
+    \fill[coreorange] (4.60,3.00) circle (2.6pt);
+    \node[font=\scriptsize,text=coreorange,anchor=west] at (4.75,3.30) {comms-first};
+    \node[font=\scriptsize,text=softgray] at (1.15,2.95) {infeasible};
+    \node[font=\scriptsize,text=softgray] at (4.45,1.10) {reachable, but wasteful};
   \end{tikzpicture}
 
   \vspace{0.6em}
   \glossline{Horizontal axis = sensing error: how far off the range and speed estimates
-    are. \textbf{Lower is better}, so the good corner is up and to the left.}
+    are. \textbf{Lower is better}, so the good corner is up and to the left --- and the
+    curve is exactly what keeps you out of it: walking left buys accuracy with rate.}
 
   \vspace{0.2em}
   \takeaway{Every result in the rest of this lecture\\is a claim about one point on a curve like this.}

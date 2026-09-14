@@ -320,16 +320,16 @@ const S = [
   <li><b>纵轴</b>:可达速率(achievable rate)。<b>越高越好</b>,这个符合直觉。</li>
   <li><b>横轴:感知误差 —— 测出来的距离和速度离真值差多少。越小越好,所以越往右越差。</li>
 </ul>
-<div class="warn">这一页最大的教学陷阱:<b>学生看任何曲线图都默认"右上角最好"。这张图不是。</b><br><br>这张图的好角落在<b>左上</b>:速率高(上)+ 感知误差小(左)。<br><br>你必须<b>明确地说出来</b>,而且最好用手在屏幕上指一下左上角。不说,一半的学生会理解成相反的。</div>
+<div class="warn">这一页最大的教学陷阱:<b>学生看任何曲线图都默认"右上角最好"。这张图不是。</b><br><br>这张图的好角落在<b>左上</b>:速率高(上)+ 感知误差小(左)。<br><br>你必须<b>明确地说出来</b>,而且最好用手在屏幕上指一下左上角。不说,一半的学生会理解成相反的。<br><br>关键一句:<b>那个好角落恰恰是曲线不让你去的地方。</b>所以曲线是<b>往右上走</b>的 —— 你愿意接受更大的感知误差,才换得到更高的速率;反过来,你想往左走(误差更小),就得掏速率去买。如果曲线画成往右下走,那绿点就在两个指标上都优于橙点,那不是取舍,是碾压。</div>
 <h3>为什么会有一条底线</h3>
 <p>这条横轴在原论文里叫 CRLB(Cramér–Rao 下界),幻灯片上刻意没写这个缩写。只需要告诉学生一件事:给定这个信号、这个信噪比,不管算法多聪明,误差都不可能小于某个数 —— 物理划了一条地板线。所以曲线才会弯:越往左,每多挤出一点精度,付出的速率就越多。</p>
 <div class="say">CRLB 不是某个算法的性能,是<b>物理和信息给你划的天花板</b> —— 或者说地板。它说的是:给定这个信号、这个信噪比,不管你用多神的算法,估出来的误差都不可能小于这个数。<br><br>所以当一篇论文说"我们逼近了 CRLB",意思是"我们的算法已经好到接近理论极限了,别再指望算法上能有大改进"。</div>
 <h3>图上四个标注</h3>
 <ul>
   <li><b>attainable frontier</b>:那条蓝线,能做到的最好组合。</li>
-  <li><b>sensing-first</b>(绿点,靠左上):偏感知的设计点。</li>
-  <li><b>comms-first</b>(橙点,靠右下):偏通信的设计点。</li>
-  <li><b>unreachable / infeasible</b>:线外的两个区域,做不到。</li>
+  <li><b>sensing-first</b>(绿点,靠左下):偏感知的设计点 —— 误差小,代价是速率低。</li>
+  <li><b>comms-first</b>(橙点,靠右上):偏通信的设计点 —— 速率高,代价是误差大。</li>
+  <li><b>infeasible</b>(曲线左上方):想要的那个角落,做不到。<b>reachable, but wasteful</b>(曲线右下方):做得到,但白白浪费。</li>
 </ul>
 <p>橙框那句是本节的总结,也是给后半节课定调:"后面每一个结果,都是关于这样一条曲线上某一个点的声明。"</p>
 `},
@@ -671,8 +671,9 @@ const EN = [
 <p>Vertical axis: achievable rate. <b>Higher is better</b> — that one's intuitive.</p>
 <p>Horizontal axis: sensing error — how far off the range and speed estimates are. <b>Lower is better</b>, which means <b>further right is worse</b>.</p>
 <p>So say it with me: the good corner of this plot is <b>up and to the left</b>. <i>[Point at it.]</i> I'm making a point of this because every curve you've ever seen has "up and to the right" as good, and about half of you will read this backwards if I don't say it out loud.</p>
+<p>And now the sentence that makes the whole picture mean something: <b>that good corner is exactly the corner the curve will not let you have.</b> Which is why the curve climbs to the right. Accept a larger sensing error and you get a higher rate. Demand a smaller sensing error and you pay for it in rate. <i>[Walk your finger down the curve to the left.]</i></p>
 <p>In the paper this axis is a quantity called the CRLB. I'm deliberately keeping the acronym off the slide. The one thing to know: given this signal and this signal-to-noise ratio, no algorithm, however clever, gets the error below a certain floor. Physics sets that floor — and that's why the curve bends instead of running straight.</p>
-<p>Green point, up and left: a sensing-first design. Orange point, down and right: a communication-first design. Both are on the frontier. Both are legitimate. They're different <b>choices</b>.</p>
+<p>Green point, low and to the left: a sensing-first design — small error, and it gave up rate to get it. Orange point, high and to the right: a communication-first design — high rate, and it gave up accuracy to get it. Both are on the frontier. Neither one beats the other; if one did, it wouldn't be a frontier. They're different <b>choices</b>.</p>
 <p>And that's the frame for the rest of the hour: <b>every result after this is a claim about one point on a curve like this one.</b></p>`,
 
 `<p>Question one is answered: the two jobs want opposite things, so there is a curve of compromises. Whatever signal we pick has to carry <b>both</b> jobs and sit somewhere on that curve.</p>
