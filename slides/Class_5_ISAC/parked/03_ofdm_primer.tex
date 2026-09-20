@@ -1,25 +1,41 @@
+%!TEX root = ../main.tex
+%
+% PARKED 2026-09-20. This was section 3 of the Class 5 ISAC lecture: the ground-up
+% OFDM primer. It was on the slides for the 9/9 delivery but never actually taught --
+% that lecture used OFDM as a radar and skipped the machinery entirely.
+%
+% The frames themselves are NOT lost: all seventeen were moved into
+% slides/Class_8_WiFi_History/03_first_speed_race.tex, where they now run before the
+% 802.11a slide and are the course's only OFDM instruction. What is kept here is the
+% ISAC-specific framing around them -- the "Question 2: which signal do we actually
+% use?" roadmap frame, which only makes sense next to the three-questions frame in
+% 02_dfrc.tex. The one frame that stayed in the ISAC deck, "OFDM already carries a
+% radar inside it", now opens 05_applications.tex.
+%
+% Not input by main.tex.
+
 %!TEX root = ./main.tex
 
 \section[OFDM]{The Waveform We Already Have}
 
-% SECTION TIMING: 32:00--60:00 (17 frames). Question 2 of the roadmap frame.
-% The four "Step" frames are the OFDM primer the author asked for on 2026-09-13:
-% students know little OFDM, so walk one worked example (bits -> 16-QAM points ->
-% perpendicular axes -> the FFT matrix as those axes -> IFFT builds the symbol and
-% the grid). Keep it at the level of a 2x2 and a 4x4 matrix; no formulas beyond that.
+% SECTION TIMING: 32:00--50:00 (13 frames). Question 2 of the roadmap frame.
+% The primer walks one worked example (bits -> 16-QAM points -> perpendicular axes ->
+% IFFT builds the symbol and the grid). No formulas.
 % The OTFS / ODDM / delay-Doppler frames that used to follow were removed on 2026-09-13
 % (CS audience, no signal-processing background); see parked/03_otfs_oddm_frames.tex.
+% The four-frame FFT primer that used to sit between B and C (the 2x2 and 4x4 FFT
+% matrices, N^2 vs N log N) was moved on 2026-09-19 to Class_8_WiFi_History/
+% 03_first_speed_race.tex, where it follows the 802.11a "64-point FFT" slide. This
+% lecture now treats the IFFT/FFT as a labelled box and says so on the C1 frame.
 
-% OFDM primer, 16 frames (2026-09-13, third pass, at the author's request: one idea per
+% OFDM primer, 13 frames (2026-09-13, third pass, at the author's request: one idea per
 % frame, each motivated by the gap the previous frame leaves; nothing crammed).
 %   A. what a radio sends           A1 transition, A2 a wave and its two knobs,
 %                                   A3 two knobs = one point, A4 bits pick a point
 %   B. many waves, perpendicular    B1 one wave is slow, B2 why not one fast wave (echoes),
 %                                   B3 add 64 waves -- how to separate?, B4 perpendicular
 %                                   axes, B5 perpendicular waves drawn, B6 the family k/T
-%   C. the FFT                      C1 two machines, C2 the 2x2 with numbers, C3 the 4x4,
-%                                   C4 why "fast" matters
-%   D. assemble OFDM                D1 transmitter, D2 receiver, D3 the grid
+%   C. assemble OFDM                C1 transmitter, C2 receiver, C3 the grid
 
 % ---------- A1 ----------
 \begin{frame}{Question 2: which signal do we actually use?}
@@ -34,13 +50,12 @@
 
   \vspace{0.45em}
   {\small Before we can read OFDM as a radar we need to understand it properly. Most
-   of you have only heard the name, so we build it from the ground up, in four parts:\par}
+   of you have only heard the name, so we build it from the ground up, in three parts:\par}
   \vspace{0.2em}
   {\small
   \begin{enumerate}\itemsep0pt
     \item What a radio actually sends --- and why that is a \emph{point}.
     \item Why we send many waves at once, and why they must be \emph{perpendicular}.
-    \item Why the FFT --- the machine that adds waves up and takes them apart.
     \item Putting it together: transmitter, receiver, and the \emph{grid}.
   \end{enumerate}}
 
@@ -345,127 +360,18 @@
 \end{frame}
 
 % ---------- C1 ----------
-\begin{frame}{Part 3: we need two machines}
-  \vspace{0.4em}
-  \centering
-  \begin{tikzpicture}[scale=0.9,transform shape,
-      mbox/.style={draw=ranblue,fill=blue!5,rounded corners=3pt,minimum width=3.0cm,
-        minimum height=1.05cm,align=center,font=\small}]
-    \node[font=\small,align=center] (pts) at (0,0) {64 points\\[-2pt]{\scriptsize $(x_1,y_1)\ldots(x_{64},y_{64})$}};
-    \node[mbox,draw=coreorange,fill=orange!8] (add) at (4.0,0.9) {\textbf{Machine 1}\\[-1pt]{\scriptsize add the 64 waves, each with its amount}};
-    \node[mbox] (sep) at (4.0,-0.9) {\textbf{Machine 2}\\[-1pt]{\scriptsize measure how much of each wave is in a sum}};
-    \node[font=\small,align=center] (sum) at (8.2,0) {the sum\\[-2pt]{\scriptsize one squiggle, time $T$}};
-    \draw[flow] (pts) |- (add); \draw[flow] (add) -| (sum);
-    \draw[flow] (sum) |- (sep); \draw[flow] (sep) -| (pts);
-    \node[font=\scriptsize,text=coreorange] at (2.0,1.55) {transmitter};
-    \node[font=\scriptsize,text=ranblue] at (6.2,-1.55) {receiver};
-  \end{tikzpicture}
+% The IFFT/FFT are deliberately left as labelled boxes here: the four frames that
+% opened the FFT matrix up (2x2, 4x4, N^2 vs N log N) moved to Class 8 on 2026-09-19.
+% Say the sentence below out loud -- a CS audience will accept a named box, but not
+% an unnamed one that appears from nowhere.
+\begin{frame}{Part 3: the transmitter}
+  \vspace{0.2em}
+  {\small We now know \emph{which} 64 waves to use. Adding them up --- and, at the far
+   end, taking a sum back apart --- is one standard pair of machines: the
+   \textbf{IFFT} and the \textbf{FFT}. Today they are labelled boxes; Class 8 opens
+   them up and shows you the table inside.\par}
 
-  \vspace{0.7em}
-  {\small Both machines work on the same 64 waves. To put them in a computer, sample
-   each wave at 64 instants during $T$: a wave becomes a row of 64 numbers, and 64
-   waves become a 64$\times$64 table. \textbf{Machine 2 is that table.} Machine 1 is
-   the same table run backwards.\par}
-
-  \vspace{0.3em}
-  \takeaway{That table has a name: the FFT matrix. }
-\end{frame}
-
-% ---------- C2 ----------
-\begin{frame}{Two waves: the $2\times2$ FFT, with numbers}
-  \vspace{0.1em}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.50\textwidth}
-      {\small\textbf{Machine 2} --- measure. Two waves sampled at two instants: a flat
-       one $(1,\,1)$ and a flipping one $(1,\,-1)$. Stack them as rows:\par}
-      \vspace{-0.5em}
-      {\small\[ \begin{pmatrix} 1 & \phantom{-}1 \\ 1 & -1 \end{pmatrix}
-          \begin{pmatrix} 3 \\ 1 \end{pmatrix} =
-          \begin{pmatrix} 4 \\ 2 \end{pmatrix} \]}
-      \vspace{-0.2em}
-      {\small The sum $(3, 1)$ contains 4 units of the flat wave and 2 of the flipping
-       one. Rows perpendicular: $1\cdot1 + 1\cdot(-1) = 0$.\par}
-    \column{0.46\textwidth}
-      {\small\textbf{Machine 1} --- add. Same table, run backwards (divide by 2):\par}
-      \vspace{-0.5em}
-      {\small\[ \tfrac{1}{2}\begin{pmatrix} 1 & \phantom{-}1 \\ 1 & -1 \end{pmatrix}
-          \begin{pmatrix} 4 \\ 2 \end{pmatrix} =
-          \begin{pmatrix} 3 \\ 1 \end{pmatrix} \]}
-      \vspace{-0.2em}
-      {\small Give it the amounts $(4, 2)$ and it rebuilds the sum $(3, 1)$. Round trip
-       complete, nothing lost --- \emph{because} the rows are perpendicular.\par}
-  \end{columns}
-
-  \vspace{0.4em}
-  \takeaway{FFT $=$ measure each wave. IFFT $=$ add the waves back.\\Perpendicular rows are what make the round trip exact.}
-\end{frame}
-
-% ---------- C3 ----------
-\begin{frame}{Four waves: the $4\times4$ FFT}
-  \vspace{0.1em}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.46\textwidth}
-      {\small Four waves at $0,\ 1/T,\ 2/T,\ 3/T$, each sampled at four instants:\par}
-      \vspace{-0.5em}
-      {\small\[ \begin{pmatrix} 1 & \phantom{-}1 & \phantom{-}1 & \phantom{-}1 \\
-                                1 & -j & -1 & \phantom{-}j \\
-                                1 & -1 & \phantom{-}1 & -1 \\
-                                1 & \phantom{-}j & -1 & -j \end{pmatrix} \]}
-      \vspace{-0.2em}
-      {\footnotesize Row $k$ is the wave at frequency $k/T$. The $j$ ($=\sqrt{-1}$) is
-       only there so a wave can \emph{rotate} through its cycle instead of merely
-       flipping sign.\par}
-    \column{0.50\textwidth}
-      {\small\textbf{Check one pair.} Row 2 against row 4 (flip the sign of $j$ in one
-       of them, multiply entry by entry, add):\par}
-      \vspace{0.2em}
-      {\small\[ \begin{aligned} &1\cdot1 + (-j)(-j) + (-1)(-1) + j\cdot j \\ &\quad= 1 - 1 + 1 - 1 = 0 \end{aligned} \]}
-      \vspace{-0.2em}
-      {\small Zero. Try any other pair --- also zero. \textbf{Every wave is
-       perpendicular to every other}, exactly as the drawing promised.\par}
-      \vspace{0.3em}
-      {\small The $64\times64$ table is the same thing, bigger. The $4096\times4096$
-       one too.\par}
-  \end{columns}
-
-  \vspace{0.3em}
-  \takeaway{The FFT matrix is the list of perpendicular waves, written as numbers.}
-\end{frame}
-
-% ---------- C4 ----------
-\begin{frame}{Why ``Fast'' is the important letter}
-  \vspace{0.3em}
-  {\small Multiplying a signal by an $N\times N$ table costs $N^2$ multiplications.
-   The FFT gets the identical answer in about $N\log_2 N$ --- by reusing the halves of
-   the table, which are copies of each other.\par}
-
-  \vspace{0.6em}
-  \centering
-  {\small
-  \renewcommand{\arraystretch}{1.3}
-  \begin{tabular}{r r r r}
-    \toprule
-    waves $N$ & plain table $N^2$ & FFT $N\log_2 N$ & saving \\
-    \midrule
-    64    & 4\,096       & 384    & $11\times$ \\
-    1\,024 & 1\,048\,576 & 10\,240 & $100\times$ \\
-    4\,096 & 16\,777\,216 & 49\,152 & $340\times$ \\
-    \bottomrule
-  \end{tabular}}
-
-  \vspace{0.7em}
-  {\small A 5G phone runs this for every symbol, tens of thousands of times a second,
-   on a battery. With the plain table it could not. The FFT algorithm dates from 1965;
-   the first paper proposing OFDM built on it is from 1971. That is not a
-   coincidence.\par}
-
-  \vspace{0.3em}
-  \takeaway{OFDM is practical \emph{because} the FFT is fast.}
-\end{frame}
-
-% ---------- D1 ----------
-\begin{frame}{Part 4: the transmitter}
-  \vspace{0.3em}
+  \vspace{0.45em}
   \centering
   \begin{tikzpicture}[scale=0.84,transform shape,
       pbox/.style={draw=ranblue,fill=blue!5,rounded corners=3pt,minimum width=2.05cm,
@@ -488,9 +394,11 @@
 
   \vspace{0.3em}
   \takeaway{256 bits in, one symbol out --- 64 times what one wave could do.}
+
+  \glossline{FFT = Fast Fourier Transform; IFFT = its inverse. Opened up in Class 8.}
 \end{frame}
 
-% ---------- D2 ----------
+% ---------- C2 ----------
 \begin{frame}{The receiver}
   \vspace{0.3em}
   \centering
@@ -519,7 +427,7 @@
   \takeaway{Same 64 waves, same FFT, read the other way round.}
 \end{frame}
 
-% ---------- D3 ----------
+% ---------- C3 ----------
 \begin{frame}{Symbol after symbol: the grid}
   \vspace{0.2em}
   \begin{columns}[T,onlytextwidth]
@@ -550,37 +458,4 @@
   {\small Every OFDM radio --- Wi-Fi, 4G, 5G --- fills and reads this grid, symbol
    after symbol.\par}
 
-\end{frame}
-
-\begin{frame}{OFDM already carries a radar inside it}
-  \vspace{0.3em}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.44\textwidth}
-      \centering
-      \begin{tikzpicture}[scale=0.80,transform shape]
-        \foreach \x in {0,...,5}
-          \foreach \y in {0,...,3}
-            \draw[draw=softgray!50,fill=blue!6] (\x*0.62+0.12,\y*0.52+0.10)
-              rectangle ++(0.58,0.48);
-        \draw[-{Latex[length=2mm]},softgray] (0,0) -- (4.0,0)
-          node[anchor=north,font=\scriptsize] {time (symbols)};
-        \draw[-{Latex[length=2mm]},softgray] (0,0) -- (0,2.4);
-        \node[font=\scriptsize,rotate=90,anchor=south] at (-0.16,1.2) {frequency};
-      \end{tikzpicture}
-    \column{0.52\textwidth}
-      \small
-      \begin{itemize}\itemsep5pt
-        \item Mature: Wi-Fi, 4G, 5G, 6G.
-        \item The grid is already knobs.
-        \item A cell serves bits or echoes.
-        \item No new modulator needed.
-      \end{itemize}
-  \end{columns}
-
-  \vspace{0.4em}
-  \qa{If OFDM is already good enough, what is left to design?}
-     {Which cells go to bits and which go to echoes. Every cell handed to sensing
-      is a cell taken from data.}
-
-  \glossline{OFDM = Orthogonal Frequency Division Multiplexing}
 \end{frame}
