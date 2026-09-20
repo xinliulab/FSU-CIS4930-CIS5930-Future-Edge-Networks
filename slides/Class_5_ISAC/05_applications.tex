@@ -2,12 +2,51 @@
 
 \section[Allocation]{Choosing a Point on the Curve}
 
-% SECTION TIMING: 35:00--45:00 (4 frames; the peak explainer is a ~1 min beat).
-% Question 3 of the roadmap frame. The simulation-parameters frame and the multiuser
+% SECTION TIMING: 20:00--32:00 (5 frames; the peak explainer is a ~1 min beat).
+% Questions 2 and 3 of the roadmap frame: the opening frame answers Q2 in one slide
+% now that the OFDM primer has moved to Class 8, and the rest answers Q3. The simulation-parameters frame and the multiuser
 % ODDM frame were removed on 2026-09-13; see parked/05_simulation_multiuser_frames.tex.
 % SOURCE: "Cross-Domain Dual-Functional OFDM Waveform Design for Accurate
 % Sensing/Positioning," IEEE JSAC, 2024. The two allocation strategies and their
 % "almost no loss" results are quoted from that work.
+
+% Moved here 2026-09-20 from 03_waveforms.tex, which was parked whole. This is now
+% the lecture's entire answer to Question 2 ("which signal do we actually use?") and
+% the setup for Question 3: it names OFDM, says why it costs nothing to adopt, and
+% turns the grid into the thing we are about to hand out. The ground-up primer that
+% used to precede it is taught in Class 8 (Wi-Fi History) instead.
+\begin{frame}{OFDM already carries a radar inside it}
+  \vspace{0.3em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.44\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.80,transform shape]
+        \foreach \x in {0,...,5}
+          \foreach \y in {0,...,3}
+            \draw[draw=softgray!50,fill=blue!6] (\x*0.62+0.12,\y*0.52+0.10)
+              rectangle ++(0.58,0.48);
+        \draw[-{Latex[length=2mm]},softgray] (0,0) -- (4.0,0)
+          node[anchor=north,font=\scriptsize] {time (symbols)};
+        \draw[-{Latex[length=2mm]},softgray] (0,0) -- (0,2.4);
+        \node[font=\scriptsize,rotate=90,anchor=south] at (-0.16,1.2) {frequency};
+      \end{tikzpicture}
+    \column{0.52\textwidth}
+      \small
+      \begin{itemize}\itemsep5pt
+        \item Mature: Wi-Fi, 4G, 5G, 6G.
+        \item The grid is already knobs.
+        \item A cell serves bits or echoes.
+        \item No new modulator needed.
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.4em}
+  \qa{If OFDM is already good enough, what is left to design?}
+     {Which cells go to bits and which go to echoes. Every cell handed to sensing
+      is a cell taken from data.}
+
+  \glossline{OFDM = Orthogonal Frequency Division Multiplexing}
+\end{frame}
 
 \begin{frame}{The grid is the budget}
   \vspace{0.3em}
