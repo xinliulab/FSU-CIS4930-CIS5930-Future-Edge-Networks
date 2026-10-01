@@ -1,0 +1,74 @@
+%!TEX root = ./main.tex
+
+\section[The idea]{The Idea: Phase Is a Ruler}
+
+% SECTION TIMING: 0:00--8:00 (2 frames).
+% LAYOUT RULES for this template:
+%   - a frame title must fit ONE line in the title bar: keep it under ~44 characters.
+%   - every bullet must fit on one line; shorten the text, do not let it wrap.
+% RUNNING EXAMPLE for the whole deck -- keep the numbers consistent everywhere:
+%   5 GHz Wi-Fi, wavelength 6 cm, antenna spacing d = 3 cm (half wavelength).
+%   Direct path: phone at 30 degrees, 5 m  (delay ~17 ns).
+%   Wall echo:   arrives from -40 degrees, 8 m path (delay ~27 ns).
+%   At 30 degrees, each next antenna lags by pi/2 -- a QUARTER TURN. Say it that way.
+
+% Teaching note (240 s): read the three cards slowly; each is a real, published
+% result, not a demo video. Then ask the Q out loud and let the room guess sensors
+% (camera? UWB? radar chip?) before revealing that the answer is "none".
+\begin{frame}{What your access point knows without asking}
+  \vspace{0.5em}
+  \centering
+  \begin{tikzpicture}[scale=0.92,transform shape]
+    \foreach \i/\head/\body in {
+      0/{Where is the phone?}/{to 40 cm, median\\(SpotFi, SIGCOMM'15)},
+      1/{Is someone home?}/{presence, motion,\\gestures --- no camera},
+      2/{Is she breathing?}/{breathing, even heartbeat\\(2FiA --- Class 13)}}{
+      \node[draw=ranblue!40,fill=blue!4,rounded corners=3pt,minimum width=3.3cm,
+            minimum height=1.75cm,align=center] at (\i*3.65,0)
+        {\small\textbf{\head}\\[3pt]\scriptsize\body};
+    }
+  \end{tikzpicture}
+
+  \vspace{0.3em}
+  \qa{Which extra sensor did the access point need for all of this?}
+     {None. Every answer was read out of the \textbf{channel estimates} the AP
+      already computes just to decode packets. This lecture is about how.}
+
+  \source{https://dl.acm.org/doi/10.1145/2785956.2787487}{Kotaru et al., SpotFi, SIGCOMM 2015 \quad$\cdot$\quad 2FiA appears in Paper Practicum 5 (Class 13)}
+\end{frame}
+
+% Teaching note (240 s): the one contrast the section exists for. RSSI collapses the
+% whole room into one number; phase turns 360 degrees every 6 cm of path. Do the
+% mental arithmetic on the slide out loud: 1 degree ~ 0.17 mm. Then the honest catch:
+% that exquisite ruler has no absolute markings -- which is the next frame's problem.
+\begin{frame}{RSSI is a light meter, phase is a ruler}
+  \vspace{0.4em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      {\small\textbf{\textcolor{softgray}{RSSI --- signal strength}}\par}
+      \vspace{0.4em}
+      {\small
+       \begin{itemize}\itemsep4pt
+         \item One number per packet.
+         \item All paths, summed as power.
+         \item Swings dBs if you just stand up.
+         \item Good for: rough presence.
+       \end{itemize}\par}
+    \column{0.47\textwidth}
+      {\small\textbf{\textcolor{ranblue}{Phase --- of the channel $H$}}\par}
+      \vspace{0.4em}
+      {\small
+       \begin{itemize}\itemsep4pt
+         \item One per subcarrier, per antenna.
+         \item Turns $360^\circ$ every wavelength.
+         \item At 5 GHz: $\lambda = 6$ cm.
+         \item $1^\circ$ of phase $\approx$ 0.17 mm of path.
+       \end{itemize}\par}
+  \end{columns}
+
+  \vspace{0.8em}
+  \takeaway{Wi-Fi sensing is the move from reading \textcolor{softgray}{power}\\
+    to reading \textcolor{ranblue}{phase} --- from a light meter to a ruler.}
+
+  \source{https://www.mit.edu/~fadel/courses/MAS.s60/materials/Lec2-localization-2022.pdf}{Adib, MIT MAS.S60, Lecture 2: RF localization --- the RSSI-to-phase hierarchy}
+\end{frame}
