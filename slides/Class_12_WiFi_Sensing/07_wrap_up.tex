@@ -2,62 +2,67 @@
 
 \section[Wrap-up]{Wrap-Up}
 
-% SECTION TIMING: 72:00--75:00 (2 frames). Retrieval, then the bridge forward.
+% SECTION TIMING: 70:00--75:00 (2 frames). Retrieval, then the bridge forward.
 
-% Teaching note (120 s): retrieval practice. Cover the right column (overlay 1),
-% ask the room to produce each ruler's axis and formula, then reveal.
-\begin{frame}{One matrix, two axes, two rulers}
-  \vspace{0.5em}
+% Teaching note (150 s): the ladder, one row per rung. Cover the right columns and
+% have the room fill them in. The one sentence to leave with: a phase is useless
+% alone; every rung above RSSI is a DIFFERENCE of phases along some axis.
+\begin{frame}{The ladder we climbed}
+  \vspace{0.4em}
   \centering
-  {\small\setlength{\tabcolsep}{4.5pt}
-  \begin{tabular}{lll}
+  {\footnotesize\setlength{\tabcolsep}{5pt}
+  \begin{tabular}{llll}
     \toprule
-    Read $H[m,k]$\ldots & You get & Because \\
+    Read\ldots & across\ldots & gives & system \\
     \midrule
-    \textcolor{ranblue}{down a column (antennas)} &
-      \visible<2->{angle $\theta$} &
-      \visible<2->{$\Delta\varphi = \frac{2\pi}{\lambda} d\sin\theta$} \\[4pt]
-    \textcolor{coreorange}{along a row (subcarriers)} &
-      \visible<2->{delay $\tau$ (distance)} &
-      \visible<2->{$\Delta\varphi = 2\pi\,\Delta f\,\tau$} \\[4pt]
-    \textcolor{softgreen}{both at once} &
-      \visible<2->{$(\theta, \tau)$ peaks} &
-      \visible<2->{2D MUSIC; earliest wins} \\
+    \textcolor{softgray}{signal strength} & --- & a room &
+      fingerprinting \\[3pt]
+    \textcolor{ranblue}{one phase} & --- & nothing (wrapped) & --- \\[3pt]
+    \textcolor{ranblue}{phase difference} & \textcolor{ranblue}{antennas} &
+      \textbf{angle} & ArrayTrack: 23 cm, 6 APs \\[3pt]
+    \textcolor{coreorange}{phase difference} & \textcolor{coreorange}{subcarriers} &
+      \textbf{distance} & Chronos: 14 cm, 1 AP \\[3pt]
+    \textcolor{softgreen}{both} & both & \textbf{every path} &
+      SpotFi: 40 cm, stock APs \\
     \bottomrule
   \end{tabular}\par}
 
   \vspace{0.8em}
-  \takeaway{Phase is a 6 cm ruler with no absolute markings.\\
-    All of Wi-Fi sensing is reading its \textbf{differences} along the
-    matrix's axes.}
+  \takeaway{Phase is a 6 cm ruler with no absolute marks.\\
+    Everything above RSSI is a \textbf{difference} of phases along some axis.}
 \end{frame}
 
-% Teaching note (60 s): the bridge. Class 13's papers run these exact two tricks
-% on 5G uplink signals and on CSI biometrics; Class 14 reads the compressed CSI
-% that beamforming feedback already broadcasts in the clear.
-\begin{frame}{Where this goes next}
+% Teaching note (90 s): the bridge. The same CSI that located a phone also sees a
+% body that is not transmitting at all: Class 13's 2FiA reads breathing and
+% heartbeat from it; Class 14 reads the compressed CSI the AP broadcasts as
+% beamforming feedback. Hands-on links for the curious.
+\begin{frame}{Next: the same signal sees the room}
+  \vspace{0.2em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.46\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{figure/mit_through_wall.png}
+      {\scriptsize\color{softgray}Seeing people through a wall with Wi-Fi\par}
+    \column{0.5\textwidth}
+      {\small
+       \begin{itemize}\itemsep4pt
+         \item \textbf{Class 13:} 2FiA reads breathing and heartbeat out of CSI.
+         \item \textbf{Class 14:} the AP already \emph{broadcasts} compressed CSI
+           --- beamforming feedback.
+       \end{itemize}\par}
+      \vspace{0.4em}
+      {\small\textbf{Try it} (free, with code):\par}
+      {\small
+       \begin{itemize}\itemsep3pt
+         \item Tsinghua \blink{https://tns.thss.tsinghua.edu.cn/wst/docs/features}{Hands-on
+           Wireless Sensing}: \texttt{naive\_aoa}, \texttt{naive\_tof}
+         \item Princeton COS463
+           \blink{https://www.cs.princeton.edu/courses/archive/spring18/cos463/labs/lab5_preview.html}{AoA
+           / MUSIC lab} in NumPy
+       \end{itemize}\par}
+  \end{columns}
+
   \vspace{0.4em}
-  {\small
-   \begin{itemize}\itemsep5pt
-     \item \textbf{Class 13 (practicum):} CARTS runs these tricks on 5G's own
-       uplink reference signals; 2FiA reads breathing and heartbeat out of CSI.
-     \item \textbf{Class 14:} the AP already \emph{broadcasts} compressed CSI
-       --- 802.11 beamforming feedback --- and we will sense with that.
-   \end{itemize}\par}
-
-  \vspace{0.6em}
-  {\small\textbf{Try it yourself} (both free, with code):\par}
-  {\small
-   \begin{itemize}\itemsep4pt
-     \item Tsinghua \emph{Hands-on Wireless Sensing}:
-       \blink{https://tns.thss.tsinghua.edu.cn/wst/docs/features}{CSI features
-       tutorial} --- Matlab \texttt{naive\_aoa} / \texttt{naive\_tof}.
-     \item Princeton COS463
-       \blink{https://www.cs.princeton.edu/courses/archive/spring18/cos463/labs/lab5_preview.html}{MUSIC
-       lab} --- build the AoA spectrum in NumPy.
-   \end{itemize}\par}
-
-  \vspace{0.7em}
-  \ask{Your phone never opted in to any of this.\\
-    Who should be allowed to run a ruler made of your Wi-Fi?}
+  \ask{Your phone never opted in. Who may run a ruler made of your Wi-Fi?}
+  \source{https://www.mit.edu/~fadel/courses/MAS.s60/materials/Lec2-localization-2022.pdf}{Figure: MIT MAS.S60 Lecture 2}
 \end{frame}
