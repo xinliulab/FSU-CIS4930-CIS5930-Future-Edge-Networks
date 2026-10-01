@@ -1,0 +1,33 @@
+\documentclass[11pt]{beamer}
+
+\input{../variables.tex}
+\input{ran_macros.tex}
+
+\title[Wi-Fi Sensing]{Class 12: Wi-Fi Sensing}
+\subtitle{Angle from the Antennas, Distance from the Subcarriers}
+
+\FSUOSMeta
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\addtocounter{framenumber}{-1}
+
+% One straight line (2026-09-30). The whole lecture is one object -- the CSI matrix
+% H[antenna, subcarrier] -- and one enemy -- phase wrapping. Each section defeats the
+% enemy along one axis of the matrix, then SpotFi uses both axes at once.
+% Sources this deck distills: the Tsinghua "Hands-on Wireless Sensing" tutorial (CSI
+% model, ToF, AoA, MUSIC), the MIT localization lecture (RSSI-vs-phase hierarchy),
+% ArrayTrack NSDI'13 (AoA), Chronos NSDI'16 (ToF), SpotFi SIGCOMM'15 (joint 2D).
+\input{01_hook.tex}      % what a stock AP has sensed; RSSI is a light meter
+\input{02_csi.tex}       % the matrix you already have, and why phase wraps
+\input{03_aoa.tex}       % ruler 1: read across the antennas -> angle
+\input{04_tof.tex}       % ruler 2: read across the subcarriers -> distance
+\input{05_spotfi.tex}    % both rulers on the same matrix -> one dot on the map
+\input{06_reality.tex}   % what the hardware ruins, and what systems still achieved
+\input{07_wrap_up.tex}
+
+\end{document}

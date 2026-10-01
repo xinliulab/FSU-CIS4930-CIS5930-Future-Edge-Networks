@@ -1,0 +1,115 @@
+%!TEX root = ./main.tex
+
+\section[Both at once]{Both at Once: One Matrix, Two Rulers}
+
+% SECTION TIMING: 57:00--66:00 (3 frames). SpotFi's move, on the running example.
+% The payoff of the whole lecture: the matrix from the CSI section returns, now
+% with both colored arrows on it, and the AoA cliffhanger ("which peak is the
+% phone?") finally gets its answer -- the direct path is the SHORTEST one.
+
+% Teaching note (150 s): bring back the exact grid students saw 40 minutes ago.
+% Trace a column with a finger: angle. Trace a row: delay. Each path stamps the
+% whole grid with one 2D twist -- so estimate (theta, tau) JOINTLY, per path.
+\begin{frame}{The matrix returns}
+  \vspace{0.4em}
+  \centering
+  \begin{tikzpicture}[scale=0.98,transform shape]
+    \csigrid
+    \draw[-{Latex[length=2.6mm]},line width=1.6pt,ranblue]
+      (6.2,0.3) -- (6.2,1.9);
+    \node[font=\scriptsize\bfseries,text=ranblue,align=left] at (7.6,1.15)
+      {step down a column\\$\to$ angle $\theta$};
+    \draw[-{Latex[length=2.6mm]},line width=1.6pt,coreorange]
+      (0.3,2.65) -- (3.3,2.65);
+    \node[font=\scriptsize\bfseries,text=coreorange,align=left] at (5.3,2.72)
+      {step along a row $\to$ delay $\tau$};
+  \end{tikzpicture}
+
+  \vspace{0.6em}
+  {\small Each path twists the grid along \textbf{both} axes at once ---
+   so fit both at once: treat every $(\text{antenna}, \text{subcarrier})$ cell
+   as one sensor and run MUSIC over candidate \emph{pairs} $(\theta, \tau)$.\par}
+
+  \vspace{0.4em}
+  \takeaway{One measurement, two questions, answered jointly:\\
+    2D MUSIC over $(\theta, \tau)$.}
+
+  \source{https://dl.acm.org/doi/10.1145/2785956.2787487}{Kotaru et al., SpotFi, SIGCOMM 2015 --- Sec.\ 3: the 2D estimator and its smoothing trick}
+\end{frame}
+
+% Teaching note (180 s): the money picture. Two blobs, one per path, and the
+% ambiguity from the AoA section dies: the wall echo sits at a LONGER delay, and
+% light does not take shortcuts -- the direct path is always the earliest.
+\begin{frame}{Every path is a peak in (angle, delay)}
+  \vspace{0.3em}
+  \centering
+  \begin{tikzpicture}[scale=0.95,transform shape]
+    % axes
+    \draw[-{Latex[length=2mm]},thick,ranblue] (0,0) -- (7.6,0)
+      node[right,font=\scriptsize\bfseries,text=ranblue]{angle $\theta$};
+    \draw[-{Latex[length=2mm]},thick,coreorange] (0,0) -- (0,3.3)
+      node[rotate=90,font=\scriptsize\bfseries,text=coreorange,
+           anchor=south east,yshift=2pt]{delay $\tau$};
+    \foreach \t/\x in {-90/0.6, 0/3.5, 90/6.4}{
+      \draw[softgray!60] (\x,-0.07) -- (\x,0.07);
+      \node[font=\scriptsize,text=softgray] at (\x,-0.33) {$\t^\circ$};}
+    \foreach \d/\y in {17/0.9, 27/1.75}{
+      \draw[softgray!60] (-0.07,\y) -- (0.07,\y);
+      \node[font=\scriptsize,text=softgray] at (-0.55,\y) {\d\ ns};}
+    % the direct path blob
+    \fill[softgreen,opacity=0.75] (4.45,0.9) ellipse (0.42 and 0.3);
+    \node[font=\scriptsize\bfseries,text=softgreen] at (5.65,0.38)
+      {direct: $(+30^\circ,\ 17\,\text{ns})$};
+    % the wall echo blob
+    \fill[ranpurple,opacity=0.65] (2.2,1.75) ellipse (0.42 and 0.3);
+    \node[font=\scriptsize\bfseries,text=ranpurple] at (2.2,2.35)
+      {wall echo: $(-40^\circ,\ 27\,\text{ns})$};
+    % the rule
+    \draw[softgray,dashed] (0,0.9) -- (4.0,0.9);
+  \end{tikzpicture}
+
+  \vspace{0.4em}
+  \qa{Two peaks again --- which one is the phone \emph{now}?}
+     {The \textbf{earliest} one. A reflection travels farther by definition, so
+      the direct path has the smallest $\tau$. The delay axis breaks the tie the
+      angle axis could not.}
+\end{frame}
+
+% Teaching note (150 s): land the result and close the loop to the hook card.
+% SpotFi: 3 antennas, stock 802.11n AP, 40 cm median -- the number promised on
+% slide one. One line on how several APs fuse bearings into a dot.
+\begin{frame}{From (angle, delay) to a dot on the map}
+  \vspace{0.3em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    % floor plan
+    \draw[softgray] (0,0) rectangle (7.6,3.0);
+    % APs
+    \node[draw=ranblue,fill=blue!5,rounded corners=2pt,minimum width=0.85cm,
+          minimum height=0.45cm,font=\scriptsize\bfseries] (apa) at (0.75,2.6)
+          {AP 1};
+    \node[draw=ranblue,fill=blue!5,rounded corners=2pt,minimum width=0.85cm,
+          minimum height=0.45cm,font=\scriptsize\bfseries] (apb) at (6.85,2.6)
+          {AP 2};
+    % bearings
+    \draw[ranblue,thick,dashed] (apa) -- (4.7,0.85);
+    \draw[ranblue,thick,dashed] (apb) -- (4.7,0.85);
+    \fill[softgreen] (4.7,0.85) circle (0.12);
+    \node[font=\scriptsize\bfseries,text=softgreen] at (4.7,0.42) {phone};
+    \node[font=\scriptsize,text=ranblue] at (2.2,1.45) {bearing 1};
+    \node[font=\scriptsize,text=ranblue] at (6.35,1.45) {bearing 2};
+  \end{tikzpicture}
+
+  \vspace{0.4em}
+  {\small
+   \begin{itemize}\itemsep3pt
+     \item Each AP contributes its direct path's \textbf{bearing}; delays
+       down-weight APs stuck behind reflections.
+     \item Bearings intersect $\to$ a position --- no app, no extra hardware
+       on the phone.
+     \item SpotFi: stock 3-antenna 802.11n APs, \textbf{40 cm median error}.
+   \end{itemize}\par}
+
+  \vspace{0.35em}
+  \takeaway{That is the hook card from slide one, cashed in.}
+\end{frame}
