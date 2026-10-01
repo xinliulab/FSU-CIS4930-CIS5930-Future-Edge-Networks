@@ -1,0 +1,63 @@
+%!TEX root = ./main.tex
+
+\section[Wrap-up]{Wrap-Up}
+
+% SECTION TIMING: 72:00--75:00 (2 frames). Retrieval, then the bridge forward.
+
+% Teaching note (120 s): retrieval practice. Cover the right column (overlay 1),
+% ask the room to produce each ruler's axis and formula, then reveal.
+\begin{frame}{One matrix, two axes, two rulers}
+  \vspace{0.5em}
+  \centering
+  {\small\setlength{\tabcolsep}{4.5pt}
+  \begin{tabular}{lll}
+    \toprule
+    Read $H[m,k]$\ldots & You get & Because \\
+    \midrule
+    \textcolor{ranblue}{down a column (antennas)} &
+      \visible<2->{angle $\theta$} &
+      \visible<2->{$\Delta\varphi = \frac{2\pi}{\lambda} d\sin\theta$} \\[4pt]
+    \textcolor{coreorange}{along a row (subcarriers)} &
+      \visible<2->{delay $\tau$ (distance)} &
+      \visible<2->{$\Delta\varphi = 2\pi\,\Delta f\,\tau$} \\[4pt]
+    \textcolor{softgreen}{both at once} &
+      \visible<2->{$(\theta, \tau)$ peaks} &
+      \visible<2->{2D MUSIC; earliest wins} \\
+    \bottomrule
+  \end{tabular}\par}
+
+  \vspace{0.8em}
+  \takeaway{Phase is a 6 cm ruler with no absolute markings.\\
+    All of Wi-Fi sensing is reading its \textbf{differences} along the
+    matrix's axes.}
+\end{frame}
+
+% Teaching note (60 s): the bridge. Class 13's papers run these exact two tricks
+% on 5G uplink signals and on CSI biometrics; Class 14 reads the compressed CSI
+% that beamforming feedback already broadcasts in the clear.
+\begin{frame}{Where this goes next}
+  \vspace{0.4em}
+  {\small
+   \begin{itemize}\itemsep5pt
+     \item \textbf{Class 13 (practicum):} CARTS runs these tricks on 5G's own
+       uplink reference signals; 2FiA reads breathing and heartbeat out of CSI.
+     \item \textbf{Class 14:} the AP already \emph{broadcasts} compressed CSI
+       --- 802.11 beamforming feedback --- and we will sense with that.
+   \end{itemize}\par}
+
+  \vspace{0.6em}
+  {\small\textbf{Try it yourself} (both free, with code):\par}
+  {\small
+   \begin{itemize}\itemsep4pt
+     \item Tsinghua \emph{Hands-on Wireless Sensing}:
+       \blink{https://tns.thss.tsinghua.edu.cn/wst/docs/features}{CSI features
+       tutorial} --- Matlab \texttt{naive\_aoa} / \texttt{naive\_tof}.
+     \item Princeton COS463
+       \blink{https://www.cs.princeton.edu/courses/archive/spring18/cos463/labs/lab5_preview.html}{MUSIC
+       lab} --- build the AoA spectrum in NumPy.
+   \end{itemize}\par}
+
+  \vspace{0.7em}
+  \ask{Your phone never opted in to any of this.\\
+    Who should be allowed to run a ruler made of your Wi-Fi?}
+\end{frame}

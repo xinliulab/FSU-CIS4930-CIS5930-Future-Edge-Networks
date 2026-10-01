@@ -1,0 +1,184 @@
+%!TEX root = ./main.tex
+
+\section[Distance]{Ruler 2: Distance, Read Across the Subcarriers}
+
+% SECTION TIMING: 40:00--57:00 (5 frames). Chronos's and the Tsinghua tutorial's
+% story. The symmetry IS the pedagogy: same trick as the last section, with the
+% roles of "position" and "frequency" swapped. Say the sentence "difference across
+% a small step beats wrapping" in both sections, verbatim.
+
+% Teaching note (150 s): open by physically rotating your hand 90 degrees over the
+% CSI grid: we just read columns (antennas); now we read rows (subcarriers). Then
+% kill the naive hope with the 87-turns number from the wrapping frame.
+\begin{frame}{Same trick: rotate the ruler}
+  \vspace{0.3em}
+  {\small Fix one antenna. Walk along the \textcolor{coreorange}{\textbf{frequency
+    axis}} instead:\par}
+  \vspace{0.2em}
+  \centering
+  {\large $\varphi(f) \;=\; -\,2\pi f \tau$
+   \quad{\small\textcolor{softgray}{($\tau$ = time of flight $= r/c$)}}\par}
+
+  \vspace{0.6em}
+  \raggedright
+  {\small
+   \begin{itemize}\itemsep4pt
+     \item One frequency alone is hopeless: our 5 m path is
+       \textbf{87 turns} deep in wraps.
+     \item But two \emph{nearby} frequencies differ by only
+       $\Delta\varphi = 2\pi\,\Delta f\,\tau$ --- a tiny, unwrapped step.
+     \item Same sentence as last section: a \textbf{difference across a small
+       step beats wrapping}.
+   \end{itemize}\par}
+
+  \vspace{0.5em}
+  \qa{Where do we get many nearby frequencies, measured at the same instant?}
+     {You have known the answer since Class 8: \textbf{OFDM}. Every Wi-Fi packet
+      is 52+ equally spaced tones, each reporting its own phase.}
+\end{frame}
+
+% Teaching note (210 s): THE frame of the section. Phase vs frequency is a straight
+% line whose slope is the delay. Work the running example: 312.5 kHz per step gives
+% ~1.9 degrees per subcarrier, ~120 degrees across a 20 MHz packet -- small but
+% plainly measurable. And the wrap-around distance for the STEP is 960 m: no house
+% is that big, so the slope never wraps indoors.
+\begin{frame}{Two tones make a slope}
+  \vspace{0.2em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \draw[-{Latex[length=2mm]},softgray] (0,0) -- (8.6,0)
+      node[below left,font=\scriptsize]{subcarrier $f_k$};
+    \draw[-{Latex[length=2mm]},softgray] (0,0) -- (0,2.7)
+      node[rotate=90,font=\scriptsize,anchor=south east,yshift=2pt]{phase $\varphi$};
+    % measured points on a falling line
+    \draw[coreorange,thick] (0.5,2.35) -- (8.1,0.45);
+    \foreach \x in {0.9,1.8,2.7,3.6,4.5,5.4,6.3,7.2}{
+      \pgfmathsetmacro{\y}{2.35-0.25*(\x-0.5)}
+      \fill[coreorange] (\x,\y) circle (0.08);}
+    \node[font=\scriptsize\bfseries,text=coreorange,rotate=-14] at (4.3,1.85)
+      {slope $= -2\pi\tau$ \;---\; steeper line $=$ longer path};
+  \end{tikzpicture}
+
+  \vspace{0.35em}
+  \begin{tcolorbox}[colback=green!5,colframe=softgreen,boxrule=0.7pt,arc=2pt,
+    left=5pt,right=5pt,top=3pt,bottom=3pt,width=0.96\textwidth]
+    \small\centering
+    Running example, 5 m path: $1.9^\circ$ per 312.5 kHz subcarrier step,\\
+    $\approx 120^\circ$ of total fall across one 20 MHz packet.
+  \end{tcolorbox}
+
+  \vspace{0.35em}
+  {\small The step $\Delta f = 312.5$ kHz wraps only beyond
+   $c/\Delta f = \textbf{960 m}$ --- indoors, never.\par}
+
+  \source{https://www.usenix.org/conference/nsdi16/technical-sessions/presentation/vasisht}{Vasisht et al., Chronos, NSDI 2016 --- slides 11--31 walk exactly this argument}
+\end{frame}
+
+% Teaching note (180 s): multipath again, resolved the honest way: the measured
+% line is a SUM of spirals, one per path, and the IFFT across subcarriers is the
+% machine that sorts them by delay. Students know FFT from Class 8's OFDM frames;
+% "the FFT's twin, run across the band" is enough.
+\begin{frame}{The IFFT sorts the room by distance}
+  \vspace{0.3em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    % CFR: a wiggly magnitude across frequency
+    \draw[-{Latex[length=2mm]},softgray] (0,0) -- (3.3,0)
+      node[below left,font=\scriptsize]{$f$};
+    \draw[-{Latex[length=2mm]},softgray] (0,0) -- (0,2.1);
+    \draw[coreorange,thick] plot[smooth] coordinates
+      {(0.15,1.5) (0.7,1.9) (1.2,1.0) (1.7,1.6) (2.2,0.7) (2.7,1.4) (3.1,1.1)};
+    \node[font=\scriptsize,align=center] at (1.6,2.35)
+      {what you measure: $H(f)$\\{\scriptsize\color{softgray}paths summed,
+        interfering}};
+    % arrow
+    \draw[-{Latex[length=3mm]},very thick,softgray] (3.7,1.0) -- (5.0,1.0)
+      node[midway,above,font=\scriptsize\bfseries]{IFFT};
+    % CIR: taps
+    \draw[-{Latex[length=2mm]},softgray] (5.4,0) -- (9.3,0)
+      node[below left,font=\scriptsize]{delay $\tau$};
+    \draw[-{Latex[length=2mm]},softgray] (5.4,0) -- (5.4,2.1);
+    \draw[softgreen,very thick] (6.3,0) -- (6.3,1.8);
+    \fill[softgreen] (6.3,1.8) circle (0.09);
+    \draw[ranpurple,very thick] (7.3,0) -- (7.3,1.1);
+    \fill[ranpurple] (7.3,1.1) circle (0.09);
+    \draw[ranpurple,very thick] (8.3,0) -- (8.3,0.5);
+    \fill[ranpurple] (8.3,0.5) circle (0.09);
+    \node[font=\scriptsize,text=softgreen] at (6.3,-0.35) {17 ns};
+    \node[font=\scriptsize,text=ranpurple] at (7.3,-0.35) {27 ns};
+    \node[font=\scriptsize,align=center] at (7.4,2.35)
+      {what you want: the CIR\\{\scriptsize\color{softgray}one spike per path}};
+  \end{tikzpicture}
+
+  \vspace{0.5em}
+  \takeaway{$H$ across frequency and the echoes across delay are a Fourier
+    pair.\\The IFFT is the sorting machine.}
+
+  \glossline{CFR = Channel Frequency Response ($H$ vs.\ $f$) \quad
+    CIR = Channel Impulse Response ($H$ vs.\ $\tau$)}
+\end{frame}
+
+% Teaching note (210 s): the cold shower. Resolution = 1/bandwidth, period. Run the
+% example: our two paths are 10 ns apart; a 20 MHz tap is 50 ns wide -- same tap,
+% unresolvable. Let the table sink in before naming the two escapes.
+\begin{frame}{Resolution is bandwidth}
+  \vspace{0.3em}
+  {\small Two CIR spikes merge unless their delays differ by
+   $\gtrsim 1/B$:\par}
+
+  \vspace{0.4em}
+  \centering
+  {\small
+  \begin{tabular}{lccc}
+    \toprule
+    Channel width $B$ & tap width $1/B$ & in meters & our 5 m vs.\ 8 m paths? \\
+    \midrule
+    20 MHz  & 50 ns   & 15 m   & \textcolor{talkred}{merged} \\
+    40 MHz  & 25 ns   & 7.5 m  & \textcolor{talkred}{merged} \\
+    80 MHz  & 12.5 ns & 3.75 m & \textcolor{talkred}{barely} \\
+    160 MHz & 6.25 ns & 1.9 m  & \textcolor{softgreen}{split} \\
+    \bottomrule
+  \end{tabular}\par}
+
+  \vspace{0.6em}
+  {\small Two escapes, and you have met both ideas today:\par}
+  {\small
+   \begin{itemize}\itemsep3pt
+     \item \textbf{Super-resolution math} --- run MUSIC along the
+       \textcolor{coreorange}{frequency axis} too (SpotFi, next section).
+     \item \textbf{Buy bandwidth} --- hop across \emph{all} Wi-Fi bands and
+       stitch the slopes into one giant sweep: Chronos, sub-nanosecond ToF.
+   \end{itemize}\par}
+
+  \source{https://www.usenix.org/conference/nsdi16/technical-sessions/presentation/vasisht}{Chronos stitches 2.4 and 5 GHz bands on commodity Wi-Fi cards}
+\end{frame}
+
+% Teaching note (210 s): the honesty frame; students who later touch real CSI will
+% thank you. TX and RX clocks are strangers: absolute tau is biased by a different
+% amount every packet. The rule that survives: trust differences, not absolutes --
+% which is why this lecture only ever used slopes and steps.
+\begin{frame}{What the clocks ruin}
+  \vspace{0.3em}
+  {\small\textbf{\textcolor{softgray}{Four lies in every raw CSI capture:}}\par}
+  \vspace{0.3em}
+  {\small
+   \begin{itemize}\itemsep4pt
+     \item \textbf{Unsynced clocks}: TX and RX never agree on $t = 0$;
+       absolute $\tau$ is biased.
+     \item \textbf{Packet detection delay}: the bias \emph{changes} packet to
+       packet.
+     \item \textbf{Carrier frequency offset}: a slow phase spin on top of
+       everything.
+     \item \textbf{Per-chain offsets}: each RF chain adds its own constant
+       phase (calibrate once).
+   \end{itemize}\par}
+
+  \vspace{0.4em}
+  {\small\textbf{\textcolor{softgreen}{What survives untouched:}} differences.
+   Path-to-path delay gaps, the slope \emph{shape} across subcarriers,
+   antenna-to-antenna steps.\par}
+
+  \vspace{0.5em}
+  \takeaway{Trust differences, not absolutes. (Chronos is, at heart,\\
+    one long fight to win back the absolute.)}
+\end{frame}
