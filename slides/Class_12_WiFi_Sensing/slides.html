@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 12: Wi-Fi Sensing</title>
+<!--
+  HTML edition of the Class 12 deck. main.tex (+ 01..07_*.tex) stays the source of the
+  PDF; this file mirrors its 22 frames one-to-one and reuses figure/*.png.
+  Keys: -> / Space / PageDown next; <- / PageUp back; F fullscreen; N notes;
+  B black screen; number + Enter jumps; ? help. Teaching notes are the % comments of
+  the .tex files, kept in <aside class="notes">.
+-->
+<style>
+  :root {
+    --blue: #2E5BBA;       /* ranblue: the antenna axis -> angle */
+    --orange: #DE7A24;     /* coreorange: the subcarrier axis -> distance */
+    --green: #498B4A;      /* softgreen: the direct path */
+    --purple: #6D3597;     /* ranpurple: reflections */
+    --gray: #5C6269;       /* softgray: hardware dirt */
+    --red: #A31A34;        /* talkred: bad news */
+    --navy: #1D3A78;
+    --ink: #1f2328;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #16181c; overflow: hidden;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; color: var(--ink); }
+
+  /* The deck is drawn on a fixed 1280x720 stage and scaled to the window. */
+  #deck { position: absolute; left: 50%; top: 50%; width: 1280px; height: 720px;
+    transform-origin: center center; }
+  .slide { position: absolute; inset: 0; background: #fff; display: none;
+    flex-direction: column; }
+  .slide.active { display: flex; animation: in .18s ease-out; }
+  @keyframes in { from { opacity: 0; } to { opacity: 1; } }
+
+  .slide > h2 { margin: 0; padding: 14px 44px 13px; background: var(--blue); color: #fff;
+    font-size: 34px; font-weight: 600; letter-spacing: .2px; }
+  .body { flex: 1; min-height: 0; display: flex; flex-direction: column;
+    align-items: center; padding: 16px 52px 8px; gap: 12px; }
+
+  /* A figure box takes the leftover height; the image scales to fit inside it. In a
+     column the image sits on the bottom edge so its caption stays right under it. */
+  .fig { position: relative; flex: 1 1 0; min-height: 60px; width: 100%; }
+  .fig img { position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: contain; }
+  .col .fig img { object-position: center bottom; }
+  .slide .notes { display: none; }
+  .cols { display: flex; gap: 30px; width: 100%; flex: 1 1 0; min-height: 0; }
+  .col { flex: 1 1 0; display: flex; flex-direction: column; align-items: center;
+    gap: 8px; min-height: 0; min-width: 0; }
+
+  .cap { font-size: 21px; text-align: center; line-height: 1.3; }
+  .text { font-size: 22px; line-height: 1.35; width: 100%; }
+  .text.center { text-align: center; }
+  ul.text { margin: 0; padding-left: 28px; }
+  ul.text li { margin: 3px 0; }
+  .gloss { font-size: 16px; color: var(--gray); width: 100%; }
+
+  .takeaway, .ask { width: 100%; text-align: center; border-radius: 4px;
+    padding: 10px 22px; line-height: 1.35; }
+  .takeaway { border: 1.5px solid var(--orange); background: #fdf3ea; font-size: 24px; }
+  .ask { border: 1.5px solid var(--blue); background: #f1f5fc; font-size: 27px; }
+
+  .src { align-self: flex-start; font-size: 13px; color: #8b8f94; }
+  .src a { color: inherit; }
+
+  .c-blue { color: var(--blue); } .c-orange { color: var(--orange); }
+  .c-green { color: var(--green); } .c-gray { color: var(--gray); }
+  .frac { display: inline-flex; flex-direction: column; vertical-align: middle;
+    text-align: center; font-size: .9em; line-height: 1.1; margin: 0 2px; }
+  .frac > span:first-child { border-bottom: 1.5px solid currentColor; padding: 0 3px; }
+  .math { font-family: "Cambria Math", Cambria, "Times New Roman", serif; }
+
+  /* Footer in the spirit of beamer's Madrid theme. */
+  .foot { display: flex; height: 28px; font-size: 14px; color: #fff; flex: none; }
+  .foot > div { display: flex; align-items: center; justify-content: center; }
+  .foot .f1 { background: var(--navy); width: 33.3%; }
+  .foot .f2 { background: var(--blue); width: 33.4%; }
+  .foot .f3 { background: #c9d4ee; color: var(--navy); width: 33.3%; }
+
+  /* Title slide */
+  .title-slide { justify-content: center; align-items: center; gap: 22px; }
+  .title-slide .tbox { background: var(--blue); color: #fff; border-radius: 8px;
+    padding: 26px 60px; text-align: center; width: 1000px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.18); }
+  .title-slide .tbox h1 { margin: 0; font-size: 50px; font-weight: 600; }
+  .title-slide .tbox p { margin: 12px 0 0; font-size: 26px; opacity: .95; }
+  .title-slide .who { text-align: center; font-size: 24px; line-height: 1.5; }
+  .title-slide .who small { font-size: 19px; color: var(--gray); }
+  .title-slide a { color: var(--blue); }
+
+  /* Ladder table (wrap-up) */
+  table.ladder { border-collapse: collapse; font-size: 28px; margin-top: 18px; }
+  table.ladder th, table.ladder td { padding: 11px 26px; text-align: left; }
+  table.ladder thead th { border-top: 2.5px solid #333; border-bottom: 1.5px solid #333; }
+  table.ladder tbody tr:last-child td { border-bottom: 2.5px solid #333; }
+
+  /* Step-by-step reveal inside a slide (used where the .tex teaching note asks for it) */
+  .frag { visibility: hidden; }
+  .frag.on { visibility: visible; animation: in .2s ease-out; }
+
+  /* Chrome around the stage */
+  #progress { position: fixed; left: 0; bottom: 0; height: 3px; background: var(--orange);
+    transition: width .2s; z-index: 5; }
+  #notes { position: fixed; left: 0; right: 0; bottom: 0; max-height: 34vh; overflow: auto;
+    background: rgba(18,20,24,.94); color: #e8e8e8; font-size: 17px; line-height: 1.45;
+    padding: 14px 24px 18px; display: none; z-index: 10; border-top: 2px solid var(--orange); }
+  #notes b { color: #f3b27a; }
+  #notes.show { display: block; }
+  #black { position: fixed; inset: 0; background: #000; display: none; z-index: 20; }
+  #black.show { display: block; }
+  #help { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: none; z-index: 30;
+    align-items: center; justify-content: center; }
+  #help.show { display: flex; }
+  #help .card { background: #fff; border-radius: 8px; padding: 22px 30px; font-size: 17px;
+    line-height: 1.7; min-width: 420px; }
+  #help kbd { display: inline-block; min-width: 26px; padding: 0 6px; border: 1px solid #bbb;
+    border-bottom-width: 2px; border-radius: 4px; background: #f6f6f6; font-family: inherit;
+    font-size: 15px; text-align: center; }
+  #hint { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+    background: rgba(0,0,0,.72); color: #fff; padding: 7px 16px; border-radius: 6px;
+    font-size: 14px; z-index: 6; transition: opacity .6s; pointer-events: none; }
+  #jump { position: fixed; right: 18px; bottom: 18px; background: rgba(0,0,0,.75); color: #fff;
+    padding: 6px 14px; border-radius: 6px; font-size: 20px; display: none; z-index: 6; }
+</style>
+</head>
+<body>
+<div id="deck">
+
+<!-- ===================================================================== title -->
+<section class="slide title-slide" data-section="">
+  <div class="tbox">
+    <h1>Class 12: Wi-Fi Sensing</h1>
+    <p>Where Is the Phone? From Signal Strength to Angle and Distance</p>
+  </div>
+  <div class="who">
+    Xin Liu<br>
+    <small>Florida State University · <a href="mailto:xliu15@fsu.edu">xliu15@fsu.edu</a></small><br>
+    <small>CIS 4930/5930 Future Edge Networks<br>
+    <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/" target="_blank">xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks</a></small>
+  </div>
+</section>
+
+<!-- ================================================== 01 The question (0:00-8:00) -->
+<section class="slide" data-section="The question">
+  <h2>Where is the phone?</h2>
+  <div class="body">
+    <div class="fig" style="width:90%"><img src="figure/mit_applications.png" alt="Indoor applications: museum guide, VR, delivery drone"></div>
+    <div class="takeaway">Every one of these needs a position — <b>indoors</b>,<br>
+      where the one positioning system everybody knows does not reach.</div>
+    <div class="src"><a href="https://www.mit.edu/~fadel/courses/MAS.s60/materials/Lec2-localization-2022.pdf" target="_blank">Figure: Adib &amp; Eid, MIT MAS.S60 Lecture 2, “Fundamentals of Wireless Sensing &amp; Localization”</a></div>
+  </div>
+  <aside class="notes"><b>150 s.</b> Start with the want, not the technique. Walk the photos: a museum map on your phone, VR, a delivery drone. All of them need "where am I" INDOORS. Ask who has used Google Maps inside a mall, and how well it went.</aside>
+</section>
+
+<section class="slide" data-section="The question">
+  <h2>Outdoors: GPS. Indoors: nothing good</h2>
+  <div class="body">
+    <div class="fig" style="width:86%"><img src="figure/at_why_indoor.png" alt="Indoor localization options and their drawbacks"></div>
+    <div class="ask">Every building already has Wi-Fi.<br>
+      Can the access point itself work out where the phone is?</div>
+    <div class="src"><a href="https://www.usenix.org/conference/nsdi13/technical-sessions/presentation/xiong" target="_blank">Figure: Xiong &amp; Jamieson, ArrayTrack talk, NSDI 2013</a></div>
+  </div>
+  <aside class="notes"><b>120 s.</b> GPS = meters, outdoors only; indoors it fades. Point at the red lines: known indoor options are either not accurate (Wi-Fi RSSI) or need new hardware (ultrasound) or cameras. Then the observation the lecture rides on.</aside>
+</section>
+
+<section class="slide" data-section="The question">
+  <h2>Who does the locating?</h2>
+  <div class="body">
+    <div class="fig" style="width:90%"><img src="figure/mit_who_localizes.png" alt="Device-based vs network-based localization"></div>
+    <div class="text center">Today: <b>network-based</b>. The AP hears the phone's packet anyway. What can it measure from it?</div>
+    <div class="text center">
+      <span class="c-gray">signal strength</span> &nbsp;→&nbsp;
+      <span class="c-blue">phase</span> &nbsp;→&nbsp;
+      <b class="c-blue">angle</b> &nbsp;→&nbsp;
+      <b class="c-orange">distance</b> &nbsp;→&nbsp;
+      <b class="c-green">both</b></div>
+    <div class="src"><a href="https://www.mit.edu/~fadel/courses/MAS.s60/materials/Lec2-localization-2022.pdf" target="_blank">Figure: MIT MAS.S60 Lecture 2</a></div>
+  </div>
+  <aside class="notes"><b>150 s.</b> Two ways to run localization. GPS: the DEVICE listens to anchors. Radar / Wi-Fi: the NETWORK listens to the device. Today is the second kind — the AP hears the phone's packet anyway. What can it measure from that packet? Announce the ladder: power → phase → angle → distance.</aside>
+</section>
+
+<!-- ============================================= 02 Signal strength (8:00-16:00) -->
+<section class="slide" data-section="Signal strength">
+  <h2>Attempt 1: louder means closer</h2>
+  <div class="body">
+    <div class="cols">
+      <div class="col">
+        <div class="fig"><img src="figure/mit_rssi_curve.png" alt="Received power vs distance"></div>
+        <div class="cap">Power ∝ 1/<i>d</i><sup>2</sup>: read a power, get a distance.</div>
+      </div>
+      <div class="col">
+        <div class="fig"><img src="figure/mit_trilateration.png" alt="Trilateration with three APs"></div>
+        <div class="cap">One distance per AP; the circles meet at the phone.</div>
+      </div>
+    </div>
+    <div class="src"><a href="https://www.mit.edu/~fadel/courses/MAS.s60/materials/Lec2-localization-2022.pdf" target="_blank">Figures: MIT MAS.S60 Lecture 2</a></div>
+  </div>
+  <aside class="notes"><b>150 s.</b> Left: power falls as 1/d², so a power reading is a distance. Right: three APs, three circles, one intersection — trilateration, exactly what GPS does with time. This is how every phone OS started.</aside>
+</section>
+
+<section class="slide" data-section="Signal strength">
+  <h2>Why RSSI stops at room level</h2>
+  <div class="body">
+    <div class="cols">
+      <div class="col" style="flex-grow:1.15">
+        <div class="fig"><img src="figure/mit_rssi_multipath.png" alt="RSSI wiggles with position due to multipath"></div>
+        <div class="cap">Reflections add and cancel: power wiggles with position.</div>
+      </div>
+      <div class="col">
+        <div class="fig"><img src="figure/mit_fingerprint.png" alt="Fingerprinting survey points"></div>
+        <div class="cap">Workaround: record a fingerprint at every dot.</div>
+      </div>
+    </div>
+    <div class="takeaway">One number per packet, summed over every reflection: <b>room-level</b>.<br>
+      For a desk-level answer we need a finer ruler.</div>
+    <div class="src"><a href="https://www.mit.edu/~fadel/courses/MAS.s60/materials/Lec2-localization-2022.pdf" target="_blank">Figures: MIT MAS.S60 Lecture 2</a></div>
+  </div>
+  <aside class="notes"><b>180 s.</b> Two cons on the left curve — far away the curve is flat (a small power error is a large distance error), and reflections make power wiggle with position. Right: the industry workaround — walk the building and record a fingerprint at every orange dot. Works; room-level; must be redone when furniture moves. Verdict box, then move on.</aside>
+</section>
+
+<!-- ======================================================= 03 Phase (16:00-24:00) -->
+<section class="slide" data-section="Phase">
+  <h2>The signal is a wave; the phase is a ruler</h2>
+  <div class="body">
+    <div class="fig" style="width:92%"><img src="figure/mit_wave.png" alt="A wave: amplitude decays, phase rotates"></div>
+    <ul class="text">
+      <li>Amplitude decays — that was RSSI. <b>Phase turns 360° every wavelength.</b></li>
+      <li>5 GHz: <span class="math">λ</span> = 6 cm, so 1° of phase ≈ 0.17 mm of path.</li>
+      <li>The card already computes <i class="math">h</i> per subcarrier, per antenna, to decode (Class 8): that is <b>CSI</b>.</li>
+    </ul>
+    <div class="gloss">CSI = Channel State Information: the <i>h</i> values the receiver estimated from the packet preamble</div>
+    <div class="src"><a href="https://www.mit.edu/~fadel/courses/MAS.s60/materials/Lec2-localization-2022.pdf" target="_blank">Figure: MIT MAS.S60 Lecture 2</a></div>
+  </div>
+  <aside class="notes"><b>210 s.</b> Trace the figure with a finger. Amplitude decays — that was RSSI. Underneath, the phase rotates one full turn per wavelength. At 5 GHz a wavelength is 6 cm, so one degree of phase is 0.17 mm of path. The complex number h is what the Wi-Fi card computes for every subcarrier and every antenna just to decode the packet (Class 8) — the industry calls the collection CSI.</aside>
+</section>
+
+<section class="slide" data-section="Phase">
+  <h2>… but the ruler has no numbers on it</h2>
+  <div class="body">
+    <div class="fig" style="width:80%"><img src="figure/ch_one_freq.png" alt="Phase repeats every period: ambiguous delay"></div>
+    <div class="text center">Every red tick looks identical to the receiver. A 5 m path has turned ≈ 87 times; you see only the leftover fraction.</div>
+    <div class="takeaway">You cannot read <i>one</i> phase. You can read the <b>difference</b> between two:<br>
+      two <span class="c-blue">antennas</span> → <b>angle</b>; &nbsp;&nbsp;
+      two <span class="c-orange">frequencies</span> → <b>distance</b>.</div>
+    <div class="src"><a href="https://www.usenix.org/conference/nsdi16/technical-sessions/presentation/vasisht" target="_blank">Figure: Vasisht, Kumar &amp; Katabi, Chronos talk, NSDI 2016</a></div>
+  </div>
+  <aside class="notes"><b>180 s.</b> The catch. The red ticks are every moment the phase reads the same value: one period apart, 0.4 ns, 12 cm. A phone 5 m away has turned 87 full times; the AP sees only the last fraction of a turn. So a single phase reading is worthless — and the whole rest of the lecture is two ways of reading a DIFFERENCE instead: two antennas (angle) or two frequencies (distance).</aside>
+</section>
+
+<!-- ================================================ 04 Angle (24:00-42:00) -->
+<section class="slide" data-section="Angle (ArrayTrack)">
+  <h2>Two antennas hear the wave at two phases</h2>
+  <div class="body">
+    <div class="fig" style="width:88%"><img src="figure/arraytrack_two_antennas.png" alt="Two antennas, wavefront at angle theta, phase difference on the I/Q plane"></div>
+    <div class="cols" style="flex:none">
+      <div class="col" style="align-items:stretch">
+        <div class="text">Antenna 2 is <span class="math"><span class="frac"><span>λ</span><span>2</span></span> sin θ</span> farther, so it lags by <span class="math">π sin θ</span>:</div>
+        <div class="text center math" style="font-size:27px">θ = arcsin( <span class="frac"><span>∠<i>x</i><sub>2</sub> − ∠<i>x</i><sub>1</sub></span><span>π</span></span> )</div>
+      </div>
+      <div class="col" style="align-items:stretch">
+        <div class="text">Phone at 30°: a <b>quarter turn</b> per antenna.</div>
+        <div class="text">Spacing is <span class="math">λ</span>/2 so the step itself never wraps.</div>
+      </div>
+    </div>
+    <div class="src"><a href="https://www.usenix.org/conference/nsdi13/technical-sessions/presentation/xiong" target="_blank">Figure: ArrayTrack, NSDI 2013 (as redrawn in Princeton COS463 Lab 5)</a></div>
+  </div>
+  <aside class="notes"><b>210 s.</b> THE geometry frame; go slowly. Antenna 2 is half a wavelength to the right; a wave from angle θ travels an extra (λ/2) sin θ to reach it, i.e. lags by π sin θ. On the I/Q plane that is the green arc between x1 and x2. Invert: θ = arcsin(phase step / π). Running example: 30° → a quarter turn. Ask why λ/2: any wider and the step itself wraps.</aside>
+</section>
+
+<section class="slide" data-section="Angle (ArrayTrack)">
+  <h2>More antennas: a spectrum of power vs. bearing</h2>
+  <div class="body">
+    <div class="cols">
+      <div class="col">
+        <div class="fig"><img src="figure/mit_array.png" alt="Antenna array"></div>
+        <div class="cap"><i>N</i> antennas, <i>N</i> − 1 phase steps: sweep θ in software.</div>
+      </div>
+      <div class="col">
+        <div class="fig"><img src="figure/at_approach.png" alt="AoA spectrum from ArrayTrack"></div>
+      </div>
+    </div>
+    <div class="takeaway">A peak in the spectrum is a bearing.<br>Two APs' bearings cross at the phone.</div>
+    <div class="src"><a href="https://www.usenix.org/conference/nsdi13/technical-sessions/presentation/xiong" target="_blank">Figures: MIT MAS.S60 Lecture 2 (left); ArrayTrack talk, NSDI 2013 (right)</a></div>
+  </div>
+  <aside class="notes"><b>180 s.</b> N antennas = N−1 steps; sweep a candidate angle in software and ask how well the measured steps fit — the fit versus angle is the AoA spectrum (right). A peak is a bearing; two APs' bearings cross at the client. Say "the beam is a for-loop run after reception".</aside>
+</section>
+
+<section class="slide" data-section="Angle (ArrayTrack)">
+  <h2>The office fights back: multipath</h2>
+  <div class="body">
+    <div class="fig" style="width:90%"><img src="figure/at_multipath.png" alt="Office photo and multipath diagram"></div>
+    <div class="ask">Three lobes in the spectrum. Which one is the phone?</div>
+    <div class="src"><a href="https://www.usenix.org/conference/nsdi13/technical-sessions/presentation/xiong" target="_blank">Figure: ArrayTrack talk, NSDI 2013</a></div>
+  </div>
+  <aside class="notes"><b>150 s.</b> Reality. Photo: a real office. Diagram: the client's signal reaches the array directly (grey), off the wall (green), off furniture (blue) — and the spectrum honestly shows ALL of them. Worse: the direct path may be the weakest. Leave the question hanging for a beat.</aside>
+</section>
+
+<section class="slide" data-section="Angle (ArrayTrack)">
+  <h2>ArrayTrack's trick: the direct path holds still</h2>
+  <div class="body">
+    <div class="cols">
+      <div class="col"><div class="fig"><img src="figure/at_stable_bearing.png" alt="Direct bearing stays stable as client moves"></div></div>
+      <div class="col"><div class="fig"><img src="figure/at_pairing.png" alt="Spectra from two nearby positions"></div></div>
+    </div>
+    <div class="text center">Move the client a few cm. Reflected bearings swing; the direct bearing stays. Keep the peaks that reappear within 5°.</div>
+    <div class="src"><a href="https://www.usenix.org/conference/nsdi13/technical-sessions/presentation/xiong" target="_blank">Figures: ArrayTrack talk, NSDI 2013</a></div>
+  </div>
+  <aside class="notes"><b>180 s.</b> ArrayTrack's answer is physical, not mathematical. Move the client a few centimetres: a reflection's bearing swings (the bounce point moves), the direct bearing barely changes. Take spectra from two nearby positions and keep only peaks that reappear within five degrees.</aside>
+</section>
+
+<section class="slide" data-section="Angle (ArrayTrack)">
+  <h2>More APs, sharper dot: 23 cm</h2>
+  <div class="body">
+    <div class="cols">
+      <div class="col" style="flex-grow:1.15"><div class="fig"><img src="figure/at_heatmaps_aps.png" alt="Likelihood heat-maps with more APs"></div></div>
+      <div class="col"><div class="fig"><img src="figure/at_cdf.png" alt="ArrayTrack location error CDF"></div></div>
+    </div>
+    <div class="text center">One AP gives a bearing, not a point. Six 8-antenna APs: <b>23 cm median</b>.</div>
+    <div class="takeaway">Angle alone needs <i>several</i> APs around the room.<br>Your home has one.</div>
+    <div class="src"><a href="https://www.usenix.org/conference/nsdi13/technical-sessions/presentation/xiong" target="_blank">Figures: ArrayTrack talk, NSDI 2013</a></div>
+  </div>
+  <aside class="notes"><b>150 s.</b> The payoff and the price. One AP gives a bearing, not a point; six APs sharpen the heat-map to a dot, 23 cm median. The price is in the hardware: six APs, each with 8 antennas, around one room. Last line of the frame is the segue — your home has one AP.</aside>
+</section>
+
+<!-- ============================================= 05 Distance (42:00-62:00) -->
+<section class="slide" data-section="Distance (Chronos)">
+  <h2>Homes have ONE access point</h2>
+  <div class="body">
+    <div class="fig" style="width:70%;flex-grow:0.8"><img src="figure/ch_one_ap.png" alt="Homes and shops have a single AP"></div>
+    <div class="fig" style="width:60%;flex-grow:1.2"><img src="figure/ch_prop_delay.png" alt="Distance equals speed of light times propagation delay"></div>
+    <div class="text center">One AP needs angle <i>and</i> distance. Distance = <i>c</i> × propagation delay, and the delay sits in the phase — wrapped.</div>
+    <div class="src"><a href="https://www.usenix.org/conference/nsdi16/technical-sessions/presentation/vasisht" target="_blank">Figures: Chronos talk, NSDI 2016</a></div>
+  </div>
+  <aside class="notes"><b>120 s.</b> The constraint that motivates everything: homes and shops have ONE access point. One AP can give a bearing; to pin a point it also needs the distance. And distance = speed of light × propagation delay, which lives in the phase — wrapped, as we saw.</aside>
+</section>
+
+<section class="slide" data-section="Distance (Chronos)">
+  <h2>Many frequencies agree on only one delay</h2>
+  <div class="body">
+    <div class="fig" style="width:70%"><img src="figure/ch_many_freqs.png" alt="Several frequencies wrap at different periods and agree only at the true delay"></div>
+    <div class="text center">Each frequency wraps at its own period. Only the true delay is consistent with <i>all</i> of them.</div>
+    <div class="takeaway">Same sentence as last section: a <b>difference across a small step</b> beats wrapping — now the step is in frequency, not space.</div>
+    <div class="src"><a href="https://www.usenix.org/conference/nsdi16/technical-sessions/presentation/vasisht" target="_blank">Figure: Chronos talk, NSDI 2016</a></div>
+  </div>
+  <aside class="notes"><b>210 s.</b> THE intuition frame of the section. One frequency: the ticks repeat every period, so the delay is ambiguous. Add a second frequency: it repeats at a different period. Only at the TRUE delay do the ticks of every frequency line up (the green check). Mathematicians call it the Chinese remainder theorem; the class can call it "find the time when all four clocks agree".</aside>
+</section>
+
+<section class="slide" data-section="Distance (Chronos)">
+  <h2>OFDM hands you the frequencies for free</h2>
+  <div class="body">
+    <div class="fig" style="width:74%"><img src="figure/ch_ofdm_slope.png" alt="Phase vs subcarrier is a straight line"></div>
+    <div class="text center">Phase vs. subcarrier is a <b>straight line</b>; its slope is the delay. 5 m path: ≈ 120° of fall across one 20 MHz packet.</div>
+    <div class="takeaway">You have known this since Class 8: every packet is 52+ equally spaced tones, each reporting its own phase.</div>
+    <div class="src"><a href="https://www.usenix.org/conference/nsdi16/technical-sessions/presentation/vasisht" target="_blank">Figure: Chronos talk, NSDI 2016</a></div>
+  </div>
+  <aside class="notes"><b>180 s.</b> Where do many frequencies come from, measured at the same instant? OFDM — Class 8. A Wi-Fi packet is 52+ subcarriers Δ apart, each with its own phase. Plot phase against subcarrier: a straight line whose slope is the delay. For a 5 m path the line falls ~120° across a 20 MHz packet.</aside>
+</section>
+
+<section class="slide" data-section="Distance (Chronos)">
+  <h2>Multipath: the shortest delay is the distance</h2>
+  <div class="body">
+    <div class="cols">
+      <div class="col"><div class="fig"><img src="figure/ch_smallest_delay.png" alt="Smallest delay is the direct path"></div></div>
+      <div class="col">
+        <div class="fig"><img src="figure/tsinghua_multipath_cir.png" alt="Channel impulse response: one spike per path"></div>
+        <div class="cap">IFFT across subcarriers: one spike per path.</div>
+      </div>
+    </div>
+    <div class="text center">A reflection always travels farther. 5.2 ns × <i>c</i> = 1.6 m to the phone.</div>
+    <div class="src"><a href="https://tns.thss.tsinghua.edu.cn/wst/docs/pre/" target="_blank">Figures: Chronos talk, NSDI 2016 (left); Yang et al., Tsinghua “Hands-on Wireless Sensing” tutorial (right)</a></div>
+  </div>
+  <aside class="notes"><b>180 s.</b> Multipath, resolved honestly. Each path has its own delay; transform the phase-vs-frequency line back to time (IFFT across subcarriers) and you get the channel impulse response — one spike per path. Reflections travel farther by definition, so the SHORTEST delay is the distance to the phone.</aside>
+</section>
+
+<section class="slide" data-section="Distance (Chronos)">
+  <h2>The catch: the receiver's own delay</h2>
+  <div class="body">
+    <div class="fig" style="width:84%"><img src="figure/ch_detection_delay.png" alt="Measured delay = propagation delay + detection delay"></div>
+    <ul class="text">
+      <li>Detection delay is larger than propagation delay and changes every packet.</li>
+      <li>Chronos: the phase <i>at the carrier</i> is immune — read it off the OFDM line; a packet/ACK pair cancels clock offsets.</li>
+      <li>Resolution is bandwidth: 20 MHz separates paths only ~15 m apart, so Chronos hops across all Wi-Fi bands.</li>
+    </ul>
+    <div class="src"><a href="https://www.usenix.org/conference/nsdi16/technical-sessions/presentation/vasisht" target="_blank">Figure: Chronos talk, NSDI 2016</a></div>
+  </div>
+  <aside class="notes"><b>210 s.</b> The honesty frame. The AP cannot see the propagation delay alone: it sees propagation + its own packet-DETECTION delay, which is larger and differs on every packet. Chronos's two moves: the phase at the carrier frequency is immune to detection delay (read it off the OFDM line), and a packet/ACK exchange cancels the unknown clock offset. Also the resolution limit: a 20 MHz packet separates delays only ~15 m apart, so Chronos hops across every Wi-Fi band.</aside>
+</section>
+
+<section class="slide" data-section="Distance (Chronos)">
+  <h2>What a single access point achieves</h2>
+  <div class="body">
+    <div class="cols">
+      <div class="col">
+        <div class="fig"><img src="figure/ch_distance_cdf.png" alt="Chronos distance error CDF"></div>
+        <div class="cap">Distance: <b>14 cm</b> (LOS), 21 cm (NLOS)</div>
+      </div>
+      <div class="col">
+        <div class="fig"><img src="figure/ch_smart_home.png" alt="Smart home room detection"></div>
+        <div class="cap">Right room <b>94%</b> of the time</div>
+      </div>
+      <div class="col">
+        <div class="fig"><img src="figure/ch_drone.png" alt="Drone following its user"></div>
+        <div class="cap">Drone follows at 1.4 m, <b>4 cm</b> error</div>
+      </div>
+    </div>
+    <div class="takeaway">One off-the-shelf Wi-Fi card. No infrastructure beyond the AP.</div>
+    <div class="src"><a href="https://www.usenix.org/conference/nsdi16/technical-sessions/presentation/vasisht" target="_blank">Figures: Chronos talk, NSDI 2016</a></div>
+  </div>
+  <aside class="notes"><b>120 s.</b> What one stock AP buys you: 14 cm distance error with line of sight, the right room 94% of the time, a drone that keeps 1.4 m from its user to within 4 cm. Say the hardware out loud: an Intel 5300 Wi-Fi card.</aside>
+</section>
+
+<!-- ======================================= 06 Both at once (62:00-70:00) -->
+<section class="slide" data-section="Both at once (SpotFi)">
+  <h2>Angle and delay from the same packet</h2>
+  <div class="body">
+    <div class="fig" style="width:98%"><img src="figure/spotfi_overview.png" alt="SpotFi overview: CSI, (angle, delay) pairs, direct path, localization"></div>
+    <ul class="text">
+      <li>3 antennas × 30 subcarriers = <b>90 sensors</b> in one packet's CSI.</li>
+      <li>Every path becomes an (<span class="c-blue">angle</span>, <span class="c-orange">delay</span>) pair; fit them jointly.</li>
+      <li>Direct path = the <b>earliest</b> pair with a stable bearing. Then cross the bearings.</li>
+    </ul>
+    <div class="src"><a href="https://dl.acm.org/doi/10.1145/2785956.2787487" target="_blank">Figure 1: Kotaru, Joshi, Bharadia &amp; Katti, SpotFi, SIGCOMM 2015</a></div>
+  </div>
+  <aside class="notes"><b>210 s.</b> Walk the four panels left to right. Collect CSI at every AP. Each path shows up as a pair (angle, delay). The direct path is the one with the smallest delay AND a stable bearing (ArrayTrack's trick, reused). Intersect the direct bearings. The trick that makes it work on THREE antennas: treat every (antenna, subcarrier) cell as a sensor — 90 sensors per packet, not 3.</aside>
+</section>
+
+<section class="slide" data-section="Both at once (SpotFi)">
+  <h2>A stock 3-antenna AP: 40 cm median</h2>
+  <div class="body">
+    <div class="fig" style="width:98%"><img src="figure/spotfi_cdf.png" alt="SpotFi localization error CDFs"></div>
+    <div class="text center">Same office, same 3-antenna hardware: SpotFi <b>0.4 m</b> median vs. 1.8 m for angle-only. Without line of sight: 1.6 m.</div>
+    <div class="takeaway">“Where is the phone?” — answered to 40 cm<br>by access points that were already on the wall.</div>
+    <div class="src"><a href="https://dl.acm.org/doi/10.1145/2785956.2787487" target="_blank">Figure 7: SpotFi, SIGCOMM 2015</a></div>
+  </div>
+  <aside class="notes"><b>120 s.</b> Same office, same three-antenna hardware: SpotFi 0.4 m median, ArrayTrack's algorithm 1.8 m. In the no-line-of-sight corridor SpotFi degrades to 1.6 m — say that too. Close the loop: the question on slide one is answered with stock access points and nothing else.</aside>
+</section>
+
+<!-- ============================================ 07 Wrap-up (70:00-75:00) -->
+<section class="slide" data-section="Wrap-up">
+  <h2>The ladder we climbed</h2>
+  <div class="body" style="justify-content:center">
+    <table class="ladder">
+      <thead><tr><th>Read…</th><th>across…</th><th>gives</th><th>system</th></tr></thead>
+      <tbody>
+        <tr><td class="c-gray">signal strength</td><td>—</td>
+          <td class="frag" data-f="1">a room</td><td class="frag" data-f="1">fingerprinting</td></tr>
+        <tr><td class="c-blue">one phase</td><td>—</td>
+          <td class="frag" data-f="2">nothing (wrapped)</td><td class="frag" data-f="2">—</td></tr>
+        <tr><td class="c-blue">phase difference</td><td class="c-blue">antennas</td>
+          <td class="frag" data-f="3"><b>angle</b></td><td class="frag" data-f="3">ArrayTrack: 23 cm, 6 APs</td></tr>
+        <tr><td class="c-orange">phase difference</td><td class="c-orange">subcarriers</td>
+          <td class="frag" data-f="4"><b>distance</b></td><td class="frag" data-f="4">Chronos: 14 cm, 1 AP</td></tr>
+        <tr><td class="c-green">both</td><td>both</td>
+          <td class="frag" data-f="5"><b>every path</b></td><td class="frag" data-f="5">SpotFi: 40 cm, stock APs</td></tr>
+      </tbody>
+    </table>
+    <div class="takeaway frag" data-f="6" style="margin-top:28px;width:auto">Phase is a 6 cm ruler with no absolute marks.<br>
+      Everything above RSSI is a <b>difference</b> of phases along some axis.</div>
+  </div>
+  <aside class="notes"><b>150 s.</b> The ladder, one row per rung. The right two columns start hidden: have the room fill each row in, then press → to reveal it (5 rows, then the takeaway). The one sentence to leave with: a phase is useless alone; every rung above RSSI is a DIFFERENCE of phases along some axis.</aside>
+</section>
+
+<section class="slide" data-section="Wrap-up">
+  <h2>Next: the same signal sees the room</h2>
+  <div class="body">
+    <div class="cols">
+      <div class="col" style="flex-grow:0.92">
+        <div class="fig"><img src="figure/mit_through_wall.png" alt="Seeing people through a wall with Wi-Fi"></div>
+        <div class="cap c-gray" style="font-size:16px">Seeing people through a wall with Wi-Fi</div>
+      </div>
+      <div class="col" style="align-items:stretch;justify-content:center">
+        <ul class="text">
+          <li><b>Class 13:</b> 2FiA reads breathing and heartbeat out of CSI.</li>
+          <li><b>Class 14:</b> the AP already <i>broadcasts</i> compressed CSI — beamforming feedback.</li>
+        </ul>
+        <div class="text" style="margin-top:8px"><b>Try it</b> (free, with code):</div>
+        <ul class="text">
+          <li>Tsinghua <a href="https://tns.thss.tsinghua.edu.cn/wst/docs/features" target="_blank">Hands-on Wireless Sensing</a>: <code>naive_aoa</code>, <code>naive_tof</code></li>
+          <li>Princeton COS463 <a href="https://www.cs.princeton.edu/courses/archive/spring18/cos463/labs/lab5_preview.html" target="_blank">AoA / MUSIC lab</a> in NumPy</li>
+        </ul>
+      </div>
+    </div>
+    <div class="ask">Your phone never opted in. Who may run a ruler made of your Wi-Fi?</div>
+    <div class="src"><a href="https://www.mit.edu/~fadel/courses/MAS.s60/materials/Lec2-localization-2022.pdf" target="_blank">Figure: MIT MAS.S60 Lecture 2</a></div>
+  </div>
+  <aside class="notes"><b>90 s.</b> The bridge. The same CSI that located a phone also sees a body that is not transmitting at all: Class 13's 2FiA reads breathing and heartbeat from it; Class 14 reads the compressed CSI the AP broadcasts as beamforming feedback. Hands-on links for the curious.</aside>
+</section>
+
+</div>
+
+<div id="progress"></div>
+<div id="notes"></div>
+<div id="black"></div>
+<div id="jump"></div>
+<div id="hint">→ / Space next · ← back · F fullscreen · N notes · ? all keys</div>
+<div id="help"><div class="card">
+  <b>Keys</b><br>
+  <kbd>→</kbd> <kbd>Space</kbd> <kbd>PgDn</kbd> &nbsp;next (or click the right side)<br>
+  <kbd>←</kbd> <kbd>PgUp</kbd> &nbsp;back (or click the left third)<br>
+  <kbd>Home</kbd> <kbd>End</kbd> &nbsp;first / last slide<br>
+  <kbd>5</kbd> <kbd>Enter</kbd> &nbsp;jump to slide 5<br>
+  <kbd>F</kbd> &nbsp;fullscreen &nbsp;·&nbsp; <kbd>N</kbd> &nbsp;teaching notes &nbsp;·&nbsp; <kbd>B</kbd> &nbsp;black screen<br>
+  <kbd>Esc</kbd> &nbsp;close this
+</div></div>
+
+<script>
+(function () {
+  const deck = document.getElementById('deck');
+  const slides = Array.from(deck.querySelectorAll('.slide'));
+  const total = slides.length - 1;              // the title slide is not numbered
+  const $ = id => document.getElementById(id);
+  let cur = 0, step = 0, digits = '';
+
+  // Madrid-style footer on every numbered slide.
+  slides.forEach((s, i) => {
+    if (i === 0) return;
+    const f = document.createElement('div');
+    f.className = 'foot';
+    f.innerHTML = '<div class="f1">Xin Liu (FSU)</div><div class="f2">Wi-Fi Sensing · ' +
+      s.dataset.section + '</div><div class="f3">' + i + ' / ' + total + '</div>';
+    s.appendChild(f);
+  });
+
+  const maxStep = i => Math.max(0, ...Array.from(slides[i].querySelectorAll('.frag'),
+    f => +f.dataset.f));
+
+  function render() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === cur));
+    slides[cur].querySelectorAll('.frag').forEach(f =>
+      f.classList.toggle('on', +f.dataset.f <= step));
+    $('progress').style.width = (100 * cur / total) + '%';
+    const n = slides[cur].querySelector('.notes');
+    $('notes').innerHTML = '<b>' + cur + ' / ' + total + '</b> &nbsp; ' +
+      (n ? n.innerHTML : '(no notes)');
+    history.replaceState(null, '', '#' + cur);
+  }
+  function go(i, atEnd) {
+    cur = Math.max(0, Math.min(total, i));
+    step = atEnd ? maxStep(cur) : 0;
+    render();
+  }
+  function next() {
+    if (step < maxStep(cur)) { step++; render(); }
+    else if (cur < total) go(cur + 1);
+  }
+  function prev() {
+    if (step > 0) { step--; render(); }
+    else if (cur > 0) go(cur - 1, true);
+  }
+
+  function fit() {
+    const s = Math.min(innerWidth / 1280, innerHeight / 720);
+    deck.style.transform = 'translate(-50%,-50%) scale(' + s + ')';
+  }
+  addEventListener('resize', fit);
+
+  function toggleFull() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen().catch(() => {});
+  }
+
+  addEventListener('keydown', e => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const k = e.key;
+    if ($('help').classList.contains('show') && k !== '?') {
+      $('help').classList.remove('show'); e.preventDefault(); return;
+    }
+    if (/^[0-9]$/.test(k)) {
+      digits += k; $('jump').textContent = 'go to ' + digits; $('jump').style.display = 'block';
+      return;
+    }
+    if (k === 'Enter' && digits) {
+      go(+digits); digits = ''; $('jump').style.display = 'none'; e.preventDefault(); return;
+    }
+    if (digits && k !== 'Backspace') { digits = ''; $('jump').style.display = 'none'; }
+    switch (k) {
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter':
+        next(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp':
+        prev(); break;
+      case 'Backspace':
+        if (digits) { digits = digits.slice(0, -1);
+          $('jump').textContent = 'go to ' + digits;
+          if (!digits) $('jump').style.display = 'none'; }
+        else prev();
+        break;
+      case 'Home': go(0); break;
+      case 'End': go(total, true); break;
+      case 'f': case 'F': toggleFull(); break;
+      case 'n': case 'N': $('notes').classList.toggle('show'); break;
+      case 'b': case 'B': case '.': $('black').classList.toggle('show'); break;
+      case '?': $('help').classList.toggle('show'); break;
+      case 'Escape': $('notes').classList.remove('show'); $('black').classList.remove('show'); break;
+      default: return;
+    }
+    e.preventDefault();
+  });
+
+  // Click / tap: left third goes back, the rest goes forward. Links still work.
+  addEventListener('click', e => {
+    if (e.target.closest('a, #notes, #help')) return;
+    if ($('black').classList.contains('show')) { $('black').classList.remove('show'); return; }
+    if (e.clientX < innerWidth / 3) prev(); else next();
+  });
+
+  // Swipe on phones and tablets.
+  let tx = null, ty = null;
+  addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; },
+    { passive: true });
+  addEventListener('touchend', e => {
+    if (tx === null) return;
+    const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+      dx < 0 ? next() : prev();
+      e.preventDefault();               // keep the synthetic click from firing too
+    }
+    tx = null;
+  });
+
+  addEventListener('hashchange', () => {
+    const i = parseInt(location.hash.slice(1), 10);
+    if (!isNaN(i) && i !== cur) go(i);
+  });
+
+  fit();
+  go(parseInt(location.hash.slice(1), 10) || 0);
+  setTimeout(() => { $('hint').style.opacity = 0; }, 3500);
+})();
+</script>
+</body>
+</html>
