@@ -221,11 +221,12 @@
   <h2>Outdoors: GPS. Indoors: nothing good</h2>
   <div class="body">
     <div class="fig" style="width:86%"><img src="figure/at_why_indoor.png" alt="Indoor localization options and their drawbacks"></div>
-    <div class="ask">Every building already has Wi-Fi.<br>
-      Can the access point itself work out where the phone is?</div>
+    <div class="text center"><b>Signal strength</b> (Wi-Fi or Bluetooth RSSI): <b class="c-red">not accurate enough</b>.</div>
+    <div class="ask">Every building already has Wi-Fi. Can the access point read<br>
+      something <b>better than signal strength</b> from the same signal?</div>
     <div class="src"><a href="https://www.usenix.org/conference/nsdi13/technical-sessions/presentation/xiong" target="_blank">Figure: Xiong &amp; Jamieson, ArrayTrack talk, NSDI 2013</a></div>
   </div>
-  <aside class="notes"><b>120 s.</b> GPS = meters, outdoors only; indoors it fades. Point at the red lines: known indoor options are either not accurate (Wi-Fi RSSI) or need new hardware (ultrasound) or cameras. Then the observation the lecture rides on.</aside>
+  <aside class="notes"><b>120 s.</b> GPS = meters, outdoors only; indoors it fades. Point at the red lines: known indoor options are either not accurate (Wi-Fi RSSI) or need new hardware (ultrasound) or cameras. Say out loud that "not accurate" is about how Wi-Fi was READ (signal strength, same as Bluetooth beacons), not about Wi-Fi itself: the rest of the lecture reads the same packet differently. Then the question.</aside>
 </section>
 
 <section class="slide" data-section="The question">
