@@ -83,28 +83,53 @@
   \source{https://tns.thss.tsinghua.edu.cn/wst/docs/pre/}{Figures: Chronos talk, NSDI 2016 (left); Yang et al., Tsinghua ``Hands-on Wireless Sensing'' tutorial (right)}
 \end{frame}
 
-% Teaching note (210 s): the honesty frame. The AP cannot see the propagation delay
-% alone: it sees propagation + its own packet-DETECTION delay, which is larger and
-% differs on every packet. Chronos's two moves: the phase at the carrier frequency
-% is immune to detection delay (read it off the OFDM line), and a packet/ACK exchange
-% cancels the unknown clock offset. Also the resolution limit: a 20 MHz packet
-% separates delays only ~15 m apart, so Chronos hops across every Wi-Fi band.
-\begin{frame}{The catch: the receiver's own delay}
-  \vspace{0.2em}
+% Teaching note (210 s): the honesty frame, as a table of the offsets every Wi-Fi
+% receiver lives with. Read it by the third column: offsets that put ONE common phase
+% on every subcarrier (CFO, carrier phase offset) versus offsets that TILT the phase
+% across subcarriers (STO / detection delay, SFO). Decoding shrugs most of them off:
+% the preamble fixes CFO, pilots track the rest, and any constant phase is absorbed
+% into H. Ranging cannot: the carrier phase offset is indistinguishable from the
+% e^{-j2 pi f_c tau} we want, so Chronos measures both directions (packet + ACK) and
+% adds the phases -- the offset flips sign and cancels (Bluetooth 6.0 Channel
+% Sounding does the same today); and the detection delay is a tilt that is zero at
+% f_c, so Chronos reads the phase at the carrier off the OFDM line. Last line: a
+% 20 MHz packet separates delays only ~15 m apart, so Chronos hops every band.
+\begin{frame}{The catch: offsets in every packet}
+  \vspace{0.3em}
   \centering
-  \includegraphics[width=0.84\textwidth]{figure/ch_detection_delay.png}
+  {\small What the receiver measures $=$ the propagation we want $+$ what its hardware adds:\par}
+
+  \vspace{0.5em}
+  {\scriptsize\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.12}%
+  \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.19\textwidth}
+                  >{\raggedright\arraybackslash}p{0.22\textwidth}
+                  >{\raggedright\arraybackslash}p{0.27\textwidth}
+                  >{\raggedright\arraybackslash}p{0.27\textwidth}@{}}
+    \toprule
+    \textbf{Offset} & \textbf{Cause} & \textbf{Effect on CSI phase} & \textbf{Handled by} \\
+    \midrule
+    \textbf{CFO} (carrier frequency offset) & TX and RX oscillators differ ($\pm$20 ppm)
+      & same on every subcarrier, rotates over time
+      & preamble (L-STF / L-LTF) + pilot tracking \\
+    \textbf{Carrier phase offset} & random LO phase left after CFO correction
+      & one constant on every subcarrier --- looks exactly like $e^{-j2\pi f_c\tau}$
+      & decoding: absorbed into $H$; ranging: \textbf{packet + ACK}, phases add, offset cancels \\
+    \textbf{STO} / detection delay & FFT window starts late, differently every packet
+      & a slope across subcarriers, \textbf{zero at $f_c$}
+      & ranging: \textbf{read the phase at $f_c$} (Chronos) \\
+    \textbf{SFO} (sampling frequency offset) & ADC clocks differ
+      & a slope that grows symbol by symbol
+      & pilot tracking; removed with the STO slope \\
+    \textbf{Antenna phase offset} & each RF chain has its own phase
+      & a constant per antenna: biases the angle
+      & one-time calibration (ArrayTrack, SpotFi) \\
+    \bottomrule
+  \end{tabular}\par}
 
   \vspace{0.3em}
-  \raggedright
-  {\small
-   \begin{itemize}\itemsep2pt
-     \item Detection delay is larger than propagation delay and changes every packet.
-     \item Chronos: the phase \emph{at the carrier} is immune --- read it off the
-       OFDM line; a packet/ACK pair cancels clock offsets.
-     \item Resolution is bandwidth: 20 MHz separates paths only $\sim$15 m apart,
-       so Chronos hops across all Wi-Fi bands.
-   \end{itemize}\par}
-  \source{https://www.usenix.org/conference/nsdi16/technical-sessions/presentation/vasisht}{Figure: Chronos talk, NSDI 2016}
+  {\scriptsize\raggedright Resolution is bandwidth: 20 MHz separates paths only
+   $\sim$15 m apart, so Chronos hops across all Wi-Fi bands.\par}
+  \source{https://www.usenix.org/conference/nsdi16/technical-sessions/presentation/vasisht}{Ranging fixes: Vasisht, Kumar \& Katabi, Chronos, NSDI 2016}
 \end{frame}
 
 % Teaching note (120 s): what one stock AP buys you: 14 cm distance error with line
