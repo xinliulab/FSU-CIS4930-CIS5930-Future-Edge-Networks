@@ -1,0 +1,1940 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 14: Beamforming Feedback as a Sensing Signal</title>
+<!--
+  Class 14 lecture deck (HTML only; no LaTeX source). Same engine as
+  slides/Class_12_WiFi_Sensing/slides.html: a 1280x720 stage scaled to the window,
+  Madrid-style footer, step reveals (.frag + data-f), notes panel (N).
+  Every figure is inline SVG; the live ones are computed by the scripts at the end
+  (complex arithmetic, a simulated two-path channel, MUSIC with a Jacobi eigen-solver,
+  and the 802.11ac Givens compression / quantization / rebuild of the feedback matrix).
+  The six roadmap questions show as numbered dots in every title bar (data-q).
+  Keys: -> / Space / PageDown next; <- / PageUp back; F fullscreen; N notes;
+  B black screen; number + Enter jumps; ? help. slides.html?all shows every step-reveal
+  item at once and hides the key hint (screenshots, handouts, printing).
+-->
+<style>
+  :root {
+    --blue: #2E5BBA;       /* the antenna axis -> angle */
+    --orange: #DE7A24;     /* the subcarrier axis -> distance */
+    --green: #498B4A;      /* the direct path, good news */
+    --purple: #6D3597;     /* reflections */
+    --gray: #5C6269;       /* hardware dirt */
+    --red: #A31A34;        /* bad news */
+    --navy: #1D3A78;
+    --ink: #1f2328;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #16181c; overflow: hidden;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; color: var(--ink); }
+
+  /* The deck is drawn on a fixed 1280x720 stage and scaled to the window. */
+  #deck { position: absolute; left: 50%; top: 50%; width: 1280px; height: 720px;
+    transform-origin: center center; }
+  .slide { position: absolute; inset: 0; background: #fff; display: none;
+    flex-direction: column; overflow: hidden; }
+  .slide.active { display: flex; animation: in .18s ease-out; }
+  @keyframes in { from { opacity: 0; } to { opacity: 1; } }
+  .slide .notes { display: none; }
+
+  .slide > h2 { position: relative; margin: 0; padding: 14px 250px 13px 44px; background: var(--blue);
+    color: #fff; font-size: 34px; font-weight: 600; letter-spacing: .2px; flex: none;
+    white-space: nowrap; }
+  .body { flex: 1; min-height: 0; display: flex; flex-direction: column;
+    align-items: center; padding: 12px 52px 8px; gap: 10px; }
+
+  /* Roadmap dots in the title bar: which of the six questions this slide answers. */
+  .road { position: absolute; right: 22px; top: 50%; transform: translateY(-50%);
+    display: flex; gap: 7px; }
+  .road i { font-style: normal; width: 29px; height: 29px; border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,.55); color: rgba(255,255,255,.8); font-size: 15px;
+    font-weight: 600; display: flex; align-items: center; justify-content: center;
+    letter-spacing: 0; }
+  .road i.done { background: rgba(255,255,255,.22); border-color: rgba(255,255,255,.3); }
+  .road i.on { background: #fff; color: var(--blue); border-color: #fff; }
+  .slide.has-live .road { right: 200px; }
+
+  /* Section opener banner: which question, why now, what next. */
+  .qbar { width: 100%; flex: none; padding: 7px 18px 8px; border-left: 6px solid var(--orange);
+    background: #fdf3ea; border-radius: 0 4px 4px 0; font-size: 20px; line-height: 1.35; }
+  .qbar .q { font-size: 23px; font-weight: 700; color: var(--navy); }
+  /* One-line "why a sensing person cares" on the protocol slides. */
+  .hook { width: 100%; flex: none; padding: 5px 16px; border-left: 6px solid var(--green);
+    background: #f1f7f1; border-radius: 0 4px 4px 0; font-size: 20px; line-height: 1.35; }
+  .hook b:first-child { color: var(--green); }
+
+  /* A figure box takes the leftover height; its SVG scales to fit inside it. */
+  .fig { position: relative; flex: 1 1 0; min-height: 60px; width: 100%; }
+  .fig > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .fig img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+
+  /* A frame with a live demo can hold two views of its figure (none in this deck uses it;
+     the mechanism is kept): the button in the title bar, or L, swaps them. */
+  .view { display: flex; flex-direction: column; align-items: center; gap: 10px;
+    width: 100%; flex: 1 1 0; min-height: 0; }
+  .view.live, .slide.live-on .view.orig { display: none; }
+  .slide.live-on .view.live { display: flex; }
+  .livebtn { position: absolute; top: 15px; right: 22px; font: inherit; font-size: 16px;
+    padding: 5px 15px; border-radius: 16px; border: 1.5px solid #fff;
+    background: rgba(255,255,255,.14); color: #fff; cursor: pointer; }
+  .livebtn:hover { background: rgba(255,255,255,.28); }
+  .slide.live-on .livebtn { background: #fff; color: var(--blue); }
+  svg text { font-family: inherit; }
+  .cols { display: flex; gap: 30px; width: 100%; flex: 1 1 0; min-height: 0; }
+  .col { flex: 1 1 0; display: flex; flex-direction: column; align-items: center;
+    gap: 8px; min-height: 0; min-width: 0; }
+
+  .cap { font-size: 20px; text-align: center; line-height: 1.3; flex: none; }
+  .text { font-size: 22px; line-height: 1.35; width: 100%; flex: none; }
+  .text.center { text-align: center; }
+  ul.text, ol.text { margin: 0; padding-left: 28px; }
+  ul.text li, ol.text li { margin: 3px 0; }
+  .gloss { font-size: 20px; line-height: 1.3; color: var(--gray); width: 100%; flex: none; }
+
+  .takeaway, .ask { width: 100%; text-align: center; border-radius: 4px;
+    padding: 8px 22px; line-height: 1.35; flex: none; }
+  .takeaway { border: 1.5px solid var(--orange); background: #fdf3ea; font-size: 23px; }
+  .ask { border: 1.5px solid var(--blue); background: #f1f5fc; font-size: 24px; }
+
+  .src { align-self: flex-start; font-size: 13px; color: #8b8f94; flex: none; }
+  .src a { color: inherit; }
+
+  .c-blue { color: var(--blue); } .c-orange { color: var(--orange); }
+  .c-green { color: var(--green); } .c-gray { color: var(--gray); }
+  .c-purple { color: var(--purple); } .c-red { color: var(--red); } .c-navy { color: var(--navy); }
+  .math { font-family: "Cambria Math", Cambria, "Times New Roman", serif; }
+
+  /* Live controls */
+  .ctrl { display: flex; align-items: center; justify-content: center; gap: 12px;
+    font-size: 20px; flex: none; flex-wrap: wrap; }
+  .ctrl label { color: var(--gray); }
+  .ctrl input[type=range] { width: 300px; accent-color: var(--blue); cursor: pointer; }
+  .ctrl output { font-weight: 600; min-width: 64px; }
+  .read { font-size: 21px; text-align: center; flex: none; min-height: 1.35em; line-height: 1.35; }
+  .btn { font: inherit; font-size: 18px; padding: 4px 14px; border: 1.5px solid var(--blue);
+    background: #fff; color: var(--blue); border-radius: 4px; cursor: pointer; }
+  .btn.on { background: var(--blue); color: #fff; }
+  .try { font-size: 16px; color: #9aa0a6; font-style: italic; }
+
+  /* Footer in the spirit of beamer's Madrid theme. */
+  .foot { display: flex; height: 28px; font-size: 14px; color: #fff; flex: none; }
+  .foot > div { display: flex; align-items: center; justify-content: center; }
+  .foot .f1 { background: var(--navy); width: 33.3%; }
+  .foot .f2 { background: var(--blue); width: 33.4%; }
+  .foot .f3 { background: #c9d4ee; color: var(--navy); width: 33.3%; }
+
+  /* Title slide */
+  .title-slide { justify-content: center; align-items: center; gap: 22px; }
+  .title-slide .tbox { background: var(--blue); color: #fff; border-radius: 8px;
+    padding: 26px 60px; text-align: center; width: 1060px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.18); }
+  .title-slide .tbox h1 { margin: 0; font-size: 46px; font-weight: 600; line-height: 1.2; }
+  .title-slide .tbox p { margin: 14px 0 0; font-size: 26px; opacity: .95; }
+  .title-slide .who { text-align: center; font-size: 24px; line-height: 1.5; }
+  .title-slide .who small { font-size: 19px; color: var(--gray); }
+  .title-slide a { color: var(--blue); }
+
+  /* Roadmap list */
+  ol.roadmap { list-style: none; margin: 0; padding: 0; width: 100%; }
+  ol.roadmap li { display: flex; align-items: center; gap: 16px; font-size: 25px; padding: 7px 0;
+    border-bottom: 1px solid #e3e6ea; }
+  ol.roadmap li:last-child { border-bottom: none; }
+  ol.roadmap .n { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--blue);
+    color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  ol.roadmap .h { margin-left: auto; color: var(--gray); font-size: 20px; white-space: nowrap; }
+  ol.roadmap li.sense .n { background: var(--orange); }
+
+  /* Tables */
+  table.grid { border-collapse: collapse; font-size: 20px; width: 100%; }
+  table.grid th, table.grid td { padding: 6px 12px; text-align: left; border-bottom: 1px solid #e3e6ea;
+    vertical-align: top; line-height: 1.3; }
+  table.grid thead th { border-top: 2.5px solid #333; border-bottom: 1.5px solid #333; }
+  table.grid tbody tr:last-child td { border-bottom: 2.5px solid #333; }
+  table.grid td.good { color: var(--green); font-weight: 600; }
+  table.grid td.bad { color: var(--red); font-weight: 600; }
+  table.qt { border-collapse: collapse; font-size: 20px; }
+  table.qt th, table.qt td { padding: 5px 14px; text-align: right; border-bottom: 1px solid #e3e6ea; }
+  table.qt th { border-bottom: 1.5px solid #333; text-align: right; }
+  table.qt td:first-child, table.qt th:first-child { text-align: left; }
+  table.signs { border-collapse: collapse; font-size: 21px; }
+  table.signs th, table.signs td { padding: 6px 14px; text-align: center; border: 1px solid #dfe2e7; }
+  table.signs thead th { background: #dfe6f5; color: var(--navy); white-space: nowrap; }
+  table.signs tbody th { text-align: left; color: var(--blue); background: #f6f8fc; }
+  table.signs td { font-size: 30px; font-weight: 700; line-height: 1; width: 74px; }
+  table.signs td.p { color: var(--blue); } table.signs td.m { color: var(--red); background: #fbeef1; }
+
+  /* Three grouped cards (what the BFM keeps / erases) */
+  .cards { display: flex; gap: 18px; width: 100%; flex: none; align-items: stretch; }
+  .card { flex: 1 1 0; border: 2px solid; border-radius: 8px; padding: 12px 18px 14px; font-size: 22px; line-height: 1.32; }
+  .card h3 { margin: 0 0 6px; font-size: 24px; }
+  .card ul { margin: 0; padding-left: 22px; } .card li { margin: 4px 0; }
+  .card p { margin: 8px 0 0; color: var(--gray); font-size: 20px; }
+  .card.good { border-color: var(--green); background: #f1f7f1; } .card.good h3 { color: var(--green); }
+  .card.bad { border-color: var(--red); background: #fbf0f2; } .card.bad h3 { color: var(--red); }
+  .card.kept { border-color: #9aa0a6; background: #f6f7f8; } .card.kept h3 { color: var(--gray); }
+
+  /* Take-home chain */
+  ol.chain { list-style: none; margin: 0; padding: 0; width: 100%; display: flex; flex-direction: column; gap: 9px; }
+  ol.chain li { display: flex; gap: 16px; align-items: center; font-size: 22px; line-height: 1.3;
+    border: 1.5px solid #c9d4ee; border-radius: 6px; padding: 8px 16px; background: #f7f9fd; }
+  ol.chain .n { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--blue);
+    color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+  /* Step-by-step reveal inside a slide */
+  .frag { visibility: hidden; }
+  .frag.on { visibility: visible; animation: in .25s ease-out; }
+
+  /* Chrome around the stage */
+  #progress { position: fixed; left: 0; bottom: 0; height: 3px; background: var(--orange);
+    transition: width .2s; z-index: 5; }
+  #notes { position: fixed; left: 0; right: 0; bottom: 0; max-height: 34vh; overflow: auto;
+    background: rgba(18,20,24,.94); color: #e8e8e8; font-size: 17px; line-height: 1.45;
+    padding: 14px 24px 18px; display: none; z-index: 10; border-top: 2px solid var(--orange); }
+  #notes b { color: #f3b27a; }
+  #notes.show { display: block; }
+  #black { position: fixed; inset: 0; background: #000; display: none; z-index: 20; }
+  #black.show { display: block; }
+  #help { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: none; z-index: 30;
+    align-items: center; justify-content: center; }
+  #help.show { display: flex; }
+  #help .card2 { background: #fff; border-radius: 8px; padding: 22px 30px; font-size: 17px;
+    line-height: 1.7; min-width: 420px; }
+  #help kbd { display: inline-block; min-width: 26px; padding: 0 6px; border: 1px solid #bbb;
+    border-bottom-width: 2px; border-radius: 4px; background: #f6f6f6; font-family: inherit;
+    font-size: 15px; text-align: center; }
+  #hint { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+    background: rgba(0,0,0,.72); color: #fff; padding: 7px 16px; border-radius: 6px;
+    font-size: 14px; z-index: 6; transition: opacity .6s; pointer-events: none; }
+  #jump { position: fixed; right: 18px; bottom: 18px; background: rgba(0,0,0,.75); color: #fff;
+    padding: 6px 14px; border-radius: 6px; font-size: 20px; display: none; z-index: 6; }
+</style>
+</head>
+<body>
+
+<!-- Shared drawing parts: icons and arrowheads -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-ap4" viewBox="0 0 80 50">
+      <line x1="16" y1="28" x2="16" y2="3" stroke="#2E5BBA" stroke-width="3" stroke-linecap="round"/>
+      <line x1="32" y1="28" x2="32" y2="3" stroke="#2E5BBA" stroke-width="3" stroke-linecap="round"/>
+      <line x1="48" y1="28" x2="48" y2="3" stroke="#2E5BBA" stroke-width="3" stroke-linecap="round"/>
+      <line x1="64" y1="28" x2="64" y2="3" stroke="#2E5BBA" stroke-width="3" stroke-linecap="round"/>
+      <rect x="3" y="27" width="74" height="18" rx="4" fill="#dfe6f5" stroke="#2E5BBA" stroke-width="2.5"/>
+      <circle cx="14" cy="36" r="2.5" fill="#498B4A"/><circle cx="23" cy="36" r="2.5" fill="#498B4A"/>
+    </symbol>
+    <symbol id="i-phone" viewBox="0 0 30 50">
+      <rect x="2" y="2" width="26" height="46" rx="5" fill="#2b2f36"/>
+      <rect x="5" y="7" width="20" height="33" rx="1.5" fill="#8fb3ff"/>
+      <circle cx="15" cy="44" r="2" fill="#8a8f98"/>
+    </symbol>
+    <symbol id="i-watch" viewBox="0 0 40 60">
+      <rect x="12" y="0" width="16" height="14" rx="3" fill="#5C6269"/>
+      <rect x="12" y="46" width="16" height="14" rx="3" fill="#5C6269"/>
+      <circle cx="20" cy="30" r="17" fill="#2b2f36"/>
+      <circle cx="20" cy="30" r="13" fill="#8fb3ff"/>
+    </symbol>
+    <symbol id="i-laptop" viewBox="0 0 70 50">
+      <rect x="10" y="4" width="50" height="32" rx="3" fill="#2b2f36"/>
+      <rect x="14" y="8" width="42" height="24" fill="#cfe0ff"/>
+      <path d="M2 38 H68 L63 46 H7 Z" fill="#5C6269"/>
+    </symbol>
+    <symbol id="i-ant" viewBox="0 0 24 40">
+      <path d="M2 2 L12 16 L22 2 Z" fill="none" stroke="#2E5BBA" stroke-width="2.5" stroke-linejoin="round"/>
+      <line x1="12" y1="16" x2="12" y2="38" stroke="#2E5BBA" stroke-width="2.5"/>
+    </symbol>
+    <symbol id="i-lock" viewBox="0 0 30 36">
+      <path d="M8 17 V11 a7 7 0 0 1 14 0 V17" fill="none" stroke="#5C6269" stroke-width="3.5"/>
+      <rect x="3" y="16" width="24" height="19" rx="3" fill="#5C6269"/>
+    </symbol>
+    <symbol id="i-unlock" viewBox="0 0 30 36">
+      <path d="M8 17 V8 a7 7 0 0 1 14 0 V10" fill="none" stroke="#A31A34" stroke-width="3.5"/>
+      <rect x="3" y="16" width="24" height="19" rx="3" fill="#A31A34"/>
+    </symbol>
+    <marker id="ah-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#5C6269"/></marker>
+    <marker id="ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#1f2328"/></marker>
+    <marker id="ah-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#2E5BBA"/></marker>
+    <marker id="ah-navy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#1D3A78"/></marker>
+    <marker id="ah-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#498B4A"/></marker>
+    <marker id="ah-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#6D3597"/></marker>
+    <marker id="ah-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#DE7A24"/></marker>
+    <marker id="ah-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#A31A34"/></marker>
+  </defs>
+</svg>
+
+<div id="deck">
+
+<!-- ===================================================================== title -->
+<section class="slide title-slide" data-section="">
+  <div class="tbox">
+    <h1>Class 14: Beamforming Feedback<br>as a Sensing Signal</h1>
+    <p>The Channel Report Wi-Fi Clients Send in the Clear — and the Angle Hidden in It</p>
+  </div>
+  <div class="who">
+    Xin Liu<br>
+    <small>Florida State University · <a href="mailto:xliu15@fsu.edu">xliu15@fsu.edu</a></small><br>
+    <small>CIS 4930/5930 Future Edge Networks<br>
+    <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/" target="_blank">xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks</a></small>
+  </div>
+  <aside class="notes"><b>0 s.</b> Title on screen while people sit down. Today: one frame type that Wi-Fi 5 / Wi-Fi 6 clients already transmit, why it exists, and how to get last week's angle out of it. A live demo closes the class.</aside>
+</section>
+
+<!-- ============================================================ opener -->
+<section class="slide" data-section="Where we are" data-q="0">
+  <h2>Last week's angle needed a special Wi-Fi card</h2>
+  <div class="body">
+    <div class="fig">
+      <svg viewBox="0 0 1176 330">
+        <line x1="588" y1="8" x2="588" y2="322" stroke="#dfe2e7" stroke-width="2"/>
+        <text x="294" y="30" text-anchor="middle" font-size="23" font-weight="700" fill="#5C6269">Class 12: CSI</text>
+        <text x="882" y="30" text-anchor="middle" font-size="23" font-weight="700" fill="#2E5BBA">Today: beamforming feedback</text>
+        <!-- left: CSI stays in the chip -->
+        <use href="#i-ap4" x="64" y="118" width="112" height="70"/>
+        <use href="#i-phone" x="452" y="62" width="32" height="54"/>
+        <line x1="446" y1="96" x2="186" y2="140" stroke="#5C6269" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#ah-gray)"/>
+        <text x="322" y="98" text-anchor="middle" font-size="18" fill="#5C6269">the phone's packet</text>
+        <rect x="40" y="206" width="210" height="62" rx="6" fill="#eef1f6" stroke="#5C6269" stroke-width="2"/>
+        <text x="145" y="232" text-anchor="middle" font-size="19" font-weight="600">AP's Wi-Fi chip</text>
+        <text x="145" y="257" text-anchor="middle" font-size="18" fill="#2E5BBA">computes CSI h</text>
+        <use href="#i-lock" x="262" y="216" width="30" height="38"/>
+        <text x="304" y="232" font-size="19" fill="#5C6269">stays inside unless you</text>
+        <text x="304" y="257" font-size="19" fill="#5C6269">patch the driver or firmware:</text>
+        <text x="40" y="304" font-size="18" fill="#5C6269">Intel 5300 CSI Tool · Atheros CSI Tool · Nexmon · ESP32</text>
+        <!-- right: the client reports its channel over the air -->
+        <use href="#i-ap4" x="626" y="118" width="112" height="70"/>
+        <use href="#i-watch" x="1040" y="58" width="38" height="58"/>
+        <line x1="742" y1="128" x2="1030" y2="80" stroke="#2E5BBA" stroke-width="2.5" marker-end="url(#ah-blue)"/>
+        <text x="880" y="84" text-anchor="middle" font-size="18" fill="#2E5BBA" transform="rotate(-9 880 84)">① AP: “measure this packet”</text>
+        <line x1="1032" y1="106" x2="746" y2="156" stroke="#1D3A78" stroke-width="4" marker-end="url(#ah-navy)"/>
+        <text x="852" y="186" text-anchor="middle" font-size="18" font-weight="600" fill="#1D3A78" transform="rotate(-9 852 186)">② client → AP: my channel, compressed</text>
+        <use href="#i-laptop" x="1010" y="222" width="84" height="60"/>
+        <line x1="1000" y1="112" x2="1052" y2="222" stroke="#A31A34" stroke-width="2" stroke-dasharray="6 5"/>
+        <use href="#i-unlock" x="1100" y="232" width="28" height="34"/>
+        <text x="640" y="236" font-size="19" fill="#A31A34" font-weight="600">anyone in range hears ②</text>
+        <text x="640" y="262" font-size="19" fill="#5C6269">every 802.11ac / ax client</text>
+        <text x="640" y="288" font-size="19" fill="#5C6269">no special card</text>
+      </svg>
+    </div>
+    <div class="text center">Class 12's “off-the-shelf” cards still needed a patched driver or firmware to hand over CSI: the stock chip computes CSI but won't give it to you.</div>
+    <div class="ask">Wi-Fi 5/6 clients send their AP a compressed copy of their channel when asked — <b>unencrypted</b>.<br>Can we read last week's angle out of that?</div>
+    <div class="gloss">Correction to Class 12's last slide: the <b>client</b> sends this report <b>to the AP</b> (we loosely said “the AP broadcasts it”). CSI = Channel State Information · AP = access point · 802.11ac = Wi-Fi 5, 802.11ax = Wi-Fi 6 (Class 8)</div>
+  </div>
+  <aside class="notes"><b>90 s.</b> Recap in one breath: CSI is the complex number h per subcarrier per antenna that the card computes anyway; the phase step across antennas gives the angle. The catch we glossed over: last week's systems used "off-the-shelf" cards (Chronos's Intel 5300, SpotFi's stock 3-antenna AP) — but every one of them ran a patched driver or firmware (the Intel 5300 CSI Tool and friends) to get CSI out. The stock chip computes CSI to decode and then throws it away (left). Right: today's frame. The AP asks a client to measure a packet; the client sends back a report of its channel. Point at the red dashed line: that report is not encrypted. Read the correction line aloud: last week's last slide said the AP broadcasts the compressed CSI; precisely, the CLIENT sends it to the AP, and anyone in range can hear it. Ask: who has an 802.11ac or ax device on them right now? (Everyone with a phone from the last decade.)</aside>
+</section>
+
+<section class="slide" data-section="Where we are" data-q="0">
+  <h2>Six questions for today</h2>
+  <div class="body">
+    <div class="cols">
+      <div class="col" style="flex-grow:1.45;align-items:stretch;justify-content:center">
+        <ol class="roadmap">
+          <li><span class="n">1</span>Why would an AP aim its signal?<span class="h">beamforming</span></li>
+          <li><span class="n">2</span>Why must the AP ask the client?<span class="h">feedback</span></li>
+          <li><span class="n">3</span>How does the AP ask?<span class="h">sounding</span></li>
+          <li><span class="n">4</span>What does the client send back?<span class="h">the BFM</span></li>
+          <li class="sense"><span class="n">5</span>How does an array turn CSI into angles?<span class="h">MUSIC</span></li>
+          <li class="sense"><span class="n">6</span>Can the BFM give the same angles?<span class="h">BFM sensing</span></li>
+        </ol>
+        <div class="gloss" style="margin-top:8px"><span class="c-blue"><b>1–4</b></span>: the BFM's day job inside Wi-Fi. &nbsp; <span class="c-orange"><b>5–6</b></span>: borrowing it to find angles. BFM = beamforming feedback matrix, the client's report · MUSIC = MUltiple SIgnal Classification, an angle-finding algorithm. The dots in every title bar say where we are.</div>
+      </div>
+      <div class="col">
+        <div class="fig">
+          <svg viewBox="0 0 470 400">
+            <line x1="40" y1="330" x2="440" y2="330" stroke="#dfe2e7" stroke-width="2"/>
+            <!-- antennas, numbered from the end nearest the client -->
+            <g fill="#2E5BBA" font-size="18" font-weight="700" text-anchor="middle">
+              <use href="#i-ant" x="98" y="292" width="24" height="40"/><text x="110" y="356">4</text>
+              <use href="#i-ant" x="158" y="292" width="24" height="40"/><text x="170" y="356">3</text>
+              <use href="#i-ant" x="218" y="292" width="24" height="40"/><text x="230" y="356">2</text>
+              <use href="#i-ant" x="278" y="292" width="24" height="40"/><text x="290" y="356">1</text>
+            </g>
+            <path d="M230,372 v-6 M230,369 H290 M290,372 v-6" stroke="#1f2328" stroke-width="2" fill="none"/>
+            <text x="260" y="392" text-anchor="middle" font-size="17">λ/2 = 3 cm</text>
+            <line x1="200" y1="292" x2="200" y2="120" stroke="#9aa0a6" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <line x1="200" y1="292" x2="340" y2="49" stroke="#498B4A" stroke-width="3" marker-end="url(#ah-green)"/>
+            <path d="M200,212 A80,80 0 0 1 240,223" fill="none" stroke="#1f2328" stroke-width="2"/>
+            <text x="226" y="200" font-size="19" font-style="italic">θ</text>
+            <use href="#i-watch" x="334" y="6" width="34" height="50"/>
+            <text x="376" y="30" font-size="19" font-weight="700" fill="#498B4A">client</text>
+            <text x="376" y="54" font-size="19" fill="#498B4A">θ = 30°</text>
+            <!-- wavefronts -->
+            <g stroke="#A31A34" stroke-opacity=".45" stroke-width="2">
+              <line x1="104" y1="120" x2="356" y2="265"/>
+              <line x1="64" y1="174" x2="330" y2="327"/>
+            </g>
+            <text x="20" y="30" font-size="18" fill="#1f2328">5 GHz: λ ≈ 6 cm</text>
+          </svg>
+        </div>
+        <div class="cap"><b>Running example</b> (Class 12's): 4 AP antennas, a 1-antenna client at 30°. Each next antenna is 1.5 cm farther: a <b>quarter turn</b> (90°) later.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><b>90 s.</b> Read the six questions aloud; they are the spine of the lecture. 1–4 are how Wi-Fi works (why this report exists at all); 5–6 are how we borrow it for sensing. MUSIC is the angle algorithm SpotFi used last week without our opening it; today we open it. Point at the dots in the title bar: they light up as we go. Then the running example, the same as last week: 5 GHz, 6 cm wavelength, an AP with four antennas 3 cm apart, a client 30 degrees off to the right. Antenna 1 is the one nearest the client; each next antenna is half of 3 cm = 1.5 cm farther away, a quarter of a wavelength, i.e. a quarter turn of phase. Every number today comes from this picture.</aside>
+</section>
+
+<!-- ============================================== Q1 Why beamform -->
+<section class="slide" data-section="Why beamform" data-q="1">
+  <h2>One antenna sprays energy everywhere</h2>
+  <div class="body">
+    <div class="qbar"><span class="q">Question 1 of 6: why would an AP aim its signal?</span><br>
+      Why start here: the report we will sniff today exists only because APs aim. Next: give the AP four antennas.</div>
+    <div class="fig"><svg id="one" viewBox="0 0 1176 420"></svg></div>
+    <div class="text center">One antenna cannot pick a direction: the client at 30° gets <b>1×</b> — and so does every empty corner of the room.</div>
+  </div>
+  <aside class="notes"><b>60 s.</b> The picture is power versus direction in front of the AP. One antenna: the same in every direction (the blue half-disc reaches the 1× ring everywhere). Call 1× our yardstick for the next three slides. Point at the empty directions: all that energy is wasted, and it is interference for the neighbours. Rings go up to 4× for a reason we will see in two slides.</aside>
+</section>
+
+<section class="slide" data-section="Why beamform" data-q="1">
+  <h2>Four antennas: the copies add or cancel</h2>
+  <div class="body">
+    <div class="fig"><svg id="add" viewBox="0 0 1176 400"></svg></div>
+    <div class="ctrl"><label for="add-d">phase the AP adds per antenna</label><input type="range" id="add-d" min="-180" max="180" step="5" value="0"><output id="add-out">0°</output>
+      <span id="add-btns"><button class="btn" data-v="0">same phase</button> <button class="btn" data-v="90">beamform: +90°</button></span></div>
+    <div class="read" id="add-read">AP adds 0° per antenna → copies arrive at 0°, −90°, −180°, −270° → they <b class="c-red">cancel</b>. Power at the client: 0.00×.</div>
+    <div class="text center" style="font-size:20px">Power = length². Same total power split four ways: each antenna gets ¼ of the power, so its copy has length ½. In step: 4 × ½ = 2 → power 2² = <b>4×</b>. Around a square: 0 — a <b>null</b> (a direction where the copies cancel). The 4× is paid for by less power in other directions.</div>
+  </div>
+  <aside class="notes"><b>180 s.</b> Left: the AP. Each dial is the phase the AP gives that antenna; the grey row underneath is what the trip adds (antenna 1 is nearest, each next one a quarter turn later). Right: the client's view. The four copies are drawn head to tail; the thick arrow is what the client actually receives; the dashed circle is 1×, one antenna at full power. Point at the text line: power is length squared, so a quarter of the power is a copy of length one half. Default: the same phase on every antenna. The copies arrive a quarter turn apart and walk around a square back to zero: a null exactly on our client. Not bad luck: four quarter turns always close a square. Now drag the slider slowly to +90 (or press "beamform"): the square opens into a straight line, length 2, power 4×. Energy is not created: other directions get less (next slide shows where). Ask: what should the AP add for a client straight ahead at 0°? (Nothing: 0°.)</aside>
+</section>
+
+<section class="slide" data-section="Why beamform" data-q="1">
+  <h2>Choose the phases: a beam</h2>
+  <div class="body">
+    <div class="fig"><svg id="beam" viewBox="0 0 1176 400"></svg></div>
+    <div class="ctrl"><label for="beam-d">phase the AP adds per antenna</label><input type="range" id="beam-d" min="-180" max="180" step="5" value="90"><output id="beam-out">+90°</output></div>
+    <div class="read" id="beam-read">+90° per antenna → the beam points at 30°. Power at the client: <b>4.00×</b> (6.0 dB).</div>
+    <div class="takeaway">+90° per antenna undoes the quarter turn the trip adds: all four copies arrive in step at 30°<br>→ <b>4× the power (6 dB)</b> from the same total transmit power. That is beamforming.</div>
+    <div class="gloss">dB = 10 · log<sub>10</sub>(ratio): 2× = 3 dB, 4× = 6 dB, 10× = 10 dB.</div>
+  </div>
+  <aside class="notes"><b>150 s.</b> Same slider, now drawn as power versus direction. The dashed half-circle is one antenna (1×). At +90° the four copies line up at 30° and the beam reaches the 4× ring there; elsewhere the copies partly cancel and the room gets less — that is where the 4× came from. Drag the slider: the beam swings; at 0° it points straight ahead and our client sits in a null (the previous slide). Say "6 dB" out loud and write the dB line on the board: they will meet dB again on the MUSIC plots. The AP did not spend more power; it spent it in the right direction.</aside>
+</section>
+
+<section class="slide" data-section="Why beamform" data-q="1">
+  <h2>What 4× (6 dB) buys</h2>
+  <div class="body">
+    <div class="cols">
+      <div class="col" style="align-items:stretch;justify-content:center;flex-grow:1.05">
+        <div class="text"><b class="c-blue">Faster.</b> 6 dB more signal-to-noise ratio (SNR) ≈ one step up Class 8's QAM ladder (quadrature amplitude modulation): 64-QAM → 256-QAM, 6 → 8 bits per symbol.</div>
+        <div class="text" style="margin-top:14px"><b class="c-blue">Farther.</b> In free space power falls as 1/d², so 4× the power reaches 2× the distance. Indoors, walls make it less.</div>
+        <div class="text" style="margin-top:14px"><b class="c-blue">Two clients at once.</b> Two beams in one transmission, each with a null on the other client: <b>MU-MIMO</b> (multi-user multiple-input multiple-output, Class 8).</div>
+      </div>
+      <div class="col">
+        <div class="fig"><svg id="mu" viewBox="0 0 480 300"></svg></div>
+        <div class="cap">Client A at 30°, client B at −40°: each beam is aimed at its client and has a null on the other.</div>
+      </div>
+    </div>
+    <div class="ask">All of it needs the right phase for every antenna. Who knows those phases?</div>
+    <div class="gloss">symbol = one tick of the radio, carrying a few bits · QAM = the grid of points a symbol can land on (Class 8's constellation): 64 points carry 6 bits, 256 carry 8</div>
+  </div>
+  <aside class="notes"><b>120 s.</b> The payoff in numbers. Rate: Class 8's constellation slide — every step up the QAM ladder needs more SNR; going from 64 to 256-QAM (2 more bits per symbol) costs about 6 dB, exactly what four antennas bought. Range: power falls as 1/d² in free space, so 4× power is 2× distance; indoors less. MU-MIMO: the AP shapes two beams at once; each puts a null on the OTHER client so they do not hear each other's data (the right panel is computed: zero-forcing weights for clients at 30° and −40°). Then the question that drives the next section.</aside>
+</section>
+
+<!-- ================================================ Q2 Why feedback -->
+<section class="slide" data-section="Why feedback" data-q="2">
+  <h2>Same air both ways, different radios: so the AP asks</h2>
+  <div class="body">
+    <div class="qbar"><span class="q">Question 2 of 6: why must the AP ask the client?</span><br>
+      Why now: the right phases come from h — and Class 12's AP measured h itself. Next (Question 3): how it asks.</div>
+    <div class="fig"><svg id="chains" viewBox="0 0 1176 290">
+      <rect x="20" y="14" width="420" height="232" rx="10" fill="#f6f8fc" stroke="#2E5BBA" stroke-width="2"/>
+      <text x="40" y="40" font-size="19" font-weight="700" fill="#2E5BBA">inside the AP, for each antenna n</text>
+      <rect x="44" y="62" width="250" height="64" rx="6" fill="#fff" stroke="#1D3A78" stroke-width="2"/>
+      <text x="60" y="88" font-size="18" font-weight="700" fill="#1D3A78">transmit circuit</text>
+      <text x="60" y="112" font-size="18" fill="#1D3A78">adds its own phase t<tspan baseline-shift="sub" font-size="14">n</tspan></text>
+      <circle cx="262" cy="94" r="20" fill="#f6f8fc" stroke="#c9d4ee"/><line x1="262" y1="94" x2="276" y2="80" stroke="#1D3A78" stroke-width="3"/>
+      <rect x="44" y="160" width="250" height="64" rx="6" fill="#fff" stroke="#498B4A" stroke-width="2"/>
+      <text x="60" y="186" font-size="18" font-weight="700" fill="#498B4A">receive circuit</text>
+      <text x="60" y="210" font-size="18" fill="#498B4A">adds its own phase r<tspan baseline-shift="sub" font-size="14">n</tspan></text>
+      <circle cx="262" cy="192" r="20" fill="#f6f8fc" stroke="#c9d4ee"/><line x1="262" y1="192" x2="250" y2="210" stroke="#498B4A" stroke-width="3"/>
+      <line x1="296" y1="94" x2="376" y2="138" stroke="#1D3A78" stroke-width="2.5" marker-end="url(#ah-navy)"/>
+      <line x1="378" y1="150" x2="298" y2="192" stroke="#498B4A" stroke-width="2.5" marker-end="url(#ah-green)"/>
+      <use href="#i-ant" x="380" y="122" width="28" height="46"/>
+      <text x="394" y="186" text-anchor="middle" font-size="17" font-weight="700" fill="#2E5BBA">ant n</text>
+      <line x1="420" y1="138" x2="700" y2="138" stroke="#5C6269" stroke-width="3" marker-start="url(#ah-gray)" marker-end="url(#ah-gray)"/>
+      <text x="560" y="122" text-anchor="middle" font-size="19" font-weight="700" fill="#5C6269">the air: h<tspan baseline-shift="sub" font-size="14">n</tspan></text>
+      <text x="560" y="166" text-anchor="middle" font-size="18" fill="#5C6269">the same in both directions</text>
+      <text x="560" y="190" text-anchor="middle" font-size="18" fill="#5C6269">(reciprocity)</text>
+      <use href="#i-watch" x="706" y="108" width="40" height="60"/>
+      <text x="726" y="194" text-anchor="middle" font-size="17" fill="#5C6269">client</text>
+      <g font-size="20">
+        <text x="790" y="72" fill="#498B4A"><tspan font-weight="700">uplink</tspan> (what Class 12's AP measured):</text>
+        <text x="830" y="102" fill="#498B4A">h<tspan baseline-shift="sub" font-size="15">n</tspan> × r<tspan baseline-shift="sub" font-size="15">n</tspan></text>
+        <text x="790" y="148" fill="#1D3A78"><tspan font-weight="700">downlink</tspan> (what the AP's beam meets):</text>
+        <text x="830" y="178" fill="#1D3A78">h<tspan baseline-shift="sub" font-size="15">n</tspan> × t<tspan baseline-shift="sub" font-size="15">n</tspan></text>
+        <text x="790" y="222" fill="#A31A34" font-weight="700">t<tspan baseline-shift="sub" font-size="15">n</tspan> ≠ r<tspan baseline-shift="sub" font-size="15">n</tspan>, unknown, different</text>
+        <text x="790" y="248" fill="#A31A34" font-weight="700">for every antenna, and they drift</text>
+        <text x="790" y="274" fill="#A31A34">with temperature and gain settings</text>
+      </g>
+    </svg></div>
+    <ul class="text">
+      <li>The air between antenna n and the client is the same both ways (reciprocity). But each AP antenna sends through one circuit and listens through another, each adding its own unknown phase.</li>
+      <li>So uplink CSI is <b>not</b> what the AP's beam will meet unless the AP keeps every circuit calibrated to within a few degrees — fiddly. 802.11n (Wi-Fi 4) made that “implicit” route optional, and few devices implemented it interoperably; 802.11ac (Wi-Fi 5) standardised only the simpler <b>explicit</b> way: the client measures and reports.</li>
+    </ul>
+  </div>
+  <aside class="notes"><b>150 s.</b> Head off the obvious objection first: last week the AP measured h from the phone's packets, so why ask? Because of the picture. The radio wave between antenna n and the client sees the same air both ways — that is reciprocity. But inside the AP each antenna has two different circuits: one for transmitting, one for receiving, each adding its own phase (t_n and r_n). What the AP hears on the uplink is h_n times r_n; what its beam meets on the downlink is h_n times t_n. Those differ per antenna, are unknown, and drift with temperature and gain settings, so phases computed from the uplink would point the beam the wrong way unless the AP keeps every chain calibrated — to within a few degrees, all the time. That is fiddly, which is the honest reason implicit beamforming faded: 802.11n (2009, Wi-Fi 4) made calibration and the implicit route optional alongside several explicit ones, and few devices implemented them interoperably. 802.11ac standardised only the explicit route: the client measures a test packet and sends back compressed feedback. Keep t_n in mind: it comes back on slide 24 to bias the sniffer. (And the client's own circuits? Our client has one antenna, so its receive-circuit phase multiplies all four h_n alike — a common phase, which cancels like any other.) And h changes whenever someone walks by, so sounding happens over and over.</aside>
+</section>
+
+<!-- ================================================== Q3 Sounding -->
+<section class="slide" data-section="Sounding" data-q="3">
+  <h2>Step 1: a heads-up (NDPA)</h2>
+  <div class="body">
+    <div class="qbar"><span class="q">Question 3 of 6: how does the AP ask? (“sounding”)</span><br>
+      Why now: the client must measure h on one agreed packet. Next (Question 4): what it sends back.</div>
+    <div class="text">Clients ignore frames not addressed to them, and the measurement must happen on one agreed packet. So the AP first says: <i>“a measuring packet follows right after this one — you and you: measure it and report.”</i></div>
+    <div class="fig"><svg id="ndpa" viewBox="0 0 1176 236">
+      <g font-size="17" text-anchor="middle" fill="#9aa0a6">
+        <rect x="10" y="20" width="110" height="64" fill="#f7f8f9" stroke="#d5d9de" stroke-width="1.5"/><text x="65" y="47">Frame</text><text x="65" y="68">Control</text>
+        <rect x="120" y="20" width="110" height="64" fill="#f7f8f9" stroke="#d5d9de" stroke-width="1.5"/><text x="175" y="57">Duration</text>
+        <rect x="230" y="20" width="120" height="64" fill="#f7f8f9" stroke="#d5d9de" stroke-width="1.5"/><text x="290" y="47">receiver</text><text x="290" y="68">address</text>
+        <rect x="350" y="20" width="120" height="64" fill="#f7f8f9" stroke="#d5d9de" stroke-width="1.5"/><text x="410" y="47">transmitter</text><text x="410" y="68">address (AP)</text>
+        <rect x="1030" y="20" width="130" height="64" fill="#f7f8f9" stroke="#d5d9de" stroke-width="1.5"/><text x="1095" y="57">FCS</text>
+        <rect x="940" y="20" width="90" height="64" fill="#fff" stroke="#d5d9de" stroke-width="1.5" stroke-dasharray="5 4"/><text x="985" y="58">…</text>
+      </g>
+      <g font-size="17" text-anchor="middle">
+        <rect x="470" y="20" width="150" height="64" fill="#fdf3ea" stroke="#DE7A24" stroke-width="2"/><text x="545" y="47">Sounding</text><text x="545" y="68">Dialog Token</text>
+        <rect x="620" y="20" width="160" height="64" fill="#dfe6f5" stroke="#2E5BBA" stroke-width="2.5"/><text x="700" y="47" font-weight="700">STA Info 1</text><text x="700" y="68" font-size="15">client A</text>
+        <rect x="780" y="20" width="160" height="64" fill="#dfe6f5" stroke="#2E5BBA" stroke-width="2.5"/><text x="860" y="47" font-weight="700">STA Info 2</text><text x="860" y="68" font-size="15">client B</text>
+      </g>
+      <text x="240" y="130" text-anchor="middle" font-size="18" fill="#9aa0a6">grey: routine fields that never</text>
+      <text x="240" y="154" text-anchor="middle" font-size="18" fill="#9aa0a6">come back today (~20–30 bytes in all)</text>
+      <line x1="545" y1="86" x2="545" y2="116" stroke="#DE7A24" stroke-width="2"/>
+      <text x="545" y="140" text-anchor="middle" font-size="19" fill="#DE7A24">a ticket number:</text>
+      <text x="545" y="164" text-anchor="middle" font-size="19" fill="#DE7A24">the report quotes it back</text>
+      <path d="M626,94 v10 H934 v-10" fill="none" stroke="#2E5BBA" stroke-width="2"/>
+      <line x1="780" y1="104" x2="780" y2="116" stroke="#2E5BBA" stroke-width="2"/>
+      <text x="880" y="140" text-anchor="middle" font-size="19" fill="#2E5BBA">per client: <tspan font-weight="700">AID</tspan> (which client), SU or MU,</text>
+      <text x="880" y="164" text-anchor="middle" font-size="19" fill="#2E5BBA">how many columns of the report: one per</text>
+      <text x="880" y="188" text-anchor="middle" font-size="19" fill="#2E5BBA">data stream (1 for our client)</text>
+      <text x="880" y="212" text-anchor="middle" font-size="17" fill="#5C6269">— you'll see the report in Question 4</text>
+    </svg></div>
+    <div class="text center">That heads-up is the <b>NDPA</b> (Null Data Packet Announcement), a short <b>control frame</b>. No measuring happens here.</div>
+    <div class="hook"><b>Sensing hook:</b> a sniffer that reads the NDPA learns <b>whose report comes next</b> — the AIDs name the clients.</div>
+    <div class="gloss">Control frame = a short frame that coordinates who uses the air (management frames, like the report later, do housekeeping) · STA = station (a client) · AID = Association ID, a client's number on its AP · SU / MU = single- / multi-user · data stream = one independent flow of symbols; a 1-antenna client can receive one · FCS = frame check sequence (a checksum)</div>
+  </div>
+  <aside class="notes"><b>120 s.</b> Problem first: a client normally drops frames that are not for it, and a measurement is only useful if client and AP agree on WHICH packet was measured. So step one is a warning. The grey fields are routine (frame type, how long the air is reserved, receiver and transmitter address, a checksum) — do not dwell on them. The two that matter: the sounding dialog token — a ticket number the client copies into its report so the AP can match answer to sounding — and one STA Info per client: its AID (the small number it was given when it associated), single-user or multi-user feedback, and how many columns of the report to send back (the field is Nc; one per data stream; one for our 1-antenna client — the report itself comes in Question 4). Then the name: Null Data Packet Announcement; 802.11ac calls it the VHT NDP Announcement. Read the sensing hook: a sniffer learns from the AIDs whose report is coming.</aside>
+</section>
+
+<section class="slide" data-section="Sounding" data-q="3">
+  <h2>Step 2: a packet that is all ruler (NDP)</h2>
+  <div class="body">
+    <div class="text">To measure h for all 4 AP antennas on every subcarrier, the client needs symbols it <b>already knows</b>, sent from all 4 antennas — and no payload.</div>
+    <div class="fig"><svg id="ndp" viewBox="0 0 1176 280">
+      <text x="20" y="30" font-size="19" fill="#5C6269">a normal packet (Class 8):</text>
+      <g font-size="18" text-anchor="middle">
+        <rect x="260" y="10" width="190" height="34" fill="#dfe6f5" stroke="#2E5BBA" stroke-width="1.5"/><text x="355" y="33">preamble</text>
+        <rect x="450" y="10" width="120" height="34" fill="#f1f2f4" stroke="#5C6269" stroke-width="1.5"/><text x="510" y="33">header</text>
+        <rect x="570" y="10" width="560" height="34" fill="#f7f7f7" stroke="#5C6269" stroke-width="1.5"/><text x="850" y="33">payload (your data) …</text>
+      </g>
+      <text x="20" y="96" font-size="19" fill="#1D3A78" font-weight="600">the NDP, to scale:</text>
+      <g font-size="16" text-anchor="middle" fill="#9aa0a6">
+        <rect x="40" y="110" width="112" height="56" fill="#f7f8f9" stroke="#d5d9de" stroke-width="1.5"/><text x="96" y="143">L-STF</text>
+        <rect x="152" y="110" width="112" height="56" fill="#f7f8f9" stroke="#d5d9de" stroke-width="1.5"/><text x="208" y="143">L-LTF</text>
+        <rect x="264" y="110" width="56" height="56" fill="#f7f8f9" stroke="#d5d9de" stroke-width="1.5"/><text x="292" y="143">L-SIG</text>
+        <rect x="320" y="110" width="112" height="56" fill="#f7f8f9" stroke="#d5d9de" stroke-width="1.5"/><text x="376" y="143">VHT-SIG-A</text>
+        <rect x="432" y="110" width="56" height="56" fill="#f7f8f9" stroke="#d5d9de" stroke-width="1.5"/><text x="460" y="134">VHT-</text><text x="460" y="154">STF</text>
+        <rect x="712" y="110" width="56" height="56" fill="#f7f8f9" stroke="#d5d9de" stroke-width="1.5"/><text x="740" y="134">VHT-</text><text x="740" y="154">SIG-B</text>
+      </g>
+      <g font-size="16" text-anchor="middle">
+        <rect x="488" y="110" width="56" height="56" fill="#b9cbee" stroke="#2E5BBA" stroke-width="2.5"/><text x="516" y="143" font-weight="700">LTF 1</text>
+        <rect x="544" y="110" width="56" height="56" fill="#b9cbee" stroke="#2E5BBA" stroke-width="2.5"/><text x="572" y="143" font-weight="700">LTF 2</text>
+        <rect x="600" y="110" width="56" height="56" fill="#b9cbee" stroke="#2E5BBA" stroke-width="2.5"/><text x="628" y="143" font-weight="700">LTF 3</text>
+        <rect x="656" y="110" width="56" height="56" fill="#b9cbee" stroke="#2E5BBA" stroke-width="2.5"/><text x="684" y="143" font-weight="700">LTF 4</text>
+        <rect x="768" y="110" width="360" height="56" fill="#fff" stroke="#A31A34" stroke-width="2" stroke-dasharray="7 5"/><text x="948" y="144" fill="#A31A34" font-size="19" font-weight="600">no Data field</text>
+      </g>
+      <path d="M488,104 v-8 H712 v8" fill="none" stroke="#2E5BBA" stroke-width="2"/>
+      <text x="600" y="90" text-anchor="middle" font-size="17" fill="#2E5BBA" font-weight="600">VHT-LTFs: as many as AP antennas (4 here)</text>
+      <g font-size="16" fill="#6b7178" text-anchor="middle">
+        <text x="40" y="186">0</text><text x="152" y="186">8</text><text x="264" y="186">16</text><text x="320" y="186">20</text><text x="432" y="186">28</text><text x="488" y="186">32</text><text x="712" y="186">48</text><text x="768" y="186">52 µs</text>
+      </g>
+      <text x="40" y="226" font-size="19" fill="#2E5BBA"><tspan font-weight="700">LTF</tspan> = long training field: symbols the client already knows → compare with what arrived → h</text>
+      <text x="40" y="258" font-size="18" fill="#9aa0a6">grey = start-of-packet detection and headers: never come back today · L- = legacy · VHT = Very High Throughput (802.11ac)</text>
+    </svg></div>
+    <div class="hook"><b>Sensing hook:</b> the LTFs are <b>where the CSI is born</b> — every angle in today's lecture starts in these four boxes.</div>
+    <div class="takeaway"><b>NDP</b> = Null Data Packet: a preamble and nothing else — a 52 µs measuring stick.<br>Every LTF is sent from <b>all four</b> antennas at once. How can the client tell them apart? Next slide.</div>
+  </div>
+  <aside class="notes"><b>90 s.</b> Top: Class 8's packet, preamble + header + payload. Bottom: the sounding packet, drawn to scale: preamble only. Wave at the grey boxes (short training fields detect the packet and set the gain; SIG fields are headers; L- fields are the legacy part old devices can read) and spend the time on the blue ones. Long training fields are symbols the client already knows, so comparing what arrived with what was sent gives h — exactly last week's CSI. Our AP has four antennas, so the NDP carries four VHT-LTFs (the standard says at least one per antenna sounded). Each LTF goes out of all four antennas at the same time — so how does the client separate h1 from h4? Leave that hanging for the next slide. 52 µs is about the time light needs to cross 16 km.</aside>
+</section>
+
+<section class="slide" data-section="Sounding" data-q="3">
+  <h2>Four LTFs = four equations for four unknowns</h2>
+  <div class="body">
+    <div class="cols">
+      <div class="col" style="justify-content:center;flex-grow:.9">
+        <table class="signs">
+          <thead><tr><th></th><th>LTF 1</th><th>LTF 2</th><th>LTF 3</th><th>LTF 4</th></tr></thead>
+          <tbody>
+            <tr><th>antenna 1</th><td class="p">+</td><td class="m">−</td><td class="p">+</td><td class="p">+</td></tr>
+            <tr><th>antenna 2</th><td class="p">+</td><td class="p">+</td><td class="m">−</td><td class="p">+</td></tr>
+            <tr><th>antenna 3</th><td class="p">+</td><td class="p">+</td><td class="p">+</td><td class="m">−</td></tr>
+            <tr><th>antenna 4</th><td class="m">−</td><td class="p">+</td><td class="p">+</td><td class="p">+</td></tr>
+          </tbody>
+        </table>
+        <div class="cap" style="margin-top:6px">The sign each antenna puts on the known symbol, per LTF<br>(802.11's pattern for 4 antennas)</div>
+      </div>
+      <div class="col" style="align-items:stretch;justify-content:center;flex-grow:1.1">
+        <div class="text">On one subcarrier, divide what arrives in LTF n by the known symbol and call it y<sub>n</sub>. Read the columns:</div>
+        <div class="text math" style="font-size:24px;line-height:1.5;margin:6px 0 6px 24px">
+          y<sub>1</sub> = &nbsp;h<sub>1</sub> + h<sub>2</sub> + h<sub>3</sub> − h<sub>4</sub><br>
+          y<sub>2</sub> = −h<sub>1</sub> + h<sub>2</sub> + h<sub>3</sub> + h<sub>4</sub><br>
+          y<sub>3</sub> = &nbsp;h<sub>1</sub> − h<sub>2</sub> + h<sub>3</sub> + h<sub>4</sub><br>
+          y<sub>4</sub> = &nbsp;h<sub>1</sub> + h<sub>2</sub> − h<sub>3</sub> + h<sub>4</sub></div>
+        <div class="text"><b>4 equations, 4 unknowns.</b> The signs are chosen so each h falls out by adding and subtracting: <span class="math">h<sub>1</sub> = (y<sub>1</sub> − y<sub>2</sub> + y<sub>3</sub> + y<sub>4</sub>) / 4</span>.</div>
+      </div>
+    </div>
+    <div class="takeaway">The <b>± pattern across the four LTFs</b> is what tells the antennas apart.<br>Solve it on every subcarrier (234 at 80 MHz) → the client holds the whole CSI grid.</div>
+    <div class="hook"><b>Sensing hook:</b> these h's are exactly the CSI we would love to have. The client computes them — but sends out only a compressed version (Question 4).</div>
+  </div>
+  <aside class="notes"><b>90 s.</b> The answer to the cliffhanger. Every antenna transmits in every LTF, but with a different sign each time (the table: rows are antennas, columns are LTFs; this is the 4×4 sign matrix 802.11n/ac use for four streams). Read the first column aloud: in LTF 1, antennas 1–3 send +, antenna 4 sends −, so the client receives h1 + h2 + h3 − h4. Four LTFs give four such equations. CS framing: a 4×4 linear system per subcarrier, and because the rows of the sign table are orthogonal, solving it is just adding and subtracting: h1 = (y1 − y2 + y3 + y4)/4 — check one term on the board if the room is with you (h2 cancels: +1 +1 −1 −1). Same for every subcarrier: that is the CSI grid of Question 4, and it never leaves the client's chip in raw form.</aside>
+</section>
+
+<section class="slide" data-section="Sounding" data-q="3">
+  <h2>Step 3: the report — the whole exchange in under 0.5 ms</h2>
+  <div class="body">
+    <div class="fig"><svg id="tl" viewBox="0 0 1176 300">
+      <text x="14" y="100" font-size="21" font-weight="700" fill="#2E5BBA">AP</text>
+      <text x="14" y="190" font-size="21" font-weight="700" fill="#1D3A78">client</text>
+      <line x1="110" y1="110" x2="1166" y2="110" stroke="#c9ced6" stroke-width="2"/>
+      <line x1="110" y1="200" x2="1166" y2="200" stroke="#c9ced6" stroke-width="2"/>
+      <line x1="110" y1="236" x2="1166" y2="236" stroke="#1f2328" stroke-width="2" marker-end="url(#ah-gray)"/>
+      <g font-size="16" fill="#6b7178" text-anchor="middle">
+        <text x="120" y="258">0</text><text x="370" y="258">100</text><text x="620" y="258">200</text><text x="870" y="258">300</text><text x="1120" y="258">400 µs</text>
+      </g>
+      <g class="frag" data-f="1">
+        <rect x="120" y="70" width="140" height="40" rx="3" fill="#dfe6f5" stroke="#2E5BBA" stroke-width="2"/>
+        <text x="190" y="97" text-anchor="middle" font-size="19" font-weight="700">NDPA</text>
+        <text x="190" y="60" text-anchor="middle" font-size="17" fill="#2E5BBA">heads-up ≈ 56 µs</text>
+      </g>
+      <g class="frag" data-f="2">
+        <path d="M262,118 v6 H298 v-6" fill="none" stroke="#5C6269" stroke-width="2"/>
+        <text x="280" y="144" text-anchor="middle" font-size="16" fill="#5C6269">SIFS 16 µs</text>
+        <rect x="300" y="70" width="130" height="40" rx="3" fill="#b9cbee" stroke="#2E5BBA" stroke-width="2"/>
+        <text x="365" y="97" text-anchor="middle" font-size="19" font-weight="700">NDP</text>
+        <text x="365" y="60" text-anchor="middle" font-size="17" fill="#2E5BBA">the ruler, 52 µs</text>
+      </g>
+      <g class="frag" data-f="3">
+        <path d="M432,118 v6 H468 v-6" fill="none" stroke="#5C6269" stroke-width="2"/>
+        <text x="450" y="144" text-anchor="middle" font-size="16" fill="#5C6269">SIFS 16 µs</text>
+        <rect x="470" y="160" width="500" height="40" rx="3" fill="#1D3A78" stroke="#1D3A78" stroke-width="2"/>
+        <text x="720" y="187" text-anchor="middle" font-size="19" font-weight="700" fill="#fff">report (the BFM)</text>
+        <text x="720" y="150" text-anchor="middle" font-size="17" fill="#1D3A78">drawn at 200 µs; really 100–300 µs (size and rate)</text>
+      </g>
+      <g class="frag" data-f="4">
+        <path d="M972,118 v6 H1008 v-6" fill="none" stroke="#5C6269" stroke-width="2"/>
+        <text x="990" y="144" text-anchor="middle" font-size="16" fill="#5C6269">SIFS 16 µs</text>
+        <rect x="1010" y="70" width="150" height="40" rx="3" fill="#e4f0e4" stroke="#498B4A" stroke-width="2"/>
+        <text x="1085" y="97" text-anchor="middle" font-size="18" font-weight="700" fill="#498B4A">data, aimed</text>
+        <text x="1085" y="60" text-anchor="middle" font-size="17" fill="#498B4A">beamformed</text>
+        <path d="M120,268 v8 H1010 v-8" fill="none" stroke="#1D3A78" stroke-width="2"/>
+        <text x="565" y="296" text-anchor="middle" font-size="17" fill="#1D3A78" font-weight="600">the whole sounding: ≈ 0.36 ms as drawn (0.26–0.46 ms) — under half a millisecond</text>
+      </g>
+    </svg></div>
+    <div class="text"><b>SIFS</b> (Short Interframe Space) = a fixed 16 µs gap. Everyone else must wait longer, so nobody cuts in.</div>
+    <div class="text"><b>More clients:</b> 802.11ac asks them one at a time (a Beamforming Report Poll each); 802.11ax triggers them all to answer at once.</div>
+    <div class="hook"><b>Sensing hook:</b> the dark box — the client's report — is <b>the frame we will capture</b>. h changes whenever someone moves, so the AP keeps re-sounding: each report is a fresh snapshot of the room (how often is the vendor's choice).</div>
+  </div>
+  <aside class="notes"><b>120 s.</b> Press → four times (or open with ?all to see all of it). (1) NDPA from the AP, about 56 µs for one client at the 6 Mb/s base rate (less at higher rates). (2) A SIFS gap, then the NDP, 52 µs. (3) Another SIFS, then the CLIENT's report: drawn at 200 µs, really 100–300 µs depending on how many subcarriers, how many bits and the rate. (4) After one more SIFS the AP sends data, beamformed. Adding it up: 56 + 16 + 52 + 16 + (100 to 300) + 16 ≈ 0.26–0.46 ms. Why SIFS works: it is the shortest gap in Wi-Fi; Class 8's CSMA/CA makes every other device wait at least a DIFS (34 µs at 5 GHz) plus a random backoff, so nobody can squeeze in between. Several clients: 802.11ac follows the first report with a Beamforming Report Poll to each next client; 802.11ax (HE, High Efficiency) sends one BFRP trigger frame and the clients answer together, each on its own slice of subcarriers (OFDMA: OFDM with the subcarriers shared among users). Sense of scale: a 60 fps video frame lasts 16.7 ms. How often any of this happens is the vendor's call — watch for it in the demo.</aside>
+</section>
+
+<!-- ============================================== Q4 The BFM -->
+<section class="slide" data-section="The BFM" data-q="4">
+  <h2>The client now holds last week's CSI</h2>
+  <div class="body">
+    <div class="qbar"><span class="q">Question 4 of 6: what does the client send back?</span><br>
+      Why now: the NDP just gave the client h. Next: what it computes from h, and how it squeezes that into bits.</div>
+    <div class="fig"><svg id="grid" viewBox="0 0 1176 270"></svg></div>
+    <ul class="text">
+      <li>One complex h per AP antenna per subcarrier — <b>exactly Class 12's CSI</b>, measured at the client this time.</li>
+      <li>Send it all? 4 antennas × 234 subcarriers = 936 complex numbers; at 8 bits per real and per imaginary part (an assumption) ≈ <b>1.9 kB per sounding, per client</b>. And the AP does not need the channel itself — it needs <b>the phases to transmit with</b>.</li>
+    </ul>
+    <div class="takeaway">So the client computes what the AP will use, and sends only that.</div>
+  </div>
+  <aside class="notes"><b>120 s.</b> The grid is the CSI the client just measured: one arrow per (AP antenna, subcarrier). Down a column the arrows turn a quarter turn per antenna — that is the 30° direction, last week's angle ruler. Along a row they twist steadily — that is the delay, last week's distance ruler. (Only 14 of the subcarriers drawn.) Ask: why not just send all of it? Two reasons: size — 936 complex numbers, 1.9 kB if each part took 8 bits (the 8 is our assumption, just for scale), every sounding, for every client — and need: the AP is not trying to understand the room, it wants to know what to transmit. Hand the gap to the next slide.</aside>
+</section>
+
+<section class="slide" data-section="The BFM" data-q="4">
+  <h2>What the AP needs: rotate each arrow back</h2>
+  <div class="body">
+    <div class="fig"><svg id="hv" viewBox="0 0 1176 342"></svg></div>
+    <div class="ctrl"><label for="hv-th">client direction θ</label><input type="range" id="hv-th" min="-60" max="60" step="1" value="30" style="width:260px"><output id="hv-out">30°</output>
+      <button class="btn" id="hv-ref">add a wall reflection</button></div>
+    <div class="read" id="hv-read">Each copy arrives as h<sub>n</sub>v<sub>n</sub> = |h<sub>n</sub>|²/‖h‖ ≥ 0: all in step. Power at the client: ‖h‖² = 4.00 = <b>4×</b> one antenna's.</div>
+    <div class="text center"><span class="math" style="font-size:25px">v = conj(h) / ‖h‖, &nbsp;‖h‖ = √(|h<sub>1</sub>|² + |h<sub>2</sub>|² + |h<sub>3</sub>|² + |h<sub>4</sub>|²)</span><br>conj flips each arrow's angle; dividing by ‖h‖ makes v's squared lengths add to 1 — the AP's power budget.</div>
+    <div class="takeaway">The client never needs θ — <b>it just undoes whatever h is.</b> For our 1-antenna client,<br>the <b>BFM</b> (beamforming feedback matrix) is this v, written as angles.</div>
+    <div class="gloss">Several client antennas: a matrix decomposition (the SVD) of all their h's gives V, one column per data stream.</div>
+  </div>
+  <aside class="notes"><b>180 s.</b> Left: the four h arrows the client measured (each one a quarter turn behind the last, plus some common phase the hardware added). Middle: what the AP should send, v = conj(h)/‖h‖: every arrow mirrored (rotated back by its own angle), all shrunk so the total length is 1 — the AP's power budget (drawn 2× larger so you can see them). Right: the payoff: the copy from antenna n arrives as h_n times v_n = |h_n|²/‖h‖, a positive real number, so all four land on the same line: total ‖h‖, power 4×. Press "add a wall reflection": the h arrows go messy, v follows them, and the copies STILL line up. Say the boxed line twice: the client never needs θ; it just undoes whatever h is. Then the definition: for our client, the BFM is this v written as angles. The gloss is only for students who ask about multi-antenna phones.</aside>
+</section>
+
+<section class="slide" data-section="The BFM" data-q="4">
+  <h2>Compress (1): the phases become φ</h2>
+  <div class="body">
+    <div class="fig"><svg id="phi" viewBox="0 0 1176 300"></svg></div>
+    <div class="ctrl"><label for="phi-th">client direction θ</label><input type="range" id="phi-th" min="-60" max="60" step="1" value="30"><output id="phi-out">30°</output></div>
+    <div class="read" id="phi-read">θ = 30°: φ<sub>11</sub> = 90°, φ<sub>21</sub> = 180°, φ<sub>31</sub> = 270° — each next antenna +90° (a quarter turn).</div>
+    <ul class="text">
+      <li>Turn all four arrows together until antenna 4's points right: <b>antenna 4 is the zero</b> (the reference; it sends no φ).</li>
+      <li><b>φ<sub>k1</sub> = angle of antenna k measured from antenna 4.</b> At 30°: 90°, 180°, 270°, and antenna 4 is 0° = 360°.</li>
+      <li>Neighbours differ by <b>90°</b>: Class 12's quarter-turn step. Here each next antenna <i>leads</i> by 90° instead of lagging, because v = conj(h) flips every angle.</li>
+    </ul>
+    <div class="takeaway">For one stream, the gaps between neighbouring φ's are Class 12's phase steps, with the sign flipped.</div>
+    <div class="gloss">The standard makes the last antenna the zero; slide 17's fingerprint starts from antenna 1. Only differences matter, so which antenna is zero is a free choice.</div>
+  </div>
+  <aside class="notes"><b>150 s.</b> The client now squeezes v into angles, in two moves. Move 1: rotate all four arrows by the same amount so antenna 4's arrow lies on the positive real axis (faint arrows = before, solid = after). Allowed because the copies still arrive in step; only differences matter. Antenna 4 becomes the zero and needs no angle. Move 2: read each other arrow's angle: phi_11, phi_21, phi_31 (subscript: row k, column 1 — column 1 because one stream). For our client: 90, 180, 270 degrees. Point at the orange "+90°" between the dials: walk 1 → 2 → 3 → 4 and each step is +90°, the same quarter turn as last week. Last week the farther antenna LAGGED by 90°; in v it LEADS by 90°, because v is conj(h). Drag θ: 0° gives all zeros; −30° gives 270, 180, 90 (each next antenna −90°). The angle is sitting in the report in plain sight.</aside>
+</section>
+
+<section class="slide" data-section="The BFM" data-q="4">
+  <h2>Compress (2): the lengths become ψ</h2>
+  <div class="body">
+    <div class="fig"><svg id="psi" viewBox="0 0 1176 250"></svg></div>
+    <div class="ctrl" id="psi-btns"><button class="btn on" data-v="eq">equal shares (our example)</button><button class="btn" data-v="uneq">unequal (with a reflection)</button></div>
+    <div class="text">Each cut is one angle ψ: cos ψ and sin ψ split a length into two parts whose squares add to 1. Count: 4 complex numbers = 8 real numbers, − 1 common phase, − 1 fixed length = <b>6 angles</b>: φ<sub>11</sub>, φ<sub>21</sub>, φ<sub>31</sub>, ψ<sub>21</sub>, ψ<sub>31</sub>, ψ<sub>41</sub>.</div>
+    <div class="takeaway">Relax about ψ: in our example it carries <b>no direction</b> (equal shares; ψ<sub>41</sub> = 30° is a coincidence, not θ).<br>The angle lives in φ. ψ matters only when reflections make the antennas unequal.</div>
+  </div>
+  <aside class="notes"><b>150 s.</b> The φ's carried the phases; the ψ's carry how the power (length squared) is shared among the antennas. If a student asks for the exact formula (802.11ac's Givens-rotation form for one column; write it on the board, do not derive it): v = [ e^{jφ11} cosψ21 cosψ31 cosψ41, e^{jφ21} sinψ21 cosψ31 cosψ41, e^{jφ31} sinψ31 cosψ41, sinψ41 ]ᵀ. Read the bars top to bottom like splitting a budget: psi_41 decides antenna 4's share of the whole (sin² psi_41); psi_31 decides antenna 3's share of what is left; psi_21 splits the rest between antennas 2 and 1. Our clean example: everyone gets a quarter, so the cuts are 1/4, then 1/3 of the rest, then 1/2 of the rest: 30°, 35.3°, 45°. Warn them that the 30° is a coincidence (sin 30° = 1/2). Press "unequal": shares 40/30/20/10% give 40.9°, 28.1°, 18.4°. The count is the point: 8 real numbers in, 6 angles out. (General count, if asked: an Nr × Nc matrix needs Nc(2Nr − Nc − 1) angles.)</aside>
+</section>
+
+<section class="slide" data-section="The BFM" data-q="4">
+  <h2>Quantize and send: this is the BFM</h2>
+  <div class="body">
+    <div class="ctrl" id="qz-btns"><label><b>codebook</b> = the bit widths (b<sub>ψ</sub>, b<sub>φ</sub>) both sides agree on:</label>
+      <button class="btn" data-v="2,4">SU (2, 4)</button><button class="btn on" data-v="4,6">SU (4, 6)</button><button class="btn" data-v="5,7">MU (5, 7)</button><button class="btn" data-v="7,9">MU (7, 9)</button></div>
+    <div class="cols">
+      <div class="col" style="flex-grow:1.15"><div class="fig"><svg id="qzd" viewBox="0 0 600 292"></svg></div></div>
+      <div class="col" style="justify-content:center;flex-grow:.85">
+        <table class="qt"><thead><tr><th>angle</th><th>exact</th><th>sent</th><th>error</th></tr></thead><tbody id="qz-rows">
+          <tr><td>φ<sub>11</sub></td><td>90.0°</td><td>92.8°</td><td>2.8°</td></tr>
+          <tr><td>φ<sub>21</sub></td><td>180.0°</td><td>182.8°</td><td>2.8°</td></tr>
+          <tr><td>φ<sub>31</sub></td><td>270.0°</td><td>272.8°</td><td>2.8°</td></tr>
+          <tr><td>ψ<sub>21</sub></td><td>45.0°</td><td>42.2°</td><td>2.8°</td></tr>
+          <tr><td>ψ<sub>31</sub></td><td>35.3°</td><td>36.6°</td><td>1.3°</td></tr>
+          <tr><td>ψ<sub>41</sub></td><td>30.0°</td><td>30.9°</td><td>0.9°</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div class="read" id="qz-read">(4, 6): 3×6 + 3×4 = <b>30 bits per subcarrier</b> × 234 subcarriers = 7,020 bits ≈ <b>0.9 kB</b> per report: 47% of the raw CSI (≈ 1.9 kB), less than one 1500-byte data packet. Worst angle error: 2.8°.</div>
+    <div class="text" style="font-size:20px">Each level stands for its whole slice, so it sits in the slice's <b>middle</b>: φ = kπ/2<sup>b<sub>φ</sub>−1</sup> + π/2<sup>b<sub>φ</sub></sup>, with level number k = 0 … 2<sup>b<sub>φ</sub></sup> − 1. The worst error is half a slice; 90° falls exactly between two levels and goes out as 92.8°. MU (multi-user) uses finer codebooks: a null aimed at the other client is fragile.</div>
+    <div class="text" style="font-size:20px">One management frame (the <b>VHT Compressed Beamforming</b> frame) carries these angles for every subcarrier: <b>the BFM</b> — and anyone can read it.</div>
+  </div>
+  <aside class="notes"><b>150 s.</b> Last step: each angle becomes a few bits. φ lives on a full turn, ψ on a quarter turn (left: the tick marks are the allowed values; thin = exact, thick = what is sent). The ticks sit in the middle of equal slices — the standard's formula adds half a step — so a "round" angle like 90° lands exactly between two levels and goes out as 92.8°; that is not a bug. A codebook is just the agreed bit widths. Grouping (one set of angles per Ng = 1, 2 or 4 neighbouring subcarriers in 802.11ac; 4 or 16 in 802.11ax) cuts the bits further at the cost of frequency detail. Single-user feedback uses (bψ, bφ) = (2, 4) or (4, 6); multi-user uses (5, 7) or (7, 9) because a null on the other client falls apart with a few degrees of error. Click through: (2, 4) is off by up to 11°, (7, 9) by under half a degree. Size: 3 φ's and 3 ψ's per subcarrier; with (4, 6) that is 30 bits, times 234 subcarriers at 80 MHz, about 0.9 kB — half of the 1.9 kB raw-CSI estimate, and smaller than one full-size data packet. The frame: a management frame of subtype Action No Ack (no acknowledgement), category VHT; besides the angles it carries a small MIMO Control field (Nc, Nr, channel width, grouping, codebook, the dialog token from the NDPA) and the average SNR per stream; MU reports add a per-subcarrier SNR correction. Section done: the BFM is v, written as six angles per subcarrier, sent in the clear.</aside>
+</section>
+
+<!-- ============================================== Q5 MUSIC -->
+<section class="slide" data-section="MUSIC" data-q="5">
+  <h2>A direction leaves a fingerprint: the steering vector</h2>
+  <div class="body">
+    <div class="qbar"><span class="q">Question 5 of 6: how does an array turn CSI into angles?</span><br>
+      Why now: last week we skipped how SpotFi found its angles — an algorithm called MUSIC. Today we open it, on CSI first; next (Question 6), on the BFM.</div>
+    <div class="fig"><svg id="steer" viewBox="0 0 1176 258"></svg></div>
+    <div class="ctrl"><label for="st-th">direction θ</label><input type="range" id="st-th" min="-80" max="80" step="1" value="30"><output id="st-out">30°</output></div>
+    <div class="text center"><span class="math" style="font-size:26px">a(θ) = [1, e<sup>−jπ sin θ</sup>, e<sup>−j2π sin θ</sup>, e<sup>−j3π sin θ</sup>]<sup>T</sup></span><br>
+      entry n: how far antenna n's copy lags antenna 1's. At 30°: 0°, −90°, −180°, −270°.</div>
+    <div class="takeaway">One path: the CSI across the antennas is a(θ) times one complex number.<br>Find a(θ) in the data → read off θ.</div>
+    <div class="gloss">j = √−1, so e<sup>jx</sup> is an arrow of length 1 at angle x · <sup>T</sup> (transpose) = write the list as a column</div>
+  </div>
+  <aside class="notes"><b>120 s.</b> Name the object we have been drawing all lecture. The steering vector is the phase pattern a direction θ leaves on the array: entry n is how far antenna n's copy lags antenna 1's. For our client: 0, −90, −180, −270 (the quarter turns). Drag θ: 0° gives four identical arrows; ±80° gives almost half a turn per antenna. With a single path, the CSI vector is exactly a(θ) times one complex number (the path's gain and phase), so finding θ means finding which a(θ) the data looks like — last week's sweep did that by trying every θ.</aside>
+</section>
+
+<section class="slide" data-section="MUSIC" data-q="5">
+  <h2>Multipath: every measurement is a mix</h2>
+  <div class="body">
+    <div class="text center"><span class="math" style="font-size:26px">h<sub>k</sub> = w<sub>1</sub>(k) · a(30°) + w<sub>2</sub>(k) · a(55°) + noise</span><br>
+      Each <b>snapshot</b> h<sub>k</sub> = the CSI of one subcarrier of one packet: two fingerprints, mixed. The weights change from snapshot to snapshot (each path has its own delay and phase).</div>
+    <div class="fig"><svg id="sweep" viewBox="0 0 1176 300"></svg></div>
+    <div class="cap">Simulated: direct path 30°, reflection 55° (70% as strong), 50 subcarriers × 20 packets = 1000 snapshots. The dB axis is relative to the curve's own peak.</div>
+    <div class="ask">Last week's sweep: one fat lobe peaking at 34.5° — <b>neither</b> path. 4 antennas are too few for it to split paths 25° apart (ArrayTrack used 8). Can we pull the two fingerprints apart?</div>
+  </div>
+  <aside class="notes"><b>120 s.</b> Real rooms again. Each CSI snapshot h_k (one subcarrier of one packet) is a weighted sum of two steering vectors, one per path. The weights differ per subcarrier because the two paths have different delays (Class 12's subcarrier twist, a different twist per path) and per packet because people move by fractions of a wavelength. Run last week's sweep on this data (simulated, but realistic): one fat lobe whose peak, 34.5°, is neither the direct path nor the reflection. Four antennas are simply too few for the sweep to separate paths 25° apart. Leave the question up.</aside>
+</section>
+
+<section class="slide" data-section="MUSIC" data-q="5">
+  <h2>MUSIC's idea: dots on a tabletop</h2>
+  <div class="body">
+    <div class="fig"><svg id="table" viewBox="0 0 1176 340">
+      <polygon points="70,300 590,300 770,180 250,180" fill="#eef3fb" stroke="#2E5BBA" stroke-width="2"/>
+      <text x="96" y="330" font-size="19" fill="#2E5BBA" font-weight="600">the table: every mix of a(30°) and a(55°) — the signal subspace</text>
+      <g fill="#1D3A78" fill-opacity=".75">
+        <circle cx="300" cy="270" r="5"/><circle cx="352" cy="214" r="5"/><circle cx="455" cy="282" r="5"/><circle cx="520" cy="220" r="5"/>
+        <circle cx="610" cy="245" r="5"/><circle cx="660" cy="200" r="5"/><circle cx="398" cy="248" r="5"/><circle cx="560" cy="275" r="5"/>
+        <circle cx="275" cy="225" r="5"/><circle cx="470" cy="196" r="5"/><circle cx="700" cy="226" r="5"/><circle cx="235" cy="285" r="5"/>
+        <circle cx="586" cy="194" r="5"/><circle cx="345" cy="292" r="5"/>
+      </g>
+      <line x1="420" y1="245" x2="672" y2="214" stroke="#498B4A" stroke-width="4" marker-end="url(#ah-green)"/>
+      <text x="610" y="252" font-size="19" fill="#498B4A" font-weight="700">a(30°) ✓ lies flat</text>
+      <line x1="420" y1="245" x2="300" y2="292" stroke="#6D3597" stroke-width="4" marker-end="url(#ah-purple)"/>
+      <text x="150" y="266" font-size="19" fill="#6D3597" font-weight="700">a(55°) ✓</text>
+      <line x1="420" y1="245" x2="420" y2="40" stroke="#5C6269" stroke-width="3" stroke-dasharray="8 6" marker-end="url(#ah-gray)"/>
+      <text x="300" y="30" font-size="19" fill="#5C6269" font-weight="600">“up”: only noise lives here</text>
+      <text x="330" y="54" font-size="17" fill="#5C6269">(the noise subspace)</text>
+      <line x1="420" y1="245" x2="560" y2="96" stroke="#A31A34" stroke-width="4" marker-end="url(#ah-red)"/>
+      <line x1="560" y1="98" x2="560" y2="226" stroke="#A31A34" stroke-width="2" stroke-dasharray="5 5"/>
+      <text x="576" y="96" font-size="19" fill="#A31A34" font-weight="700">a(0°) ✗ sticks up</text>
+      <text x="576" y="150" font-size="17" fill="#A31A34">dashed = its “up” part</text>
+      <g font-size="20">
+        <text x="800" y="70" font-weight="700" fill="#1D3A78">Score every candidate θ:</text>
+        <text x="800" y="104">how far does a(θ) stick up</text>
+        <text x="800" y="132">out of the table?</text>
+        <text x="800" y="180" fill="#498B4A">flat → score = 1 / (≈ 0) → huge</text>
+        <text x="800" y="210" fill="#498B4A">→ a peak: a path</text>
+        <text x="800" y="258" fill="#A31A34">tilted → score small</text>
+        <text x="800" y="288" fill="#A31A34">→ no peak</text>
+      </g>
+    </svg></div>
+    <ul class="text">
+      <li>Every snapshot is a mix of a(30°) and a(55°), so all of them lie flat on one “table”: the <b>signal subspace</b>.</li>
+      <li>Straight up from the table there is nothing but noise: the <b>noise subspace</b>. Test each a(θ): flat on the table → a path.</li>
+    </ul>
+    <div class="gloss">The real data has more than 3 dimensions; the picture is a cartoon of it.</div>
+  </div>
+  <aside class="notes"><b>180 s.</b> THE intuition frame of the section; go slowly. Each dot is one snapshot h_k. Because every snapshot is (something) × a(30°) + (something) × a(55°), all the dots lie on the flat plane spanned by those two arrows: a tabletop in a room. Nothing in the data ever points "up" off the table, except noise. Now the test: take a candidate steering vector, say a(0°), and ask how much of it sticks up out of the table (the red dashed drop). A lot → not a path. a(30°) lies exactly in the table → sticks up by zero → 1 / zero = a huge score. That is the whole algorithm. Ask the room: what if all the dots were the SAME mix? (They would sit on one line, not a table — slide 21 shows MUSIC failing then.) Honesty line: the real space is 4 complex dimensions, the table is 2-D, "up" is 2-D; the picture is the 3-D cartoon.</aside>
+</section>
+
+<section class="slide" data-section="MUSIC" data-q="5">
+  <h2>MUSIC in three steps</h2>
+  <div class="body">
+    <div class="cols">
+      <div class="col" style="flex-grow:.8">
+        <div class="fig"><svg id="eig" viewBox="0 0 500 346"></svg></div>
+        <div class="cap">How much the snapshots spread along each of R's 4 eigenvectors (its eigenvalues): 2 big, 2 tiny.</div>
+      </div>
+      <div class="col" style="align-items:stretch;justify-content:center;flex-grow:1.2">
+        <ol class="text">
+          <li><b>Average</b> h h<sup>H</sup> over all snapshots → a 4×4 matrix <b>R</b> (the covariance): how the antennas vary together.</li>
+          <li style="margin-top:8px"><b>Eigenvectors</b> of R: the big-eigenvalue ones span the table — count them: the number of paths. The small ones span “up”; call them E<sub>n</sub>.</li>
+          <li style="margin-top:8px"><b>Scan</b> θ: &nbsp;<span class="math" style="font-size:25px">P(θ) = 1 / ‖E<sub>n</sub><sup>H</sup> a(θ)‖²</span><br>= 1 / (how much a(θ) sticks up). Flat → a peak.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="text" style="font-size:20px"><b>Why eigenvectors find the table:</b> R stretches most along the directions the dots spread out along — so its big eigenvectors lie in the table. Noise spreads a tiny bit in every direction; along the table it is drowned by the signal, so the leftover directions contain only noise.</div>
+    <div class="takeaway"><b>MUSIC</b> = MUltiple SIgnal Classification (Schmidt, 1986). It needs at least one “up” direction left over,<br>so N antennas find at most N − 1 paths: <b>3 for our AP</b>.</div>
+    <div class="gloss">eigenvector = a direction the matrix only stretches, never turns; eigenvalue = how much it stretches · h<sup>H</sup> = flip every angle, turn the column into a row</div>
+  </div>
+  <aside class="notes"><b>180 s.</b> The tabletop, in linear algebra. Step 1: average the outer products h h^H; R records how the four antennas vary together. Step 2: eigen-decompose R (one library call, numpy.linalg.eigh). Directions where the snapshots spread a lot (big eigenvalues) span the table; the left plot is computed from our simulated data: two big (two paths), two essentially zero (noise only). Step 3: for each candidate θ, project a(θ) onto the "up" vectors; the squared length of that projection is how much it sticks up; P(θ) is one over it. Name and citation last: MUSIC, Ralph Schmidt, 1986. Limit: the table must leave at least one "up" direction, so N antennas see at most N−1 paths. Our AP: 3.</aside>
+</section>
+
+<section class="slide" data-section="MUSIC" data-q="5">
+  <h2>Same data: the sweep vs. MUSIC</h2>
+  <div class="body">
+    <div class="fig"><svg id="vs" viewBox="0 0 1176 300"></svg></div>
+    <div class="ctrl"><label for="vs-1" class="c-green">direct path</label><input type="range" id="vs-1" min="-80" max="80" step="1" value="30" style="width:220px"><output id="vs-1-out">30°</output>
+      <label for="vs-2" class="c-purple" style="margin-left:10px">reflection</label><input type="range" id="vs-2" min="-80" max="80" step="1" value="55" style="width:220px"><output id="vs-2-out">55°</output>
+      <button class="btn" id="vs-freeze">freeze the weights</button></div>
+    <div class="read" id="vs-read">Sweep: one lobe at 34.5°. &nbsp; MUSIC: <b class="c-blue">30.0°, 55.0°</b>.</div>
+    <div class="text" style="font-size:20px"><b>Peak heights are not powers.</b> A needle 10 dB lower is not a weaker path; only the peak <i>positions</i> mean something.</div>
+    <div class="text" style="font-size:20px"><b>The weights must vary.</b> Freeze them and every snapshot is the same mix: the dots fall on one line, the table collapses, MUSIC finds wrong angles. Different delays (across subcarriers) and motion (across packets) keep them varied.</div>
+    <div class="takeaway">Same 4 antennas, same data: the sweep blurs, MUSIC splits — if you tell it how many paths (count the big eigenvalues).</div>
+  </div>
+  <aside class="notes"><b>150 s.</b> Both spectra from the same simulated snapshots, plotted in dB relative to their own peak. Grey: last week's sweep, one hump. Blue: MUSIC, two needles exactly on the green and purple dashed lines. Read the first text line aloud: the second needle is lower, but that says nothing about the reflection's strength — MUSIC's heights are not powers. Drag the reflection toward the direct path: MUSIC holds until they are within a few degrees; the sweep cannot separate them unless they are far apart. Drag the reflection to −20°: now even the sweep shows two lobes — the sweep is not wrong, just blunt. Then press "freeze the weights": the two paths now have the same delay and never move, so every snapshot is the same mix, the dots sit on a line instead of a table, and MUSIC's needles land at wrong angles. That is why varied snapshots (many subcarriers, many packets) matter.</aside>
+</section>
+
+<!-- ============================================== Q6 BFM sensing -->
+<section class="slide" data-section="BFM sensing" data-q="6">
+  <h2>The report is the CSI minus what angle doesn't need</h2>
+  <div class="body">
+    <div class="qbar"><span class="q">Question 6 of 6: can the BFM give the same angles?</span><br>
+      Why now: MUSIC needs snapshots that lie on the table. Next: run it on rebuilt BFM vectors and compare.</div>
+    <div class="fig"><svg id="lanes" viewBox="0 0 1176 250">
+      <g font-size="18" text-anchor="middle">
+        <rect x="10" y="20" width="300" height="64" rx="6" fill="#eef1f6" stroke="#5C6269" stroke-width="2"/>
+        <text x="160" y="47" font-weight="700">CSI h per subcarrier</text><text x="160" y="71" fill="#5C6269">needs a special card</text>
+        <rect x="10" y="150" width="250" height="78" rx="6" fill="#dfe6f5" stroke="#2E5BBA" stroke-width="2"/>
+        <text x="135" y="176" font-weight="700" fill="#2E5BBA">inside the client's chip:</text><text x="135" y="202">v = conj(h)/‖h‖</text><text x="135" y="222" font-size="16" fill="#2E5BBA">rotate + shrink, per subcarrier</text>
+        <rect x="290" y="150" width="230" height="78" rx="6" fill="#1D3A78"/>
+        <text x="405" y="182" fill="#fff" font-weight="700">6 angles, a few bits</text><text x="405" y="208" fill="#fff">over the air, in the clear</text>
+        <rect x="550" y="150" width="230" height="78" rx="6" fill="#fdf3ea" stroke="#DE7A24" stroke-width="2"/>
+        <text x="665" y="182" font-weight="700">we rebuild v,</text><text x="665" y="208">conjugate it back</text>
+        <rect x="830" y="70" width="336" height="110" rx="6" fill="#e4f0e4" stroke="#498B4A" stroke-width="2.5"/>
+        <text x="998" y="104" font-weight="700" fill="#498B4A">MUSIC, unchanged:</text><text x="998" y="132">R = average of x x<tspan baseline-shift="super" font-size="13">H</tspan> → eigenvectors</text><text x="998" y="158">→ scan θ → peaks</text>
+      </g>
+      <line x1="262" y1="189" x2="286" y2="189" stroke="#1f2328" stroke-width="2.5" marker-end="url(#ah-ink)"/>
+      <line x1="522" y1="189" x2="546" y2="189" stroke="#1f2328" stroke-width="2.5" marker-end="url(#ah-ink)"/>
+      <line x1="782" y1="189" x2="826" y2="160" stroke="#1f2328" stroke-width="2.5" marker-end="url(#ah-ink)"/>
+      <line x1="312" y1="52" x2="826" y2="96" stroke="#1f2328" stroke-width="2.5" marker-end="url(#ah-ink)"/>
+      <text x="560" y="62" font-size="18" fill="#5C6269">Class 12's route: x = h</text>
+      <text x="290" y="138" font-size="18" fill="#1D3A78" font-weight="600">today's route: x = conj(rebuilt v)</text>
+    </svg></div>
+    <ul class="text">
+      <li>For our 1-antenna client the chip only <b>flips and shrinks</b> each h. Conjugate v back and you get h itself, shorter and turned by one common phase, so it still lies on MUSIC's table.</li>
+      <li>The chip drops one common phase and the length per subcarrier; angle never needed them. A common phase cancels: <span class="math">(e<sup>jα</sup>v)(e<sup>jα</sup>v)<sup>H</sup> = e<sup>jα</sup>e<sup>−jα</sup> v v<sup>H</sup> = v v<sup>H</sup></span>.</li>
+      <li>MUSIC still does its own decomposition across all the snapshots, exactly as on CSI.</li>
+    </ul>
+    <div class="gloss">Footnote, clients with several antennas: V's columns are eigenvectors of H<sup>H</sup>H for each subcarrier — there the chip does run a decomposition per subcarrier.</div>
+  </div>
+  <aside class="notes"><b>150 s.</b> Two routes into the same MUSIC code. Top: last week's, CSI straight from a modified card. Bottom: today's. For our 1-antenna client the chip did nothing clever: it turned each subcarrier's h into a unit vector along conj(h) — rotate and shrink — wrote it as six angles and sent them. We rebuild v from the angles with the formula three slides back, conjugate it (v points the arrows backwards, h forwards), and feed it to MUSIC as if it were CSI. Two worries to dismiss: (1) the client threw away one common phase per subcarrier — v v^H is blind to a common phase, so MUSIC never sees it; (2) each v has length 1 instead of ‖h‖ — that only reweights the snapshots, the table is the same. MUSIC's own eigen-decomposition across snapshots is still our job. Only for multi-antenna clients does the chip run a per-subcarrier decomposition (the SVD) — the footnote.</aside>
+</section>
+
+<section class="slide" data-section="BFM sensing" data-q="6">
+  <h2>CSI-MUSIC vs. BFM-MUSIC: the same peaks</h2>
+  <div class="body">
+    <div class="fig"><svg id="ov" viewBox="0 0 1176 320"></svg></div>
+    <div class="ctrl"><span id="ov-btns"><button class="btn" data-v="0,0">no quantization</button><button class="btn" data-v="7,9">MU (7, 9)</button><button class="btn on" data-v="4,6">SU (4, 6)</button><button class="btn" data-v="2,4">SU (2, 4)</button></span>
+      <label for="ov-2" class="c-purple" style="margin-left:14px">reflection</label><input type="range" id="ov-2" min="-80" max="80" step="1" value="55" style="width:220px"><output id="ov-2-out">55°</output></div>
+    <div class="read" id="ov-read">CSI: 30.0°, 55.0° · BFM (4, 6): 30.0°, 55.0° — off by 0.0° and 0.0°.</div>
+    <div class="text center" style="font-size:20px">The simulation assumes the AP's own transmit phases t<sub>n</sub> are already calibrated — slide 24 shows what happens if they are not.</div>
+    <div class="takeaway">With the standard's bits the BFM peaks land within a fraction of a degree of the CSI peaks.<br>The coarsest codebook, (2, 4), starts to hurt when two paths are close: drag the reflection to 40°.</div>
+  </div>
+  <aside class="notes"><b>150 s.</b> The punchline, computed live. Same simulated room as before (direct 30°, reflection 55°, 50 subcarriers × 20 packets, a random common phase and timing offset per packet). Blue: MUSIC on the CSI. Orange dashed: the BFM route — for every subcarrier and packet, v = conj(h)/‖h‖, six angles, quantized with the selected codebook, rebuilt, conjugated, MUSIC. With no quantization the two curves are the same up to rounding. With (4, 6), the default single-user codebook, peaks still within a fraction of a degree. Click (2, 4) and drag the reflection to 40°: the 40° path is lost — quantization noise lifts the floor of "up". Reminder from the last section: compare peak positions, not heights. Ask: why would a real system rarely be at (2, 4)? (MU sounding uses the fine codebooks.)</aside>
+</section>
+
+<section class="slide" data-section="BFM sensing" data-q="6">
+  <h2>What the BFM keeps — and what it erases</h2>
+  <div class="body" style="justify-content:center;gap:18px">
+    <div class="cards">
+      <div class="card good"><h3>Cancels — good</h3>
+        <ul><li>Carrier phase and CFO</li><li>Timing offsets STO, SFO</li></ul>
+        <p>Last week's hardware dirt: the same on all 4 antennas at a subcarrier, so it goes away with the common phase.</p></div>
+      <div class="card bad"><h3>Lost — bad</h3>
+        <ul><li><b>Distance.</b> Time of flight is also a phase common to all antennas at each subcarrier. Each subcarrier is reset separately, so Chronos's slope across subcarriers is wiped.</li><li>Absolute strength (only an average SNR per stream)</li></ul></div>
+      <div class="card kept" style="flex-grow:1.25"><h3>Still there: the AP's own phases</h3>
+        <ul><li>Each AP antenna's transmit phase t<sub>n</sub> (slide 7) rides inside every v, so the absolute angle is <b>biased</b> until calibrated. The same t<sub>n</sub> that forced the AP to ask now bias the sniffer.</li><li>Without owning the AP: calibrate with a device at a known spot, or track <i>changes</i> in angle.</li><li>Also: a few bits per angle; samples only when the AP sounds.</li></ul></div>
+    </div>
+    <div class="takeaway">Anything <b>common to all antennas at one subcarrier</b> vanishes — last week's dirt, and the distance with it.<br>The <b>angle</b> lives in the differences between antennas, so it survives.</div>
+    <div class="gloss">CFO = carrier frequency offset · STO = symbol timing offset · SFO = sampling frequency offset (Class 12's offset table) · Time of flight = the propagation delay, Chronos's distance ruler</div>
+  </div>
+  <aside class="notes"><b>120 s.</b> One rule generates all three boxes: per subcarrier, the client normalized v (length 1, antenna 4 real). Anything that multiplies all four antennas by the same number at that subcarrier disappears. Green: CFO, the carrier phase offset, and the timing offsets (STO, SFO) were exactly that kind of dirt last week — they cancel for free. Red: the time of flight is ALSO a phase common to all antennas at each subcarrier; since every subcarrier is normalized on its own, Chronos's slope across subcarriers is wiped, so the distance ruler is gone; BFM gives angle, not range. Grey: the honest catch. The client measured h_n × t_n (slide 7), so the AP's transmit-circuit phases ride inside every v and shift the φ's: the absolute angle is biased until someone calibrates. The AP's owner could; a sniffer who does not own the AP has practical options — put a reference device at a known spot and measure the offsets, or ignore the absolute value and track changes in angle (someone walking across the room). Same t_n that made implicit beamforming fiddly. Plus quantization and grouping, and the AP, not you, decides how often a sample arrives.</aside>
+</section>
+
+<section class="slide" data-section="BFM sensing" data-q="6">
+  <h2>The payoff: an angle from the air — no special card, no key</h2>
+  <div class="body">
+    <div class="cols">
+      <div class="col" style="justify-content:center;flex-grow:.9">
+        <div class="fig"><svg viewBox="0 0 420 300">
+          <use href="#i-ap4" x="20" y="60" width="104" height="65"/>
+          <use href="#i-watch" x="330" y="30" width="40" height="60"/>
+          <line x1="322" y1="64" x2="134" y2="96" stroke="#1D3A78" stroke-width="4" marker-end="url(#ah-navy)"/>
+          <text x="226" y="62" text-anchor="middle" font-size="18" fill="#1D3A78" font-weight="600" transform="rotate(-10 226 62)">BFM report</text>
+          <line x1="230" y1="82" x2="250" y2="200" stroke="#A31A34" stroke-width="2.5" stroke-dasharray="6 5"/>
+          <use href="#i-laptop" x="210" y="200" width="100" height="72"/>
+          <use href="#i-unlock" x="320" y="214" width="28" height="34"/>
+          <text x="140" y="294" font-size="18" fill="#A31A34">a laptop in monitor mode</text>
+        </svg></div>
+      </div>
+      <div class="col" style="align-items:stretch;justify-content:center;flex-grow:1.25">
+        <ul class="text">
+          <li><b>Any Wi-Fi card</b> in monitor mode (it keeps every frame it hears) captures the report — from every 802.11ac/ax client its AP beamforms to.</li>
+          <li style="margin-top:8px"><b class="c-red">Even on WPA2/WPA3:</b> Wi-Fi's protection for management frames (802.11w) covers only a list of “robust” frame types; the beamforming report is not on the list.</li>
+          <li style="margin-top:8px">Wireshark captures and labels the frame; the open-source Wi-BFI tool turns the angles back into V.</li>
+        </ul>
+        <div class="text" style="font-size:20px;margin-top:10px;color:#5C6269">Compare slide 1: CSI needed a patched driver or firmware on a device you control.</div>
+      </div>
+    </div>
+    <div class="takeaway">Last week's angle, from frames that any nearby laptop can hear.</div>
+    <div class="gloss"><b>Read more:</b> BFMSense (NSDI 2024) — breathing and walking tracks · Wi-BFI (WiNTECH 2023) — the open-source decoder · BeamSense (Computer Networks 2025) — activity recognition from MU-MIMO feedback · WPA2/WPA3 = Wi-Fi Protected Access, the network password's security</div>
+  </div>
+  <aside class="notes"><b>120 s.</b> The payoff, not a recap. CSI needed a patched driver or firmware on a device you control (slide 1). The BFM is sent by every Wi-Fi 5/6 client its AP beamforms to, as a plain management frame. Wi-Fi does protect management frames (802.11w, "protected management frames") — but only a listed set of "robust" frame types, and the VHT/HE beamforming report (VHT = 802.11ac, HE = High Efficiency, 802.11ax's name for itself) is not on that list, so even on a WPA3 network it goes out in the clear. Any card in monitor mode captures it; Wireshark shows the frame and its fields, and Wi-BFI (Haque, Meneghello &amp; Restuccia, WiNTECH 2023) exists precisely because no common tool turned the angles back into V. Pointers: BFMSense (Yi et al., NSDI 2024) derives the BFM–CSI relation and tracks breathing and walking; BeamSense (Haque, Zhang, Meneghello &amp; Restuccia, Computer Networks 258, 2025; arXiv 2023) uses multi-user feedback for activity recognition. The same property that makes it convenient is the privacy problem we end on.</aside>
+</section>
+
+<!-- ================================================ Wrap-up -->
+<section class="slide" data-section="Wrap-up" data-q="7">
+  <h2>Take-homes</h2>
+  <div class="body" style="justify-content:center">
+    <ol class="chain">
+      <li><span class="n">1</span><span><b>Beamforming:</b> pre-rotate each antenna so the copies arrive in step. Four antennas → 4× the power (6 dB) at the client.</span></li>
+      <li><span class="n">2</span><span><b>Uplink CSI isn't enough</b> (different transmit and receive circuits), so the AP sounds: NDPA (heads-up) → NDP (ruler) → report.</span></li>
+      <li><span class="n">3</span><span><b>The report is the BFM:</b> v = conj(h)/‖h‖ as 6 angles — φ = phase steps between antennas, ψ = how the length is split — a few bits each.</span></li>
+      <li><span class="n">4</span><span><b>MUSIC:</b> varied snapshots lie on a “table”; the directions whose steering vector lies flat on it are the paths.</span></li>
+      <li><span class="n">5</span><span><b>BFM vectors lie on that table too:</b> the same angles, from frames anyone can capture — but no distance.</span></li>
+    </ol>
+    <div class="takeaway" style="margin-top:6px">Last week's angle, without the special card.</div>
+  </div>
+  <aside class="notes"><b>90 s.</b> Five sentences, one per box; have the room say the missing word before you read each one (e.g. "the AP sounds: NDPA, NDP, ...?" — report). If time is short, keep boxes 3 and 5.</aside>
+</section>
+
+<section class="slide" data-section="Wrap-up" data-q="7">
+  <h2>Live demo: tracking a person through their watch</h2>
+  <div class="body">
+    <div class="fig"><svg viewBox="0 0 1176 230">
+      <use href="#i-ap4" x="20" y="40" width="112" height="70"/>
+      <text x="76" y="134" text-anchor="middle" font-size="18">AP</text>
+      <use href="#i-watch" x="380" y="24" width="40" height="60"/>
+      <text x="400" y="106" text-anchor="middle" font-size="18">Google Pixel Watch 3</text>
+      <text x="400" y="128" text-anchor="middle" font-size="16" fill="#5C6269">(the Wi-Fi client)</text>
+      <line x1="140" y1="58" x2="372" y2="46" stroke="#2E5BBA" stroke-width="2.5" marker-end="url(#ah-blue)"/>
+      <text x="256" y="40" text-anchor="middle" font-size="17" fill="#2E5BBA">NDPA, NDP</text>
+      <line x1="374" y1="68" x2="142" y2="84" stroke="#1D3A78" stroke-width="4" marker-end="url(#ah-navy)"/>
+      <text x="262" y="104" text-anchor="middle" font-size="17" fill="#1D3A78" font-weight="600">BFM</text>
+      <line x1="190" y1="82" x2="200" y2="160" stroke="#A31A34" stroke-width="2" stroke-dasharray="6 5"/>
+      <use href="#i-laptop" x="160" y="160" width="84" height="60"/>
+      <g font-size="18" text-anchor="middle">
+        <rect x="390" y="150" width="170" height="62" rx="6" fill="#eef1f6" stroke="#5C6269" stroke-width="2"/><text x="475" y="177">capture in</text><text x="475" y="200">monitor mode</text>
+        <rect x="590" y="150" width="150" height="62" rx="6" fill="#1D3A78"/><text x="665" y="177" fill="#fff">decode the</text><text x="665" y="200" fill="#fff">angles</text>
+        <rect x="770" y="150" width="150" height="62" rx="6" fill="#fdf3ea" stroke="#DE7A24" stroke-width="2"/><text x="845" y="177">rebuild v,</text><text x="845" y="200">conjugate</text>
+        <rect x="950" y="150" width="100" height="62" rx="6" fill="#e4f0e4" stroke="#498B4A" stroke-width="2"/><text x="1000" y="187" font-weight="700">MUSIC</text>
+        <rect x="1080" y="150" width="90" height="62" rx="6" fill="#fff" stroke="#2E5BBA" stroke-width="2"/><text x="1125" y="177">angle</text><text x="1125" y="200">vs. time</text>
+      </g>
+      <line x1="248" y1="190" x2="386" y2="182" stroke="#1f2328" stroke-width="2.5" marker-end="url(#ah-ink)"/>
+      <line x1="562" y1="181" x2="586" y2="181" stroke="#1f2328" stroke-width="2.5" marker-end="url(#ah-ink)"/>
+      <line x1="742" y1="181" x2="766" y2="181" stroke="#1f2328" stroke-width="2.5" marker-end="url(#ah-ink)"/>
+      <line x1="922" y1="181" x2="946" y2="181" stroke="#1f2328" stroke-width="2.5" marker-end="url(#ah-ink)"/>
+      <line x1="1052" y1="181" x2="1076" y2="181" stroke="#1f2328" stroke-width="2.5" marker-end="url(#ah-ink)"/>
+      <text x="780" y="50" font-size="20" fill="#1D3A78" font-weight="700">Watch for:</text>
+      <text x="780" y="78" font-size="19">① how often a report appears (the AP decides)</text>
+      <text x="780" y="104" font-size="19">② the angle as the wearer walks around the AP</text>
+      <text x="780" y="130" font-size="19">③ what a second person walking by does to it</text>
+    </svg></div>
+    <div class="text center" style="font-size:20px"><b>Which peak is the person?</b> A heuristic: follow the peak that moves smoothly as the wearer walks; reflection peaks jump or blink (Class 12's ArrayTrack used a similar trick). Setup details: live in class.</div>
+    <div class="ask"><b>Exit question.</b> Anyone in range can capture these reports from your watch.<br>Who should be allowed to compute your angle from them?<br>What could Wi-Fi change to stop everyone else?</div>
+  </div>
+  <aside class="notes"><b>60 s + demo (about 12 min).</b> Instructor fills in the setup here: which AP and channel, how the watch is associated, which sniffer card and capture/decoding tool, and where the antennas are. The watch is a Wi-Fi 6 client (Google's spec page: 802.11 a/b/g/n/ac/ax, 2.4 + 5 GHz); do not claim its antenna count. Keep the demo honest: point out the three things on the slide as they happen, especially that the report rate is the AP's choice, and say that "follow the smooth peak" is a heuristic, not a guarantee. Close with the exit question; collect one-sentence answers (cards or the LMS). Good answers: encrypt or randomize the feedback, make the VHT/HE categories "robust", let users opt out of beamforming, or regulate passive Wi-Fi sensing.</aside>
+</section>
+
+</div>
+
+<div id="progress"></div>
+<div id="notes"></div>
+<div id="black"></div>
+<div id="jump"></div>
+<div id="hint">→ / Space next · ← back · F fullscreen · N notes · ? all keys</div>
+<div id="help"><div class="card2">
+  <b>Keys</b><br>
+  <kbd>→</kbd> <kbd>Space</kbd> <kbd>PgDn</kbd> &nbsp;next (or click the right side)<br>
+  <kbd>←</kbd> <kbd>PgUp</kbd> &nbsp;back (or click the left third)<br>
+  <kbd>Home</kbd> <kbd>End</kbd> &nbsp;first / last slide<br>
+  <kbd>5</kbd> <kbd>Enter</kbd> &nbsp;jump to slide 5<br>
+  <kbd>F</kbd> &nbsp;fullscreen &nbsp;·&nbsp; <kbd>N</kbd> &nbsp;teaching notes &nbsp;·&nbsp; <kbd>B</kbd> &nbsp;black screen<br>
+  Sliders and buttons change the figure, not the slide.<br>
+  Dots 1–6 in the title bar: which of today's six questions we are on.<br>
+  <kbd>Esc</kbd> &nbsp;close this
+</div></div>
+
+<!-- ============================================================ numerics -->
+<script>
+/* Numerics: complex vectors, a simulated multipath channel, MUSIC / Bartlett spectra,
+   and the 802.11ac Givens compression of a 4x1 V. No DOM access here. */
+(function (root) {
+  const D2R = Math.PI / 180;
+  const cexp = t => [Math.cos(t), Math.sin(t)];
+  const cmul = (a, b) => [a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]];
+  const cconj = a => [a[0], -a[1]];
+  const cabs = a => Math.hypot(a[0], a[1]);
+  const carg = a => Math.atan2(a[1], a[0]);
+  const vnorm = v => Math.sqrt(v.reduce((s, z) => s + z[0] * z[0] + z[1] * z[1], 0));
+  const mod2pi = x => ((x % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+
+  // Steering vector of an N-antenna lambda/2 line array: each next antenna lags pi*sin(theta).
+  const steer = (thDeg, N = 4) => {
+    const s = Math.PI * Math.sin(thDeg * D2R), a = [];
+    for (let n = 0; n < N; n++) a.push(cexp(-n * s));
+    return a;
+  };
+
+  // Small seeded RNG so every live figure draws the same picture each time.
+  function rng(seed) {
+    let t = seed >>> 0;
+    const u = () => {
+      t += 0x6D2B79F5; let r = Math.imul(t ^ (t >>> 15), 1 | t);
+      r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+      return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+    };
+    const g = () => Math.sqrt(-2 * Math.log(u() + 1e-300)) * Math.cos(2 * Math.PI * u());
+    return { u, g };
+  }
+
+  /* A simulated channel from one client antenna to the AP's N antennas.
+     paths: [{th (deg), amp, tau (ns)}]; K subcarriers spaced df (MHz); F frames.
+     Every frame gets a random common phase (CFO / carrier phase), a random timing
+     slope common to all antennas (STO), and a fresh random phase per path (the
+     person moves by a fraction of a wavelength between frames). */
+  // frozen: every path has the same delay and keeps its phase from frame to frame, so the
+  // paths' relative weights never change -- the case where MUSIC breaks.
+  function simulate({ paths, N = 4, K = 50, F = 20, df = 1.5, snrDb = 25, seed = 7, frozen = false }) {
+    const R = rng(seed), out = [];
+    const sig = Math.sqrt(paths.reduce((s, p) => s + p.amp * p.amp, 0) / Math.pow(10, snrDb / 10) / 2);
+    const A = paths.map(p => steer(p.th, N));
+    const beta0 = frozen ? paths.map(() => 2 * Math.PI * R.u()) : null;   // (unfrozen runs draw the same numbers as before)
+    for (let f = 0; f < F; f++) {
+      const common = 2 * Math.PI * R.u(), sto = 50 * R.u();
+      const fresh = paths.map(() => 2 * Math.PI * R.u());
+      const beta = frozen ? beta0 : fresh;
+      for (let k = 0; k < K; k++) {
+        const fk = (k - (K - 1) / 2) * df * 1e-3;            // GHz, so fk * ns = cycles
+        const h = [];
+        for (let n = 0; n < N; n++) h.push([sig * R.g(), sig * R.g()]);
+        paths.forEach((p, i) => {
+          const tau = frozen ? paths[0].tau : p.tau;
+          const w = cmul([p.amp, 0], cexp(beta[i] - 2 * Math.PI * fk * tau));
+          for (let n = 0; n < N; n++) {
+            const z = cmul(w, A[i][n]);
+            h[n][0] += z[0]; h[n][1] += z[1];
+          }
+        });
+        const c = cexp(common - 2 * Math.PI * fk * sto);
+        out.push(h.map(z => cmul(z, c)));
+      }
+    }
+    return out;
+  }
+
+  // R = average of h h^H, returned as its 2N x 2N real symmetric embedding [[Re,-Im],[Im,Re]].
+  function covEmbed(snaps) {
+    const N = snaps[0].length, M = [];
+    for (let i = 0; i < 2 * N; i++) M.push(new Array(2 * N).fill(0));
+    snaps.forEach(h => {
+      for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+        // (h h^H)_ij = h_i conj(h_j)
+        const re = h[i][0] * h[j][0] + h[i][1] * h[j][1];
+        const im = h[i][1] * h[j][0] - h[i][0] * h[j][1];
+        M[i][j] += re; M[i + N][j + N] += re;
+        M[i + N][j] += im; M[i][j + N] -= im;
+      }
+    });
+    const S = snaps.length;
+    return M.map(r => r.map(x => x / S));
+  }
+
+  // Cyclic Jacobi for a real symmetric matrix. Returns eigenpairs sorted by value, largest first.
+  function jacobi(A0) {
+    const n = A0.length, A = A0.map(r => r.slice()), V = [];
+    for (let i = 0; i < n; i++) { V.push(new Array(n).fill(0)); V[i][i] = 1; }
+    for (let sweep = 0; sweep < 60; sweep++) {
+      let off = 0;
+      for (let p = 0; p < n; p++) for (let q = p + 1; q < n; q++) off += A[p][q] * A[p][q];
+      if (off < 1e-26) break;
+      for (let p = 0; p < n; p++) for (let q = p + 1; q < n; q++) {
+        if (Math.abs(A[p][q]) < 1e-300) continue;
+        const th = (A[q][q] - A[p][p]) / (2 * A[p][q]);
+        const t = Math.sign(th || 1) / (Math.abs(th) + Math.sqrt(th * th + 1));
+        const c = 1 / Math.sqrt(t * t + 1), s = t * c;
+        for (let k = 0; k < n; k++) {
+          const akp = A[k][p], akq = A[k][q];
+          A[k][p] = c * akp - s * akq; A[k][q] = s * akp + c * akq;
+        }
+        for (let k = 0; k < n; k++) {
+          const apk = A[p][k], aqk = A[q][k];
+          A[p][k] = c * apk - s * aqk; A[q][k] = s * apk + c * aqk;
+        }
+        for (let k = 0; k < n; k++) {
+          const vkp = V[k][p], vkq = V[k][q];
+          V[k][p] = c * vkp - s * vkq; V[k][q] = s * vkp + c * vkq;
+        }
+      }
+    }
+    const pairs = [];
+    for (let i = 0; i < n; i++) pairs.push({ val: A[i][i], vec: V.map(r => r[i]) });
+    return pairs.sort((a, b) => b.val - a.val);
+  }
+
+  // Eigenvalues of the complex R (each appears twice in the real embedding).
+  function eigvals(M) {
+    const e = jacobi(M).map(p => p.val), out = [];
+    for (let i = 0; i < e.length; i += 2) out.push((e[i] + e[i + 1]) / 2);
+    return out;
+  }
+
+  const grid = (lo = -90, hi = 90, step = 0.25) => {
+    const g = []; for (let a = lo; a <= hi + 1e-9; a += step) g.push(+a.toFixed(4)); return g;
+  };
+
+  // MUSIC pseudo-spectrum, P(theta) = 1 / |E_n^H a(theta)|^2, from a real embedding M.
+  function music(M, nPaths, angles = grid()) {
+    const n = M.length, N = n / 2, pairs = jacobi(M);
+    const noise = pairs.slice(2 * nPaths);              // the 2(N - nPaths) smallest
+    return angles.map(th => {
+      const a = steer(th, N), u = a.map(z => z[0]).concat(a.map(z => z[1]));
+      let d = 0;
+      noise.forEach(p => { let dot = 0; for (let i = 0; i < n; i++) dot += p.vec[i] * u[i]; d += dot * dot; });
+      return 1 / Math.max(d / N, 1e-12);
+    });
+  }
+
+  // Last week's sweep (Bartlett / delay-and-sum): a^H R a / N.
+  function bartlett(M, angles = grid()) {
+    const n = M.length, N = n / 2;
+    return angles.map(th => {
+      const a = steer(th, N), u = a.map(z => z[0]).concat(a.map(z => z[1]));
+      let s = 0;
+      for (let i = 0; i < n; i++) { let r = 0; for (let j = 0; j < n; j++) r += M[i][j] * u[j]; s += u[i] * r; }
+      return s / N;
+    });
+  }
+
+  // Interior local maxima of a spectrum at least `floor` x the highest; the k highest, by height.
+  function peaks(vals, angles = grid(), k = 2, floor = 0) {
+    const c = [], mx = Math.max(...vals);
+    for (let i = 1; i < vals.length - 1; i++)
+      if (vals[i] >= vals[i - 1] && vals[i] > vals[i + 1] && vals[i] >= floor * mx) c.push([angles[i], vals[i]]);
+    return c.sort((a, b) => b[1] - a[1]).slice(0, k).map(p => p[0]);
+  }
+
+  /* 802.11ac compressed beamforming feedback for one column (Nr = 4, Nc = 1).
+     Rotate the column so the last entry is real and >= 0; phi_k1 = phase of antenna k
+     relative to antenna 4; psi_l1 split the unit length among the antennas. */
+  function compress(v) {
+    const r = cexp(-carg(v[3])), w = v.map(z => cmul(z, r));
+    const m = w.map(cabs);
+    return {
+      phi: [0, 1, 2].map(k => mod2pi(carg(w[k]))),
+      psi: [Math.atan2(m[1], m[0]), Math.atan2(m[2], Math.hypot(m[0], m[1])),
+            Math.atan2(m[3], Math.hypot(m[0], m[1], m[2]))]
+    };
+  }
+  // v = [e^{j phi11} c21 c31 c41, e^{j phi21} s21 c31 c41, e^{j phi31} s31 c41, s41]
+  function rebuild({ phi, psi }) {
+    const [a, b, c] = psi;
+    const mag = [Math.cos(a) * Math.cos(b) * Math.cos(c), Math.sin(a) * Math.cos(b) * Math.cos(c),
+                 Math.sin(b) * Math.cos(c), Math.sin(c)];
+    return [cmul(cexp(phi[0]), [mag[0], 0]), cmul(cexp(phi[1]), [mag[1], 0]),
+            cmul(cexp(phi[2]), [mag[2], 0]), [mag[3], 0]];
+  }
+  // Quantizers of the standard: phi = pi(1/2^bphi + q/2^(bphi-1)), psi = pi(1/2^(bpsi+2) + q/2^(bpsi+1)).
+  function qPhi(x, b) {
+    const st = Math.PI / Math.pow(2, b - 1), off = Math.PI / Math.pow(2, b), L = Math.pow(2, b);
+    const q = ((Math.round((mod2pi(x) - off) / st) % L) + L) % L;
+    return off + q * st;
+  }
+  function qPsi(x, b) {
+    const st = Math.PI / Math.pow(2, b + 1), off = Math.PI / Math.pow(2, b + 2), L = Math.pow(2, b);
+    const q = Math.max(0, Math.min(L - 1, Math.round((x - off) / st)));
+    return off + q * st;
+  }
+  function quantize(ang, bpsi, bphi) {
+    if (!bphi) return ang;
+    return { phi: ang.phi.map(x => qPhi(x, bphi)), psi: ang.psi.map(x => qPsi(x, bpsi)) };
+  }
+
+  // The client's job for one subcarrier: v = conj(h)/|h|.
+  const vOf = h => { const s = vnorm(h); return h.map(z => [z[0] / s, -z[1] / s]); };
+  // Our job: angles -> rebuilt v -> conj (V points the arrows backwards) -> a MUSIC snapshot.
+  function bfmSnapshots(snaps, bpsi, bphi) {
+    return snaps.map(h => rebuild(quantize(compress(vOf(h)), bpsi, bphi)).map(cconj));
+  }
+
+  root.BFM = { D2R, cexp, cmul, cconj, cabs, carg, vnorm, mod2pi, steer, rng, simulate, covEmbed,
+    jacobi, eigvals, grid, music, bartlett, peaks, compress, rebuild, qPhi, qPsi, quantize, vOf,
+    bfmSnapshots };
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+
+<!-- ======================================================== live figures -->
+<script>
+(function () {
+  const NS = 'http://www.w3.org/2000/svg';
+  const $ = id => document.getElementById(id);
+  const B = window.BFM;
+  const rad = d => d * Math.PI / 180, deg = r => r * 180 / Math.PI;
+  const C = { blue: '#2E5BBA', orange: '#DE7A24', green: '#498B4A', purple: '#6D3597',
+              gray: '#5C6269', red: '#A31A34', navy: '#1D3A78', ink: '#1f2328', grid: '#dfe2e7',
+              faint: '#9aa0a6', tick: '#6b7178' };
+
+  function E(parent, tag, attrs, text) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  // A <g> that is wiped and redrawn on every update.
+  function layer(svg, name) {
+    let g = svg.querySelector('g.' + name);
+    if (g) g.replaceChildren(); else g = E(svg, 'g', { class: name });
+    return g;
+  }
+  function bindRange(id, fn) {
+    const el = $(id);
+    const run = () => fn(+el.value);
+    el.addEventListener('input', run);
+    el.addEventListener('change', () => el.blur());   // give the arrow keys back to the deck
+    run();
+  }
+  function bindButtons(groupId, fn) {
+    const bs = Array.from($(groupId).querySelectorAll('button'));
+    bs.forEach(b => b.addEventListener('click', () => {
+      bs.forEach(x => x.classList.toggle('on', x === b)); b.blur(); fn(b.dataset.v);
+    }));
+    fn((bs.find(b => b.classList.contains('on')) || bs[0]).dataset.v);
+  }
+  const pathOf = pts => pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join('');
+  const sgn = d => (d > 0 ? '+' : d < 0 ? '−' : '') + Math.abs(d);
+  const fmtDeg = (x, n = 1) => x.toFixed(n).replace('-', '−') + '°';
+  const mod360 = d => ((d % 360) + 360) % 360;
+
+  // Power-versus-direction fan: rings at 1x..4x, spokes every 30 degrees (+ to the right).
+  function powerGrid(g, cx, cy, U) {
+    for (let r = 1; r <= 4; r++) {
+      E(g, 'path', { d: `M${cx - U * r},${cy} A${U * r},${U * r} 0 0 1 ${cx + U * r},${cy}`,
+        fill: 'none', stroke: C.grid, 'stroke-width': 1.5 });
+      E(g, 'text', { x: cx - U * r + 5, y: cy - 7, 'font-size': 16, fill: C.tick }, r + '×');
+    }
+    for (let a = -90; a <= 90; a += 30) {
+      const s = Math.sin(rad(a)), c = Math.cos(rad(a));
+      E(g, 'line', { x1: cx, y1: cy, x2: cx + 4 * U * s, y2: cy - 4 * U * c, stroke: C.grid });
+      E(g, 'text', { x: cx + (4 * U + 24) * s, y: cy - (4 * U + 24) * c + 6, 'text-anchor': 'middle',
+        'font-size': 16, fill: C.tick }, fmtDeg(a, 0));
+    }
+  }
+  const polarAt = (cx, cy, U, a, r) => [cx + U * r * Math.sin(rad(a)), cy - U * r * Math.cos(rad(a))];
+  function polarCurve(g, cx, cy, U, f, attrs) {
+    const pts = [[cx, cy]];
+    for (let a = -90; a <= 90; a += 0.5) pts.push(polarAt(cx, cy, U, a, f(a)));
+    return E(g, 'path', Object.assign({ d: pathOf(pts) + 'Z' }, attrs));
+  }
+  // Received power at direction a (deg) when the AP gives antenna n the phase n*delta and
+  // splits unit power equally: |sum_n 1/2 e^{j n (delta - 180 sin a)}|^2, in "one antenna" units.
+  const arrayPower = (delta, a) => {
+    let re = 0, im = 0;
+    for (let n = 0; n < 4; n++) { const p = rad(n * (delta - 180 * Math.sin(rad(a)))); re += .5 * Math.cos(p); im += .5 * Math.sin(p); }
+    return re * re + im * im;
+  };
+
+  // An I/Q dial and helpers for drawing complex numbers as arrows.
+  function dial(g, cx, cy, R, label) {
+    E(g, 'circle', { cx, cy, r: R, fill: '#f6f8fc', stroke: '#c9d4ee', 'stroke-width': 1.5 });
+    E(g, 'line', { x1: cx - R - 6, y1: cy, x2: cx + R + 6, y2: cy, stroke: C.grid });
+    E(g, 'line', { x1: cx, y1: cy - R - 6, x2: cx, y2: cy + R + 6, stroke: C.grid });
+    if (label) E(g, 'text', { x: cx, y: cy + R + 26, 'text-anchor': 'middle', 'font-size': 18, 'font-weight': 600 }, label);
+  }
+  const at = (cx, cy, z, s) => [cx + s * z[0], cy - s * z[1]];
+  function arrowZ(g, cx, cy, z, s, col, w, mk, extra) {
+    const p = at(cx, cy, z, s);
+    if (Math.hypot(p[0] - cx, p[1] - cy) < 2) return null;
+    return E(g, 'line', Object.assign({ x1: cx, y1: cy, x2: p[0], y2: p[1], stroke: col, 'stroke-width': w,
+      'stroke-linecap': 'round', 'marker-end': `url(#${mk})` }, extra || {}));
+  }
+  // Arc from angle a0 to a1 (deg, counter-clockwise = math positive).
+  function arc(g, cx, cy, r, a0, a1, attrs) {
+    if (Math.abs(a1 - a0) < 0.5) return null;
+    const p0 = [cx + r * Math.cos(rad(a0)), cy - r * Math.sin(rad(a0))];
+    const p1 = [cx + r * Math.cos(rad(a1)), cy - r * Math.sin(rad(a1))];
+    const d = a1 - a0, large = Math.abs(d) > 180 ? 1 : 0, sweep = d > 0 ? 0 : 1;
+    return E(g, 'path', Object.assign({ d: `M${p0[0].toFixed(1)},${p0[1].toFixed(1)} A${r},${r} 0 ${large} ${sweep} ${p1[0].toFixed(1)},${p1[1].toFixed(1)}`,
+      fill: 'none' }, attrs));
+  }
+
+  // Spectrum axes: angle -90..90 on x, dB (relative to the curve's own peak) on y.
+  const ANG = B.grid();
+  function specPlot(svg, W, H) {
+    const x0 = 92, x1 = W - 24, y0 = 22, y1 = H - 56, dbMin = -40;
+    const X = a => x0 + (a + 90) / 180 * (x1 - x0);
+    const Y = db => y0 + Math.min(1, db / dbMin) * (y1 - y0);
+    const g = E(svg, 'g', {});
+    for (let a = -90; a <= 90; a += 30) {
+      E(g, 'line', { x1: X(a), y1: y0, x2: X(a), y2: y1, stroke: C.grid });
+      E(g, 'text', { x: X(a), y: y1 + 24, 'text-anchor': 'middle', 'font-size': 16, fill: C.tick }, fmtDeg(a, 0));
+    }
+    for (let d = 0; d >= dbMin; d -= 10) {
+      E(g, 'line', { x1: x0, y1: Y(d), x2: x1, y2: Y(d), stroke: C.grid });
+      E(g, 'text', { x: x0 - 10, y: Y(d) + 5, 'text-anchor': 'end', 'font-size': 15, fill: C.tick }, (d ? '−' + (-d) : '0') + ' dB');
+    }
+    E(g, 'text', { x: x1, y: H - 6, 'text-anchor': 'end', 'font-size': 18, 'font-weight': 600 }, 'candidate direction θ');
+    return {
+      X, Y,
+      curve(L, vals, attrs) {
+        const mx = Math.max(...vals);
+        const pts = vals.map((v, i) => [X(ANG[i]), Y(10 * Math.log10(Math.max(v / mx, 1e-9)))]);
+        return E(L, 'path', Object.assign({ d: pathOf(pts), fill: 'none', 'stroke-linejoin': 'round' }, attrs));
+      },
+      truth(L, a, label, col) {
+        E(L, 'line', { x1: X(a), y1: y0, x2: X(a), y2: y1, stroke: col, 'stroke-width': 2, 'stroke-dasharray': '6 5' });
+        E(L, 'text', { x: X(a) + (a > 60 ? -6 : 6), y: y1 - 8, 'text-anchor': a > 60 ? 'end' : 'start', 'font-size': 16, fill: col, 'font-weight': 600 }, label);
+      },
+      legend(L, items) {                       // one row under the axis, from the left
+        items.forEach((it, i) => {
+          const x = x0 + i * 290, y = H - 6;
+          E(L, 'line', { x1: x, y1: y - 6, x2: x + 36, y2: y - 6, stroke: it.col, 'stroke-width': it.w || 3, 'stroke-dasharray': it.dash || '' });
+          E(L, 'text', { x: x + 44, y, 'font-size': 17, fill: it.col, 'font-weight': 600 }, it.label);
+        });
+      }
+    };
+  }
+  const twoPaths = (t1, t2) => B.simulate({ paths: [{ th: t1, amp: 1, tau: 10 }, { th: t2, amp: 0.7, tau: 30 }] });
+  const listDeg = arr => arr.slice().sort((a, b) => a - b).map(a => fmtDeg(a)).join(', ');
+
+  /* -------------------------------------------- one antenna: same everywhere */
+  (function () {
+    const svg = $('one'), cx = 588, cy = 360, U = 75;
+    const g = E(svg, 'g', {});
+    powerGrid(g, cx, cy, U);
+    polarCurve(g, cx, cy, U, () => 1, { fill: 'rgba(46,91,186,.18)', stroke: C.blue, 'stroke-width': 3 });
+    E(g, 'use', { href: '#i-ant', x: cx - 12, y: cy - 4, width: 24, height: 40 });
+    E(g, 'text', { x: cx + 22, y: cy + 40, 'font-size': 17, fill: C.gray }, 'one antenna');
+    const p = polarAt(cx, cy, U, 30, 1), q = polarAt(cx, cy, U, 30, 5.0);     // client sits beyond the 30° tick label
+    E(g, 'line', { x1: cx, y1: cy, x2: q[0], y2: q[1], stroke: C.green, 'stroke-width': 2, 'stroke-dasharray': '6 5' });
+    E(g, 'circle', { cx: p[0], cy: p[1], r: 7, fill: C.green });
+    E(g, 'use', { href: '#i-watch', x: q[0] - 16, y: q[1] - 26, width: 32, height: 48 });
+    E(g, 'text', { x: q[0] + 22, y: q[1] + 2, 'font-size': 19, fill: C.green, 'font-weight': 700 }, 'client (30°): 1×');
+    E(g, 'text', { x: 140, y: 120, 'font-size': 19, fill: C.gray }, 'every empty direction: 1× too');
+    E(g, 'text', { x: 140, y: 146, 'font-size': 19, fill: C.gray }, '(wasted, and interference for the neighbours)');
+  })();
+
+  /* ------------------------------------- four antennas: copies add or cancel */
+  (function () {
+    const svg = $('add'), ax = [500, 380, 260, 140], ay = 300, dy = 190, dr = 36;   // antenna n+1 at ax[n]
+    const P = [880, 212], S = 140;                                                  // client plane, 140 px = amplitude 1
+    const g = E(svg, 'g', {});
+    E(g, 'text', { x: 320, y: 30, 'text-anchor': 'middle', 'font-size': 20, 'font-weight': 700, fill: C.blue }, 'at the AP');
+    E(g, 'text', { x: 20, y: dy - 50, 'font-size': 17, fill: C.gray }, 'phase the');
+    E(g, 'text', { x: 20, y: dy - 30, 'font-size': 17, fill: C.gray }, 'AP adds:');
+    E(g, 'text', { x: 20, y: 384, 'font-size': 17, fill: C.gray }, 'trip adds:');
+    ax.forEach((x, n) => {
+      E(g, 'use', { href: '#i-ant', x: x - 12, y: ay - 20, width: 24, height: 40 });
+      E(g, 'text', { x, y: ay + 42, 'text-anchor': 'middle', 'font-size': 17, 'font-weight': 700, fill: C.blue }, 'ant ' + (n + 1));
+      E(g, 'text', { x, y: 384, 'text-anchor': 'middle', 'font-size': 18, fill: C.gray }, (n ? '−' : '') + (90 * n) + '°');
+      dial(g, x, dy, dr);
+    });
+    E(g, 'line', { x1: 540, y1: 120, x2: 640, y2: 50, stroke: C.green, 'stroke-width': 2.5, 'stroke-dasharray': '7 5', 'marker-end': 'url(#ah-green)' });
+    E(g, 'text', { x: 470, y: 70, 'font-size': 17, fill: C.green }, 'to the client (30°)');
+    E(g, 'line', { x1: 680, y1: 10, x2: 680, y2: 395, stroke: C.grid, 'stroke-width': 2 });
+    E(g, 'text', { x: 930, y: 24, 'text-anchor': 'middle', 'font-size': 20, 'font-weight': 700, fill: C.navy }, 'at the client: the four copies, head to tail');
+    E(g, 'line', { x1: 700, y1: P[1], x2: 1170, y2: P[1], stroke: C.grid });
+    E(g, 'line', { x1: P[0], y1: 50, x2: P[0], y2: 395, stroke: C.grid });
+    E(g, 'circle', { cx: P[0], cy: P[1], r: S, fill: 'none', stroke: C.faint, 'stroke-width': 1.5, 'stroke-dasharray': '5 5' });
+    E(g, 'text', { x: 700, y: 392, 'font-size': 16, fill: C.faint }, 'dashed circle: 1× (one antenna)');
+    const sl = $('add-d');
+    function draw(dl) {
+      const L = layer(svg, 'dyn');
+      ax.forEach((x, n) => {
+        arrowZ(L, x, dy, B.cexp(rad(n * dl)), dr * .85, C.blue, 3, 'ah-blue');
+        E(L, 'text', { x, y: dy - dr - 10, 'text-anchor': 'middle', 'font-size': 17, fill: C.blue }, sgn(mod360(n * dl + 180) - 180) + '°');
+      });
+      let p = [0, 0];
+      for (let n = 0; n < 4; n++) {
+        const z = B.cmul([.5, 0], B.cexp(rad(n * (dl - 90))));
+        const a = at(P[0], P[1], p, S), b = at(P[0], P[1], [p[0] + z[0], p[1] + z[1]], S);
+        E(L, 'line', { x1: a[0], y1: a[1], x2: b[0], y2: b[1], stroke: C.blue, 'stroke-width': 3, 'marker-end': 'url(#ah-blue)' });
+        const m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], nx = -(b[1] - a[1]), ny = b[0] - a[0], nl = Math.hypot(nx, ny) || 1;
+        E(L, 'text', { x: m[0] + 14 * nx / nl, y: m[1] + 14 * ny / nl + 6, 'text-anchor': 'middle', 'font-size': 16, 'font-weight': 700, fill: C.blue }, n + 1);
+        p = [p[0] + z[0], p[1] + z[1]];
+      }
+      const pw = p[0] * p[0] + p[1] * p[1], col = pw > 3.9 ? C.green : pw < 0.05 ? C.red : C.navy;
+      arrowZ(L, P[0], P[1], p, S, col, 6, pw > 3.9 ? 'ah-green' : 'ah-navy', { 'stroke-opacity': .85 });
+      E(L, 'circle', { cx: P[0], cy: P[1], r: 6, fill: col });
+      E(L, 'text', { x: 1168, y: 392, 'text-anchor': 'end', 'font-size': 22, 'font-weight': 700, fill: col }, 'power = ' + pw.toFixed(2) + '×');
+      $('add-out').textContent = sgn(dl) + '°';
+      const arr = [0, 1, 2, 3].map(n => (mod360(n * (dl - 90)) - 360) % 360);     // in (-360, 0]: "how far behind"
+      const words = pw > 3.9 ? '→ all in step: <b class="c-green">4×</b> the power' : pw < 0.05 ? '→ they <b class="c-red">cancel</b>' : '→ partly cancel';
+      $('add-read').innerHTML = `AP adds ${sgn(dl)}° per antenna → copies arrive at ${arr.map(x => fmtDeg(x, 0)).join(', ')} ${words}. Power at the client: <b>${pw.toFixed(2)}×</b>.`;
+    }
+    bindRange('add-d', draw);
+    $('add-btns').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+      sl.value = b.dataset.v; sl.dispatchEvent(new Event('input')); b.blur();
+    }));
+  })();
+
+  /* --------------------------------------------------- choose phases: a beam */
+  (function () {
+    const svg = $('beam'), cx = 588, cy = 345, U = 72;
+    const g = E(svg, 'g', {});
+    powerGrid(g, cx, cy, U);
+    polarCurve(g, cx, cy, U, () => 1, { fill: 'none', stroke: C.faint, 'stroke-width': 2, 'stroke-dasharray': '6 5' });
+    E(g, 'use', { href: '#i-ap4', x: cx - 36, y: cy + 2, width: 72, height: 45 });
+    E(g, 'text', { x: cx - 300, y: cy - 90, 'font-size': 16, fill: C.faint }, '- - one antenna (1×)');
+    const q = polarAt(cx, cy, U, 30, 5.0);                                    // beyond the 30° tick label
+    E(g, 'use', { href: '#i-watch', x: q[0] - 15, y: q[1] - 24, width: 30, height: 46 });
+    function draw(dl) {
+      const L = layer(svg, 'dyn');
+      polarCurve(L, cx, cy, U, a => arrayPower(dl, a), { fill: 'rgba(46,91,186,.16)', stroke: C.blue, 'stroke-width': 3 });
+      const pc = arrayPower(dl, 30), p = polarAt(cx, cy, U, 30, pc);
+      E(L, 'line', { x1: cx, y1: cy, x2: q[0], y2: q[1], stroke: C.green, 'stroke-width': 2, 'stroke-dasharray': '6 5' });
+      E(L, 'circle', { cx: p[0], cy: p[1], r: 8, fill: pc > 3.9 ? C.green : pc < 0.05 ? C.red : C.navy });
+      E(L, 'text', { x: q[0] + 20, y: q[1] + 4, 'font-size': 19, 'font-weight': 700, fill: C.green }, 'client 30°: ' + pc.toFixed(2) + '×');
+      const aim = deg(Math.asin(Math.max(-1, Math.min(1, dl / 180))));
+      $('beam-out').textContent = sgn(dl) + '°';
+      const db = pc > 1e-4 ? (10 * Math.log10(pc)).toFixed(1) + ' dB' : '−∞ dB';
+      $('beam-read').innerHTML = `${sgn(dl)}° per antenna → the beam points at ${fmtDeg(aim)}. Power at the client: <b>${pc.toFixed(2)}×</b> (${db.replace('-', '−')}).`;
+    }
+    bindRange('beam-d', draw);
+  })();
+
+  /* ------------------------------------------- MU-MIMO: two beams, two nulls */
+  (function () {
+    const svg = $('mu'), cx = 240, cy = 270, U = 56, tA = 30, tB = -40;
+    const g = E(svg, 'g', {});
+    for (let r = 2; r <= 4; r += 2) E(g, 'path', { d: `M${cx - U * r},${cy} A${U * r},${U * r} 0 0 1 ${cx + U * r},${cy}`, fill: 'none', stroke: C.grid, 'stroke-width': 1.5 });
+    E(g, 'line', { x1: cx - 4 * U, y1: cy, x2: cx + 4 * U, y2: cy, stroke: C.grid });
+    // Zero-forcing: aim at one client, project out the other client's direction.
+    function zf(ta, tb) {
+      const x = B.steer(ta).map(B.cconj), c = B.steer(tb).map(B.cconj);
+      let dr = 0, di = 0, cc = 0;
+      c.forEach((z, i) => { dr += z[0] * x[i][0] + z[1] * x[i][1]; di += z[0] * x[i][1] - z[1] * x[i][0]; cc += z[0] * z[0] + z[1] * z[1]; });
+      const w = x.map((z, i) => [z[0] - (c[i][0] * dr - c[i][1] * di) / cc, z[1] - (c[i][0] * di + c[i][1] * dr) / cc]);
+      const nrm = B.vnorm(w);
+      return w.map(z => [z[0] / nrm, z[1] / nrm]);
+    }
+    const gain = (w, a) => { const s = B.steer(a); let re = 0, im = 0; s.forEach((z, i) => { const p = B.cmul(z, w[i]); re += p[0]; im += p[1]; }); return re * re + im * im; };
+    const wA = zf(tA, tB), wB = zf(tB, tA);
+    polarCurve(g, cx, cy, U, a => gain(wA, a), { fill: 'rgba(46,91,186,.16)', stroke: C.blue, 'stroke-width': 3 });
+    polarCurve(g, cx, cy, U, a => gain(wB, a), { fill: 'rgba(222,122,36,.14)', stroke: C.orange, 'stroke-width': 3 });
+    E(g, 'use', { href: '#i-ap4', x: cx - 30, y: cy - 2, width: 60, height: 38 });
+    const pa = polarAt(cx, cy, U, tA, 4.45), pb = polarAt(cx, cy, U, tB, 4.45);
+    E(g, 'use', { href: '#i-phone', x: pa[0] - 12, y: pa[1] - 20, width: 24, height: 40 });
+    E(g, 'use', { href: '#i-phone', x: pb[0] - 12, y: pb[1] - 20, width: 24, height: 40 });
+    E(g, 'text', { x: pa[0] + 16, y: pa[1] + 2, 'font-size': 18, 'font-weight': 700, fill: C.blue }, 'A');
+    E(g, 'text', { x: pb[0] - 18, y: pb[1] + 2, 'text-anchor': 'end', 'font-size': 18, 'font-weight': 700, fill: C.orange }, 'B');
+  })();
+
+  /* ---------------------------------------------- the CSI grid at the client */
+  (function () {
+    const svg = $('grid'), M = 4, K = 14, x0 = 150, y0 = 14, sp = 52, cs = 44;
+    const g = E(svg, 'g', {});
+    for (let m = 0; m < M; m++) {
+      E(g, 'text', { x: x0 - 14, y: y0 + m * sp + cs / 2 + 6, 'text-anchor': 'end', 'font-size': 17, 'font-weight': 700, fill: C.blue }, 'ant ' + (m + 1));
+      for (let k = 0; k < K; k++) {
+        const x = x0 + k * sp, y = y0 + m * sp, a = 70 - 90 * m - 17 * k, c = [x + cs / 2, y + cs / 2];
+        E(g, 'rect', { x, y, width: cs, height: cs, rx: 3, fill: '#f4f5f7', stroke: '#c9ced6' });
+        E(g, 'line', { x1: c[0] - 13 * Math.cos(rad(a)), y1: c[1] + 13 * Math.sin(rad(a)), x2: c[0] + 15 * Math.cos(rad(a)), y2: c[1] - 15 * Math.sin(rad(a)),
+          stroke: C.ink, 'stroke-width': 2, 'marker-end': 'url(#ah-gray)' });
+      }
+    }
+    E(g, 'line', { x1: x0, y1: y0 + M * sp + 8, x2: x0 + K * sp - 8, y2: y0 + M * sp + 8, stroke: C.orange, 'stroke-width': 3, 'marker-end': 'url(#ah-orange)' });
+    E(g, 'text', { x: x0 + K * sp / 2, y: y0 + M * sp + 34, 'text-anchor': 'middle', 'font-size': 18, fill: C.orange, 'font-weight': 600 }, 'subcarriers (234 at 80 MHz; 14 drawn)');
+    E(g, 'text', { x: x0 + K * sp + 20, y: 50, 'font-size': 19, fill: C.blue, 'font-weight': 600 }, '↓ down a column:');
+    E(g, 'text', { x: x0 + K * sp + 20, y: 76, 'font-size': 19, fill: C.blue }, 'a quarter turn per');
+    E(g, 'text', { x: x0 + K * sp + 20, y: 102, 'font-size': 19, fill: C.blue }, 'antenna (the angle)');
+    E(g, 'text', { x: x0 + K * sp + 20, y: 150, 'font-size': 19, fill: C.orange, 'font-weight': 600 }, '→ along a row:');
+    E(g, 'text', { x: x0 + K * sp + 20, y: 176, 'font-size': 19, fill: C.orange }, 'a steady twist');
+    E(g, 'text', { x: x0 + K * sp + 20, y: 202, 'font-size': 19, fill: C.orange }, '(the delay)');
+  })();
+
+  /* ------------------------------------------ h -> v = conj(h)/|h| -> in step */
+  (function () {
+    const svg = $('hv'), D1 = [180, 180], D2 = [560, 180], R = 130, s = 80, sv = 160, s3 = 85, P3 = [800, 180];
+    let th = 30, refl = false;
+    const g = E(svg, 'g', {});
+    dial(g, D1[0], D1[1], R); dial(g, D2[0], D2[1], R);
+    E(g, 'text', { x: D1[0], y: 24, 'text-anchor': 'middle', 'font-size': 22, 'font-weight': 700, fill: C.navy }, 'h: what the client measured');
+    E(g, 'text', { x: D2[0], y: 24, 'text-anchor': 'middle', 'font-size': 22, 'font-weight': 700, fill: C.blue }, 'v = conj(h)/‖h‖: what to send');
+    E(g, 'text', { x: 960, y: 24, 'text-anchor': 'middle', 'font-size': 22, 'font-weight': 700, fill: C.green }, 'at the client: copies h₁v₁ … h₄v₄');
+    E(g, 'line', { x1: 330, y1: 180, x2: 410, y2: 180, stroke: C.ink, 'stroke-width': 2.5, 'marker-end': 'url(#ah-ink)' });
+    E(g, 'text', { x: 370, y: 166, 'text-anchor': 'middle', 'font-size': 19 }, 'rotate back,');
+    E(g, 'text', { x: 370, y: 206, 'text-anchor': 'middle', 'font-size': 19 }, 'shrink to 1');
+    E(g, 'line', { x1: 706, y1: 180, x2: 776, y2: 180, stroke: C.ink, 'stroke-width': 2.5, 'marker-end': 'url(#ah-ink)' });
+    E(g, 'text', { x: 741, y: 166, 'text-anchor': 'middle', 'font-size': 19 }, 'send,');
+    E(g, 'text', { x: 741, y: 206, 'text-anchor': 'middle', 'font-size': 19 }, 'travel');
+    E(g, 'text', { x: D2[0], y: D2[1] + R + 26, 'text-anchor': 'middle', 'font-size': 19, fill: C.faint }, 'drawn 2× larger');
+    E(g, 'line', { x1: P3[0], y1: P3[1], x2: 1170, y2: P3[1], stroke: C.grid, 'stroke-width': 1.5 });
+    E(g, 'line', { x1: P3[0], y1: 60, x2: P3[0], y2: 300, stroke: C.grid, 'stroke-width': 1.5 });
+    E(g, 'text', { x: 1168, y: P3[1] - 10, 'text-anchor': 'end', 'font-size': 18, fill: C.faint }, 'real axis');
+    const lab = n => '₁₂₃₄'[n];
+    function draw() {
+      const L = layer(svg, 'dyn'), c = B.cexp(rad(40));
+      const h = B.steer(th).map((z, n) => {
+        let w = z;
+        if (refl) { const r = B.cmul(B.cexp(2.0), B.steer(-35)[n]); w = [z[0] + .55 * r[0], z[1] + .55 * r[1]]; }
+        return B.cmul(c, w);
+      });
+      const nh = B.vnorm(h), v = h.map(z => [z[0] / nh, -z[1] / nh]);
+      h.forEach((z, n) => {
+        arrowZ(L, D1[0], D1[1], z, s, C.navy, 3.5, 'ah-navy');
+        const p = at(D1[0], D1[1], z, s + 18 / Math.max(B.cabs(z), .3));
+        E(L, 'text', { x: p[0], y: p[1] + 6, 'text-anchor': 'middle', 'font-size': 20, 'font-weight': 700, fill: C.navy }, 'h' + lab(n));
+        arrowZ(L, D2[0], D2[1], v[n], sv, C.blue, 3.5, 'ah-blue');
+        const q = at(D2[0], D2[1], v[n], sv + 20 / Math.max(B.cabs(v[n]), .15));
+        E(L, 'text', { x: q[0], y: q[1] + 6, 'text-anchor': 'middle', 'font-size': 20, 'font-weight': 700, fill: C.blue }, 'v' + lab(n));
+      });
+      let x = 0;
+      h.forEach((z, n) => {
+        const p = B.cmul(z, v[n]), a = P3[0] + s3 * x, b = P3[0] + s3 * (x + p[0]), y = P3[1];
+        E(L, 'line', { x1: a, y1: y, x2: b, y2: y, stroke: n % 2 ? '#2f6b30' : C.green, 'stroke-width': 5, 'marker-end': 'url(#ah-green)' });
+        E(L, 'line', { x1: a, y1: y - 9, x2: a, y2: y + 9, stroke: C.ink, 'stroke-width': 1.5 });
+        E(L, 'text', { x: (a + b) / 2, y: y - 12, 'text-anchor': 'middle', 'font-size': 19, fill: C.green, 'font-weight': 700 }, n + 1);
+        x += p[0];
+      });
+      E(L, 'path', { d: `M${P3[0]},${P3[1] + 22} v8 H${P3[0] + s3 * x} v-8`, fill: 'none', stroke: C.ink, 'stroke-width': 2 });
+      E(L, 'text', { x: P3[0] + s3 * x / 2, y: P3[1] + 56, 'text-anchor': 'middle', 'font-size': 21, 'font-weight': 700 }, 'sum = ‖h‖ = ' + nh.toFixed(2));
+      E(L, 'text', { x: P3[0] + 10, y: P3[1] + 96, 'font-size': 20, fill: C.gray }, 'all real, all ≥ 0: in step');
+      $('hv-out').textContent = fmtDeg(th, 0);
+      const avg = h.reduce((t, z) => t + z[0] * z[0] + z[1] * z[1], 0) / 4;
+      $('hv-read').innerHTML = `Each copy arrives as h<sub>n</sub>v<sub>n</sub> = |h<sub>n</sub>|²/‖h‖ ≥ 0: all in step. Power at the client: ‖h‖² = ${(nh * nh).toFixed(2)} = <b>${(nh * nh / avg).toFixed(0)}×</b> one antenna's${refl ? ' (on average)' : ''}.`;
+    }
+    bindRange('hv-th', v => { th = v; draw(); });
+    $('hv-ref').addEventListener('click', e => {
+      refl = !refl; e.target.classList.toggle('on', refl);
+      e.target.textContent = refl ? 'remove the reflection' : 'add a wall reflection';
+      e.target.blur(); draw();
+    });
+  })();
+
+  /* --------------------------------------------------- phases become phi */
+  (function () {
+    const svg = $('phi'), xs = [150, 440, 730, 1020], cy = 140, R = 105;
+    const g = E(svg, 'g', {});
+    xs.forEach((x, n) => dial(g, x, cy, R, 'antenna ' + (n + 1)));
+    function draw(th) {
+      const L = layer(svg, 'dyn');
+      const v = B.vOf(B.steer(th).map(z => B.cmul(z, B.cexp(rad(40)))));
+      const ang = B.compress(v), rot = B.cexp(-B.carg(v[3]));
+      const names = ['φ₁₁', 'φ₂₁', 'φ₃₁'];
+      v.forEach((z, n) => {
+        const u = [z[0] / B.cabs(z), z[1] / B.cabs(z)], w = B.cmul(u, rot);
+        arrowZ(L, xs[n], cy, u, R * .82, C.faint, 2, 'ah-gray', { 'stroke-dasharray': '5 4', 'stroke-opacity': .7 });
+        arrowZ(L, xs[n], cy, w, R * .85, C.blue, 4, 'ah-blue');
+        if (n < 3) {
+          const p = deg(ang.phi[n]);
+          arc(L, xs[n], cy, 36, 0, p, { stroke: C.orange, 'stroke-width': 3.5 });
+          E(L, 'text', { x: xs[n], y: cy + R + 50, 'text-anchor': 'middle', 'font-size': 21, 'font-weight': 700, fill: C.orange },
+            names[n] + ' = ' + fmtDeg(p, 0));
+        } else {
+          E(L, 'text', { x: xs[n], y: cy + R + 50, 'text-anchor': 'middle', 'font-size': 19, 'font-weight': 600, fill: C.blue }, 'the zero: 0°');
+        }
+      });
+      // The step from each antenna to the next (antenna 4 counts as 0 = 360 degrees).
+      const full = ang.phi.map(deg).concat([0]);
+      const step = d => { const s = mod360(d + 180) - 180; return Math.abs(s + 180) < 1e-6 ? 180 : s; };
+      for (let n = 0; n < 3; n++) {
+        const s = step(full[n + 1] - full[n]), xm = (xs[n] + xs[n + 1]) / 2;
+        E(L, 'text', { x: xm, y: cy + 8, 'text-anchor': 'middle', 'font-size': 22, 'font-weight': 700, fill: C.orange }, (s >= 0 ? '+' : '−') + Math.abs(s).toFixed(0) + '°');
+        E(L, 'line', { x1: xm - 26, y1: cy + 20, x2: xm + 26, y2: cy + 20, stroke: C.orange, 'stroke-width': 2, 'marker-end': 'url(#ah-orange)' });
+      }
+      $('phi-out').textContent = fmtDeg(th, 0);
+      const s1 = step(full[1] - full[0]);
+      const ph = ang.phi.map(x => fmtDeg(deg(x), 0));
+      $('phi-read').innerHTML = `θ = ${fmtDeg(th, 0)}: φ<sub>11</sub> = ${ph[0]}, φ<sub>21</sub> = ${ph[1]}, φ<sub>31</sub> = ${ph[2]} — each next antenna ${s1 >= 0 ? '+' : '−'}${Math.abs(s1).toFixed(0)}°${Math.abs(Math.abs(s1) - 90) < 1 ? ' (a quarter turn)' : ''}.`;
+    }
+    bindRange('phi-th', draw);
+  })();
+
+  /* --------------------------------------------------- lengths become psi */
+  (function () {
+    const svg = $('psi'), x0 = 330, x1 = 1150, W = x1 - x0, ys = [20, 98, 176], bh = 46;
+    const shade = ['#2E5BBA', '#5b7fcb', '#8aa5dc', '#b9cbee'], txt = ['#fff', '#fff', '#1D3A78', '#1D3A78'];
+    const cases = { eq: [.25, .25, .25, .25], uneq: [.4, .3, .2, .1] };
+    function draw(key) {
+      const L = layer(svg, 'dyn'), s = cases[key];
+      const p41 = Math.asin(Math.sqrt(s[3])), p31 = Math.asin(Math.sqrt(s[2] / (1 - s[3]))), p21 = Math.asin(Math.sqrt(s[1] / (s[0] + s[1])));
+      const rest1 = 1 - s[3], rest2 = rest1 - s[2];
+      const rows = [
+        { y: ys[0], whole: 1, cut: s[3], ant: 4, psi: p41, name: 'ψ₄₁', what: 'of all' },
+        { y: ys[1], whole: rest1, cut: s[2], ant: 3, psi: p31, name: 'ψ₃₁', what: 'of the rest' },
+        { y: ys[2], whole: rest2, cut: s[1], ant: 2, psi: p21, name: 'ψ₂₁', what: 'of the rest' }];
+      rows.forEach((r, i) => {
+        const xe = x0 + W * r.whole, xc = xe - W * r.cut;
+        E(L, 'rect', { x: x0, y: r.y, width: xc - x0, height: bh, fill: i === 2 ? shade[0] : '#eceef1', stroke: '#fff', 'stroke-width': 2 });
+        E(L, 'rect', { x: xc, y: r.y, width: xe - xc, height: bh, fill: shade[r.ant - 1], stroke: '#fff', 'stroke-width': 2 });
+        E(L, 'text', { x: (xc + xe) / 2, y: r.y + 30, 'text-anchor': 'middle', 'font-size': 17, 'font-weight': 700, fill: txt[r.ant - 1] },
+          'ant ' + r.ant + ': ' + Math.round(r.cut * 100) + '%');
+        E(L, 'text', { x: (x0 + xc) / 2, y: r.y + 30, 'text-anchor': 'middle', 'font-size': 17, 'font-weight': i === 2 ? 700 : 400, fill: i === 2 ? '#fff' : C.gray },
+          i === 2 ? 'ant 1 keeps the rest: ' + Math.round(s[0] * 100) + '%' : 'the rest: ' + Math.round((r.whole - r.cut) * 100) + '%');
+        if (i < 2) E(L, 'line', { x1: xc, y1: r.y + bh, x2: xc, y2: r.y + 78, stroke: C.faint, 'stroke-width': 1.5, 'stroke-dasharray': '4 4' });
+        E(L, 'text', { x: 10, y: r.y + 20, 'font-size': 20, 'font-weight': 700, fill: C.navy }, r.name + ' = ' + fmtDeg(deg(r.psi)));
+        E(L, 'text', { x: 10, y: r.y + 44, 'font-size': 17, fill: C.gray },
+          'ant ' + r.ant + ' takes sin²' + r.name + ' = ' + Math.round(r.cut / r.whole * 100) + '% ' + r.what);
+      });
+    }
+    bindButtons('psi-btns', draw);
+  })();
+
+  /* ---------------------------------------------------------- quantization */
+  (function () {
+    const svg = $('qzd'), F = [140, 145], RF = 112, Q = [330, 250], RQ = 225;
+    const ang = B.compress(B.vOf(B.steer(30).map(z => B.cmul(z, B.cexp(rad(40))))));
+    const g = E(svg, 'g', {});
+    E(g, 'circle', { cx: F[0], cy: F[1], r: RF, fill: '#f6f8fc', stroke: '#c9d4ee', 'stroke-width': 1.5 });
+    E(g, 'path', { d: `M${Q[0]},${Q[1]} H${Q[0] + RQ} A${RQ},${RQ} 0 0 0 ${Q[0]},${Q[1] - RQ} Z`, fill: '#f6f8fc', stroke: '#c9d4ee', 'stroke-width': 1.5 });
+    E(g, 'text', { x: F[0], y: 22, 'text-anchor': 'middle', 'font-size': 18, 'font-weight': 700, fill: C.orange }, 'φ: a full turn');
+    E(g, 'text', { x: Q[0] + RQ - 4, y: 22, 'text-anchor': 'end', 'font-size': 18, 'font-weight': 700, fill: C.purple }, 'ψ: a quarter turn');
+    const names = ['φ₁₁', 'φ₂₁', 'φ₃₁'], pn = ['ψ₂₁', 'ψ₃₁', 'ψ₄₁'];
+    function draw(v) {
+      const [bpsi, bphi] = v.split(',').map(Number), L = layer(svg, 'dyn'), q = B.quantize(ang, bpsi, bphi);
+      const nF = Math.pow(2, bphi), nQ = Math.pow(2, bpsi);
+      for (let i = 0; i < nF; i++) {
+        const a = Math.PI / nF + i * 2 * Math.PI / nF, r0 = RF - (nF > 64 ? 5 : 9);
+        E(L, 'line', { x1: F[0] + r0 * Math.cos(a), y1: F[1] - r0 * Math.sin(a), x2: F[0] + RF * Math.cos(a), y2: F[1] - RF * Math.sin(a), stroke: C.orange, 'stroke-width': nF > 64 ? .6 : 1.5 });
+      }
+      for (let i = 0; i < nQ; i++) {
+        const a = Math.PI / (4 * nQ) + i * Math.PI / (2 * nQ), r0 = RQ - (nQ > 32 ? 6 : 12);
+        E(L, 'line', { x1: Q[0] + r0 * Math.cos(a), y1: Q[1] - r0 * Math.sin(a), x2: Q[0] + RQ * Math.cos(a), y2: Q[1] - RQ * Math.sin(a), stroke: C.purple, 'stroke-width': nQ > 32 ? .8 : 1.5 });
+      }
+      ang.phi.forEach((x, i) => {
+        arrowZ(L, F[0], F[1], B.cexp(x), RF * .8, C.faint, 2, 'ah-gray', { 'stroke-dasharray': '4 4' });
+        arrowZ(L, F[0], F[1], B.cexp(q.phi[i]), RF * .8, C.orange, 3.5, 'ah-orange');
+        const p = at(F[0], F[1], B.cexp(q.phi[i] + 0.35), RF * .5);
+        E(L, 'text', { x: p[0], y: p[1] + 6, 'text-anchor': 'middle', 'font-size': 16, 'font-weight': 700, fill: C.orange }, names[i]);
+      });
+      ang.psi.forEach((x, i) => {
+        arrowZ(L, Q[0], Q[1], B.cexp(x), RQ * .8, C.faint, 2, 'ah-gray', { 'stroke-dasharray': '4 4' });
+        arrowZ(L, Q[0], Q[1], B.cexp(q.psi[i]), RQ * .8, C.purple, 3, 'ah-purple');
+      });
+      E(L, 'text', { x: Q[0] + 22, y: Q[1] - 150, 'font-size': 17, 'font-weight': 700, fill: C.purple }, 'ψ₂₁, ψ₃₁, ψ₄₁ ↘');
+      E(L, 'text', { x: F[0], y: F[1] + RF + 26, 'text-anchor': 'middle', 'font-size': 17, fill: C.gray }, nF + ' levels (' + bphi + ' bits)');
+      E(L, 'text', { x: Q[0] + RQ / 2 + 10, y: Q[1] + 24, 'text-anchor': 'middle', 'font-size': 17, fill: C.gray }, nQ + ' levels (' + bpsi + ' bits)');
+      const rows = [], err = [];
+      ang.phi.forEach((x, i) => { const e = Math.abs(mod360(deg(q.phi[i] - x) + 180) - 180); err.push(e); rows.push(['φ<sub>' + (i + 1) + '1</sub>', deg(x), deg(q.phi[i]), e]); });
+      ang.psi.forEach((x, i) => { const e = Math.abs(deg(q.psi[i] - x)); err.push(e); rows.push(['ψ<sub>' + (i + 2) + '1</sub>', deg(x), deg(q.psi[i]), e]); });
+      $('qz-rows').innerHTML = rows.map(r => `<tr><td>${r[0]}</td><td>${r[1].toFixed(1)}°</td><td>${r[2].toFixed(1)}°</td><td>${r[3].toFixed(1)}°</td></tr>`).join('');
+      const bits = 3 * bphi + 3 * bpsi, tot = bits * 234;
+      const kb = tot / 8000, raw = 936 * 2 * 8 / 8000;      // raw CSI at an assumed 8 bits per real / imaginary part
+      $('qz-read').innerHTML = `(${bpsi}, ${bphi}): 3×${bphi} + 3×${bpsi} = <b>${bits} bits per subcarrier</b> × 234 subcarriers = ${tot.toLocaleString('en-US')} bits ≈ <b>${kb.toFixed(1)} kB</b> per report: ${Math.round(100 * kb / raw)}% of the raw CSI (≈ ${raw.toFixed(1)} kB), less than one 1500-byte data packet. Worst angle error: ${Math.max(...err).toFixed(1)}°.`;
+    }
+    bindButtons('qz-btns', draw);
+  })();
+
+  /* ------------------------------------------------------ steering vector */
+  (function () {
+    const svg = $('steer'), xs = [150, 440, 730, 1020], cy = 108, R = 88;
+    const g = E(svg, 'g', {});
+    xs.forEach((x, n) => dial(g, x, cy, R, 'antenna ' + (n + 1)));
+    function draw(th) {
+      const L = layer(svg, 'dyn'), a = B.steer(th);
+      a.forEach((z, n) => {
+        arrowZ(L, xs[n], cy, z, R * .85, C.blue, 4, 'ah-blue');
+        const d = -n * 180 * Math.sin(rad(th));
+        arc(L, xs[n], cy, 32, 0, d, { stroke: C.red, 'stroke-width': 3 });
+        E(L, 'text', { x: xs[n], y: cy + R + 50, 'text-anchor': 'middle', 'font-size': 20, 'font-weight': 700, fill: C.red }, 'lags ' + fmtDeg(-d, 0));
+      });
+      $('st-out').textContent = fmtDeg(th, 0);
+    }
+    bindRange('st-th', draw);
+  })();
+
+  /* ------------------------------------------------ last week's sweep alone */
+  (function () {
+    const svg = $('sweep'), P = specPlot(svg, 1176, 300), M = B.covEmbed(twoPaths(30, 55));
+    const L = E(svg, 'g', {}), ba = B.bartlett(M, ANG);
+    P.truth(L, 30, 'direct 30°', C.green); P.truth(L, 55, 'reflection 55°', C.purple);
+    P.curve(L, ba, { stroke: C.gray, 'stroke-width': 4 });
+    const pk = B.peaks(ba, ANG, 1)[0];
+    E(L, 'circle', { cx: P.X(pk), cy: P.Y(0), r: 7, fill: C.red });
+    E(L, 'text', { x: P.X(pk) - 14, y: P.Y(0) - 4, 'text-anchor': 'end', 'font-size': 18, 'font-weight': 700, fill: C.red }, 'sweep peak: ' + fmtDeg(pk));
+    P.legend(L, [{ col: C.gray, label: 'last week’s sweep', w: 4 }]);
+  })();
+
+  /* ------------------------------------------------------- eigenvalue bars */
+  (function () {
+    const svg = $('eig'), ev = B.eigvals(B.covEmbed(twoPaths(30, 55))), mx = ev[0];
+    const x0 = 70, y1 = 270, Hh = 220, bw = 70, gap = 34;
+    E(svg, 'line', { x1: x0 - 10, y1, x2: 480, y2: y1, stroke: C.ink, 'stroke-width': 2 });
+    ev.forEach((v, i) => {
+      const x = x0 + i * (bw + gap), h = Math.max(2, Hh * v / mx), big = i < 2;
+      E(svg, 'rect', { x, y: y1 - h, width: bw, height: h, fill: big ? C.blue : C.gray, 'fill-opacity': big ? .85 : .6 });
+      E(svg, 'text', { x: x + bw / 2, y: y1 - h - 8, 'text-anchor': 'middle', 'font-size': 18, 'font-weight': 700, fill: big ? C.blue : C.gray }, v < 0.1 ? v.toFixed(3) : v.toFixed(2));
+      E(svg, 'text', { x: x + bw / 2, y: y1 + 24, 'text-anchor': 'middle', 'font-size': 18 }, 'spread ' + (i + 1));
+    });
+    E(svg, 'path', { d: `M${x0},${y1 + 36} v8 H${x0 + 2 * bw + gap} v-8`, fill: 'none', stroke: C.blue, 'stroke-width': 2 });
+    E(svg, 'text', { x: x0 + bw + gap / 2, y: y1 + 62, 'text-anchor': 'middle', 'font-size': 17, fill: C.blue, 'font-weight': 600 }, 'big: the table, 2 paths');
+    E(svg, 'path', { d: `M${x0 + 2 * (bw + gap)},${y1 + 36} v8 H${x0 + 4 * bw + 3 * gap} v-8`, fill: 'none', stroke: C.gray, 'stroke-width': 2 });
+    E(svg, 'text', { x: x0 + 3 * bw + 2.5 * gap, y: y1 + 62, 'text-anchor': 'middle', 'font-size': 17, fill: C.gray, 'font-weight': 600 }, '≈ 0: “up” (noise)');
+  })();
+
+  /* --------------------------------------------------- sweep vs MUSIC, live */
+  (function () {
+    const svg = $('vs'), P = specPlot(svg, 1176, 300);
+    let t1 = 30, t2 = 55, frozen = false;
+    function draw() {
+      const snaps = frozen
+        ? B.simulate({ paths: [{ th: t1, amp: 1, tau: 10 }, { th: t2, amp: 0.7, tau: 30 }], frozen: true })
+        : twoPaths(t1, t2);
+      const L = layer(svg, 'dyn'), M = B.covEmbed(snaps);
+      const ba = B.bartlett(M, ANG), mu = B.music(M, 2, ANG);
+      P.truth(L, t1, 'direct', C.green); P.truth(L, t2, 'reflection', C.purple);
+      P.curve(L, ba, { stroke: C.gray, 'stroke-width': 4, 'stroke-opacity': .8 });
+      P.curve(L, mu, { stroke: frozen ? C.red : C.blue, 'stroke-width': 3 });
+      P.legend(L, [{ col: C.gray, label: 'last week’s sweep', w: 4 }, { col: frozen ? C.red : C.blue, label: frozen ? 'MUSIC, weights frozen' : 'MUSIC' }]);
+      const pb = B.peaks(ba, ANG, 2, 0.25), pm = B.peaks(mu, ANG, 2);
+      $('vs-1-out').textContent = fmtDeg(t1, 0); $('vs-2-out').textContent = fmtDeg(t2, 0);
+      const ev = B.eigvals(M), big = ev.filter(x => x > 0.05 * ev[0]).length;
+      $('vs-read').innerHTML = frozen
+        ? `Weights frozen: ${big} big eigenvalue${big === 1 ? '' : 's'} — the dots lie on a line, not a table. MUSIC: <b class="c-red">${listDeg(pm)}</b>; the true paths are ${listDeg([t1, t2])}.`
+        : `Sweep: ${pb.length < 2 ? 'one lobe at ' + fmtDeg(pb[0]) : 'two lobes at ' + listDeg(pb)}. &nbsp; MUSIC: <b class="c-blue">${listDeg(pm)}</b>.`;
+    }
+    $('vs-freeze').addEventListener('click', e => {
+      frozen = !frozen; e.target.classList.toggle('on', frozen);
+      e.target.textContent = frozen ? 'let the weights vary' : 'freeze the weights';
+      e.target.blur(); draw();
+    });
+    bindRange('vs-1', v => { t1 = v; draw(); });
+    bindRange('vs-2', v => { t2 = v; draw(); });
+  })();
+
+  /* ------------------------------------------ CSI-MUSIC vs BFM-MUSIC, live */
+  (function () {
+    const svg = $('ov'), P = specPlot(svg, 1176, 320);
+    let code = '4,6', t2 = 55;
+    const t1 = 30;
+    function draw() {
+      const L = layer(svg, 'dyn'), snaps = twoPaths(t1, t2), [bpsi, bphi] = code.split(',').map(Number);
+      const mc = B.music(B.covEmbed(snaps), 2, ANG), mb = B.music(B.covEmbed(B.bfmSnapshots(snaps, bpsi, bphi)), 2, ANG);
+      P.truth(L, t1, 'direct', C.green); P.truth(L, t2, 'reflection', C.purple);
+      P.curve(L, mc, { stroke: C.blue, 'stroke-width': 4 });
+      P.curve(L, mb, { stroke: C.orange, 'stroke-width': 3, 'stroke-dasharray': '9 6' });
+      const tag = bphi ? `(${bpsi}, ${bphi})` : '(no quantization)';
+      P.legend(L, [{ col: C.blue, label: 'MUSIC on CSI', w: 4 }, { col: C.orange, label: 'MUSIC on BFM ' + (bphi ? tag : ''), dash: '9 6' }]);
+      const pc = B.peaks(mc, ANG, 2).sort((a, b) => a - b), pb = B.peaks(mb, ANG, 2).sort((a, b) => a - b);
+      $('ov-2-out').textContent = fmtDeg(t2, 0);
+      // For each CSI peak, the nearest BFM peak; more than 3 degrees away counts as lost.
+      const near = pc.map(p => pb.length ? Math.min(...pb.map(q => Math.abs(q - p))) : Infinity);
+      const lost = pc.filter((p, i) => near[i] > 3);
+      const tail = lost.length
+        ? ` — <b class="c-red">the ${listDeg(lost)} path is lost</b> in quantization noise.`
+        : ` — off by ${near.map(e => e.toFixed(1) + '°').join(' and ')}.`;
+      $('ov-read').innerHTML = `CSI: ${listDeg(pc)} · BFM ${tag}: ${listDeg(pb)}${tail}`;
+    }
+    bindButtons('ov-btns', v => { code = v; draw(); });
+    bindRange('ov-2', v => { t2 = v; draw(); });
+  })();
+})();
+</script>
+
+<!-- ========================================================== navigation -->
+<script>
+(function () {
+  const deck = document.getElementById('deck');
+  const slides = Array.from(deck.querySelectorAll('.slide'));
+  const total = slides.length - 1;              // the title slide is not numbered
+  const $ = id => document.getElementById(id);
+  const LIVE = 'a, button, input, label, .ctrl, .livebtn, #notes, #help';
+  let cur = 0, step = 0, digits = '';
+
+  // Madrid-style footer on every numbered slide.
+  slides.forEach((s, i) => {
+    if (i === 0) return;
+    const f = document.createElement('div');
+    f.className = 'foot';
+    f.innerHTML = '<div class="f1">Xin Liu (FSU)</div><div class="f2">BFM Sensing · ' +
+      s.dataset.section + '</div><div class="f3">' + i + ' / ' + total + '</div>';
+    s.appendChild(f);
+  });
+
+  // Roadmap dots in the title bar: the current question filled, earlier ones shaded.
+  slides.forEach(s => {
+    const h = s.querySelector(':scope > h2');
+    if (!h) return;
+    const q = +(s.dataset.q || 0), r = document.createElement('span');
+    r.className = 'road'; r.title = 'Which of the six questions this slide answers';
+    for (let k = 1; k <= 6; k++) {
+      const c = document.createElement('i');
+      c.textContent = k;
+      if (k === q) c.className = 'on'; else if (k < q) c.className = 'done';
+      r.appendChild(c);
+    }
+    h.appendChild(r);
+  });
+
+  // slides.html?all shows every step-reveal item on every slide at once and hides the key
+  // hint (for screenshots, handouts and printing); → then moves slide by slide.
+  const ALL = new URLSearchParams(location.search).has('all');
+  if (ALL) { document.querySelectorAll('.frag').forEach(f => f.classList.add('on')); $('hint').style.display = 'none'; }
+
+  // Step-reveal items of the view that is showing (a hidden view's items do not count).
+  const frags = i => Array.from(slides[i].querySelectorAll('.frag')).filter(f => {
+    const v = f.closest('.view');
+    return !v || v.classList.contains('live') === slides[i].classList.contains('live-on');
+  });
+  const maxStep = i => ALL ? 0 : Math.max(0, ...frags(i).map(f => +f.dataset.f));
+
+  // Frames with a .view.orig + .view.live pair get a toggle in the title bar (none in this deck).
+  function toggleLive(i) {
+    const s = slides[i];
+    if (!s.querySelector('.view.live')) return;
+    const on = s.classList.toggle('live-on');
+    s.querySelector('.livebtn').textContent = on ? '◀ Original figure' : '▶ Live demo';
+    if (i === cur) { step = 0; render(); }
+  }
+  slides.forEach((s, i) => {
+    if (!s.querySelector('.view.live')) return;
+    const b = document.createElement('button');
+    b.className = 'livebtn'; b.textContent = '▶ Live demo'; b.title = 'Switch figure (L)';
+    b.addEventListener('click', () => { toggleLive(i); b.blur(); });
+    s.appendChild(b); s.classList.add('has-live');
+  });
+
+  function render() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === cur));
+    frags(cur).forEach(f => f.classList.toggle('on', ALL || +f.dataset.f <= step));
+    $('progress').style.width = (100 * cur / total) + '%';
+    const n = slides[cur].querySelector('.notes');
+    $('notes').innerHTML = '<b>' + cur + ' / ' + total + '</b> &nbsp; ' +
+      (n ? n.innerHTML : '(no notes)');
+    history.replaceState(null, '', '#' + cur);
+  }
+  function go(i, atEnd) {
+    cur = Math.max(0, Math.min(total, i));
+    step = atEnd ? maxStep(cur) : 0;
+    render();
+  }
+  function next() {
+    if (step < maxStep(cur)) { step++; render(); }
+    else if (cur < total) go(cur + 1);
+  }
+  function prev() {
+    if (step > 0) { step--; render(); }
+    else if (cur > 0) go(cur - 1, true);
+  }
+
+  function fit() {
+    const s = Math.min(innerWidth / 1280, innerHeight / 720);
+    deck.style.transform = 'translate(-50%,-50%) scale(' + s + ')';
+  }
+  addEventListener('resize', fit);
+
+  function toggleFull() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen().catch(() => {});
+  }
+
+  addEventListener('keydown', e => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const k = e.key;
+    if ($('help').classList.contains('show') && k !== '?') {
+      $('help').classList.remove('show'); e.preventDefault(); return;
+    }
+    if (/^[0-9]$/.test(k)) {
+      digits += k; $('jump').textContent = 'go to ' + digits; $('jump').style.display = 'block';
+      return;
+    }
+    if (k === 'Enter' && digits) {
+      go(+digits); digits = ''; $('jump').style.display = 'none'; e.preventDefault(); return;
+    }
+    if (digits && k !== 'Backspace') { digits = ''; $('jump').style.display = 'none'; }
+    switch (k) {
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter':
+        next(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp':
+        prev(); break;
+      case 'Backspace':
+        if (digits) { digits = digits.slice(0, -1);
+          $('jump').textContent = 'go to ' + digits;
+          if (!digits) $('jump').style.display = 'none'; }
+        else prev();
+        break;
+      case 'Home': go(0); break;
+      case 'End': go(total, true); break;
+      case 'f': case 'F': toggleFull(); break;
+      case 'l': case 'L': toggleLive(cur); break;
+      case 'n': case 'N': $('notes').classList.toggle('show'); break;
+      case 'b': case 'B': case '.': $('black').classList.toggle('show'); break;
+      case '?': $('help').classList.toggle('show'); break;
+      case 'Escape': $('notes').classList.remove('show'); $('black').classList.remove('show'); break;
+      default: return;
+    }
+    if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+    e.preventDefault();
+  });
+
+  // Click / tap: left third goes back, the rest goes forward. Live figures keep their clicks.
+  addEventListener('click', e => {
+    if (e.target.closest(LIVE)) return;
+    if ($('black').classList.contains('show')) { $('black').classList.remove('show'); return; }
+    if (e.clientX < innerWidth / 3) prev(); else next();
+  });
+
+  // Swipe on phones and tablets (not when the finger starts on a control).
+  let tx = null, ty = null;
+  addEventListener('touchstart', e => {
+    if (e.target.closest(LIVE)) { tx = null; return; }
+    tx = e.touches[0].clientX; ty = e.touches[0].clientY;
+  }, { passive: true });
+  addEventListener('touchend', e => {
+    if (tx === null) return;
+    const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+      dx < 0 ? next() : prev();
+      e.preventDefault();               // keep the synthetic click from firing too
+    }
+    tx = null;
+  });
+
+  addEventListener('hashchange', () => {
+    const i = parseInt(location.hash.slice(1), 10);
+    if (!isNaN(i) && i !== cur) go(i);
+  });
+
+  fit();
+  if (new URLSearchParams(location.search).has('live'))     // slides.html?live opens every demo
+    slides.forEach((s, i) => { if (s.querySelector('.view.live')) toggleLive(i); });
+  go(parseInt(location.hash.slice(1), 10) || 0);
+  setTimeout(() => { $('hint').style.opacity = 0; }, 3500);
+})();
+</script>
+</body>
+</html>
