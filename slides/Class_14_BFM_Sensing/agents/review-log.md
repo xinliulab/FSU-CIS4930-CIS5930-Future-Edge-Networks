@@ -25,3 +25,13 @@ WiNTECH 2023); BeamSense (Haque, Zhang, Meneghello, Restuccia, Computer Networks
 Pixel Watch 3: Wi-Fi 802.11a/b/g/n/ac/ax, 2.4 + 5 GHz (Google spec page).
 Not independently verified: rows 2–4 of the LTF sign table (802.11n P matrix, from memory);
 NDPA ≈ 56 µs and report 100–300 µs are estimates labelled as such.
+
+## 2026-10-10: standalone pass (author request)
+
+The author asked that every lecture stand alone: no "last week", "Class 12", "Class 8", or
+ArrayTrack/Chronos/SpotFi recaps on slides or in notes. The teacher removed ~60 references and the
+student was re-run with **no** previous-class memory (round 5: 11/11, CONFUSED+BORED). It exposed
+concepts that had been borrowed from earlier lectures: phase, complex number as an arrow,
+subcarrier, and why asking the client fixes the tx/rx-circuit problem. Round 6 added a
+"A signal is an arrow" slide (deck now 29 slides), defined subcarriers in place, and put
+"the client measures h_n × t_n" on slide 8. Then linked from `index.html` and `canvas/home.html`.

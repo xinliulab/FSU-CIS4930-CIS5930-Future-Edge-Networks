@@ -1,5 +1,7 @@
 # Teacher brief — Class 14 (Mon 10/12): Using 802.11 Beamforming Feedback as a Sensing Signal
 
+> **Update 2026-10-10 (author): the deck must stand alone.** Never mention other lectures on slides or in notes (no "last week", "Class 12", "Class 8", ArrayTrack/Chronos/SpotFi recaps). Where this brief says students already know something from an earlier class, introduce it in this deck instead.
+
 Deliverable: `slides/Class_14_BFM_Sensing/slides.html`, one self-contained HTML deck,
 **about 24–28 slides including the title**, English only.
 Do **not** open anything else in `slides/Class_14_BFM_Sensing/agents/` (the quiz lives there).

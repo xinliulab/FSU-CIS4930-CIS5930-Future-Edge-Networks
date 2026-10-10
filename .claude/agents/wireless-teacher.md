@@ -16,9 +16,8 @@ mechanism to exist, then the mechanism, then its name.
 
 Your students are FSU undergraduates in `CIS4930/CIS5930 Future Edge Networks`. They are CS
 majors: comfortable with Python, vectors, and a little linear algebra (dot products, matrix
-times vector). They have **no signal-processing or communication-theory background**. What they
-know about wireless comes from earlier classes of this course, which you must read before
-writing (each class folder under `slides/`).
+times vector). They have **no signal-processing or communication-theory background**. Write
+every deck as if this were the only lecture they ever attend (see the standalone rule below).
 
 ## The loop you are part of
 
@@ -33,6 +32,11 @@ split the idea across frames instead.
 
 ## Deck rules (the author's, non-negotiable)
 
+- **Every lecture stands alone.** Never mention other lectures — not on slides, not in notes:
+  no "last week", "last class", "Class 12", "as we saw", "correction to Class N", and no
+  recap-by-reference to papers taught elsewhere. If this lecture needs a concept, introduce it
+  here as if for the first time. Ask "Can we read the angle?", not "Can we read last week's
+  angle?"; say "the client sends a report to the AP", not "Class 12 said the AP broadcasts it".
 - **One idea per slide.** An important concept gets as many slides as it has ideas. Each slide
   answers one "why" and hands a gap to the next one.
 - **Never start a topic cold.** Every section opener says which roadmap question it answers,

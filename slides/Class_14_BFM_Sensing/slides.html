@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Class 14: Beamforming Feedback as a Sensing Signal</title>
 <!--
-  Class 14 lecture deck (HTML only; no LaTeX source). Same engine as
-  slides/Class_12_WiFi_Sensing/slides.html: a 1280x720 stage scaled to the window,
+  Class 14 lecture deck (HTML only; no LaTeX source): a 1280x720 stage scaled to the window,
   Madrid-style footer, step reveals (.frag + data-f), notes panel (N).
   Every figure is inline SVG; the live ones are computed by the scripts at the end
   (complex arithmetic, a simulated two-path channel, MUSIC with a Jacobi eigen-solver,
@@ -278,23 +277,23 @@
     <small>CIS 4930/5930 Future Edge Networks<br>
     <a href="https://xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks/" target="_blank">xinliulab.github.io/FSU-CIS4930-CIS5930-Future-Edge-Networks</a></small>
   </div>
-  <aside class="notes"><b>0 s.</b> Title on screen while people sit down. Today: one frame type that Wi-Fi 5 / Wi-Fi 6 clients already transmit, why it exists, and how to get last week's angle out of it. A live demo closes the class.</aside>
+  <aside class="notes"><b>0 s.</b> Title on screen while people sit down. Today: one frame type that Wi-Fi 5 / Wi-Fi 6 clients already transmit, why it exists, and how to read a person's direction out of it. A live demo closes the class.</aside>
 </section>
 
 <!-- ============================================================ opener -->
 <section class="slide" data-section="Where we are" data-q="0">
-  <h2>Last week's angle needed a special Wi-Fi card</h2>
+  <h2>CSI needs a special card; this report does not</h2>
   <div class="body">
     <div class="fig">
       <svg viewBox="0 0 1176 330">
         <line x1="588" y1="8" x2="588" y2="322" stroke="#dfe2e7" stroke-width="2"/>
-        <text x="294" y="30" text-anchor="middle" font-size="23" font-weight="700" fill="#5C6269">Class 12: CSI</text>
+        <text x="294" y="30" text-anchor="middle" font-size="23" font-weight="700" fill="#5C6269">CSI: computed, then locked in</text>
         <text x="882" y="30" text-anchor="middle" font-size="23" font-weight="700" fill="#2E5BBA">Today: beamforming feedback</text>
         <!-- left: CSI stays in the chip -->
         <use href="#i-ap4" x="64" y="118" width="112" height="70"/>
         <use href="#i-phone" x="452" y="62" width="32" height="54"/>
         <line x1="446" y1="96" x2="186" y2="140" stroke="#5C6269" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#ah-gray)"/>
-        <text x="322" y="98" text-anchor="middle" font-size="18" fill="#5C6269">the phone's packet</text>
+        <text x="322" y="98" text-anchor="middle" font-size="18" fill="#5C6269">a client's packet</text>
         <rect x="40" y="206" width="210" height="62" rx="6" fill="#eef1f6" stroke="#5C6269" stroke-width="2"/>
         <text x="145" y="232" text-anchor="middle" font-size="19" font-weight="600">AP's Wi-Fi chip</text>
         <text x="145" y="257" text-anchor="middle" font-size="18" fill="#2E5BBA">computes CSI h</text>
@@ -317,11 +316,11 @@
         <text x="640" y="288" font-size="19" fill="#5C6269">no special card</text>
       </svg>
     </div>
-    <div class="text center">Class 12's “off-the-shelf” cards still needed a patched driver or firmware to hand over CSI: the stock chip computes CSI but won't give it to you.</div>
-    <div class="ask">Wi-Fi 5/6 clients send their AP a compressed copy of their channel when asked — <b>unencrypted</b>.<br>Can we read last week's angle out of that?</div>
-    <div class="gloss">Correction to Class 12's last slide: the <b>client</b> sends this report <b>to the AP</b> (we loosely said “the AP broadcasts it”). CSI = Channel State Information · AP = access point · 802.11ac = Wi-Fi 5, 802.11ax = Wi-Fi 6 (Class 8)</div>
+    <div class="text center">Every Wi-Fi chip computes CSI to decode each packet, but a stock chip won't hand it over: reading it needs a patched driver or firmware.</div>
+    <div class="ask">Wi-Fi 5/6 clients send their AP a compressed copy of their channel when asked — <b>unencrypted</b>.<br>Can we read the client's direction out of that?</div>
+    <div class="gloss">CSI (Channel State Information) = the complex number h, per antenna and per frequency, that a receiver computes from known training symbols · AP = access point · 802.11ac = Wi-Fi 5, 802.11ax = Wi-Fi 6</div>
   </div>
-  <aside class="notes"><b>90 s.</b> Recap in one breath: CSI is the complex number h per subcarrier per antenna that the card computes anyway; the phase step across antennas gives the angle. The catch we glossed over: last week's systems used "off-the-shelf" cards (Chronos's Intel 5300, SpotFi's stock 3-antenna AP) — but every one of them ran a patched driver or firmware (the Intel 5300 CSI Tool and friends) to get CSI out. The stock chip computes CSI to decode and then throws it away (left). Right: today's frame. The AP asks a client to measure a packet; the client sends back a report of its channel. Point at the red dashed line: that report is not encrypted. Read the correction line aloud: last week's last slide said the AP broadcasts the compressed CSI; precisely, the CLIENT sends it to the AP, and anyone in range can hear it. Ask: who has an 802.11ac or ax device on them right now? (Everyone with a phone from the last decade.)</aside>
+  <aside class="notes"><b>90 s.</b> Define CSI in one breath: to decode any packet, a Wi-Fi receiver measures how the channel changed each subcarrier on each antenna — one complex number h per (antenna, subcarrier), computed from training symbols it already knows. That is CSI, and its phases across antennas encode direction (we build this up from slide 4). The catch (left): the chip computes CSI and throws it away; getting it out needs a patched driver or firmware (the Intel 5300 CSI Tool, Atheros CSI Tool, Nexmon, ESP32), on a device you control. Right: today's frame. The AP asks a client to measure a packet; the CLIENT sends back a report of its channel, to the AP. Point at the red dashed line: that report is not encrypted, so anyone in range can hear it. Ask: who has an 802.11ac or ax device on them right now? (Everyone with a phone from the last decade.)</aside>
 </section>
 
 <section class="slide" data-section="Where we are" data-q="0">
@@ -367,11 +366,11 @@
             <text x="20" y="30" font-size="18" fill="#1f2328">5 GHz: λ ≈ 6 cm</text>
           </svg>
         </div>
-        <div class="cap"><b>Running example</b> (Class 12's): 4 AP antennas, a 1-antenna client at 30°. Each next antenna is 1.5 cm farther: a <b>quarter turn</b> (90°) later.</div>
+        <div class="cap"><b>Running example</b>: 4 AP antennas 3 cm (λ/2) apart; a 1-antenna client at θ = 30°. Each next antenna is <b>1.5 cm farther</b> from the client.</div>
       </div>
     </div>
   </div>
-  <aside class="notes"><b>90 s.</b> Read the six questions aloud; they are the spine of the lecture. 1–4 are how Wi-Fi works (why this report exists at all); 5–6 are how we borrow it for sensing. MUSIC is the angle algorithm SpotFi used last week without our opening it; today we open it. Point at the dots in the title bar: they light up as we go. Then the running example, the same as last week: 5 GHz, 6 cm wavelength, an AP with four antennas 3 cm apart, a client 30 degrees off to the right. Antenna 1 is the one nearest the client; each next antenna is half of 3 cm = 1.5 cm farther away, a quarter of a wavelength, i.e. a quarter turn of phase. Every number today comes from this picture.</aside>
+  <aside class="notes"><b>90 s.</b> Read the six questions aloud; they are the spine of the lecture. 1–4 are how Wi-Fi works (why this report exists at all); 5–6 are how we borrow it for sensing. MUSIC is the angle-finding algorithm we open in Question 5. Point at the dots in the title bar: they light up as we go. Then the running example: 5 GHz, 6 cm wavelength, an AP with four antennas 3 cm apart, a client 30 degrees off to the right. Antenna 1 is the one nearest the client; at 30° each next antenna is half of 3 cm = 1.5 cm farther away — a quarter of a wavelength. What that does to the signal is two slides away. Every number today comes from this picture.</aside>
 </section>
 
 <!-- ============================================== Q1 Why beamform -->
@@ -379,11 +378,69 @@
   <h2>One antenna sprays energy everywhere</h2>
   <div class="body">
     <div class="qbar"><span class="q">Question 1 of 6: why would an AP aim its signal?</span><br>
-      Why start here: the report we will sniff today exists only because APs aim. Next: give the AP four antennas.</div>
+      Why start here: the report we will sniff today exists only because APs aim. Next: how copies of a signal add — first, a signal as an arrow.</div>
     <div class="fig"><svg id="one" viewBox="0 0 1176 420"></svg></div>
     <div class="text center">One antenna cannot pick a direction: the client at 30° gets <b>1×</b> — and so does every empty corner of the room.</div>
   </div>
-  <aside class="notes"><b>60 s.</b> The picture is power versus direction in front of the AP. One antenna: the same in every direction (the blue half-disc reaches the 1× ring everywhere). Call 1× our yardstick for the next three slides. Point at the empty directions: all that energy is wasted, and it is interference for the neighbours. Rings go up to 4× for a reason we will see in two slides.</aside>
+  <aside class="notes"><b>60 s.</b> The picture is power versus direction in front of the AP. One antenna: the same in every direction (the blue half-disc reaches the 1× ring everywhere). Call 1× our yardstick for the rest of this section. Point at the empty directions: all that energy is wasted, and it is interference for the neighbours. Rings go up to 4× for a reason we will see in three slides.</aside>
+</section>
+
+<section class="slide" data-section="Why beamform" data-q="1">
+  <h2>A signal is an arrow</h2>
+  <div class="body">
+    <div class="fig"><svg id="arrow" viewBox="0 0 1176 330">
+      <g font-size="20" font-weight="700" text-anchor="middle">
+        <text x="190" y="26" fill="#1D3A78">phase: where in its cycle</text>
+        <text x="588" y="26" fill="#1D3A78">a complex number h = an arrow</text>
+        <text x="986" y="26" fill="#1D3A78">multiply: lengths ×, angles +</text>
+      </g>
+      <line x1="388" y1="10" x2="388" y2="320" stroke="#dfe2e7" stroke-width="2"/>
+      <line x1="786" y1="10" x2="786" y2="320" stroke="#dfe2e7" stroke-width="2"/>
+      <!-- panel 1: extra distance turns the arrow -->
+      <circle cx="190" cy="160" r="100" fill="#f6f8fc" stroke="#c9d4ee" stroke-width="1.5"/>
+      <line x1="84" y1="160" x2="296" y2="160" stroke="#dfe2e7"/><line x1="190" y1="54" x2="190" y2="266" stroke="#dfe2e7"/>
+      <line x1="190" y1="160" x2="272" y2="160" stroke="#2E5BBA" stroke-width="4" marker-end="url(#ah-blue)"/>
+      <line x1="190" y1="160" x2="190" y2="242" stroke="#2E5BBA" stroke-width="4" stroke-dasharray="7 5" marker-end="url(#ah-blue)"/>
+      <path d="M232,160 A42,42 0 0 1 190,202" fill="none" stroke="#DE7A24" stroke-width="3.5"/>
+      <text x="236" y="214" font-size="18" fill="#DE7A24" font-weight="700">90°</text>
+      <text x="276" y="150" font-size="17" fill="#2E5BBA">0 cm</text>
+      <text x="200" y="262" font-size="17" fill="#2E5BBA">1.5 cm farther</text>
+      <g font-size="18" fill="#1f2328" text-anchor="middle">
+        <text x="190" y="292">1.5 cm farther → a quarter turn (90°)</text>
+        <text x="190" y="316">6 cm (one wavelength) → a full turn</text>
+      </g>
+      <!-- panel 2: an arrow -->
+      <circle cx="588" cy="160" r="100" fill="#f6f8fc" stroke="#c9d4ee" stroke-width="1.5"/>
+      <line x1="482" y1="160" x2="694" y2="160" stroke="#dfe2e7"/><line x1="588" y1="54" x2="588" y2="266" stroke="#dfe2e7"/>
+      <line x1="588" y1="160" x2="642" y2="115" stroke="#1D3A78" stroke-width="4.5" marker-end="url(#ah-navy)"/>
+      <path d="M628,160 A40,40 0 0 0 619,135" fill="none" stroke="#DE7A24" stroke-width="3.5"/>
+      <text x="636" y="152" font-size="17" fill="#DE7A24" font-weight="700">40°</text>
+      <text x="650" y="108" font-size="20" fill="#1D3A78" font-weight="700">h</text>
+      <g font-size="18" fill="#1f2328" text-anchor="middle">
+        <text x="588" y="292">length = how much the wave shrank</text>
+        <text x="588" y="316">angle = its phase (how far it turned)</text>
+      </g>
+      <!-- panel 3: h times conj(h) lands on the positive real axis -->
+      <circle cx="986" cy="160" r="100" fill="#f6f8fc" stroke="#c9d4ee" stroke-width="1.5"/>
+      <line x1="880" y1="160" x2="1092" y2="160" stroke="#dfe2e7"/><line x1="986" y1="54" x2="986" y2="266" stroke="#dfe2e7"/>
+      <line x1="986" y1="160" x2="1040" y2="115" stroke="#1D3A78" stroke-width="4" marker-end="url(#ah-navy)"/>
+      <line x1="986" y1="160" x2="1040" y2="205" stroke="#2E5BBA" stroke-width="4" stroke-dasharray="7 5" marker-end="url(#ah-blue)"/>
+      <line x1="986" y1="160" x2="1035" y2="160" stroke="#498B4A" stroke-width="6" marker-end="url(#ah-green)"/>
+      <text x="1046" y="110" font-size="18" fill="#1D3A78" font-weight="700">h: +40°</text>
+      <text x="1046" y="222" font-size="18" fill="#2E5BBA" font-weight="700">conj(h): −40°</text>
+      <text x="1044" y="166" font-size="18" fill="#498B4A" font-weight="700">h·conj(h)</text>
+      <g font-size="18" fill="#1f2328" text-anchor="middle">
+        <text x="986" y="292">angles add: +40° − 40° = 0°</text>
+        <text x="986" y="316">→ on the positive real axis, length |h|²</text>
+      </g>
+    </svg></div>
+    <ul class="text">
+      <li><b>Phase</b> = where in its cycle the wave is when it arrives. One wavelength of extra distance (6 cm at 5 GHz) = one full turn, 360°. Our antennas' 1.5 cm = a quarter turn.</li>
+      <li>A <b>complex number is an arrow</b>: length = how much the wave shrank, angle = how far it got turned. Adding arrows = adding waves.</li>
+      <li><b>Multiplying arrows:</b> lengths multiply, angles add. conj(h) is h with its angle flipped, so <b>conj(h)·h always lands on the positive real axis</b>.</li>
+    </ul>
+  </div>
+  <aside class="notes"><b>120 s.</b> The one piece of math the rest of the deck stands on; go slowly. Left: a wave arrives in some state of its cycle — its phase. Move the receiver farther and the arrow turns: 1.5 cm (a quarter of the 6 cm wavelength) turns it a quarter turn; a full wavelength turns it all the way round. That is why our four antennas, each 1.5 cm farther from the client, see copies a quarter turn apart. Middle: the receiver describes what arrived with one complex number h, which you should picture as an arrow: how long (the wave shrank on the way) and which way (its phase). Adding two signals is adding their arrows head to tail — the next slide does exactly that. Right: multiplying two arrows multiplies their lengths and adds their angles. conj(h) is the mirror image (angle flipped), so h times conj(h) has angle zero: it points along the positive real axis. Remember that picture: it is the whole trick of beamforming three questions from now.</aside>
 </section>
 
 <section class="slide" data-section="Why beamform" data-q="1">
@@ -415,9 +472,9 @@
   <div class="body">
     <div class="cols">
       <div class="col" style="align-items:stretch;justify-content:center;flex-grow:1.05">
-        <div class="text"><b class="c-blue">Faster.</b> 6 dB more signal-to-noise ratio (SNR) ≈ one step up Class 8's QAM ladder (quadrature amplitude modulation): 64-QAM → 256-QAM, 6 → 8 bits per symbol.</div>
+        <div class="text"><b class="c-blue">Faster.</b> 6 dB more signal-to-noise ratio (SNR) ≈ one step up the QAM ladder (quadrature amplitude modulation): 64-QAM → 256-QAM, 6 → 8 bits per symbol.</div>
         <div class="text" style="margin-top:14px"><b class="c-blue">Farther.</b> In free space power falls as 1/d², so 4× the power reaches 2× the distance. Indoors, walls make it less.</div>
-        <div class="text" style="margin-top:14px"><b class="c-blue">Two clients at once.</b> Two beams in one transmission, each with a null on the other client: <b>MU-MIMO</b> (multi-user multiple-input multiple-output, Class 8).</div>
+        <div class="text" style="margin-top:14px"><b class="c-blue">Two clients at once.</b> Two beams in one transmission, each with a null on the other client: <b>MU-MIMO</b> (multi-user multiple-input multiple-output).</div>
       </div>
       <div class="col">
         <div class="fig"><svg id="mu" viewBox="0 0 480 300"></svg></div>
@@ -425,9 +482,9 @@
       </div>
     </div>
     <div class="ask">All of it needs the right phase for every antenna. Who knows those phases?</div>
-    <div class="gloss">symbol = one tick of the radio, carrying a few bits · QAM = the grid of points a symbol can land on (Class 8's constellation): 64 points carry 6 bits, 256 carry 8</div>
+    <div class="gloss">symbol = one tick of the radio, carrying a few bits · QAM = the grid of points a symbol can land on: 64 points carry 6 bits, 256 carry 8; denser grids need a cleaner signal</div>
   </div>
-  <aside class="notes"><b>120 s.</b> The payoff in numbers. Rate: Class 8's constellation slide — every step up the QAM ladder needs more SNR; going from 64 to 256-QAM (2 more bits per symbol) costs about 6 dB, exactly what four antennas bought. Range: power falls as 1/d² in free space, so 4× power is 2× distance; indoors less. MU-MIMO: the AP shapes two beams at once; each puts a null on the OTHER client so they do not hear each other's data (the right panel is computed: zero-forcing weights for clients at 30° and −40°). Then the question that drives the next section.</aside>
+  <aside class="notes"><b>120 s.</b> The payoff in numbers. Rate: every step up the QAM ladder packs the points closer, so it needs more SNR; going from 64 to 256-QAM (2 more bits per symbol) costs about 6 dB, exactly what four antennas bought. Range: power falls as 1/d² in free space, so 4× power is 2× distance; indoors less. MU-MIMO: the AP shapes two beams at once; each puts a null on the OTHER client so they do not hear each other's data (the right panel is computed: zero-forcing weights for clients at 30° and −40°). Then the question that drives the next section.</aside>
 </section>
 
 <!-- ================================================ Q2 Why feedback -->
@@ -435,7 +492,7 @@
   <h2>Same air both ways, different radios: so the AP asks</h2>
   <div class="body">
     <div class="qbar"><span class="q">Question 2 of 6: why must the AP ask the client?</span><br>
-      Why now: the right phases come from h — and Class 12's AP measured h itself. Next (Question 3): how it asks.</div>
+      Why now: the right phases come from h — and the AP hears the client's own packets. Next (Question 3): how it asks.</div>
     <div class="fig"><svg id="chains" viewBox="0 0 1176 290">
       <rect x="20" y="14" width="420" height="232" rx="10" fill="#f6f8fc" stroke="#2E5BBA" stroke-width="2"/>
       <text x="40" y="40" font-size="19" font-weight="700" fill="#2E5BBA">inside the AP, for each antenna n</text>
@@ -458,7 +515,7 @@
       <use href="#i-watch" x="706" y="108" width="40" height="60"/>
       <text x="726" y="194" text-anchor="middle" font-size="17" fill="#5C6269">client</text>
       <g font-size="20">
-        <text x="790" y="72" fill="#498B4A"><tspan font-weight="700">uplink</tspan> (what Class 12's AP measured):</text>
+        <text x="790" y="72" fill="#498B4A"><tspan font-weight="700">uplink</tspan> (what the AP hears from the client):</text>
         <text x="830" y="102" fill="#498B4A">h<tspan baseline-shift="sub" font-size="15">n</tspan> × r<tspan baseline-shift="sub" font-size="15">n</tspan></text>
         <text x="790" y="148" fill="#1D3A78"><tspan font-weight="700">downlink</tspan> (what the AP's beam meets):</text>
         <text x="830" y="178" fill="#1D3A78">h<tspan baseline-shift="sub" font-size="15">n</tspan> × t<tspan baseline-shift="sub" font-size="15">n</tspan></text>
@@ -469,10 +526,11 @@
     </svg></div>
     <ul class="text">
       <li>The air between antenna n and the client is the same both ways (reciprocity). But each AP antenna sends through one circuit and listens through another, each adding its own unknown phase.</li>
-      <li>So uplink CSI is <b>not</b> what the AP's beam will meet unless the AP keeps every circuit calibrated to within a few degrees — fiddly. 802.11n (Wi-Fi 4) made that “implicit” route optional, and few devices implemented it interoperably; 802.11ac (Wi-Fi 5) standardised only the simpler <b>explicit</b> way: the client measures and reports.</li>
+      <li>So uplink CSI is <b>not</b> what the beam will meet unless every circuit stays calibrated to within a few degrees — fiddly. 802.11n (Wi-Fi 4) made that “implicit” route optional and rarely interoperable; 802.11ac (Wi-Fi 5) kept only the explicit way.</li>
     </ul>
+    <div class="takeaway"><b>The answer:</b> the client measures what really arrives, h<sub>n</sub> × t<sub>n</sub> — exactly what the beam will meet.</div>
   </div>
-  <aside class="notes"><b>150 s.</b> Head off the obvious objection first: last week the AP measured h from the phone's packets, so why ask? Because of the picture. The radio wave between antenna n and the client sees the same air both ways — that is reciprocity. But inside the AP each antenna has two different circuits: one for transmitting, one for receiving, each adding its own phase (t_n and r_n). What the AP hears on the uplink is h_n times r_n; what its beam meets on the downlink is h_n times t_n. Those differ per antenna, are unknown, and drift with temperature and gain settings, so phases computed from the uplink would point the beam the wrong way unless the AP keeps every chain calibrated — to within a few degrees, all the time. That is fiddly, which is the honest reason implicit beamforming faded: 802.11n (2009, Wi-Fi 4) made calibration and the implicit route optional alongside several explicit ones, and few devices implemented them interoperably. 802.11ac standardised only the explicit route: the client measures a test packet and sends back compressed feedback. Keep t_n in mind: it comes back on slide 24 to bias the sniffer. (And the client's own circuits? Our client has one antenna, so its receive-circuit phase multiplies all four h_n alike — a common phase, which cancels like any other.) And h changes whenever someone walks by, so sounding happens over and over.</aside>
+  <aside class="notes"><b>150 s.</b> Head off the obvious objection first: the AP hears the client's packets and could measure h from them itself, so why ask? Because of the picture. The radio wave between antenna n and the client sees the same air both ways — that is reciprocity. But inside the AP each antenna has two different circuits: one for transmitting, one for receiving, each adding its own phase (t_n and r_n). What the AP hears on the uplink is h_n times r_n; what its beam meets on the downlink is h_n times t_n. Those differ per antenna, are unknown, and drift with temperature and gain settings, so phases computed from the uplink would point the beam the wrong way unless the AP keeps every chain calibrated — to within a few degrees, all the time. That is fiddly, which is the honest reason implicit beamforming faded: 802.11n (2009, Wi-Fi 4) made calibration and the implicit route optional alongside several explicit ones, and few devices implemented them interoperably. 802.11ac standardised only the explicit route: the client measures a test packet and sends back compressed feedback. Keep t_n in mind: it comes back on slide 25 to bias the sniffer. (And the client's own circuits? Our client has one antenna, so its receive-circuit phase multiplies all four h_n alike — a common phase, which cancels like any other.) And h changes whenever someone walks by, so sounding happens over and over.</aside>
 </section>
 
 <!-- ================================================== Q3 Sounding -->
@@ -520,7 +578,7 @@
   <div class="body">
     <div class="text">To measure h for all 4 AP antennas on every subcarrier, the client needs symbols it <b>already knows</b>, sent from all 4 antennas — and no payload.</div>
     <div class="fig"><svg id="ndp" viewBox="0 0 1176 280">
-      <text x="20" y="30" font-size="19" fill="#5C6269">a normal packet (Class 8):</text>
+      <text x="20" y="30" font-size="19" fill="#5C6269">a normal packet:</text>
       <g font-size="18" text-anchor="middle">
         <rect x="260" y="10" width="190" height="34" fill="#dfe6f5" stroke="#2E5BBA" stroke-width="1.5"/><text x="355" y="33">preamble</text>
         <rect x="450" y="10" width="120" height="34" fill="#f1f2f4" stroke="#5C6269" stroke-width="1.5"/><text x="510" y="33">header</text>
@@ -551,9 +609,10 @@
       <text x="40" y="258" font-size="18" fill="#9aa0a6">grey = start-of-packet detection and headers: never come back today · L- = legacy · VHT = Very High Throughput (802.11ac)</text>
     </svg></div>
     <div class="hook"><b>Sensing hook:</b> the LTFs are <b>where the CSI is born</b> — every angle in today's lecture starts in these four boxes.</div>
+    <div class="gloss"><b>Subcarrier:</b> Wi-Fi splits its channel into many narrow frequencies side by side — 234 across an 80 MHz channel — and each one gets its own h.</div>
     <div class="takeaway"><b>NDP</b> = Null Data Packet: a preamble and nothing else — a 52 µs measuring stick.<br>Every LTF is sent from <b>all four</b> antennas at once. How can the client tell them apart? Next slide.</div>
   </div>
-  <aside class="notes"><b>90 s.</b> Top: Class 8's packet, preamble + header + payload. Bottom: the sounding packet, drawn to scale: preamble only. Wave at the grey boxes (short training fields detect the packet and set the gain; SIG fields are headers; L- fields are the legacy part old devices can read) and spend the time on the blue ones. Long training fields are symbols the client already knows, so comparing what arrived with what was sent gives h — exactly last week's CSI. Our AP has four antennas, so the NDP carries four VHT-LTFs (the standard says at least one per antenna sounded). Each LTF goes out of all four antennas at the same time — so how does the client separate h1 from h4? Leave that hanging for the next slide. 52 µs is about the time light needs to cross 16 km.</aside>
+  <aside class="notes"><b>90 s.</b> Top: a normal Wi-Fi packet, preamble + header + payload. Bottom: the sounding packet, drawn to scale: preamble only. Wave at the grey boxes (short training fields detect the packet and set the gain; SIG fields are headers; L- fields are the legacy part old devices can read) and spend the time on the blue ones. Long training fields are symbols the client already knows, so comparing what arrived with what was sent gives h — the CSI. Our AP has four antennas, so the NDP carries four VHT-LTFs (the standard says at least one per antenna sounded). Each LTF goes out of all four antennas at the same time — so how does the client separate h1 from h4? Leave that hanging for the next slide. 52 µs is about the time light needs to cross 16 km.</aside>
 </section>
 
 <section class="slide" data-section="Sounding" data-q="3">
@@ -626,30 +685,30 @@
         <text x="1085" y="97" text-anchor="middle" font-size="18" font-weight="700" fill="#498B4A">data, aimed</text>
         <text x="1085" y="60" text-anchor="middle" font-size="17" fill="#498B4A">beamformed</text>
         <path d="M120,268 v8 H1010 v-8" fill="none" stroke="#1D3A78" stroke-width="2"/>
-        <text x="565" y="296" text-anchor="middle" font-size="17" fill="#1D3A78" font-weight="600">the whole sounding: ≈ 0.36 ms as drawn (0.26–0.46 ms) — under half a millisecond</text>
+        <text x="565" y="296" text-anchor="middle" font-size="17" fill="#1D3A78" font-weight="600">the whole sounding: 0.26–0.46 ms — under 0.5 ms; one 60 fps video frame lasts 16.7 ms</text>
       </g>
     </svg></div>
     <div class="text"><b>SIFS</b> (Short Interframe Space) = a fixed 16 µs gap. Everyone else must wait longer, so nobody cuts in.</div>
     <div class="text"><b>More clients:</b> 802.11ac asks them one at a time (a Beamforming Report Poll each); 802.11ax triggers them all to answer at once.</div>
     <div class="hook"><b>Sensing hook:</b> the dark box — the client's report — is <b>the frame we will capture</b>. h changes whenever someone moves, so the AP keeps re-sounding: each report is a fresh snapshot of the room (how often is the vendor's choice).</div>
   </div>
-  <aside class="notes"><b>120 s.</b> Press → four times (or open with ?all to see all of it). (1) NDPA from the AP, about 56 µs for one client at the 6 Mb/s base rate (less at higher rates). (2) A SIFS gap, then the NDP, 52 µs. (3) Another SIFS, then the CLIENT's report: drawn at 200 µs, really 100–300 µs depending on how many subcarriers, how many bits and the rate. (4) After one more SIFS the AP sends data, beamformed. Adding it up: 56 + 16 + 52 + 16 + (100 to 300) + 16 ≈ 0.26–0.46 ms. Why SIFS works: it is the shortest gap in Wi-Fi; Class 8's CSMA/CA makes every other device wait at least a DIFS (34 µs at 5 GHz) plus a random backoff, so nobody can squeeze in between. Several clients: 802.11ac follows the first report with a Beamforming Report Poll to each next client; 802.11ax (HE, High Efficiency) sends one BFRP trigger frame and the clients answer together, each on its own slice of subcarriers (OFDMA: OFDM with the subcarriers shared among users). Sense of scale: a 60 fps video frame lasts 16.7 ms. How often any of this happens is the vendor's call — watch for it in the demo.</aside>
+  <aside class="notes"><b>120 s.</b> Press → four times (or open with ?all to see all of it). (1) NDPA from the AP, about 56 µs for one client at the 6 Mb/s base rate (less at higher rates). (2) A SIFS gap, then the NDP, 52 µs. (3) Another SIFS, then the CLIENT's report: drawn at 200 µs, really 100–300 µs depending on how many subcarriers, how many bits and the rate. (4) After one more SIFS the AP sends data, beamformed. Adding it up: 56 + 16 + 52 + 16 + (100 to 300) + 16 ≈ 0.26–0.46 ms. Why SIFS works: it is the shortest gap in Wi-Fi; Wi-Fi's listen-before-talk rule (CSMA/CA, carrier-sense multiple access with collision avoidance) makes every other device wait at least a DIFS (34 µs at 5 GHz) plus a random backoff, so nobody can squeeze in between. Several clients: 802.11ac follows the first report with a Beamforming Report Poll to each next client; 802.11ax (HE, High Efficiency) sends one BFRP trigger frame and the clients answer together, each on its own slice of subcarriers (OFDMA: OFDM with the subcarriers shared among users). Sense of scale: a 60 fps video frame lasts 16.7 ms. How often any of this happens is the vendor's call — watch for it in the demo.</aside>
 </section>
 
 <!-- ============================================== Q4 The BFM -->
 <section class="slide" data-section="The BFM" data-q="4">
-  <h2>The client now holds last week's CSI</h2>
+  <h2>The client now holds the CSI</h2>
   <div class="body">
     <div class="qbar"><span class="q">Question 4 of 6: what does the client send back?</span><br>
       Why now: the NDP just gave the client h. Next: what it computes from h, and how it squeezes that into bits.</div>
     <div class="fig"><svg id="grid" viewBox="0 0 1176 270"></svg></div>
     <ul class="text">
-      <li>One complex h per AP antenna per subcarrier — <b>exactly Class 12's CSI</b>, measured at the client this time.</li>
+      <li>One complex h per AP antenna per subcarrier: <b>the CSI</b>, now sitting in the client's chip. Down a column: the quarter-turn steps of the direction. Along a row: a longer trip turns each frequency by a slightly different amount, so <b>delay shows up as a steady twist</b>.</li>
       <li>Send it all? 4 antennas × 234 subcarriers = 936 complex numbers; at 8 bits per real and per imaginary part (an assumption) ≈ <b>1.9 kB per sounding, per client</b>. And the AP does not need the channel itself — it needs <b>the phases to transmit with</b>.</li>
     </ul>
     <div class="takeaway">So the client computes what the AP will use, and sends only that.</div>
   </div>
-  <aside class="notes"><b>120 s.</b> The grid is the CSI the client just measured: one arrow per (AP antenna, subcarrier). Down a column the arrows turn a quarter turn per antenna — that is the 30° direction, last week's angle ruler. Along a row they twist steadily — that is the delay, last week's distance ruler. (Only 14 of the subcarriers drawn.) Ask: why not just send all of it? Two reasons: size — 936 complex numbers, 1.9 kB if each part took 8 bits (the 8 is our assumption, just for scale), every sounding, for every client — and need: the AP is not trying to understand the room, it wants to know what to transmit. Hand the gap to the next slide.</aside>
+  <aside class="notes"><b>120 s.</b> The grid is the CSI the client just measured: one arrow per (AP antenna, subcarrier). Down a column the arrows turn a quarter turn per antenna — that is the 30° direction (the quarter-turn steps of slide 4). Along a row they twist steadily — that is the delay: a longer trip turns higher-frequency subcarriers a little more. (Only 14 of the subcarriers drawn.) Ask: why not just send all of it? Two reasons: size — 936 complex numbers, 1.9 kB if each part took 8 bits (the 8 is our assumption, just for scale), every sounding, for every client — and need: the AP is not trying to understand the room, it wants to know what to transmit. Hand the gap to the next slide.</aside>
 </section>
 
 <section class="slide" data-section="The BFM" data-q="4">
@@ -675,12 +734,11 @@
     <ul class="text">
       <li>Turn all four arrows together until antenna 4's points right: <b>antenna 4 is the zero</b> (the reference; it sends no φ).</li>
       <li><b>φ<sub>k1</sub> = angle of antenna k measured from antenna 4.</b> At 30°: 90°, 180°, 270°, and antenna 4 is 0° = 360°.</li>
-      <li>Neighbours differ by <b>90°</b>: Class 12's quarter-turn step. Here each next antenna <i>leads</i> by 90° instead of lagging, because v = conj(h) flips every angle.</li>
+      <li>Neighbours differ by <b>90°</b>: the running example's quarter-turn step. Here each next antenna <i>leads</i> by 90° instead of lagging, because v = conj(h) flips every angle.</li>
     </ul>
-    <div class="takeaway">For one stream, the gaps between neighbouring φ's are Class 12's phase steps, with the sign flipped.</div>
-    <div class="gloss">The standard makes the last antenna the zero; slide 17's fingerprint starts from antenna 1. Only differences matter, so which antenna is zero is a free choice.</div>
+    <div class="takeaway">For one stream, the gaps between neighbouring φ's are the phase steps between antennas — the angle's fingerprint — with the sign flipped.</div>
   </div>
-  <aside class="notes"><b>150 s.</b> The client now squeezes v into angles, in two moves. Move 1: rotate all four arrows by the same amount so antenna 4's arrow lies on the positive real axis (faint arrows = before, solid = after). Allowed because the copies still arrive in step; only differences matter. Antenna 4 becomes the zero and needs no angle. Move 2: read each other arrow's angle: phi_11, phi_21, phi_31 (subscript: row k, column 1 — column 1 because one stream). For our client: 90, 180, 270 degrees. Point at the orange "+90°" between the dials: walk 1 → 2 → 3 → 4 and each step is +90°, the same quarter turn as last week. Last week the farther antenna LAGGED by 90°; in v it LEADS by 90°, because v is conj(h). Drag θ: 0° gives all zeros; −30° gives 270, 180, 90 (each next antenna −90°). The angle is sitting in the report in plain sight.</aside>
+  <aside class="notes"><b>150 s.</b> The client now squeezes v into angles, in two moves. Move 1: rotate all four arrows by the same amount so antenna 4's arrow lies on the positive real axis (faint arrows = before, solid = after). Allowed because the copies still arrive in step; only differences matter. Antenna 4 becomes the zero and needs no angle. Move 2: read each other arrow's angle: phi_11, phi_21, phi_31 (subscript: row k, column 1 — column 1 because one stream). For our client: 90, 180, 270 degrees. Point at the orange "+90°" between the dials: walk 1 → 2 → 3 → 4 and each step is +90°, the same quarter turn as in h. In h the farther antenna LAGGED by 90°; in v it LEADS by 90°, because v is conj(h). Drag θ: 0° gives all zeros; −30° gives 270, 180, 90 (each next antenna −90°). The angle is sitting in the report in plain sight.</aside>
 </section>
 
 <section class="slide" data-section="The BFM" data-q="4">
@@ -688,10 +746,9 @@
   <div class="body">
     <div class="fig"><svg id="psi" viewBox="0 0 1176 250"></svg></div>
     <div class="ctrl" id="psi-btns"><button class="btn on" data-v="eq">equal shares (our example)</button><button class="btn" data-v="uneq">unequal (with a reflection)</button></div>
-    <div class="text">Each cut is one angle ψ: cos ψ and sin ψ split a length into two parts whose squares add to 1. Count: 4 complex numbers = 8 real numbers, − 1 common phase, − 1 fixed length = <b>6 angles</b>: φ<sub>11</sub>, φ<sub>21</sub>, φ<sub>31</sub>, ψ<sub>21</sub>, ψ<sub>31</sub>, ψ<sub>41</sub>.</div>
-    <div class="takeaway">Relax about ψ: in our example it carries <b>no direction</b> (equal shares; ψ<sub>41</sub> = 30° is a coincidence, not θ).<br>The angle lives in φ. ψ matters only when reflections make the antennas unequal.</div>
+    <div class="takeaway"><b>ψ = how the power is split among the antennas</b> — no direction in our example (ψ<sub>41</sub> = 30° is a coincidence).<br>Total: 3 φ + 3 ψ = <b>6 angles</b> per subcarrier, instead of 4 complex numbers.</div>
   </div>
-  <aside class="notes"><b>150 s.</b> The φ's carried the phases; the ψ's carry how the power (length squared) is shared among the antennas. If a student asks for the exact formula (802.11ac's Givens-rotation form for one column; write it on the board, do not derive it): v = [ e^{jφ11} cosψ21 cosψ31 cosψ41, e^{jφ21} sinψ21 cosψ31 cosψ41, e^{jφ31} sinψ31 cosψ41, sinψ41 ]ᵀ. Read the bars top to bottom like splitting a budget: psi_41 decides antenna 4's share of the whole (sin² psi_41); psi_31 decides antenna 3's share of what is left; psi_21 splits the rest between antennas 2 and 1. Our clean example: everyone gets a quarter, so the cuts are 1/4, then 1/3 of the rest, then 1/2 of the rest: 30°, 35.3°, 45°. Warn them that the 30° is a coincidence (sin 30° = 1/2). Press "unequal": shares 40/30/20/10% give 40.9°, 28.1°, 18.4°. The count is the point: 8 real numbers in, 6 angles out. (General count, if asked: an Nr × Nc matrix needs Nc(2Nr − Nc − 1) angles.)</aside>
+  <aside class="notes"><b>60 s.</b> Keep this short. The φ's carried the phases; the ψ's carry how the power (length squared) is shared among the antennas. If a student asks for the exact formula (802.11ac's Givens-rotation form for one column; write it on the board, do not derive it): v = [ e^{jφ11} cosψ21 cosψ31 cosψ41, e^{jφ21} sinψ21 cosψ31 cosψ41, e^{jφ31} sinψ31 cosψ41, sinψ41 ]ᵀ. Read the bars top to bottom like splitting a budget: psi_41 decides antenna 4's share of the whole (sin² psi_41); psi_31 decides antenna 3's share of what is left; psi_21 splits the rest between antennas 2 and 1. Our clean example: everyone gets a quarter, so the cuts are 1/4, then 1/3 of the rest, then 1/2 of the rest: 30°, 35.3°, 45°. Warn them that the 30° is a coincidence (sin 30° = 1/2). Press "unequal": shares 40/30/20/10% give 40.9°, 28.1°, 18.4°. The count is the point: 8 real numbers in, 6 angles out. (General count, if asked: an Nr × Nc matrix needs Nc(2Nr − Nc − 1) angles.)</aside>
 </section>
 
 <section class="slide" data-section="The BFM" data-q="4">
@@ -724,15 +781,15 @@
   <h2>A direction leaves a fingerprint: the steering vector</h2>
   <div class="body">
     <div class="qbar"><span class="q">Question 5 of 6: how does an array turn CSI into angles?</span><br>
-      Why now: last week we skipped how SpotFi found its angles — an algorithm called MUSIC. Today we open it, on CSI first; next (Question 6), on the BFM.</div>
+      Why now: we know what the report holds; now a method that reads angles from many measurements — MUSIC. CSI first, then the BFM.</div>
     <div class="fig"><svg id="steer" viewBox="0 0 1176 258"></svg></div>
     <div class="ctrl"><label for="st-th">direction θ</label><input type="range" id="st-th" min="-80" max="80" step="1" value="30"><output id="st-out">30°</output></div>
     <div class="text center"><span class="math" style="font-size:26px">a(θ) = [1, e<sup>−jπ sin θ</sup>, e<sup>−j2π sin θ</sup>, e<sup>−j3π sin θ</sup>]<sup>T</sup></span><br>
-      entry n: how far antenna n's copy lags antenna 1's. At 30°: 0°, −90°, −180°, −270°.</div>
-    <div class="takeaway">One path: the CSI across the antennas is a(θ) times one complex number.<br>Find a(θ) in the data → read off θ.</div>
-    <div class="gloss">j = √−1, so e<sup>jx</sup> is an arrow of length 1 at angle x · <sup>T</sup> (transpose) = write the list as a column</div>
+      Each next antenna is (λ/2)·sin θ farther = <b>π·sin θ of phase</b> (a full wavelength = 2π), so θ = arcsin(step / π).</div>
+    <div class="takeaway">One path: the CSI across the antennas = a(θ) × one complex number. Find a(θ) in the data → read off θ.</div>
+    <div class="gloss">j = √−1; e<sup>jx</sup> = an arrow of length 1 at angle x · <sup>T</sup> = as a column · the standard zeros the last antenna; we count from antenna 1 — only differences matter</div>
   </div>
-  <aside class="notes"><b>120 s.</b> Name the object we have been drawing all lecture. The steering vector is the phase pattern a direction θ leaves on the array: entry n is how far antenna n's copy lags antenna 1's. For our client: 0, −90, −180, −270 (the quarter turns). Drag θ: 0° gives four identical arrows; ±80° gives almost half a turn per antenna. With a single path, the CSI vector is exactly a(θ) times one complex number (the path's gain and phase), so finding θ means finding which a(θ) the data looks like — last week's sweep did that by trying every θ.</aside>
+  <aside class="notes"><b>120 s.</b> Name the object we have been drawing all lecture. The steering vector is the phase pattern a direction θ leaves on the array: entry n is how far antenna n's copy lags antenna 1's. For our client: 0, −90, −180, −270 (the quarter turns). Drag θ: 0° gives four identical arrows; ±80° gives almost half a turn per antenna. With a single path, the CSI vector is exactly a(θ) times one complex number (the path's gain and phase), so finding θ means finding which a(θ) the data looks like — the simple way is to try every θ (next slide).</aside>
 </section>
 
 <section class="slide" data-section="MUSIC" data-q="5">
@@ -742,9 +799,9 @@
       Each <b>snapshot</b> h<sub>k</sub> = the CSI of one subcarrier of one packet: two fingerprints, mixed. The weights change from snapshot to snapshot (each path has its own delay and phase).</div>
     <div class="fig"><svg id="sweep" viewBox="0 0 1176 300"></svg></div>
     <div class="cap">Simulated: direct path 30°, reflection 55° (70% as strong), 50 subcarriers × 20 packets = 1000 snapshots. The dB axis is relative to the curve's own peak.</div>
-    <div class="ask">Last week's sweep: one fat lobe peaking at 34.5° — <b>neither</b> path. 4 antennas are too few for it to split paths 25° apart (ArrayTrack used 8). Can we pull the two fingerprints apart?</div>
+    <div class="ask">The simple sweep (try every θ: undo a(θ)'s phase steps and add the antennas up in step) gives one fat lobe at 34.5° — <b>neither</b> path. With 4 antennas its lobes are too wide. Can we pull the two fingerprints apart?</div>
   </div>
-  <aside class="notes"><b>120 s.</b> Real rooms again. Each CSI snapshot h_k (one subcarrier of one packet) is a weighted sum of two steering vectors, one per path. The weights differ per subcarrier because the two paths have different delays (Class 12's subcarrier twist, a different twist per path) and per packet because people move by fractions of a wavelength. Run last week's sweep on this data (simulated, but realistic): one fat lobe whose peak, 34.5°, is neither the direct path nor the reflection. Four antennas are simply too few for the sweep to separate paths 25° apart. Leave the question up.</aside>
+  <aside class="notes"><b>120 s.</b> Real rooms again. Each CSI snapshot h_k (one subcarrier of one packet) is a weighted sum of two steering vectors, one per path. The weights differ per subcarrier because the two paths have different delays (a longer trip twists the phase faster across subcarriers, a different twist per path) and per packet because people move by fractions of a wavelength. Explain the simple sweep in one line: for each candidate θ, rotate each antenna's h back by a(θ)'s phase and add the four up; the sum is big when the data looks like a(θ). Run it on this data (simulated, but realistic): one fat lobe whose peak, 34.5°, is neither the direct path nor the reflection. With four antennas the lobe is simply too wide to separate paths 25° apart; with 8 antennas it would be about half as wide. Leave the question up.</aside>
 </section>
 
 <section class="slide" data-section="MUSIC" data-q="5">
@@ -786,7 +843,7 @@
     </ul>
     <div class="gloss">The real data has more than 3 dimensions; the picture is a cartoon of it.</div>
   </div>
-  <aside class="notes"><b>180 s.</b> THE intuition frame of the section; go slowly. Each dot is one snapshot h_k. Because every snapshot is (something) × a(30°) + (something) × a(55°), all the dots lie on the flat plane spanned by those two arrows: a tabletop in a room. Nothing in the data ever points "up" off the table, except noise. Now the test: take a candidate steering vector, say a(0°), and ask how much of it sticks up out of the table (the red dashed drop). A lot → not a path. a(30°) lies exactly in the table → sticks up by zero → 1 / zero = a huge score. That is the whole algorithm. Ask the room: what if all the dots were the SAME mix? (They would sit on one line, not a table — slide 21 shows MUSIC failing then.) Honesty line: the real space is 4 complex dimensions, the table is 2-D, "up" is 2-D; the picture is the 3-D cartoon.</aside>
+  <aside class="notes"><b>180 s.</b> THE intuition frame of the section; go slowly. Each dot is one snapshot h_k. Because every snapshot is (something) × a(30°) + (something) × a(55°), all the dots lie on the flat plane spanned by those two arrows: a tabletop in a room. Nothing in the data ever points "up" off the table, except noise. Now the test: take a candidate steering vector, say a(0°), and ask how much of it sticks up out of the table (the red dashed drop). A lot → not a path. a(30°) lies exactly in the table → sticks up by zero → 1 / zero = a huge score. That is the whole algorithm. Ask the room: what if all the dots were the SAME mix? (They would sit on one line, not a table — slide 22 shows MUSIC failing then.) Honesty line: the real space is 4 complex dimensions, the table is 2-D, "up" is 2-D; the picture is the 3-D cartoon.</aside>
 </section>
 
 <section class="slide" data-section="MUSIC" data-q="5">
@@ -820,11 +877,11 @@
       <label for="vs-2" class="c-purple" style="margin-left:10px">reflection</label><input type="range" id="vs-2" min="-80" max="80" step="1" value="55" style="width:220px"><output id="vs-2-out">55°</output>
       <button class="btn" id="vs-freeze">freeze the weights</button></div>
     <div class="read" id="vs-read">Sweep: one lobe at 34.5°. &nbsp; MUSIC: <b class="c-blue">30.0°, 55.0°</b>.</div>
-    <div class="text" style="font-size:20px"><b>Peak heights are not powers.</b> A needle 10 dB lower is not a weaker path; only the peak <i>positions</i> mean something.</div>
+    <div class="text" style="font-size:20px"><b>Peak heights are not powers.</b> A height says how close a(θ) comes to lying flat on the table — sharpness, not strength. Read the <i>positions</i>.</div>
     <div class="text" style="font-size:20px"><b>The weights must vary.</b> Freeze them and every snapshot is the same mix: the dots fall on one line, the table collapses, MUSIC finds wrong angles. Different delays (across subcarriers) and motion (across packets) keep them varied.</div>
     <div class="takeaway">Same 4 antennas, same data: the sweep blurs, MUSIC splits — if you tell it how many paths (count the big eigenvalues).</div>
   </div>
-  <aside class="notes"><b>150 s.</b> Both spectra from the same simulated snapshots, plotted in dB relative to their own peak. Grey: last week's sweep, one hump. Blue: MUSIC, two needles exactly on the green and purple dashed lines. Read the first text line aloud: the second needle is lower, but that says nothing about the reflection's strength — MUSIC's heights are not powers. Drag the reflection toward the direct path: MUSIC holds until they are within a few degrees; the sweep cannot separate them unless they are far apart. Drag the reflection to −20°: now even the sweep shows two lobes — the sweep is not wrong, just blunt. Then press "freeze the weights": the two paths now have the same delay and never move, so every snapshot is the same mix, the dots sit on a line instead of a table, and MUSIC's needles land at wrong angles. That is why varied snapshots (many subcarriers, many packets) matter.</aside>
+  <aside class="notes"><b>150 s.</b> Both spectra from the same simulated snapshots, plotted in dB relative to their own peak. Grey: the simple sweep, one hump. Blue: MUSIC, two needles exactly on the green and purple dashed lines. Read the first text line aloud: the second needle is lower, but that says nothing about the reflection's strength — MUSIC's heights are not powers. Drag the reflection toward the direct path: MUSIC holds until they are within a few degrees; the sweep cannot separate them unless they are far apart. Drag the reflection to −20°: now even the sweep shows two lobes — the sweep is not wrong, just blunt. Then press "freeze the weights": the two paths now have the same delay and never move, so every snapshot is the same mix, the dots sit on a line instead of a table, and MUSIC's needles land at wrong angles. That is why varied snapshots (many subcarriers, many packets) matter.</aside>
 </section>
 
 <!-- ============================================== Q6 BFM sensing -->
@@ -850,7 +907,7 @@
       <line x1="522" y1="189" x2="546" y2="189" stroke="#1f2328" stroke-width="2.5" marker-end="url(#ah-ink)"/>
       <line x1="782" y1="189" x2="826" y2="160" stroke="#1f2328" stroke-width="2.5" marker-end="url(#ah-ink)"/>
       <line x1="312" y1="52" x2="826" y2="96" stroke="#1f2328" stroke-width="2.5" marker-end="url(#ah-ink)"/>
-      <text x="560" y="62" font-size="18" fill="#5C6269">Class 12's route: x = h</text>
+      <text x="560" y="62" font-size="18" fill="#5C6269">CSI route: x = h</text>
       <text x="290" y="138" font-size="18" fill="#1D3A78" font-weight="600">today's route: x = conj(rebuilt v)</text>
     </svg></div>
     <ul class="text">
@@ -860,7 +917,7 @@
     </ul>
     <div class="gloss">Footnote, clients with several antennas: V's columns are eigenvectors of H<sup>H</sup>H for each subcarrier — there the chip does run a decomposition per subcarrier.</div>
   </div>
-  <aside class="notes"><b>150 s.</b> Two routes into the same MUSIC code. Top: last week's, CSI straight from a modified card. Bottom: today's. For our 1-antenna client the chip did nothing clever: it turned each subcarrier's h into a unit vector along conj(h) — rotate and shrink — wrote it as six angles and sent them. We rebuild v from the angles with the formula three slides back, conjugate it (v points the arrows backwards, h forwards), and feed it to MUSIC as if it were CSI. Two worries to dismiss: (1) the client threw away one common phase per subcarrier — v v^H is blind to a common phase, so MUSIC never sees it; (2) each v has length 1 instead of ‖h‖ — that only reweights the snapshots, the table is the same. MUSIC's own eigen-decomposition across snapshots is still our job. Only for multi-antenna clients does the chip run a per-subcarrier decomposition (the SVD) — the footnote.</aside>
+  <aside class="notes"><b>150 s.</b> Two routes into the same MUSIC code. Top: CSI straight from a patched card. Bottom: the BFM route. For our 1-antenna client the chip did nothing clever: it turned each subcarrier's h into a unit vector along conj(h) — rotate and shrink — wrote it as six angles and sent them. We rebuild v from the angles with the formula three slides back, conjugate it (v points the arrows backwards, h forwards), and feed it to MUSIC as if it were CSI. Two worries to dismiss: (1) the client threw away one common phase per subcarrier — v v^H is blind to a common phase, so MUSIC never sees it; (2) each v has length 1 instead of ‖h‖ — that only reweights the snapshots, the table is the same. MUSIC's own eigen-decomposition across snapshots is still our job. Only for multi-antenna clients does the chip run a per-subcarrier decomposition (the SVD) — the footnote.</aside>
 </section>
 
 <section class="slide" data-section="BFM sensing" data-q="6">
@@ -870,7 +927,7 @@
     <div class="ctrl"><span id="ov-btns"><button class="btn" data-v="0,0">no quantization</button><button class="btn" data-v="7,9">MU (7, 9)</button><button class="btn on" data-v="4,6">SU (4, 6)</button><button class="btn" data-v="2,4">SU (2, 4)</button></span>
       <label for="ov-2" class="c-purple" style="margin-left:14px">reflection</label><input type="range" id="ov-2" min="-80" max="80" step="1" value="55" style="width:220px"><output id="ov-2-out">55°</output></div>
     <div class="read" id="ov-read">CSI: 30.0°, 55.0° · BFM (4, 6): 30.0°, 55.0° — off by 0.0° and 0.0°.</div>
-    <div class="text center" style="font-size:20px">The simulation assumes the AP's own transmit phases t<sub>n</sub> are already calibrated — slide 24 shows what happens if they are not.</div>
+    <div class="text center" style="font-size:20px">The simulation assumes the AP's own transmit phases t<sub>n</sub> are already calibrated — slide 25 shows what happens if they are not.</div>
     <div class="takeaway">With the standard's bits the BFM peaks land within a fraction of a degree of the CSI peaks.<br>The coarsest codebook, (2, 4), starts to hurt when two paths are close: drag the reflection to 40°.</div>
   </div>
   <aside class="notes"><b>150 s.</b> The punchline, computed live. Same simulated room as before (direct 30°, reflection 55°, 50 subcarriers × 20 packets, a random common phase and timing offset per packet). Blue: MUSIC on the CSI. Orange dashed: the BFM route — for every subcarrier and packet, v = conj(h)/‖h‖, six angles, quantized with the selected codebook, rebuilt, conjugated, MUSIC. With no quantization the two curves are the same up to rounding. With (4, 6), the default single-user codebook, peaks still within a fraction of a degree. Click (2, 4) and drag the reflection to 40°: the 40° path is lost — quantization noise lifts the floor of "up". Reminder from the last section: compare peak positions, not heights. Ask: why would a real system rarely be at (2, 4)? (MU sounding uses the fine codebooks.)</aside>
@@ -882,16 +939,16 @@
     <div class="cards">
       <div class="card good"><h3>Cancels — good</h3>
         <ul><li>Carrier phase and CFO</li><li>Timing offsets STO, SFO</li></ul>
-        <p>Last week's hardware dirt: the same on all 4 antennas at a subcarrier, so it goes away with the common phase.</p></div>
+        <p>Receiver imperfections that are the same on all 4 antennas at a subcarrier, so they go away with the common phase.</p></div>
       <div class="card bad"><h3>Lost — bad</h3>
-        <ul><li><b>Distance.</b> Time of flight is also a phase common to all antennas at each subcarrier. Each subcarrier is reset separately, so Chronos's slope across subcarriers is wiped.</li><li>Absolute strength (only an average SNR per stream)</li></ul></div>
+        <ul><li><b>Distance.</b> Delay is a phase slope across subcarriers, common to all antennas; each subcarrier is reset separately, so the slope is wiped.</li><li>Absolute strength (only an average SNR per stream)</li><li>Also: a few bits per angle; samples only when the AP sounds</li></ul></div>
       <div class="card kept" style="flex-grow:1.25"><h3>Still there: the AP's own phases</h3>
-        <ul><li>Each AP antenna's transmit phase t<sub>n</sub> (slide 7) rides inside every v, so the absolute angle is <b>biased</b> until calibrated. The same t<sub>n</sub> that forced the AP to ask now bias the sniffer.</li><li>Without owning the AP: calibrate with a device at a known spot, or track <i>changes</i> in angle.</li><li>Also: a few bits per angle; samples only when the AP sounds.</li></ul></div>
+        <ul><li>Each AP antenna's transmit phase t<sub>n</sub> (slide 8) rides inside every v: the absolute angle is <b>biased</b> until calibrated — the same t<sub>n</sub> that made the AP ask.</li><li>Without owning the AP: calibrate with a device at a known spot, or track <i>changes</i> in angle.</li><li>The sniffer must also know the AP's antenna layout (spacing, order): a(θ) assumes it.</li></ul></div>
     </div>
-    <div class="takeaway">Anything <b>common to all antennas at one subcarrier</b> vanishes — last week's dirt, and the distance with it.<br>The <b>angle</b> lives in the differences between antennas, so it survives.</div>
-    <div class="gloss">CFO = carrier frequency offset · STO = symbol timing offset · SFO = sampling frequency offset (Class 12's offset table) · Time of flight = the propagation delay, Chronos's distance ruler</div>
+    <div class="takeaway">Anything <b>common to all antennas at one subcarrier</b> vanishes — hardware offsets and distance alike.<br>The <b>angle</b> lives in the differences between antennas, so it survives.</div>
+    <div class="gloss">CFO = carrier frequency offset (the radios' oscillators differ slightly) · STO = symbol timing offset (the receiver's clock starts late) · SFO = sampling frequency offset (sample clocks differ) · time of flight = how long the wave travels</div>
   </div>
-  <aside class="notes"><b>120 s.</b> One rule generates all three boxes: per subcarrier, the client normalized v (length 1, antenna 4 real). Anything that multiplies all four antennas by the same number at that subcarrier disappears. Green: CFO, the carrier phase offset, and the timing offsets (STO, SFO) were exactly that kind of dirt last week — they cancel for free. Red: the time of flight is ALSO a phase common to all antennas at each subcarrier; since every subcarrier is normalized on its own, Chronos's slope across subcarriers is wiped, so the distance ruler is gone; BFM gives angle, not range. Grey: the honest catch. The client measured h_n × t_n (slide 7), so the AP's transmit-circuit phases ride inside every v and shift the φ's: the absolute angle is biased until someone calibrates. The AP's owner could; a sniffer who does not own the AP has practical options — put a reference device at a known spot and measure the offsets, or ignore the absolute value and track changes in angle (someone walking across the room). Same t_n that made implicit beamforming fiddly. Plus quantization and grouping, and the AP, not you, decides how often a sample arrives.</aside>
+  <aside class="notes"><b>120 s.</b> One rule generates all three boxes: per subcarrier, the client normalized v (length 1, antenna 4 real). Anything that multiplies all four antennas by the same number at that subcarrier disappears. Green: CFO (the transmitter's and receiver's oscillators differ slightly), the leftover carrier phase, and the timing offsets (STO: the receiver starts its clock late; SFO: the sample clocks differ) are receiver imperfections that hit all four antennas alike at a subcarrier — they cancel for free. Red: the time of flight is ALSO a phase common to all antennas at each subcarrier (a longer trip means a steeper phase slope across subcarriers); since every subcarrier is normalized on its own, that slope is wiped, so the distance ruler is gone; BFM gives angle, not range. Grey: the honest catch. The client measured h_n × t_n (slide 8), so the AP's transmit-circuit phases ride inside every v and shift the φ's: the absolute angle is biased until someone calibrates. The AP's owner could; a sniffer who does not own the AP has practical options — put a reference device at a known spot and measure the offsets, or ignore the absolute value and track changes in angle (someone walking across the room). Same t_n that made implicit beamforming fiddly. Plus quantization and grouping, and the AP, not you, decides how often a sample arrives.</aside>
 </section>
 
 <section class="slide" data-section="BFM sensing" data-q="6">
@@ -919,7 +976,7 @@
         <div class="text" style="font-size:20px;margin-top:10px;color:#5C6269">Compare slide 1: CSI needed a patched driver or firmware on a device you control.</div>
       </div>
     </div>
-    <div class="takeaway">Last week's angle, from frames that any nearby laptop can hear.</div>
+    <div class="takeaway">The angle, from frames that any nearby laptop can hear.</div>
     <div class="gloss"><b>Read more:</b> BFMSense (NSDI 2024) — breathing and walking tracks · Wi-BFI (WiNTECH 2023) — the open-source decoder · BeamSense (Computer Networks 2025) — activity recognition from MU-MIMO feedback · WPA2/WPA3 = Wi-Fi Protected Access, the network password's security</div>
   </div>
   <aside class="notes"><b>120 s.</b> The payoff, not a recap. CSI needed a patched driver or firmware on a device you control (slide 1). The BFM is sent by every Wi-Fi 5/6 client its AP beamforms to, as a plain management frame. Wi-Fi does protect management frames (802.11w, "protected management frames") — but only a listed set of "robust" frame types, and the VHT/HE beamforming report (VHT = 802.11ac, HE = High Efficiency, 802.11ax's name for itself) is not on that list, so even on a WPA3 network it goes out in the clear. Any card in monitor mode captures it; Wireshark shows the frame and its fields, and Wi-BFI (Haque, Meneghello &amp; Restuccia, WiNTECH 2023) exists precisely because no common tool turned the angles back into V. Pointers: BFMSense (Yi et al., NSDI 2024) derives the BFM–CSI relation and tracks breathing and walking; BeamSense (Haque, Zhang, Meneghello &amp; Restuccia, Computer Networks 258, 2025; arXiv 2023) uses multi-user feedback for activity recognition. The same property that makes it convenient is the privacy problem we end on.</aside>
@@ -936,7 +993,7 @@
       <li><span class="n">4</span><span><b>MUSIC:</b> varied snapshots lie on a “table”; the directions whose steering vector lies flat on it are the paths.</span></li>
       <li><span class="n">5</span><span><b>BFM vectors lie on that table too:</b> the same angles, from frames anyone can capture — but no distance.</span></li>
     </ol>
-    <div class="takeaway" style="margin-top:6px">Last week's angle, without the special card.</div>
+    <div class="takeaway" style="margin-top:6px">The angle, without a special card.</div>
   </div>
   <aside class="notes"><b>90 s.</b> Five sentences, one per box; have the room say the missing word before you read each one (e.g. "the AP sounds: NDPA, NDP, ...?" — report). If time is short, keep boxes 3 and 5.</aside>
 </section>
@@ -973,7 +1030,7 @@
       <text x="780" y="104" font-size="19">② the angle as the wearer walks around the AP</text>
       <text x="780" y="130" font-size="19">③ what a second person walking by does to it</text>
     </svg></div>
-    <div class="text center" style="font-size:20px"><b>Which peak is the person?</b> A heuristic: follow the peak that moves smoothly as the wearer walks; reflection peaks jump or blink (Class 12's ArrayTrack used a similar trick). Setup details: live in class.</div>
+    <div class="text center" style="font-size:20px"><b>Which peak is the person?</b> A heuristic: follow the peak that moves smoothly as the wearer walks; reflection peaks jump or blink. Setup details: live in class.</div>
     <div class="ask"><b>Exit question.</b> Anyone in range can capture these reports from your watch.<br>Who should be allowed to compute your angle from them?<br>What could Wi-Fi change to stop everyone else?</div>
   </div>
   <aside class="notes"><b>60 s + demo (about 12 min).</b> Instructor fills in the setup here: which AP and channel, how the watch is associated, which sniffer card and capture/decoding tool, and where the antennas are. The watch is a Wi-Fi 6 client (Google's spec page: 802.11 a/b/g/n/ac/ax, 2.4 + 5 GHz); do not claim its antenna count. Keep the demo honest: point out the three things on the slide as they happen, especially that the report rate is the AP's choice, and say that "follow the smooth peak" is a heuristic, not a guarantee. Close with the exit question; collect one-sentence answers (cards or the LMS). Good answers: encrypt or randomize the feedback, make the VHT/HE categories "robust", let users opt out of beamforming, or regulate passive Wi-Fi sensing.</aside>
@@ -1138,7 +1195,7 @@
     });
   }
 
-  // Last week's sweep (Bartlett / delay-and-sum): a^H R a / N.
+  // The simple sweep (Bartlett / delay-and-sum): a^H R a / N.
   function bartlett(M, angles = grid()) {
     const n = M.length, N = n / 2;
     return angles.map(th => {
@@ -1677,7 +1734,7 @@
     bindRange('st-th', draw);
   })();
 
-  /* ------------------------------------------------ last week's sweep alone */
+  /* ----------------------------------------------- the simple sweep alone */
   (function () {
     const svg = $('sweep'), P = specPlot(svg, 1176, 300), M = B.covEmbed(twoPaths(30, 55));
     const L = E(svg, 'g', {}), ba = B.bartlett(M, ANG);
@@ -1686,7 +1743,7 @@
     const pk = B.peaks(ba, ANG, 1)[0];
     E(L, 'circle', { cx: P.X(pk), cy: P.Y(0), r: 7, fill: C.red });
     E(L, 'text', { x: P.X(pk) - 14, y: P.Y(0) - 4, 'text-anchor': 'end', 'font-size': 18, 'font-weight': 700, fill: C.red }, 'sweep peak: ' + fmtDeg(pk));
-    P.legend(L, [{ col: C.gray, label: 'last week’s sweep', w: 4 }]);
+    P.legend(L, [{ col: C.gray, label: 'the simple sweep', w: 4 }]);
   })();
 
   /* ------------------------------------------------------- eigenvalue bars */
@@ -1719,7 +1776,7 @@
       P.truth(L, t1, 'direct', C.green); P.truth(L, t2, 'reflection', C.purple);
       P.curve(L, ba, { stroke: C.gray, 'stroke-width': 4, 'stroke-opacity': .8 });
       P.curve(L, mu, { stroke: frozen ? C.red : C.blue, 'stroke-width': 3 });
-      P.legend(L, [{ col: C.gray, label: 'last week’s sweep', w: 4 }, { col: frozen ? C.red : C.blue, label: frozen ? 'MUSIC, weights frozen' : 'MUSIC' }]);
+      P.legend(L, [{ col: C.gray, label: 'the simple sweep', w: 4 }, { col: frozen ? C.red : C.blue, label: frozen ? 'MUSIC, weights frozen' : 'MUSIC' }]);
       const pb = B.peaks(ba, ANG, 2, 0.25), pm = B.peaks(mu, ANG, 2);
       $('vs-1-out').textContent = fmtDeg(t1, 0); $('vs-2-out').textContent = fmtDeg(t2, 0);
       const ev = B.eigvals(M), big = ev.filter(x => x > 0.05 * ev[0]).length;

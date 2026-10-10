@@ -1,6 +1,6 @@
 # Class 14 quiz — Beamforming Feedback as a Sensing Signal
 
-Questions only. Answer from the slides (and last week's Class 12 slides) alone.
+Questions only. Answer from the slides alone.
 The expected answers live in `quiz-answers.md`; the student agent must never open that file.
 
 1. An access point (AP) has 4 antennas and a phone has 1. Why would the AP bother to
@@ -22,7 +22,7 @@ The expected answers live in `quiz-answers.md`; the student agent must never ope
    ψ (psi). In plain words, what does a φ angle tell you about the AP's antennas? What do the
    ψ angles describe?
 
-7. Using what you learned in Class 12: why is a phase *difference* between two antennas enough
+7. Why is a phase *difference* between two antennas enough
    to tell the direction of the device? Give the one-line reasoning (no need for the exact
    formula, but you may use it).
 
