@@ -1,0 +1,108 @@
+%!TEX root = ./main.tex
+
+\section[Hybrid]{Version 3: Meaning-Aware Bits}
+
+% SECTION TIMING: 39:40--43:10 (2 frames): 100 + 110 = 210 s.
+
+% Teaching note (100 s): Version 3 keeps today's pipeline -- standard codec, standard
+% network -- and changes only WHERE the bits go. An AI on the camera marks what
+% matters for the task; the standard encoder (JPEG/H.264) spends more bits there and
+% fewer on the rest; an AI at the receiver fills in what was dropped or lost. It does
+% not climb Weaver's levels: it keeps Level A's pipe and uses Level B/C knowledge to
+% decide which bits matter most. Tie back to "Same loss, two outcomes" (the
+% pedestrian deserves more protection than the sky) and to "Where it struggles"
+% ("every bit counts the same"). Why it matters for an edge-networks course: it needs
+% nothing new in radios, codecs, or protocols, so it is the easiest kind to deploy.
+% Networking cousins (verified earlier): AccMPEG (MLSys 2022) gives higher quality to
+% the macroblocks that matter for accuracy; DDS (ACM SIGCOMM 2020) sends a
+% low-quality stream and re-sends important regions in high quality; MPEG's Video
+% Coding for Machines (ISO/IEC 23888-2) codes video for machine analysis.
+\begin{frame}{Version 3: keep the pipe, spend bits by meaning}
+  \vspace{1.0em}
+  \centering
+  \begin{tikzpicture}[scale=0.68,transform shape,
+      std/.style={netnode,minimum width=2.2cm,minimum height=1.0cm,font=\small\bfseries},
+      ai/.style={nnnode,minimum width=2.2cm,minimum height=1.0cm,font=\small\bfseries}]
+    \node[endnode] (v) at (0,0) {Video};
+    \node[ai] (score) at (2.75,0) {AI: what\\matters?};
+    \node[std] (enc) at (5.6,0) {H.264\\[-2pt]{\scriptsize\mdseries standard}};
+    \node[chnode,minimum width=2.2cm,minimum height=1.0cm,font=\small\bfseries] (net)
+      at (8.45,0) {Today's\\network};
+    \node[ai] (fill) at (11.3,0) {AI fills\\in gaps};
+    \node[endnode] (rx) at (13.85,0) {Receiver};
+    \draw[flow] (v) -- (score); \draw[flow] (score) -- (enc); \draw[flow] (enc) -- (net);
+    \draw[flow] (net) -- (fill); \draw[flow] (fill) -- (rx);
+    \node[lbl,below=3pt of enc] {unchanged};
+    \node[lbl,below=3pt of net] {unchanged};
+  \end{tikzpicture}
+
+  \vspace{0.9em}
+  \begin{tikzpicture}[scale=0.85,visible on=<2->]
+    \pic at (0,0) {streetv3};
+    \draw[-{Latex[length=2mm]},softgreen,thick] (4.3,1.55) -- (1.55,1.3);
+    \node[anchor=west,font=\small\bfseries,text=softgreen] at (4.35,1.55)
+      {many bits: the pedestrian};
+    \draw[-{Latex[length=2mm]},softgray,thick] (4.3,0.55) -- (2.9,1.6);
+    \node[anchor=west,font=\small\bfseries,text=softgray] at (4.35,0.55)
+      {few bits: sky, road, car};
+  \end{tikzpicture}
+
+  \vspace{0.7em}
+  \uncover<3->{{\large Nothing new for radios, codecs, or networks.}\par}
+
+  \vspace{0.7em}
+  \takeawayat{4-}{Same pipe, smarter spending ---\\
+    the easiest version to deploy today.}
+\end{frame}
+
+% Teaching note (110 s): one real system, so students see Version 3 works. KDC
+% (X. Chen, Z. Feng, W. Zhao, J. Ding, K. Sun, X. Zhang, "From Bits to Tokens:
+% Knowledge-Driven Generative Communication of Multimodal Data," USENIX NSDI 2026;
+% read in full): a foundation model (CLIP, plus a small language model run once
+% offline) turns the task description into keywords -- "autonomous driving" -> car,
+% pedestrian, traffic light -- and scores every image patch against them; the
+% standard JPEG/H.264 encoder then keeps finer detail in high-scoring regions and
+% quantizes the rest coarsely (Sec. 3.2: "fully compatible with H.264/JPEG/PCC and
+% existing hardware accelerators"; it runs at the application layer, PHY/MAC and
+% retransmissions unchanged); the keywords travel once in a small header; a
+% receiver-side restoration network (UNet conditioned on a knowledge base) fills in
+% lost or coarse parts. Numbers (Sec. 5.1, images: ImageNet-1K and Cityscapes, 5G
+% traces): ~0.85 Top-1 with only 10 kB, close to ~0.87 for the full image, where a
+% full JPEG averages ~30 kB; 0.55-0.65 Top-1 at every packet-loss level, while
+% progressive JPEG and the learned codec LimitNet fall to <=0.2 at 5-10% loss and the
+% semantic system StarFish to ~0.3 at 10% loss (plain JPEG fails). Video (Sec. 5.2,
+% driving-video segmentation over real 5G traces): KDC on top of H.264 keeps the
+% segmentation score (IoU) 0.1-0.2 higher than plain H.264 under medium-to-high loss.
+% Weak spots: it still sends a picture (more bits than Version 2), and it needs AI
+% on both ends (the paper reports 32 frames/s on a Jetson Orin).
+\begin{frame}{Version 3 in practice}
+  \vspace{0.9em}
+  \centering
+  {\large Example: \textbf{KDC} (NSDI 2026)\par}
+
+  \vspace{0.8em}
+  \begin{tikzpicture}[scale=0.71,transform shape,
+      st/.style={nnnode,minimum width=3.4cm,minimum height=1.2cm,font=\small\bfseries}]
+    \node[st] (a) at (0,0) {Task $\to$ keywords\\[-2pt]{\scriptsize\mdseries ``car, pedestrian''}};
+    \node[st,draw=ranblue,fill=blue!5] (b) at (4.3,0)
+      {JPEG / H.264\\[-2pt]{\scriptsize\mdseries more detail on those}};
+    \node[st] (c) at (8.6,0) {Receiver AI\\[-2pt]{\scriptsize\mdseries fills in what was lost}};
+    \draw[flow] (a) -- (b); \draw[flow] (b) -- (c);
+  \end{tikzpicture}
+
+  \vspace{0.9em}
+  \raggedright
+  \begin{itemize}[<+(1)->]\itemsep5pt
+    \item Images: near-full accuracy with \textbf{10 kB} \textcolor{softgray}{(a full
+      JPEG $\approx$30 kB)}
+    \item 10\% packet loss: \textbf{0.55--0.65} accuracy vs.\ \textbf{$\le$0.3} for others
+    \item Driving video: H.264 \textbf{+ KDC} beats plain H.264 under loss
+  \end{itemize}
+
+  \vspace{0.6em}
+  \takeawayat{5-}{Works with today's codecs and networks ---\\
+    but still sends a picture, and needs AI on both ends.}
+  \source{https://www.usenix.org/conference/nsdi26/presentation/chen-xingyu}{X.\ Chen
+    et al., ``From Bits to Tokens: Knowledge-Driven Generative Communication,''
+    USENIX NSDI, 2026}
+\end{frame}

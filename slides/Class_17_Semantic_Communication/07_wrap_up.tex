@@ -1,0 +1,112 @@
+%!TEX root = ./main.tex
+
+\section[Wrap-up]{Wrap-Up}
+
+% SECTION TIMING: 43:10--50:00 (3 frames): 150 + 160 + 100 = 410 s.
+% If behind, show only the first two points of the open-problems frame (90 s).
+
+% Teaching note (150 s): retrieval, not new material -- before each click, ask the
+% class to fill in the next row. Rows: today's pipeline reacts one step late and
+% sends everything ("Where it struggles"); Version 1 needs the same model on both
+% ends and a wrong frame looks fine ("The price of rebuilding"); Version 2 is built
+% for the tasks it was trained for -- a new kind of task may need retraining, and
+% general multi-task models exist (e.g., U-DeepSC, IEEE Trans. Commun. 2024) but send
+% more bits and need more compute -- and there is no video to replay; Version 3 works
+% with today's codecs and networks but still sends a picture and needs AI on both
+% ends ("Version 3 in practice"). The takeaway answers "which one wins?": none --
+% choose by what the receiver needs.
+\begin{frame}{Four ways to send video}
+  \vspace{0.8em}
+  \centering
+  {\footnotesize\renewcommand{\arraystretch}{1.45}\setlength{\tabcolsep}{3pt}%
+  \begin{tabular}{@{}>{\bfseries}l l l l l@{}}
+    \toprule
+    & \textbf{Sends} & \textbf{Receiver gets} & \textbf{Strength} & \textbf{Weak spot} \\
+    \midrule
+    \textcolor{ranblue}{Today}
+      & every bit & the exact video & works for any app
+      & \makecell[lt]{reacts late;\\sends everything} \\
+    \uncover<2->{\textcolor{ranpurple}{Version 1}}
+      & \uncover<2->{meaning} & \uncover<2->{a close copy}
+      & \uncover<2->{degrades smoothly}
+      & \uncover<2->{\makecell[lt]{needs same model;\\errors look fine}} \\
+    \uncover<3->{\textcolor{coreorange}{Version 2}}
+      & \uncover<3->{task clues} & \uncover<3->{the answer}
+      & \uncover<3->{far fewer bits}
+      & \uncover<3->{\makecell[lt]{built for its tasks;\\no video to replay}} \\
+    \uncover<4->{\textcolor{softgreen}{Version 3}}
+      & \uncover<4->{\makecell[lt]{bits, spent\\by meaning}}
+      & \uncover<4->{\makecell[lt]{sharp where\\it matters}}
+      & \uncover<4->{\makecell[lt]{works on today's\\networks}}
+      & \uncover<4->{\makecell[lt]{still sends a picture;\\AI on both ends}} \\
+    \bottomrule
+  \end{tabular}\par}
+
+  \vspace{1.2em}
+  \takeawayat{5-}{No single winner:\\
+    choose by what the receiver needs.}
+\end{frame}
+
+% Teaching note (160 s): status check, one click per point. Semantic communication
+% is research-stage. (1) Today's radios and protocols assume bits (fixed signal
+% alphabets, retransmissions, layered stacks). (2) Who trains, ships, and updates the
+% shared model on every device? (3) Trust: no checksum for meaning; crafted inputs can
+% fool the AI models; transmitted features can still leak private content.
+% (4) Standards, checked to about June 2026: 3GPP's AI/ML air-interface work (Rel-18
+% study TR 38.843; Rel-19 normative one-sided models) targets CSI feedback/prediction,
+% beam management, and positioning; two-sided CSI compression is deferred to Rel-20;
+% there is no 3GPP study or work item on semantic communication, and the 6G use-case
+% report TR 22.870 mentions it only as motivation inside use cases. 3GPP's other AI
+% work (core-network analytics such as NWDAF, AI/ML for NG-RAN) is not about content
+% transmission either. Recheck before each delivery of this lecture.
+% Version 3 sidesteps the first and last points by design (standard codecs, standard
+% networks), which is why it is the closest to deployment today.
+% MPEG (the video-codec standards body) is closer to Version 2: Video Coding for
+% Machines, VCM (ISO/IEC 23888-2), codes video meant for machine analysis -- its
+% decoder still outputs video -- and reached Draft International Standard at MPEG 153
+% (January 2026), with the final stage planned for late 2026; Feature Coding for
+% Machines, FCM (ISO/IEC 23888-4), codes the intermediate features of a split neural
+% network so the cloud "only needs to run the head", and reached Committee Draft at
+% MPEG 154 (April-May 2026). These are source-coding standards (no joint design with
+% the radio channel). Sources: MPEG press releases for meetings 153-155; stage data
+% from the ISS mirror of the ISO record (iso.org itself could not be fetched).
+% Optional systems examples if students ask "who builds this?": MagicStream (ACM
+% SenSys 2024, semantic 3D telepresence), KDC (USENIX NSDI 2026, knowledge-driven
+% generative communication), LITE (ACM SIGCOMM 2026, loss-resilient telepresence with
+% multi-modal semantics).
+\begin{frame}{Why it is not in your phone yet}
+  \vspace{1.2em}
+  \begin{enumerate}[<+->]\itemsep12pt
+    \item \textbf{Must fit today's radios and networks}
+    \item \textbf{Both sides must keep the same AI model}
+    \item \textbf{Trust:} no checksum for meaning; AI can be fooled
+    \item \textbf{Standards are just starting}\\
+      {\small\textcolor{softgray}{no cellular standard yet; MPEG is defining video and
+        feature coding \textit{for machines} (2026)}}
+  \end{enumerate}
+
+  \vspace{1.6em}
+  \takeawayat{5-}{Promising for weak signals and clear goals;\\
+    not a replacement for today's networks yet.}
+  \source{https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=3983}{3GPP
+    TR 38.843 (Rel-18); MPEG press releases, meetings 153--155 (2026)}
+\end{frame}
+
+% Teaching note (100 s): four sentences to remember, one click each, then close by
+% re-asking the opening question: A needs (a good copy of) the video, B needs only
+% the answer. (The pair discussion was removed to make room for Version 3.)
+\begin{frame}{Takeaways}
+  \vspace{1.2em}
+  \begin{enumerate}[<+->]\itemsep10pt
+    \item \textbf{\textcolor{ranblue}{Today:}} copy every bit of every frame
+    \item \textbf{\textcolor{ranpurple}{Version 1:}} rebuild the video;
+      degrades smoothly
+    \item \textbf{\textcolor{coreorange}{Version 2:}} no video rebuilt ---
+      send only what the task needs
+    \item \textbf{\textcolor{softgreen}{Version 3:}} today's pipe,
+      bits spent by meaning
+  \end{enumerate}
+
+  \vspace{2.0em}
+  \askat{5-}{Back to the start: do A and B need the same data?}
+\end{frame}

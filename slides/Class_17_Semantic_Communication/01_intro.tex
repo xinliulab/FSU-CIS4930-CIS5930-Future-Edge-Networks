@@ -1,0 +1,38 @@
+%!TEX root = ./main.tex
+
+\section[Intro]{Introduction}
+
+% SECTION TIMING: 0:00--2:20 (1 frame).
+
+% Teaching note (140 s): open with the picture and the question; do not answer it
+% yet. Take one or two guesses. Receiver A needs the video itself; receiver B only
+% needs to know where the pedestrians are. The whole lecture lives in the gap between
+% those two receivers. Then reveal the route one line at a time.
+\begin{frame}{One video stream, two receivers}
+  \vspace{0.6em}
+  \centering
+  \begin{tikzpicture}[scale=0.85,transform shape]
+    \node[netnode,minimum width=2.6cm,minimum height=1.1cm] (cam) at (0,0)
+      {Street camera\\[-2pt]{\scriptsize\mdseries live video}};
+    \node[netnode,minimum width=4.4cm,minimum height=1.0cm] (a) at (6.4,0.9)
+      {A: a person\\[-2pt]{\scriptsize\mdseries wants to \textit{watch} the video}};
+    \node[corenode,minimum width=4.4cm,minimum height=1.0cm] (b) at (6.4,-0.9)
+      {B: an AI at the edge\\[-2pt]{\scriptsize\mdseries asks ``any pedestrians?''}};
+    \draw[flow] (cam.east) -- (a.west);
+    \draw[flow] (cam.east) -- (b.west);
+    \node[lbl] at (2.65,0) {wireless};
+  \end{tikzpicture}
+
+  \vspace{0.5em}
+  \askat{2-}{Do A and B need the same data?}
+
+  \vspace{0.6em}
+  \raggedright
+  \begin{enumerate}[<+(2)->]\itemsep4pt
+    \item Today: copy every bit of every frame
+    \item Semantic communication: send the \textbf{meaning}
+    \item Version 1: \textbf{rebuild} the video
+    \item Version 2: just get the \textbf{task} done --- no video rebuilt
+    \item Version 3: keep today's pipe, spend bits by \textbf{meaning}
+  \end{enumerate}
+\end{frame}

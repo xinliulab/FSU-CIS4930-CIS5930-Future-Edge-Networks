@@ -1,0 +1,205 @@
+%!TEX root = ./main.tex
+
+\section[Rebuild]{Version 1: Reconstruction-Oriented}
+
+% SECTION TIMING: 22:10--30:30 (4 frames): 170 + 130 + 110 + 90 = 500 s.
+% Flex: "Weak signal" can drop to 90 s (skip the third bullet's explanation).
+
+% Teaching note (170 s): a CONCEPT slide, not a paper slide -- "how does Version 1
+% actually work?" Mention the research name once (deep joint source-channel coding,
+% "deep JSCC") so students recognize it in papers, then teach the idea.
+% Background: the founding example of learned reconstruction (Deep JSCC =
+% deep joint source-channel coding). Trace one image left to right: an encoder
+% network maps the pixel values straight to radio symbols (complex numbers); the
+% channel adds noise; a decoder network outputs an approximate image. There is no
+% JPEG, no error-correcting code, and no checksum. Training: show it many images,
+% simulate noise in the middle (a fixed, non-trainable layer), and reward a close copy
+% (mean squared error); gradients flow through the noise layer, so both networks learn
+% together. Paper details if asked: CNN encoder/decoder; power normalization so the
+% average transmit power is P; "bandwidth compression ratio" k/n (channel symbols per
+% source value), e.g. k/n = 1/6 on CIFAR-10 (32x32x3 = 3072 values -> 512 symbols);
+% evaluated with PSNR and SSIM; also tested on Kodak images. It works on single
+% images; a video is a sequence of images, and video versions follow two slides later.
+\begin{frame}{How Version 1 works: practice with noise}
+  \vspace{1.6em}
+  \centering
+  \begin{tikzpicture}[scale=0.78,transform shape]
+    \node[endnode] (x) at (0,0) {Frame};
+    \node[nnnode,minimum width=2.5cm,minimum height=1.0cm,font=\small\bfseries] (enc)
+      at (2.9,0) {AI encoder};
+    \node[draw=softgray,fill=gray!10,circle,inner sep=1pt,font=\large\bfseries] (plus)
+      at (5.7,0) {$+$};
+    \node[chnode,minimum width=1.4cm,minimum height=0.7cm,font=\small\bfseries] (w)
+      at (5.7,-1.3) {noise};
+    \node[nnnode,minimum width=2.5cm,minimum height=1.0cm,font=\small\bfseries] (dec)
+      at (8.5,0) {AI decoder};
+    \node[endnode,minimum width=2.0cm] (xh) at (11.4,0) {Rebuilt\\frame};
+    \draw[flow] (x) -- (enc);
+    \draw[flow] (enc) -- node[above,iface]{signal} (plus);
+    \draw[flow] (w) -- (plus);
+    \draw[flow] (plus) -- (dec);
+    \draw[flow] (dec) -- (xh);
+    \draw[decorate,decoration={brace,amplitude=6pt},thick,ranpurple]
+      ([yshift=8pt]enc.north west) -- ([yshift=8pt]dec.north east)
+      node[midway,above=7pt,font=\small\bfseries,text=ranpurple] {trained together};
+  \end{tikzpicture}
+
+  \vspace{1.4em}
+  \raggedright
+  \begin{itemize}[<+(1)->]\itemsep8pt
+    \item One AI replaces ``compress, then protect''
+    \item Training: add noise on purpose, reward a close copy
+  \end{itemize}
+
+  \vspace{1.4em}
+  \takeawayat{4-}{Like two partners practicing a code\\
+    until it survives a noisy phone line.}
+  \source{https://arxiv.org/abs/1809.01733}{First shown for images (``deep JSCC''):
+    Bourtsoulatze, Kurka \& G\"und\"uz, IEEE TCCN, 2019}
+\end{frame}
+
+% Teaching note (130 s): the same three situations as "Where it struggles". First
+% click: today's row with feedback (WebRTC-style) -- sharp; blockier once feedback has
+% cut the bitrate; late (latency spike, maybe a brief freeze) right after a sudden
+% drop, before feedback reacts. Second click: the Version 1 row (the 2019 deep JSCC
+% result) -- sharp, a bit soft,
+% blurrier. The encoder does not change and no feedback is needed: the picture simply
+% gets softer as the received signal gets worse, at the moment it happens. The
+% pictures are a sketch, not output from the paper. Be honest about the evidence: the
+% 2019 paper's claims (abstract) are against digital schemes WITHOUT feedback -- on
+% an AWGN channel it beats JPEG/JPEG2000 + an IDEALIZED capacity-achieving code at low
+% SNR and low bandwidth, and it degrades gracefully as the test SNR moves away from
+% the training SNR (no cliff); on slow Rayleigh fading it is ahead at every SNR and
+% bandwidth tested. It was NOT compared with WebRTC-style feedback. The stronger
+% evidence against adaptive systems is GRACE (slide "What we gain"): same congestion
+% control, fewer undecodable frames and stalls on real LTE traces. With a strong,
+% stable signal and enough bandwidth, classic coding can be sharper.
+\begin{frame}{Weak signal: no waiting for feedback}
+  \vspace{0.6em}
+  \centering
+  \begin{tikzpicture}[scale=0.6,transform shape]
+    \signalbars{0.45}{2.3}{4}
+    \node[anchor=west,font=\small\bfseries] at (1.65,2.45) {strong};
+    \signalbars{4.45}{2.3}{2}
+    \node[anchor=west,font=\small\bfseries] at (5.65,2.45) {weaker};
+    \signalbars{8.45}{2.3}{1}
+    \node[anchor=west,font=\small\bfseries] at (9.65,2.45) {sudden drop};
+    \node[anchor=east,font=\large\bfseries,text=ranblue,align=right] at (-0.3,1.05)
+      {Today\\{\small\mdseries with feedback}};
+    \pic at (0,0) {streetframe};
+    \pic at (4,0) {streetblocky};
+    \pic at (8,0) {streetframe};
+    \pic at (8,0) {late};
+    \begin{scope}[visible on=<2->]
+      \node[anchor=east,font=\large\bfseries,text=ranpurple,align=right]
+        at (-0.3,-1.75) {Version 1};
+      \pic at (0,-2.8) {streetframe};
+      \pic at (4,-2.8) {streetsoft};
+      \pic at (8,-2.8) {streetblurry};
+    \end{scope}
+  \end{tikzpicture}
+
+  {\scriptsize\textcolor{softgray}{Sketch, not output from the paper.}\par}
+
+  \vspace{0.5em}
+  \raggedright
+  \begin{itemize}[<+(2)->]\itemsep5pt
+    \item Picture follows the signal \textbf{at once} --- no feedback round trip
+    \item Strong, stable signal: classic coding can be sharper
+  \end{itemize}
+
+  \vspace{0.5em}
+  \takeawayat{5-}{Its strength is reacting instantly,\\
+    not ``always better.''}
+  \source{https://arxiv.org/abs/1809.01733}{Bourtsoulatze, Kurka, G\"und\"uz,
+    IEEE TCCN, 2019 (compared with digital schemes without feedback)}
+\end{frame}
+
+% Teaching note (110 s): Version 1 for video -- again a concept slide; DVST is the
+% research system that shows it. DVST (Wang et al., "Wireless Deep
+% Video Semantic Transmission," IEEE JSAC 41(1), 2023) rebuilds video for viewing.
+% Each frame is encoded with the previous frame as context, so mostly what is new gets
+% sent; the features go out with deep JSCC, and more channel bandwidth goes to frames
+% and regions that are harder to code. Headline (paper's introduction): it "can save
+% up to 50% channel bandwidth cost, compared to classical H.264/H.265 combined with
+% LDPC and digital modulation schemes"; in the detailed comparison (AWGN, 10 dB) it
+% needs 40-80% of the bandwidth of H.264 + LDPC at equal PSNR. Say the caveats the
+% paper itself reports: slightly worse than H.265 + LDPC on some test sets (HEVC
+% classes C and E), only close to the ideal H.265 + capacity-achieving-code bound, and
+% only P-frames are evaluated. Note it still rebuilds every frame -- which is exactly
+% what Version 2 will skip.
+\begin{frame}{Version 1 for video: send what's new}
+  \vspace{1.2em}
+  \centering
+  \begin{tikzpicture}[scale=0.78,transform shape]
+    \node[endnode] (x) at (0,0) {Frame};
+    \node[nnnode,minimum width=2.4cm,minimum height=1.0cm,font=\small\bfseries] (enc)
+      at (2.85,0) {AI encoder};
+    \node[chnode,minimum width=1.5cm,minimum height=1.0cm,font=\small\bfseries] (ch)
+      at (6.0,0) {Channel};
+    \node[nnnode,minimum width=2.4cm,minimum height=1.0cm,font=\small\bfseries] (dec)
+      at (9.15,0) {AI decoder};
+    \node[endnode,minimum width=2.0cm] (xh) at (12.0,0) {Rebuilt\\frame};
+    \node[endnode,minimum width=6.3cm,minimum height=0.6cm,font=\scriptsize\bfseries]
+      (prev) at (6.0,1.45) {previous frame (known to both sides)};
+    \draw[flow] (x) -- (enc);
+    \draw[flow] (enc) -- node[below,iface]{new} (ch);
+    \draw[flow] (ch) -- (dec);
+    \draw[flow] (dec) -- (xh);
+    \draw[flow,dashed] (prev.west) -| (enc.north);
+    \draw[flow,dashed] (prev.east) -| (dec.north);
+  \end{tikzpicture}
+
+  \vspace{1.2em}
+  \raggedright
+  \begin{itemize}[<+(1)->]\itemsep8pt
+    \item Uses the previous frame as context: sends mostly \textbf{what is new}
+    \item Gives more bandwidth to frames that are hard to code
+    \item \textbf{Up to 50\% less bandwidth} than H.264/H.265 + error coding
+  \end{itemize}
+
+  \vspace{0.8em}
+  \takeawayat{5-}{Same video, up to half the bandwidth ---\\
+    but every frame is still rebuilt.}
+  \source{https://doi.org/10.1109/JSAC.2022.3221977}{Example system: DVST, S.\ Wang et
+    al., ``Wireless Deep Video Semantic Transmission,'' IEEE JSAC, 2023}
+\end{frame}
+
+
+% Teaching note (90 s): four costs, one click each. (1) Deep JSCC emits arbitrary
+% complex values, while Wi-Fi and 5G radios send points from a fixed QAM
+% constellation (a fixed "alphabet"); deployable versions must be constrained to that
+% alphabet (e.g., DeepJSCC-Q, Tung et al., IEEE JSAIT 2022). (2) Both sides need the
+% same trained model, so it must be shipped, versioned, and retrained when content
+% shifts (cats -> X-rays). (3) Fair comparison means a modern codec + error
+% correction + link adaptation + application feedback (e.g., WebRTC congestion
+% control), not one fixed setting. (4) The bit pipe has a
+% checksum; there is no checksum for meaning, so a wrong picture arrives without an
+% error flag. Generative decoders make point 4 sharper: the sender transmits only a
+% compact sketch of the scene (in Grassucci et al. a semantic map saying which object
+% class each pixel belongs to) and a diffusion model paints in the details -- the
+% result looks real, but some details are the model's guesses (police-sketch-artist
+% analogy). "Invented details" is our inference from the perception-distortion
+% tradeoff (Blau & Michaeli, CVPR 2018, doi:10.1109/CVPR.2018.00652). Source:
+% Grassucci, Barbarossa, Comminiello, "Generative Semantic Communication: Diffusion
+% Models Beyond Bit Recovery," IEEE TCCN, 2026, doi:10.1109/TCCN.2026.3689849.
+\begin{frame}{The price of rebuilding}
+  \vspace{0.8em}
+  \begin{enumerate}[<+->]\itemsep8pt
+    \item \textbf{Radios only speak a fixed ``alphabet''}\\
+      {\small\textcolor{softgray}{learned signals must be squeezed into it}}
+    \item \textbf{Both sides need the same AI model}\\
+      {\small\textcolor{softgray}{update it on every phone and server}}
+    \item \textbf{Fair comparisons are tricky}\\
+      {\small\textcolor{softgray}{compare with adaptive systems like WebRTC}}
+    \item \textbf{No checksum for meaning}\\
+      {\small\textcolor{softgray}{a wrong frame looks fine; generative AI may
+        invent details}}
+  \end{enumerate}
+
+  \vspace{1.0em}
+  \takeawayat{5-}{Smooth quality is paid for with\\
+    compatibility, shared models, and trust.}
+  \source{https://doi.org/10.1109/JSAIT.2022.3231042}{Point 1: T.-Y.\ Tung et al.,
+    ``DeepJSCC-Q: Constellation Constrained Deep JSCC,'' IEEE JSAIT, 2022}
+\end{frame}

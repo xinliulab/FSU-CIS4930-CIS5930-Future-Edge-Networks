@@ -1,0 +1,39 @@
+\documentclass[11pt]{beamer}
+
+\input{../variables.tex}
+\input{ran_macros.tex}
+\input{semcom_macros.tex}
+
+\title[Semantic Communication]{Class 17: Semantic Communication}
+\subtitle{From Delivering Bits to Delivering Meaning and Tasks}
+
+\FSUOSMeta
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\addtocounter{framenumber}{-1}
+
+% TALK BUDGET: 50:00 = 3000 s over 23 content frames. Running example: one street
+% camera's live video, watched by a person (A) and analyzed by an edge AI (B).
+%   01 Intro                          0:00--2:20   1 frame   140 s
+%   02 Today (bit pipe)               2:20--14:10  5 frames  710 s
+%   03 What is SemCom + gains         14:10--22:10  4 frames  480 s
+%   04 Version 1: reconstruction      22:10--30:30  4 frames  500 s
+%   05 Version 2: task-oriented       30:30--39:40  4 frames  550 s
+%   06 Version 3: meaning-aware bits  39:40--43:10  2 frames  210 s
+%   07 Wrap-up                        43:10--50:00  3 frames  410 s
+% Style: one idea per frame, few words; anything longer is revealed step by step.
+% Technical detail and sources live in each frame's "Teaching note" comment.
+\input{01_intro.tex}
+\input{02_bit_pipe.tex}
+\input{03_what_is_semcom.tex}
+\input{04_reconstruction.tex}
+\input{05_task_oriented.tex}
+\input{06_hybrid.tex}
+\input{07_wrap_up.tex}
+
+\end{document}

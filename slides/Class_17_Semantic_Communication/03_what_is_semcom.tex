@@ -1,0 +1,220 @@
+%!TEX root = ./main.tex
+
+\section[SemCom]{What Is Semantic Communication?}
+
+% SECTION TIMING: 14:10--22:10 (4 frames): 110 + 140 + 90 + 140 = 480 s.
+
+% Teaching note (110 s): Weaver wrote the companion essay to Shannon's paper and
+% split "communication" into three questions. Walk the street-camera example up the
+% levels, one click per level: every frame arrives intact (A); the scene is
+% understood -- a pedestrian is crossing (B); the car brakes in time (C). Shannon
+% answered Level A, on purpose. Then reveal the left tags: today's networks = A,
+% version 1 of semantic communication ~ B, version 2 ~ C. Say the caveat once: papers
+% use "semantic" loosely for both B and C; the mapping is a teaching aid. Level A
+% never disappears -- a semantic system still rides on a physical channel.
+% Weaver's exact wording (Sec. 1.2, "Three Levels of Communications Problems"; p. 4
+% of the 1963 paperback): A "How accurately can the symbols of communication be
+% transmitted?", B "How precisely do the transmitted symbols convey the desired
+% meaning?", C "How effectively does the received meaning affect conduct in the
+% desired way?" The slide paraphrases them.
+\begin{frame}{Weaver 1949: three levels}
+  \vspace{0.8em}
+  \centering
+  {\large A camera streams a street crossing\par}
+
+  \vspace{1.0em}
+  % SOURCE: W. Weaver, "Recent Contributions to the Mathematical Theory of
+  % Communication," in Shannon & Weaver, The Mathematical Theory of Communication, 1949.
+  \begin{tikzpicture}[scale=0.84,transform shape,
+      lvl/.style={minimum width=5.4cm,minimum height=1.05cm,align=center},
+      ex/.style={anchor=west,font=\small\itshape,text=softgray},
+      tag/.style={anchor=east,font=\small\bfseries}]
+    \node[netnode,lvl] (A) at (0,0) {Level A\\[-1pt]{\small\mdseries Did it arrive intact?}};
+    \node[oranode,lvl,visible on=<2->] (B) at (0,1.35)
+      {Level B\\[-1pt]{\small\mdseries Was it understood?}};
+    \node[corenode,lvl,visible on=<3->] (C) at (0,2.7)
+      {Level C\\[-1pt]{\small\mdseries Did it lead to the right action?}};
+    \node[ex] at ([xshift=10pt]A.east) {every frame arrives};
+    \node[ex,visible on=<2->] at ([xshift=10pt]B.east) {``a pedestrian is crossing''};
+    \node[ex,visible on=<3->] at ([xshift=10pt]C.east) {the car brakes in time};
+    \node[tag,text=ranblue,visible on=<4->] at ([xshift=-10pt]A.west) {Today};
+    \node[tag,text=ranpurple,visible on=<4->] at ([xshift=-10pt]B.west) {Version 1};
+    \node[tag,text=coreorange,visible on=<4->] at ([xshift=-10pt]C.west) {Version 2};
+  \end{tikzpicture}
+
+  \vspace{1.2em}
+  \takeawayat{5-}{Semantic communication aims at Level B or C,\\
+    not just Level A.}
+  \plainsource{W.\ Weaver, ``Recent Contributions to the Mathematical Theory of
+    Communication,'' in Shannon and Weaver, The Mathematical Theory of Communication,
+    Univ.\ of Illinois Press, 1949, Sec.\ 1.2 (paraphrased)}
+\end{frame}
+
+% Teaching note (140 s): compare with the suitcase slide. The two AI models replace
+% compress/protect; what crosses the channel is a compact set of learned "meaning"
+% features (real or complex numbers), not a compressed video file. Sender and
+% receiver are trained together, with channel noise simulated in the middle, so they
+% learn a code that survives it. The green box is the key new requirement: both sides
+% must hold the same trained model (papers call it the shared knowledge base:
+% weights, training data, context). Analogy: "meet at the usual place" only works
+% between friends who share context. In most systems the semantic and channel
+% encoders are one neural network trained end to end, called deep joint
+% source-channel coding (deep JSCC).
+\begin{frame}{A semantic communication system}
+  \vspace{1.4em}
+  \centering
+  \begin{tikzpicture}[scale=0.78,transform shape]
+    \node[endnode] (src) at (0,0) {Video};
+    \node[nnnode,minimum width=2.3cm,minimum height=1.0cm,font=\small\bfseries] (enc)
+      at (2.85,0) {AI encoder};
+    \node[chnode,minimum width=1.5cm,minimum height=1.0cm,font=\small\bfseries] (ch)
+      at (6.5,0) {Channel};
+    \node[nnnode,minimum width=2.3cm,minimum height=1.0cm,font=\small\bfseries] (dec)
+      at (9.55,0) {AI decoder};
+    \node[endnode,minimum width=1.9cm] (dst) at (12.4,0) {Receiver};
+    \draw[flow] (src) -- (enc);
+    \draw[flow] (enc) -- node[above,iface]{meaning} (ch);
+    \draw[flow] (ch) -- (dec);
+    \draw[flow] (dec) -- (dst);
+    \node[kbnode,minimum width=7.6cm,minimum height=0.75cm,font=\small\bfseries,
+      visible on=<2->] (kb) at (6.2,-1.7) {the same AI model on both sides};
+    \draw[softgreen,thick,dashed,visible on=<2->] (enc.south) -- (enc.south |- kb.north);
+    \draw[softgreen,thick,dashed,visible on=<2->] (dec.south) -- (dec.south |- kb.north);
+  \end{tikzpicture}
+
+  \vspace{1.6em}
+  \uncover<3->{{\large ``Meet at the usual place'' works\\
+    only between friends who share context.}\par}
+
+  \vspace{1.6em}
+  \takeawayat{4-}{The shared AI model plays the role of shared context.}
+  \source{https://doi.org/10.1109/JSAC.2022.3223408}{D.\ G\"und\"uz et al.,
+    ``Beyond Transmitting Bits,'' IEEE JSAC, 2023}
+\end{frame}
+
+% Teaching note (90 s): make "meaning error" concrete before any neural network
+% appears. First answer the obvious objection -- "doesn't the network resend lost
+% packets?" (slide "By the numbers" said so). Yes, but a resend costs at least one
+% round trip, and live video frames have a playback deadline: data that arrives after
+% its frame's deadline is useless for that frame, so it counts as lost. GRACE (NSDI
+% 2024) counts packets that miss the decoding deadline as lost, and KDC (NSDI 2026)
+% replays the losses that remain after transport-layer retransmission -- loss after
+% resending is real in live video. Resending also treats every packet the same: a
+% sky packet gets the same retries as a pedestrian packet. Both received frames lost
+% exactly the same amount of data -- one small
+% block. In the first, the block fell on the sky: nothing anyone cares about is gone.
+% In the second, it fell on the pedestrian: a person watching might miss them, and a
+% detector might too. Same loss, completely different damage; a traditional receiver
+% only counts the lost bits. (Illustration: in real compressed video one lost packet
+% can damage a larger area and several following frames, because frames are predicted
+% from earlier ones until the next key frame.) Then reveal the fork: two ways to
+% define "meaning delivered", which split the rest of the lecture.
+\begin{frame}{Same loss, two outcomes}
+  \vspace{0.3em}
+  \centering
+  {\large Each received frame lost the \textbf{same} amount of data.\par}
+
+  \vspace{0.2em}
+  {\small\textcolor{softgray}{Live video can't wait for every resend: late data
+    counts as lost.}\par}
+
+  \vspace{0.6em}
+  \begin{tikzpicture}[scale=0.8,transform shape]
+    \pic at (0,0) {streetframe};
+    \node[font=\small\bfseries,anchor=north] at (1.7,-0.1) {Sent};
+    \begin{scope}[visible on=<2->]
+      \pic at (4.0,0) {streetframe};
+      \fill[black!80] (6.25,1.15) rectangle (7.0,2.0);
+      \node[font=\small\bfseries,anchor=north] at (5.7,-0.1) {Received 1};
+      \node[font=\small\bfseries,text=softgreen,anchor=north] at (5.7,-0.55)
+        {lost: sky --- fine};
+    \end{scope}
+    \begin{scope}[visible on=<3->]
+      \pic at (8.0,0) {streetframe};
+      \fill[black!80] (8.78,0.65) rectangle (9.53,1.5);
+      \node[font=\small\bfseries,anchor=north] at (9.7,-0.1) {Received 2};
+      \node[font=\small\bfseries,text=coreorange,anchor=north] at (9.7,-0.55)
+        {lost: pedestrian!};
+    \end{scope}
+  \end{tikzpicture}
+
+  \vspace{0.4em}
+  \begin{tikzpicture}[scale=0.78,transform shape,visible on=<4->]
+    \node[kbnode,minimum width=3.6cm] (m) at (0,0) {``Meaning delivered'' means\ldots};
+    \node[oranode,minimum width=5.0cm,minimum height=1.2cm,align=center] (r)
+      at (-3.2,-1.7) {Version 1: rebuild it\\[-1pt]{\small\mdseries Does the video look
+      right?}};
+    \node[corenode,minimum width=5.0cm,minimum height=1.2cm,align=center] (t)
+      at (3.2,-1.7) {Version 2: do the task\\[-1pt]{\small\mdseries Was the pedestrian
+      found?}};
+    \draw[flow] (m) -- (r.north);
+    \draw[flow] (m) -- (t.north);
+  \end{tikzpicture}
+
+  \vspace{0.4em}
+  \takeawayat{5-}{Same amount of lost data, different damage.}
+\end{frame}
+
+% Teaching note (140 s): the "why bother" slide -- two advantages, each with real
+% numbers; say "best cases, each against its own baseline" out loud. We will see how
+% each system works in the next two parts.
+% LESS BANDWIDTH. (1) DVST (Wang et al., IEEE JSAC 2023) rebuilds video and "can save
+% up to 50% channel bandwidth cost, compared to classical H.264/H.265 combined with
+% LDPC and digital modulation"; it is slightly worse than H.265 + LDPC on some test
+% sets. (2) MagicStream (Cheng et al., ACM SenSys 2024, "Bandwidth-conserving
+% Immersive Telepresence via Semantic Communication") sends body-pose (SMPL-X) and
+% color semantics instead of point clouds: 0.2 Mb/s vs. 72.3 Mb/s for MetaStream's
+% point-cloud streaming at its default 200K points per frame (360x); the paper's
+% "1195x" applies only when the baseline is pushed to match MagicStream's quality.
+% (3) VideoQA-SC (Guo et al., IEEE JSAC 2025) answers questions about video without
+% rebuilding it: at low SNR "saving almost 99.5% of the bandwidth" and +5.17% answer
+% accuracy vs. a DVST-based system that rebuilds the video first.
+% SURVIVES A BAD NETWORK. (4) Signal drops: Deep JSCC (Bourtsoulatze, Kurka &
+% Gunduz, IEEE TCCN 2019) "does not suffer from the 'cliff effect'" -- quality
+% follows the received signal without any feedback (baseline: JPEG/JPEG2000 + an
+% idealized capacity-achieving code, NOT a WebRTC-style adaptive system). (5) Packet loss: GRACE (Cheng et al., USENIX
+% NSDI 2024) trains a neural video encoder and decoder together with simulated packet
+% loss, so a frame can be decoded from whatever packets arrive; vs. FEC (Tambur on
+% H.265) on real LTE traces, with the SAME congestion control for every scheme, it
+% "reduces undecodable frames by 95% and stall duration by 90%" (both "up to" figures
+% in the evaluation) -- the strongest evidence here against a feedback-based system. GRACE calls itself a neural codec,
+% not semantic communication -- it is the same joint-training idea applied to lost
+% packets; say so if asked. Survey wording (Gunduz et al., IEEE JSAC 2023): "unlike
+% separation-based approaches, their performance does not fall apart when the channel
+% quality falls below a certain threshold" -- the same survey calls the field "still
+% in its infancy".
+\begin{frame}{What we gain}
+  \vspace{0.8em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.49\textwidth}
+      {\Large\textbf{\textcolor{softgreen}{Less bandwidth}}\par}
+      \vspace{0.6em}
+      \begin{itemize}[<+->]\itemsep7pt
+        \item Rebuilt video:\\ \textbf{up to 50\% less}
+          {\scriptsize\textcolor{softgray}{(DVST)}}
+        \item 3D video call:\\ \textbf{0.2 vs.\ 72 Mb/s}
+          {\scriptsize\textcolor{softgray}{(MagicStream)}}
+        \item Task only, no video:\\ \textbf{$\approx$99.5\% less}
+          {\scriptsize\textcolor{softgray}{(VideoQA-SC)}}
+      \end{itemize}
+    \column{0.49\textwidth}
+      \uncover<4->{{\Large\textbf{\textcolor{coreorange}{Survives a bad network}}\par}}
+      \vspace{0.6em}
+      \begin{itemize}[<+->]\itemsep7pt
+        \item Signal drops:\\ \textbf{blurrier at once, no wait}
+          {\scriptsize\textcolor{softgray}{(Deep JSCC)}}
+        \item Packet loss, same feedback:\\ \textbf{up to 95\% fewer}\\
+          \textbf{broken frames} than FEC {\scriptsize\textcolor{softgray}{(GRACE)}}
+      \end{itemize}
+  \end{columns}
+
+  \vspace{1.0em}
+  \centering
+  \uncover<6->{{\small\textcolor{softgray}{Best cases reported by each paper, each
+    against its own baseline.}}\par}
+
+  \vspace{0.4em}
+  \takeawayat{6-}{Send less, and break less\\ when the network misbehaves.}
+  \plainsource{Wang et al., JSAC 2023; Cheng et al., SenSys 2024; Guo et al., JSAC
+    2025; Bourtsoulatze et al., TCCN 2019; Cheng et al., NSDI 2024}
+\end{frame}

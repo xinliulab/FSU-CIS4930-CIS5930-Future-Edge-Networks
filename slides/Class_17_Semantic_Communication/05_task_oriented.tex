@@ -1,0 +1,233 @@
+%!TEX root = ./main.tex
+
+\section[Task]{Version 2: Task-Oriented}
+
+% SECTION TIMING: 30:30--39:40 (4 frames): 130 + 160 + 140 + 120 = 550 s.
+% Flex: "Send only when the answer changes" can drop to 45 s (show the ticks, skip AoI).
+
+% Teaching note (130 s): return to Receiver B from the opening slide: it never needs
+% to watch the video, it needs to know whether (and where) there are pedestrians.
+% Reveal the three options one at a time. Send the video (compressed 1080p video is
+% several megabits per second, see the "by the numbers" slide): the server decodes
+% every frame and does all the work. Send only the answer (a few bytes per frame):
+% the camera must be strong enough to run the whole AI model. Send just enough
+% clues: split the model -- first layers on the camera, the rest on the server
+% (split computing; Neurosurgeon, Kang et al., ASPLOS 2017, picks the split layer) --
+% and train the split together with a simulated noisy channel (BottleNet++, Shao &
+% Zhang, IEEE ICC Workshops 2020, puts a fixed channel layer between encoder and
+% decoder). That last option is task-oriented semantic communication, and note what
+% is missing: no frame is ever rebuilt at the server.
+\begin{frame}{Version 2: when the receiver is a machine}
+  \vspace{1.0em}
+  \centering
+  {\large Receiver B only asks: \textbf{``any pedestrians?''}\par}
+
+  \vspace{1.0em}
+  \raggedright
+  \begin{enumerate}[<+->]\itemsep8pt
+    \item \textbf{Send the video} \textcolor{softgray}{(several Mb/s)}:
+      the server does all the work
+    \item \textbf{Send only the answer} \textcolor{softgray}{(a few bytes)}:
+      camera runs the whole AI
+    \item \textbf{\textcolor{coreorange}{Send just enough clues}}: split the AI,
+      train it with the channel
+  \end{enumerate}
+
+  \vspace{0.8em}
+  \centering
+  \begin{tikzpicture}[scale=0.76,transform shape,visible on=<3->]
+    \node[endnode] (img) at (0,0) {Video};
+    \node[nnnode,minimum width=2.4cm,minimum height=1.0cm,font=\small\bfseries] (head)
+      at (2.8,0) {AI part 1\\[-2pt]{\scriptsize\mdseries on the camera}};
+    \node[chnode,minimum width=1.5cm,minimum height=1.0cm,font=\small\bfseries] (ch)
+      at (6.3,0) {Channel};
+    \node[nnnode,minimum width=2.4cm,minimum height=1.0cm,font=\small\bfseries] (tail)
+      at (9.4,0) {AI part 2\\[-2pt]{\scriptsize\mdseries on the server}};
+    \node[corenode,minimum width=2.2cm,minimum height=1.0cm] (out) at (12.4,0)
+      {``2 people''};
+    \draw[flow] (img) -- (head);
+    \draw[flow] (head) -- node[above,iface]{clues} (ch);
+    \draw[flow] (ch) -- (tail);
+    \draw[flow] (tail) -- (out);
+  \end{tikzpicture}
+
+  \vspace{0.8em}
+  \takeawayat{4-}{With clues, no frame is ever rebuilt ---\\
+    only the decision matters.}
+  \source{https://doi.org/10.1145/3037697.3037698}{Kang et al., Neurosurgeon,
+    ASPLOS 2017; Shao \& Zhang, BottleNet++, ICC Workshops 2020}
+\end{frame}
+
+% Teaching note (160 s): the principled version of "keep only what the task needs",
+% called the information bottleneck. Squeeze each frame through a narrow neck so only
+% what the task needs survives. The pedestrian example is an illustration of the
+% principle: the cited paper (Shao, Mao & Zhang, IEEE JSAC 2022) demonstrated it on
+% image classification (MNIST, CIFAR-10), and real learned features are not
+% human-readable "shapes of people". The knob (beta in the paper) sets how tight the
+% neck is: tighter means fewer symbols on air and, past some point, more mistakes.
+% Side effect worth one sentence: less of the video leaves the camera (a privacy
+% benefit, not a guarantee). Paper details if asked: objective
+% L_IB = -I(Z^;Y) + beta * I(Z^;X), terms labelled "distortion" and "rate", with Z^
+% the noisy received feature; variational bounds and a log-uniform sparsity prior
+% switch off unneeded feature dimensions; a variable-length variant (VL-VFE) adapts
+% how many dimensions are sent to the channel condition. If asked whether one general
+% model can serve many tasks: yes, it is an active direction -- e.g., U-DeepSC (Zhang,
+% Hu, Qin, Cai, Yu & Tao, "A Unified Multi-Task Semantic Communication System for
+% Multimodal Data," IEEE Trans. Commun., 2024, doi:10.1109/TCOMM.2024.3364990) serves
+% many tasks with one model, with performance comparable to task-specific systems and
+% less overhead and model size than storing one model per task; its abstract states the
+% motivating limitation (networks "have to be updated when the task is changed"). The
+% trade-off: a general model must keep more information (U-DeepSC adjusts how many
+% symbols each task gets), so it sends more bits and needs more compute than a funnel
+% built for one task. Large foundation models as the shared knowledge base are another
+% direction (e.g., Jiang et al., IEEE Wireless Commun., 2024,
+% doi:10.1109/MWC.001.2300346 -- bibliographic check only).
+\begin{frame}{How Version 2 works: keep what the task needs}
+  \vspace{1.2em}
+  \centering
+  \begin{tikzpicture}[scale=0.82,transform shape]
+    \node[endnode,minimum width=3.0cm,minimum height=2.2cm] (x) at (0,0)
+      {One frame\\[2pt]{\scriptsize\mdseries people, cars, sky,}\\[-2pt]
+       {\scriptsize\mdseries buildings, \ldots}};
+    \draw[ranpurple,thick,fill=purple!8] (1.6,1.1) -- (4.2,0.28) -- (6.2,0.28)
+      -- (6.2,-0.28) -- (4.2,-0.28) -- (1.6,-1.1) -- cycle;
+    \node[font=\small\bfseries,text=ranpurple] at (5.2,0) {keep};
+    \node[lbl] at (3.3,1.55) {drop what the task does not need};
+    \node[corenode,minimum width=2.4cm,minimum height=1.0cm] (y) at (8.6,0)
+      {``2 people, left''};
+    \draw[flow] (6.2,0) -- (y.west);
+  \end{tikzpicture}
+
+  \vspace{1.2em}
+  \raggedright
+  \begin{itemize}[<+(1)->]\itemsep8pt
+    \item Finding people? Keep their shapes, drop the sky
+    \item A knob sets the neck: tighter = fewer bits, more mistakes
+  \end{itemize}
+
+  \vspace{1.0em}
+  \takeawayat{4-}{Send ``2 people, left'' instead of every pixel.}
+  \source{https://arxiv.org/abs/2102.04170}{The ``information bottleneck'' approach:
+    J.\ Shao, Y.\ Mao, J.\ Zhang, IEEE JSAC, 2022}
+\end{frame}
+
+% Teaching note (140 s): the concrete example of "no frame is ever rebuilt".
+% Shao, Zhang & Zhang, "Task-Oriented Communication for Edge Video Analytics," IEEE
+% Trans. Wireless Commun. 23(5), 2024 (arXiv 2211.14049): several cameras watch the
+% same square (Wildtrack dataset, 7 cameras) and the server predicts where the
+% pedestrians are (occupancy map). Devices "transmit the informative features to an
+% edge server for processing, rather than reconstructing the videos at the edge
+% server". Mechanisms: an information bottleneck keeps only task-relevant features and
+% penalizes their bit cost; each frame's features are coded using the previous
+% frames' features as side information (send what is new); the server fuses current
+% and previous frames. Number on the slide: at the same accuracy (MODA about 85%),
+% a learned image codec needs about 130 KB while their method needs 50 KB or 20 KB,
+% i.e., 2.6x-6.5x less (our arithmetic). The paper also compares JPEG, WebP, H.264
+% (AVC) and H.265 (HEVC) baselines, but only in figures, so no number is quoted here.
+% Second example: VideoQA-SC (Guo et al., IEEE JSAC 43(7), 2025): answers questions
+% about video clips while "bypassing the need for video reconstruction"; at low SNR
+% it improves answer accuracy by 5.17% "while saving almost 99.5% of the bandwidth",
+% compared with a DVST-based system that rebuilds the video first.
+% Networking cousins (if students ask): DDS (SIGCOMM 2020, up to 59% less bandwidth),
+% Reducto (SIGCOMM 2020, drops 51-97% of frames on the camera) and AccMPEG (MLSys
+% 2022) send less video for analytics, but the server still decodes ordinary H.264
+% video -- a step toward task-oriented communication without leaving the bit pipe.
+\begin{frame}{Version 2 for video: no frames rebuilt}
+  \vspace{1.0em}
+  \centering
+  \begin{tikzpicture}[scale=0.74,transform shape]
+    \node[endnode,minimum width=1.8cm,minimum height=0.75cm] (c1) at (0,1.1) {Camera 1};
+    \node[endnode,minimum width=1.8cm,minimum height=0.75cm] (c2) at (0,0) {Camera 2};
+    \node[endnode,minimum width=1.8cm,minimum height=0.75cm] (c7) at (0,-1.1) {Camera 7};
+    \node[font=\large,text=softgray] at (0,-0.55) {$\vdots$};
+    \node[nnnode,minimum width=3.0cm,minimum height=1.5cm,font=\small\bfseries] (srv)
+      at (5.0,0) {Edge AI\\[-2pt]{\scriptsize\mdseries fuses cameras}\\[-3pt]{\scriptsize\mdseries and past frames}};
+    \node[corenode,minimum width=2.6cm,minimum height=1.0cm] (out) at (8.9,0)
+      {Where are\\the people?};
+    \draw[flow] (c1.east) -- (srv.west);
+    \draw[flow] (c2.east) -- (srv.west);
+    \draw[flow] (c7.east) -- (srv.west);
+    \node[iface] at (2.3,1.0) {features};
+    \draw[flow] (srv) -- (out);
+  \end{tikzpicture}
+
+  \vspace{0.8em}
+  \raggedright
+  \begin{itemize}[<+(1)->]\itemsep5pt
+    \item Cameras send \textbf{features, not video}: no frame is rebuilt
+    \item Each feature coded with the previous one: send what is new
+    \item Same accuracy, \textbf{2.6--6.5$\times$ less data} than sending
+      compressed frames
+    \item Video Q\&A: \textbf{$\approx$99.5\% less bandwidth} than rebuilding first
+  \end{itemize}
+
+  \vspace{0.5em}
+  \takeawayat{6-}{For machines, skip the pixels.}
+  \source{https://doi.org/10.1109/TWC.2023.3314888}{Shao, Zhang \& Zhang, IEEE TWC,
+    2024; Guo et al., ``VideoQA-SC,'' IEEE JSAC, 2025}
+\end{frame}
+
+
+% Teaching note (120 s): an EXTRA lever, not the definition. Task-oriented
+% communication is first about WHAT to send (task-relevant clues, previous slides);
+% most task-oriented systems -- including the video-analytics example on the previous slide
+% -- still send something for every frame, just far fewer bits. Deciding WHEN to send
+% comes from a related research line on timely, goal-oriented status updates. Click
+% through: the number of pedestrians in view changes twice; reporting every second
+% sends ten updates; reporting only when the answer changes sends three. Three
+% catches to say out loud: (1) to know that the answer changed, the camera must
+% compute the answer itself (option 2 on "Version 2: when the receiver is a machine") or use a
+% cheap change check -- e.g., Reducto (ACM SIGCOMM 2020) drops 51-97% of frames on the
+% camera with cheap frame differencing, though it still sends ordinary H.264 frames;
+% (2) silence is ambiguous -- "nothing changed" or "the camera died?" -- so real
+% systems also send occasional heartbeat messages; (3) if one update is lost, the
+% server stays wrong until the next change -- the Age of Incorrect Information metric
+% (Maatouk, Kriouile, Assaad & Ephremides, IEEE/ACM Trans. Networking 28(5), 2020,
+% doi:10.1109/TNET.2020.3005549) measures exactly that. Age of Information (AoI)
+% measures freshness: Delta(t) = t - u(t), where u(t) is when the newest delivered
+% update was generated (Yates et al. survey, IEEE JSAC 2021); AoI was introduced by
+% Kaul, Gruteser, Rai, Kenney (IEEE SECON 2011) and first analyzed with queueing
+% theory by Kaul, Yates, Gruteser (IEEE INFOCOM 2012). The semantic step beyond it
+% (Kountouris & Pappas, IEEE Commun. Mag. 2021): freshness alone ignores how the
+% source changes; judge an update by its usefulness for the receiver's goal.
+\begin{frame}{Send only when the answer changes}
+  \vspace{0.6em}
+  \centering
+  {\small\textcolor{softgray}{An extra option, not a rule: many task-oriented systems
+    still send something every frame.}\par}
+
+  \vspace{0.6em}
+  \begin{tikzpicture}[scale=0.72]
+    \draw[-{Latex[length=2mm]},thick,softgray] (0,0) -- (10.3,0)
+      node[anchor=south east,font=\scriptsize,text=black]{time};
+    \draw[ranblue,ultra thick] (0,0.7) -- (3.2,0.7) -- (3.2,1.7) -- (7.1,1.7)
+      -- (7.1,0.7) -- (10,0.7);
+    \node[font=\scriptsize\bfseries,text=ranblue,anchor=south west] at (0,1.75)
+      {pedestrians in view};
+    \node[font=\scriptsize,text=ranblue,anchor=east] at (-0.1,0.7) {0};
+    \node[font=\scriptsize,text=ranblue,anchor=east] at (-0.1,1.7) {1};
+    \foreach \t in {0.5,1.5,...,9.5}{
+      \draw[softgray,very thick,visible on=<2->] (\t,-0.5) -- (\t,-0.85);
+    }
+    \node[font=\scriptsize,text=softgray,anchor=east,visible on=<2->] at (-0.1,-0.67)
+      {every second: 10};
+    \foreach \t in {0.5,3.3,7.2}{
+      \draw[coreorange,very thick,visible on=<3->] (\t,-1.15) -- (\t,-1.5);
+    }
+    \node[font=\scriptsize\bfseries,text=coreorange,anchor=east,visible on=<3->]
+      at (-0.1,-1.32) {on change: 3};
+  \end{tikzpicture}
+
+  \vspace{1.0em}
+  \raggedright
+  \begin{itemize}[<+(3)->]\itemsep6pt
+    \item \textbf{Freshness:} how old is my latest update?
+      \textcolor{softgray}{(``Age of Information'')}
+    \item \textbf{Usefulness:} does this update change what I do?
+  \end{itemize}
+
+  \vspace{0.8em}
+  \takeawayat{6-}{Another lever: decide \textbf{when} to send, too.}
+  \source{https://doi.org/10.1109/JSAC.2021.3065072}{Yates et al., AoI survey,
+    IEEE JSAC, 2021; Kountouris \& Pappas, IEEE Commun.\ Mag., 2021}
+\end{frame}

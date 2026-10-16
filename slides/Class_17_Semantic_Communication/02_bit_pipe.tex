@@ -1,0 +1,246 @@
+%!TEX root = ./main.tex
+
+\section[Today]{How Communication Works Today}
+
+% SECTION TIMING: 2:20--14:10 (5 frames): 130 + 190 + 130 + 90 + 170 = 710 s.
+% Flex frame if running late: "Why this design won" compresses to 60 s (say the two
+% ideas, skip the formula).
+
+% Teaching note (130 s): redraw Shannon's Fig. 1 and name the five boxes (in the
+% original figure the channel is an unlabeled box; the text names the five parts:
+% source, transmitter, channel, receiver, destination). Shannon's problem: reproduce,
+% at the destination, the message chosen at the source -- exactly or approximately.
+% Then read the quote slowly; it is the hinge of the whole lecture. Shannon did not
+% say meaning is unimportant, only that it is not needed to design the pipe.
+% Information = which message was chosen out of all possible ones, counted in bits.
+\begin{frame}{Shannon 1948: copy the message}
+  \vspace{1.2em}
+  \centering
+  % SOURCE: Shannon, Bell Syst. Tech. J. 27 (1948), Fig. 1 and Introduction.
+  \begin{tikzpicture}[scale=0.74,transform shape,
+      blk/.style={netnode,minimum width=2.1cm,minimum height=1.0cm,font=\small\bfseries}]
+    \node[blk] (src) at (0,0) {Information\\source};
+    \node[blk] (tx)  at (3.05,0) {Transmitter};
+    \node[chnode,minimum width=1.8cm,minimum height=1.0cm,font=\small\bfseries] (ch)
+      at (6.1,0) {Channel};
+    \node[blk] (rx)  at (9.15,0) {Receiver};
+    \node[blk] (dst) at (12.2,0) {Destination};
+    \node[corenode,minimum width=1.8cm,minimum height=0.75cm,font=\small\bfseries]
+      (noise) at (6.1,-1.45) {Noise};
+    \draw[flow] (src) -- (tx);
+    \draw[flow] (tx) -- (ch);
+    \draw[flow] (ch) -- (rx);
+    \draw[flow] (rx) -- (dst);
+    \draw[flow] (noise) -- (ch);
+  \end{tikzpicture}
+
+  \vspace{1.0em}
+  \uncover<2->{{\large Goal: an \textbf{exact copy} at the other end.}\par}
+
+  \vspace{1.0em}
+  \uncover<3->{{\itshape ``These semantic aspects of communication are irrelevant
+    to the engineering problem.''}\par
+    \vspace{0.2em}
+    {\small\textcolor{softgray}{--- Shannon (1948)}}\par}
+
+  \vspace{0.9em}
+  \takeawayat{4-}{Meaning was left out on purpose:\\
+    a bit is a bit, whatever it encodes.}
+  \source{https://doi.org/10.1002/j.1538-7305.1948.tb01338.x}{C.\ E.\ Shannon,
+    ``A Mathematical Theory of Communication,'' Bell Syst.\ Tech.\ J., 1948}
+\end{frame}
+
+% Teaching note (190 s): the suitcase analogy carries the slide. Compress = vacuum-pack
+% the clothes (source coding; for video, a codec such as H.264 removes what is
+% predictable inside each frame and between consecutive frames, so every bit left
+% matters). Protect = bubble wrap (channel coding: add structured redundancy so the
+% receiver can fix errors; modern examples are LDPC and polar codes -- the Wi-Fi
+% lecture did not cover them, so just say "error-correcting code"). Send = the truck
+% (modulation: the QAM and OFDM of the Wi-Fi lecture). The truck never opens the
+% suitcase: each block is designed and upgraded on its own, and the halves agree on
+% one interface only -- bits. The receiver undoes each step in reverse order.
+% Fourth click plants FEEDBACK, which "Where it struggles" builds on: the receiver
+% keeps reporting how the delivery is going, and the sender adjusts -- phone-call
+% analogy: "you're breaking up", so you slow down and repeat. In real-time video
+% (WebRTC) the receiver reports packet arrival times (TWCC) and the sender's
+% congestion control (GCC) sets the encoder's target bitrate -- hence the arrow back
+% to Compress. Wi-Fi itself also adapts at the Send step (it switches to slower,
+% sturdier transmission settings); no need to say this unless asked.
+\begin{frame}{Today's pipeline: like shipping a suitcase}
+  \vspace{1.6em}
+  \centering
+  \begin{tikzpicture}[scale=0.72,transform shape,
+      blk/.style={netnode,minimum width=2.3cm,minimum height=1.0cm,font=\small\bfseries}]
+    \node[endnode] (src) at (0,0) {Video};
+    \node[blk] (c) at (2.8,0) {Compress\\[-2pt]{\scriptsize\mdseries e.g., H.264}};
+    \node[blk] (p) at (5.75,0) {Protect\\[-2pt]{\scriptsize\mdseries error-correcting code}};
+    \node[blk] (s) at (8.7,0) {Send\\[-2pt]{\scriptsize\mdseries radio signal}};
+    \node[chnode,minimum width=1.3cm,minimum height=1.0cm] (air) at (11.2,0) {Air};
+    \node[endnode,minimum width=1.9cm] (rx) at (13.5,0) {Receiver};
+    \draw[flow] (src) -- (c);
+    \draw[flow] (c) -- (p);
+    \draw[flow] (p) -- (s);
+    \draw[flow] (s) -- (air);
+    \draw[flow] (air) -- (rx);
+    \node[iface,above=3pt of c,visible on=<2->] {vacuum-pack};
+    \node[iface,above=3pt of p,visible on=<2->] {bubble wrap};
+    \node[iface,above=3pt of s,visible on=<2->] {truck};
+    \draw[flow,coreorange,dashed,visible on=<4->] (rx.south) -- ++(0,-0.9) -| (c.south);
+    \node[font=\small\bfseries,text=coreorange,visible on=<4->] at (8.2,-1.05)
+      {feedback: ``too much, slow down!''};
+  \end{tikzpicture}
+
+  \vspace{1.0em}
+  \uncover<3->{{\large The truck never opens the suitcase.}\par}
+
+  \vspace{0.5em}
+  \uncover<4->{{\small\textcolor{softgray}{The receiver reports back, and the sender
+    adjusts the video quality --- like ``you're breaking up'' on a phone call.}}\par}
+
+  \vspace{1.0em}
+  \takeawayat{5-}{Every block has one job:\\
+    \textbf{deliver these bits exactly.}}
+\end{frame}
+
+% Teaching note (130 s): reveal one box at a time and do the arithmetic out loud.
+% Raw: 1920 x 1080 pixels x 24 bits x 30 frames/s = 1.49 Gb/s. H.264 at 8 Mb/s: that
+% is YouTube's recommended upload bitrate for 1080p SDR at 24/25/30 frames/s (YouTube
+% Help, "YouTube recommended upload encoding settings"; 12 Mb/s at 48/50/60 frames/s)
+% -- a realistic compressed rate, about 190x smaller than raw. Protection: the 802.11a
+% 54 Mb/s mode uses a rate-3/4 convolutional code, i.e., +1/3 extra bits -> about
+% 10.7 Mb/s on air, roughly 20% of an old 54 Mb/s Wi-Fi link, nonstop. The orange box
+% is a TEACHING EXAMPLE: if B only needs a pedestrian count, 1 byte per frame x 30
+% frames/s = 240 b/s. Q&A mechanism (unicast Wi-Fi frames): the 32-bit frame check
+% sequence (a CRC) fails, the receiver drops the frame and sends no ACK, the sender
+% times out and retries up to its retry limit; broadcast frames are not ACKed, and
+% inside an A-MPDU only the failed subframe is resent. Sources: IEEE Std 802.11;
+% Ergen, "IEEE 802.11 Tutorial," UC Berkeley, 2002.
+\begin{frame}{One video stream, by the numbers}
+  \vspace{1.4em}
+  \centering
+  % SOURCE (8 Mb/s): https://support.google.com/youtube/answer/1722171
+  \begin{tikzpicture}[scale=0.8,transform shape,
+      box/.style={netnode,minimum width=2.9cm,minimum height=1.25cm,font=\small\bfseries}]
+    \node[box] (raw) at (0,0) {Raw 1080p video\\[1pt]{\large 1.5 Gb/s}};
+    \node[box,visible on=<2->] (h264) at (3.9,0) {H.264\\[1pt]{\large 8 Mb/s}};
+    \node[box,visible on=<3->] (fec) at (7.8,0) {+ protection\\[1pt]{\large 10.7 Mb/s}};
+    \draw[flow,visible on=<2->] (raw) -- (h264);
+    \draw[flow,visible on=<3->] (h264) -- (fec);
+    \node[lbl,below=3pt of raw] {30 frames per second};
+    \node[lbl,below=3pt of h264,visible on=<2->] {YouTube's 1080p rate};
+    \node[lbl,below=3pt of fec,visible on=<3->] {+1/3 extra bits};
+    \node[corenode,minimum width=6.4cm,minimum height=0.95cm,font=\small\bfseries,
+      visible on=<4->] (b) at (3.9,-2.2) {But B only needs ``2 people'': $\approx$240 b/s};
+  \end{tikzpicture}
+
+  \vspace{0.6em}
+  \raggedright
+  \uncover<5->{\qa{What does the receiver check at the end?}
+     {Only whether every bit is right. One wrong bit, and it is sent again.
+      Nobody asks what the video shows.}}
+
+  \vspace{0.2em}
+  \source{https://support.google.com/youtube/answer/1722171}{YouTube recommended
+    upload encoding settings; IEEE Std 802.11; orange box = teaching example}
+\end{frame}
+
+% Teaching note (90 s): two reasons this design won. (1) Divide and conquer:
+% Shannon's separation theorem says compressing and protecting can be designed
+% separately with no loss -- for one sender and one receiver, and only in the limit of
+% very long messages. Exact conditions (Cover & Thomas, Elements of Information
+% Theory, 2nd ed., Wiley 2006, Thm. 7.13.1): point-to-point, discrete memoryless
+% channel, source satisfying the AEP, error probability -> 0 only as block length ->
+% infinity. Lossy form: distortion D is achievable if R(D) < C and impossible if
+% R(D) > C. Consequence: H.264 does not care whether it rides on Wi-Fi or 5G -- bits are
+% a universal interface. (2) A speed limit: capacity C = B log2(1 + SNR); e.g. 20 MHz
+% at 20 dB SNR gives about 133 Mb/s. It is a ceiling on reliable bits per second, not
+% a calculator for a real radio's rate.
+\begin{frame}{Why this design won}
+  \vspace{1.4em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      \centering
+      {\Large\textbf{\textcolor{ranblue}{Divide and conquer}}\par}
+      \vspace{0.8em}
+      Compress and protect\\separately: \textbf{nothing lost}\\
+      {\small\textcolor{softgray}{(long messages, one link)}}
+    \column{0.48\textwidth}
+      \centering
+      \uncover<2->{%
+      {\Large\textbf{\textcolor{coreorange}{A speed limit}}\par}
+      \vspace{0.8em}
+      Every channel has a\\\textbf{maximum reliable rate}\\
+      {\small\textcolor{softgray}{$C = B \log_2(1+\mathrm{SNR})$}}}
+  \end{columns}
+
+  \vspace{2.2em}
+  \takeawayat{3-}{Bits became a universal interface:\\
+    any app over any network.}
+  \source{https://doi.org/10.1002/j.1538-7305.1948.tb01338.x}{Shannon (1948);
+    Cover \& Thomas, Elements of Information Theory, 2nd ed., Thm.\ 7.13.1}
+\end{frame}
+
+% Teaching note (170 s): the pictures carry the slide -- one frame per click.
+% Real video calls do not just freeze when the signal weakens: WebRTC-style feedback
+% adapts. The receiver keeps reporting when each packet arrived (TWCC feedback; in
+% libwebrtc the report interval defaults to 100 ms within 50-250 ms -- from an earlier
+% reading of the source, recheck before quoting), and the sender's congestion control
+% (GCC) estimates the available bandwidth and lowers the encoder's target bitrate, so
+% the picture gets blockier rather than stopping (second frame). But the loop always
+% reacts after the fact: when wireless capacity drops suddenly, packets queue up at
+% the access point before the sender slows down, so frames arrive late -- a latency
+% spike -- and the receiver's playout can briefly freeze (WebRTC's own statistics
+% count such freezes as freezeCount). That gap between "the channel changed" and "the
+% sender reacted" is exactly what Zhuge (Meng et al., "Achieving Consistent Low
+% Latency for Wireless Real-Time Communications with the Shortest Control Loop," ACM
+% SIGCOMM 2022, doi:10.1145/3544216.3544225) attacks by shortening the control loop
+% at the AP. Background if asked: a link with ONE fixed setting and no feedback shows
+% the pure all-or-nothing "cliff" (digital TV freezing; old analog TV just got snowy)
+% -- learned-JSCC papers often compare against that, but the fair baseline is a
+% system with feedback. Theory behind "long messages, one link": at finite
+% blocklength separation pays a penalty that joint coding can avoid (Kostina & Verdu,
+% IEEE Trans. Inf. Theory 2013, doi:10.1109/TIT.2013.2238657); for a Gaussian source
+% over an AWGN channel with matched bandwidth, uncoded transmission is optimal at
+% every SNR at once, which no single digital rate can match (Gastpar, Rimoldi &
+% Vetterli, IEEE Trans. Inf. Theory 2003, doi:10.1109/TIT.2003.810631).
+\begin{frame}{Where it struggles}
+  \vspace{0.8em}
+  \centering
+  \begin{tikzpicture}[scale=0.72,transform shape]
+    \begin{scope}
+      \signalbars{0.45}{2.3}{4}
+      \node[anchor=west,font=\small\bfseries] at (1.65,2.45) {strong};
+      \pic at (0,0) {streetframe};
+      \node[font=\small\bfseries,text=softgreen,anchor=north] at (1.7,-0.1) {sharp};
+    \end{scope}
+    \begin{scope}[visible on=<2->]
+      \signalbars{4.45}{2.3}{2}
+      \node[anchor=west,font=\small\bfseries] at (5.65,2.45) {weaker};
+      \pic at (4,0) {streetblocky};
+      \node[font=\small\bfseries,text=ranblue,anchor=north,align=center] at (5.7,-0.1)
+        {lower quality\\[-2pt]{\scriptsize\mdseries feedback cut the bitrate}};
+    \end{scope}
+    \begin{scope}[visible on=<3->]
+      \signalbars{8.45}{2.3}{1}
+      \node[anchor=west,font=\small\bfseries] at (9.65,2.45) {sudden drop};
+      \pic at (8,0) {streetframe};
+      \pic at (8,0) {late};
+      \node[font=\small\bfseries,text=coreorange,anchor=north,align=center] at (9.7,-0.1)
+        {late, may freeze\\[-2pt]{\scriptsize\mdseries feedback not there yet}};
+    \end{scope}
+  \end{tikzpicture}
+
+  \vspace{0.5em}
+  \raggedright
+  \begin{itemize}[<+(3)->]\itemsep5pt
+    \item \textbf{Feedback adapts --- one step late:} quality drops, delay spikes
+    \item \textbf{Every bit counts the same:} sky = pedestrian
+    \item \textbf{Receiver B only needs an answer}
+  \end{itemize}
+
+  \vspace{0.5em}
+  \takeawayat{7-}{Today's video adapts, but after the fact ---\\
+    and it always sends everything.}
+  \source{https://doi.org/10.1145/3544216.3544225}{Feedback delay on wireless links:
+    Z.\ Meng et al., ``Zhuge,'' ACM SIGCOMM 2022}
+\end{frame}

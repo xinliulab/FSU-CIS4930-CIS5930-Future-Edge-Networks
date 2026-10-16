@@ -1,0 +1,140 @@
+%!TEX root = ./main.tex
+
+% Styles added for this deck; ran_macros.tex stays identical to the Wi-Fi History copy.
+
+% Navigation symbols sit on top of the source lines at the bottom right.
+\setbeamertemplate{navigation symbols}{}
+
+\tikzset{
+  % The physical channel: gray, so it reads as "not designed by us".
+  chnode/.style={draw=softgray,fill=gray!10,rounded corners=3pt,
+    minimum width=1.7cm,minimum height=0.82cm,align=center,font=\bfseries},
+  % Shared knowledge / trained model: green, used only for what both ends must hold.
+  kbnode/.style={draw=softgreen,fill=green!7,rounded corners=3pt,
+    minimum width=1.9cm,minimum height=0.82cm,align=center,font=\bfseries},
+  % Learned (neural) blocks: purple, so "trained" is visible at a glance.
+  nnnode/.style={draw=ranpurple,fill=purple!6,rounded corners=3pt,
+    minimum width=1.9cm,minimum height=0.82cm,align=center,font=\bfseries},
+  % Plain content boxes (photo, sentence, answer).
+  endnode/.style={draw=softgray,fill=gray!6,rounded corners=3pt,
+    minimum width=1.7cm,minimum height=1.0cm,align=center,font=\small\bfseries},
+  lbl/.style={font=\scriptsize,text=softgray,align=center},
+  iface/.style={font=\scriptsize\bfseries,text=coreorange},
+}
+
+% A tiny street-scene video frame (sky, road, one pedestrian, one car), drawn at
+% (0,0)--(3.4,2.1). Used on the "lost block" slide.
+\tikzset{
+  streetframe/.pic={
+    \fill[blue!12] (0,1.0) rectangle (3.4,2.1);
+    \fill[gray!25] (0,0) rectangle (3.4,1.0);
+    \draw[white,thick,dashed] (0,0.45) -- (3.4,0.45);
+    \fill[coreorange] (1.15,1.36) circle (0.13);
+    \fill[coreorange] (1.03,0.72) rectangle (1.27,1.21);
+    \fill[ranblue!70,rounded corners=1pt] (2.25,0.18) rectangle (3.1,0.58);
+    \draw[softgray] (0,0) rectangle (3.4,2.1);
+  }
+}
+
+% Step-by-step reveal for the colored boxes. A tcolorbox inside \uncover would still
+% paint its background, so on earlier overlays draw a fully transparent copy instead:
+% the box keeps its space and nothing below it jumps when it appears.
+% Usage: \takeawayat{3-}{text}   \askat{2-}{text}
+\newcommand{\takeawayghost}[1]{%
+  \begin{tcolorbox}[colback=orange!7,colframe=coreorange,boxrule=0.7pt,arc=2pt,
+    left=5pt,right=5pt,top=4pt,bottom=4pt,
+    opacityback=0,opacityframe=0,opacitytext=0]
+    \centering\normalsize #1
+  \end{tcolorbox}%
+}
+\newcommand{\askghost}[1]{%
+  \begin{tcolorbox}[colback=blue!4,colframe=ranblue,boxrule=0.7pt,arc=2pt,
+    left=5pt,right=5pt,top=4pt,bottom=4pt,
+    opacityback=0,opacityframe=0,opacitytext=0]
+    \centering\large #1
+  \end{tcolorbox}%
+}
+\newcommand{\takeawayat}[2]{\alt<#1>{\takeaway{#2}}{\takeawayghost{#2}}}
+\newcommand{\askat}[2]{\alt<#1>{\ask{#2}}{\askghost{#2}}}
+
+% Citation line in the same style as \source, for references with no stable open URL.
+\newcommand{\plainsource}[1]{%
+  \par\vspace{0.25em}%
+  {\tiny\textcolor{gray}{#1}\par}%
+}
+
+% Picture-based "signal gets weaker" sketches (slides "Where it struggles" and
+% "Weak signal: blurrier, not frozen"). All frames use the streetframe geometry.
+% \signalbars{x}{y}{n}: four bars at (x,y), the first n filled.
+\newcommand{\signalbars}[3]{%
+  \foreach \i in {1,2,3,4}{%
+    \ifnum\i>#3\relax
+      \draw[softgray,thick] (#1+0.22*\i,#2) rectangle ++(0.14,0.12*\i);
+    \else
+      \fill[ranblue] (#1+0.22*\i,#2) rectangle ++(0.14,0.12*\i);
+    \fi}%
+}
+% Pedestrian and car at a given opacity, so blurred frames can stack shifted copies.
+\newcommand{\streetobjects}[1]{%
+  \fill[coreorange,opacity=#1] (1.15,1.36) circle (0.13);
+  \fill[coreorange,opacity=#1] (1.03,0.72) rectangle (1.27,1.21);
+  \fill[ranblue!70,opacity=#1,rounded corners=1pt] (2.25,0.18) rectangle (3.1,0.58);%
+}
+\tikzset{
+  % today's link below its threshold: the picture stops
+  frozen/.pic={
+    \fill[black,opacity=0.6] (0,0) rectangle (3.4,2.1);
+    \fill[white] (1.45,0.85) rectangle (1.6,1.45);
+    \fill[white] (1.8,0.85) rectangle (1.95,1.45);
+    \node[font=\small\bfseries,text=white] at (1.7,0.45) {frozen};
+  },
+  % today's link after feedback lowered the bitrate: coarser, blockier picture
+  streetblocky/.pic={
+    \fill[blue!12] (0,1.0) rectangle (3.4,2.1);
+    \fill[gray!25] (0,0) rectangle (3.4,1.0);
+    \fill[coreorange!85] (0.98,1.2) rectangle (1.32,1.54);
+    \fill[coreorange!85] (0.98,0.68) rectangle (1.32,1.2);
+    \fill[ranblue!60] (2.2,0.12) rectangle (3.15,0.64);
+    \draw[white,opacity=0.55] (0,0) grid[step=0.34] (3.4,2.1);
+    \draw[softgray] (0,0) rectangle (3.4,2.1);
+  },
+  % today's link right after a sudden drop, before feedback reacts: frames arrive late
+  late/.pic={
+    \fill[black,opacity=0.45] (0,0) rectangle (3.4,2.1);
+    \draw[white,very thick] (1.7,1.25) circle (0.38);
+    \draw[white,very thick] (1.7,1.25) -- (1.7,1.5);
+    \draw[white,very thick] (1.7,1.25) -- (1.88,1.25);
+    \node[font=\small\bfseries,text=white] at (1.7,0.45) {late};
+  },
+  % Version 3: coarse background, sharp pedestrian (bits spent where the task looks)
+  streetv3/.pic={
+    \fill[blue!12] (0,1.0) rectangle (3.4,2.1);
+    \fill[gray!25] (0,0) rectangle (3.4,1.0);
+    \fill[ranblue!60] (2.2,0.12) rectangle (3.15,0.64);
+    \draw[white,opacity=0.55] (0,0) grid[step=0.34] (3.4,2.1);
+    \fill[blue!12] (0.82,1.0) rectangle (1.48,1.68);
+    \fill[gray!25] (0.82,0.58) rectangle (1.48,1.0);
+    \fill[coreorange] (1.15,1.36) circle (0.13);
+    \fill[coreorange] (1.03,0.72) rectangle (1.27,1.21);
+    \draw[softgreen,thick] (0.82,0.58) rectangle (1.48,1.68);
+    \draw[softgray] (0,0) rectangle (3.4,2.1);
+  },
+  % learned link with a weaker signal: same scene, softer
+  streetsoft/.pic={
+    \fill[blue!12] (0,1.0) rectangle (3.4,2.1);
+    \fill[gray!25] (0,0) rectangle (3.4,1.0);
+    \draw[white,thick,dashed,opacity=0.6] (0,0.45) -- (3.4,0.45);
+    \foreach \dx/\dy in {-0.05/0,0.05/0,0/0.05,0/-0.05}{
+      \begin{scope}[shift={(\dx,\dy)}]\streetobjects{0.35}\end{scope}}
+    \draw[softgray] (0,0) rectangle (3.4,2.1);
+  },
+  streetblurry/.pic={
+    \fill[blue!12] (0,1.0) rectangle (3.4,2.1);
+    \fill[gray!25] (0,0) rectangle (3.4,1.0);
+    \draw[white,thick,dashed,opacity=0.35] (0,0.45) -- (3.4,0.45);
+    \foreach \dx/\dy in {-0.12/0,0.12/0,0/0.12,0/-0.12,-0.08/-0.08,0.08/0.08,
+        -0.08/0.08,0.08/-0.08}{
+      \begin{scope}[shift={(\dx,\dy)}]\streetobjects{0.2}\end{scope}}
+    \draw[softgray] (0,0) rectangle (3.4,2.1);
+  },
+}
