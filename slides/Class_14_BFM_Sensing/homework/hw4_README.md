@@ -2,7 +2,7 @@
 
 **CIS4930 / CIS5930 Future Edge Networks**
 
-**Due: Wednesday, October 28, 11:59 p.m. ET.** You have two weeks. 100 points.
+**Due: Wednesday, November 4, 11:59 p.m. ET** (extended by one week). 100 points.
 
 **Submit by pushing to the default branch of this repo. That is the only place you submit.**
 Canvas only shows your grade.
