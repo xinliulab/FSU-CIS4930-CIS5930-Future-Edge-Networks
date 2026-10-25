@@ -1,0 +1,76 @@
+%!TEX root = ./main.tex
+
+\section[Routing]{Model Routing}
+
+% SECTION TIMING: 45:00--48:00 (3 frames): 70 + 70 + 40 s.
+
+% Teaching note (70 s): the idea is almost social: a receptionist who answers the
+% easy questions personally and forwards the hard ones to a specialist. Per query,
+% a router sends easy requests to the local small model and hard ones to the cloud.
+% Most requests are easy (set a timer, summarize a note), so the expensive path is
+% exercised rarely -- the average cost drops while the worst-case quality is kept.
+\begin{frame}{Trick 5: send the question, not every question}
+  \vspace{0.7em}
+  \centering
+  \begin{tikzpicture}[scale=0.85,transform shape]
+    \node[endnode,minimum width=1.9cm] (q) at (0,0) {request};
+    \node[nnnode,minimum width=1.9cm,minimum height=0.9cm] (r) at (3.0,0)
+      {Router};
+    \node[nnnode,minimum width=3.3cm,minimum height=1.0cm] (loc) at (7.4,1.1)
+      {Local small model\\[-2pt]{\scriptsize\mdseries ``set a timer'',
+        summaries}};
+    \node[chnode,minimum width=3.3cm,minimum height=1.0cm] (cl) at (7.4,-1.1)
+      {Cloud big model\\[-2pt]{\scriptsize\mdseries the genuinely hard asks}};
+    \draw[flow] (q) -- (r);
+    \draw[flow,draw=softgreen,thick] (r) -- node[lbl,above left] {most} (loc);
+    \draw[flow,draw=coreorange] (r) -- node[lbl,below left] {few} (cl);
+  \end{tikzpicture}
+
+  \vspace{0.8em}
+  \takeawayat{2-}{Average cost of the small model,\\
+    worst-case quality of the big one.}
+\end{frame}
+
+% Teaching note (70 s): how does the router know a request is hard, before
+% answering it? Three practical signals, cheapest first: (1) task type and length
+% -- a timer is local by rule, a 30-page analysis is cloud by rule; (2) the small
+% model's own confidence -- answer locally, and escalate when its token
+% probabilities look unsure (students saw confidence in the PyTorch lecture);
+% (3) a small learned router trained on pairs where people preferred the big
+% model's answer. This is the shipped architecture: Apple's requests route between
+% the ~3B on-device model and Private Cloud Compute; Pixel routes between Gemini
+% Nano and the cloud Gemini.
+\begin{frame}{How the router decides}
+  \vspace{0.6em}
+  \raggedright
+  \begin{enumerate}[<+->]\itemsep6pt
+    \item \textbf{Rules}: task type and length --- timers local,
+      30-page analysis cloud
+    \item \textbf{Confidence}: answer locally; escalate when the small model's
+      own token probabilities look unsure
+    \item \textbf{A learned router}: trained on requests where people preferred
+      the big model's answer
+  \end{enumerate}
+
+  \vspace{0.7em}
+  \uncover<4->{\raggedright This is the shipped design: Apple routes between its
+    on-device model and Private Cloud Compute; Pixel between Gemini Nano and
+    cloud Gemini.\par}
+  \plainsource{Apple, ``Introducing Apple's On-Device and Server Foundation
+    Models,'' 2024.}
+\end{frame}
+
+% Teaching note (40 s): close the five-trick arc with the complete picture: the
+% modern assistant is not one model, it is a routed system of models -- quantized
+% local ones, MoE cloud ones, caches and split points in between. Hand to wrap-up.
+\begin{frame}{The assistant was never one model}
+  \vspace{1.0em}
+  \raggedright
+  What answers you is a \textbf{system}: a router, a quantized on-device model,
+  a KV cache on a diet, and an MoE in the cloud --- with split points and
+  drafts in between.\par
+
+  \vspace{1.0em}
+  \takeawayat{2-}{``Where should the model run?'' ---\\
+    the shipped answer is: \textbf{everywhere, each part where it is cheapest.}}
+\end{frame}

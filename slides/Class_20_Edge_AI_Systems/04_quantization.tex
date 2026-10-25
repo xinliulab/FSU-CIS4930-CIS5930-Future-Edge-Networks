@@ -1,0 +1,153 @@
+%!TEX root = ./main.tex
+
+\section[Quantization]{Quantization}
+
+% SECTION TIMING: 16:00--24:00 (5 frames): 90 + 100 + 110 + 110 + 70 s.
+
+% Teaching note (90 s): the idea in one picture. A weight is just a number stored in
+% bits; training uses 16-bit floats. Quantization stores each weight in 8 or 4 bits
+% instead: map the range of values in a group of weights onto a small grid of
+% levels, store the grid index, keep one scale factor per group to map back. The
+% model is not retrained (post-training quantization); we only re-encode the
+% numbers. Analogy that lands: rounding every price in a store to the nearest
+% dollar -- the catalog shrinks, most totals barely change.
+\begin{frame}{Trick 1: store each weight in fewer bits}
+  \vspace{0.7em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \node[kbnode,minimum width=3.3cm,minimum height=0.95cm] (fp) at (0,0)
+      {FP16\\[-2pt]{\scriptsize\mdseries 16 bits per weight}};
+    \node[kbnode,minimum width=2.7cm,minimum height=0.95cm,visible on=<2->]
+      (i8) at (4.5,0) {INT8\\[-2pt]{\scriptsize\mdseries 8 bits}};
+    \node[kbnode,minimum width=2.2cm,minimum height=0.95cm,visible on=<2->]
+      (i4) at (8.3,0) {INT4\\[-2pt]{\scriptsize\mdseries 4 bits}};
+    \draw[flow,visible on=<2->] (fp) -- (i8);
+    \draw[flow,visible on=<2->] (i8) -- (i4);
+    \node[lbl,visible on=<2->] at (4.5,-0.95) {$2\times$ smaller};
+    \node[lbl,visible on=<2->] at (8.3,-0.95) {$4\times$ smaller};
+  \end{tikzpicture}
+
+  \vspace{0.7em}
+  \uncover<3->{\raggedright Round each weight onto a coarse grid; keep one
+    \textbf{scale} per group of weights to map back. No retraining ---
+    just re-encoding the numbers.\par}
+
+  \vspace{0.5em}
+  \takeawayat{4-}{Like rounding every price to the nearest dollar:\\
+    the catalog shrinks, most totals barely move.}
+\end{frame}
+
+% Teaching note (100 s): redo the budget math with 4 bits -- same frame layout as
+% "Do the math" on purpose, so the payoff is visible. 7B x 0.5 byte = 3.5 GB: now it
+% fits beside the OS. Ceiling: 70/3.5 = 20 tokens/s -- a comfortable chat. And since
+% decode is bandwidth-bound, the 4x fewer bytes read per token is a real ~4x on
+% streaming speed, not a paper number. This is why every on-device LLM ships
+% quantized.
+\begin{frame}{The same math at 4 bits}
+  \vspace{0.5em}
+  \raggedright
+  {\large\textbf{Fit?}}\par
+  \vspace{0.2em}
+  7B weights $\times$ 0.5 byte (INT4) $=$ \textbf{3.5 GB}
+  \hspace{0.6em}---\hspace{0.6em} \textcolor{softgreen}{\textbf{fits}} next to
+  the OS.\par
+
+  \vspace{0.8em}
+  \uncover<2->{{\large\textbf{Fast enough?}}\par
+    \vspace{0.2em}
+    every token now reads 3.5 GB:
+    \quad $\dfrac{70\ \text{GB/s}}{3.5\ \text{GB}} = $ \textbf{20 tokens/s}
+    --- a comfortable chat.\par}
+
+  \vspace{0.8em}
+  \takeawayat{3-}{Decode is bandwidth-bound, so $4\times$ fewer bytes\\
+    $\approx$ $4\times$ faster streaming. Not a paper number --- you feel it.}
+\end{frame}
+
+% Teaching note (110 s): why it isn't free. Draw the histogram story in words: most
+% weights are small and cluster near zero; a few channels carry outliers -- values
+% far outside the pack. One shared grid must stretch to cover the outliers, so the
+% small weights all collapse onto a few levels and the layer's output drifts. At 8
+% bits there is enough resolution to hide this; at 4 bits naive rounding visibly
+% hurts: answers get vaguer, arithmetic and code break first. The sketch shows the
+% quality cliff: flat from 16 to 8, bends at 4, dives below 3. The orange dot --
+% "where on-device wants to live" -- is exactly on the bend; that tension motivates
+% the next frame.
+\begin{frame}{Why 4 bits is not free}
+  \vspace{0.5em}
+  \raggedright
+  A few \textbf{outlier} weights stretch the grid; the many small weights
+  collapse onto a few levels.\par
+
+  \vspace{0.6em}
+  \centering
+  \begin{tikzpicture}[scale=0.8,transform shape]
+    \draw[flow] (0,0) -- (8.6,0) node[lbl,below left] {bits per weight};
+    \draw[flow] (0,0) -- (0,3.0) node[lbl,above right] {quality};
+    \node[lbl] at (7.8,-0.35) {16};
+    \node[lbl] at (5.4,-0.35) {8};
+    \node[lbl] at (3.0,-0.35) {4};
+    \node[lbl] at (1.8,-0.35) {3};
+    \node[lbl] at (0.6,-0.35) {2};
+    \draw[very thick,ranblue]
+      (7.8,2.55) -- (5.4,2.5) -- (3.4,2.3) .. controls (2.6,2.0) and (2.2,1.5)
+      .. (1.8,0.9) .. controls (1.4,0.4) and (1.0,0.15) .. (0.6,0.1);
+    \fill[coreorange,visible on=<2->] (3.0,2.22) circle (0.11);
+    \node[iface,visible on=<2->] at (3.0,2.75) {where on-device wants to live};
+  \end{tikzpicture}
+
+  \vspace{0.5em}
+  \takeawayat{3-}{Flat from 16 to 8 bits; the cliff starts right where\\
+    the phone needs to be. Naive rounding falls off it.}
+\end{frame}
+
+% Teaching note (110 s): how real quantizers stay on the ledge, at intuition level
+% only -- no algorithm details. Three ideas: (1) calibrate -- run a few hundred
+% sample inputs through the model and choose each group's grid to minimize the error
+% that actually shows up in the layer's output, instead of rounding blindly;
+% (2) protect what matters -- keep the outlier channels (~1% of weights) in higher
+% precision, or scale them down before rounding so the shared grid fits the rest
+% (that is AWQ's observation; GPTQ instead corrects remaining weights as it rounds);
+% (3) weights are the easy half -- activations change with every input, so
+% activation quantization is harder; on phones, weights-only INT4 with FP16 compute
+% is the common recipe. Name-drop GPTQ/AWQ in gray for students who want to read.
+\begin{frame}{How real quantizers stay on the ledge}
+  \vspace{0.6em}
+  \raggedright
+  \begin{enumerate}[<+->]\itemsep7pt
+    \item \textbf{Calibrate}: run a few hundred sample inputs; pick each grid to
+      minimize the error that actually appears in the output
+    \item \textbf{Protect the outliers}: keep the $\sim$1\% extreme channels in
+      higher precision --- or rescale them so the shared grid fits the rest
+    \item \textbf{Weights first}: activations change with every input and are
+      harder --- phones mostly ship \emph{weights-only} INT4
+  \end{enumerate}
+
+  \vspace{0.7em}
+  \glossline{Reading, if you want the algorithms: GPTQ (round, then correct the
+    remaining weights) and AWQ (rescale the salient channels before rounding).}
+  \plainsource{Frantar et al., ``GPTQ,'' ICLR 2023; Lin et al., ``AWQ,''
+    MLSys 2024 (Best Paper).}
+\end{frame}
+
+% Teaching note (70 s): close the section by pointing at shipping systems: Apple's
+% on-device foundation model averages about 3.7 bits per weight (mixed 2- and
+% 4-bit, published in their 2024 report); Gemini Nano and the open on-device models
+% students can run (llama.cpp's 4-bit GGUF files) are the same idea. The takeaway
+% restates the lecture's spine: quantization shrinks every byte; the next section
+% instead avoids touching most bytes at all -- hand off to MoE.
+\begin{frame}{Quantization, in the wild}
+  \vspace{0.7em}
+  \raggedright
+  \begin{itemize}\itemsep7pt
+    \item Apple's on-device model: $\sim$\textbf{3.7 bits} per weight on average
+      (mixed 2-/4-bit)
+    \item Gemini Nano, and every 4-bit model file you can run with
+      \texttt{llama.cpp}: same idea
+  \end{itemize}
+  \plainsource{Apple, ``Apple Intelligence Foundation Language Models,'' 2024.}
+
+  \vspace{0.9em}
+  \takeawayat{2-}{Quantization makes every byte smaller.\\
+    Next trick: \textbf{don't touch most bytes at all}.}
+\end{frame}

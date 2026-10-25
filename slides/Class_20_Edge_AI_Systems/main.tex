@@ -1,0 +1,46 @@
+\documentclass[11pt]{beamer}
+
+\input{../variables.tex}
+\input{ran_macros.tex}
+\input{edgeai_macros.tex}
+
+\title[Edge AI Systems]{Class 20: Edge AI Systems}
+\subtitle{Where Should the Model Run?}
+
+\FSUOSMeta
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\addtocounter{framenumber}{-1}
+
+% TALK BUDGET: 50:00 = 3000 s over 34 content frames. Running example: one question
+% you ask your phone ("summarize my doctor's voicemail"), answered either by the
+% phone's own model or by a model in the cloud.
+%   01 Intro                          0:00--3:00   2 frames  180 s
+%   02 Why on-device                  3:00--8:00   3 frames  300 s
+%   03 The device's budget            8:00--16:00  5 frames  480 s
+%   04 Quantization                   16:00--24:00 5 frames  480 s
+%   05 Mixture of Experts             24:00--33:00 5 frames  540 s
+%   06 KV cache                       33:00--39:00 4 frames  360 s
+%   07 Split & collaborative          39:00--45:00 4 frames  360 s
+%   08 Model routing                  45:00--48:00 3 frames  180 s
+%   09 Wrap-up                        48:00--50:00 3 frames  120 s
+% Flex frames if running late: "And the battery" (03) compresses to 30 s; the
+% speculative-decoding frame (07) can be stated in one sentence over its picture.
+% Style: one idea per frame, few words; numbers rounded; anything longer is revealed
+% step by step. Technical detail and sources live in each frame's "Teaching note".
+\input{01_intro.tex}
+\input{02_why_ondevice.tex}
+\input{03_budget.tex}
+\input{04_quantization.tex}
+\input{05_moe.tex}
+\input{06_kv_cache.tex}
+\input{07_split.tex}
+\input{08_routing.tex}
+\input{09_wrap_up.tex}
+
+\end{document}

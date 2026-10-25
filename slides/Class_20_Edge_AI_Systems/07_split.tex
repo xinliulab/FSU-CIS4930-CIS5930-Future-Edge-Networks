@@ -1,0 +1,125 @@
+%!TEX root = ./main.tex
+
+\section[Split \& collaborate]{Split and Collaborative Inference}
+
+% SECTION TIMING: 39:00--45:00 (4 frames): 110 + 90 + 100 + 60 s.
+% Flex: the speculative-decoding frame can be one sentence over its picture.
+
+% Teaching note (110 s): split inference. Cut the network at layer k: the device
+% runs the first layers, sends the intermediate activation, the cloud finishes.
+% Why would anyone do this instead of just sending the input? Because the
+% activation is a representation, not the raw data -- the voicemail audio never
+% leaves; what crosses is an embedding. Students saw this exact shape in Class 17:
+% send the representation the far end needs, not the content. Be honest in
+% passing: activations are not perfectly private (inversion attacks exist), but
+% the raw-data-never-leaves property is still a meaningful upgrade.
+\begin{frame}{Trick 4: cut the model in two}
+  \vspace{0.7em}
+  \centering
+  \begin{tikzpicture}[scale=0.82,transform shape]
+    \node[endnode,minimum width=2.0cm] (in) at (0,0) {voicemail};
+    \node[nnnode,minimum width=2.9cm,minimum height=1.0cm] (dev) at (3.6,0)
+      {Layers $1 \ldots k$\\[-2pt]{\scriptsize\mdseries on the phone}};
+    \node[chnode,minimum width=2.9cm,minimum height=1.0cm] (cl) at (9.0,0)
+      {Layers $k{+}1 \ldots L$\\[-2pt]{\scriptsize\mdseries in the cloud}};
+    \draw[flow] (in) -- (dev);
+    \draw[flow,draw=coreorange,thick] (dev) -- node[iface,above]
+      {activation, not audio} (cl);
+    \node[lbl,visible on=<2->] at (9.0,-1.05)
+      {what crosses is a representation --- Class 17's move, reused};
+  \end{tikzpicture}
+
+  \vspace{0.8em}
+  \takeawayat{3-}{The raw data never leaves; the network carries an
+    embedding.\\ Split point $k$ is a dial, not a fact.}
+\end{frame}
+
+% Teaching note (90 s): when splitting wins and when it embarrasses you. Wins: the
+% early layers are cheap enough for the device, the activation is small, privacy or
+% policy forbids shipping raw data. Loses: (1) if the activation is BIGGER than the
+% input -- common for text prompts, where the input is a few KB and a single
+% layer's hidden states are larger -- then just send the input; (2) the network
+% round trip returns -- the latency we fled in section 2 is back in the loop;
+% (3) if the cloud is unreachable, the split model is headless. So split inference
+% shines for big sensory inputs (audio, video, sensor streams) with small useful
+% representations -- not for short text.
+\begin{frame}{When the cut wins --- and when it doesn't}
+  \vspace{0.6em}
+  \raggedright
+  \textbf{Wins when}\par
+  \begin{itemize}\itemsep4pt
+    \item the input is big and sensory (audio, video), the representation small
+    \item raw data must not leave the device
+  \end{itemize}
+
+  \vspace{0.6em}
+  \uncover<2->{\textbf{Loses when}\par
+  \begin{itemize}\itemsep4pt
+    \item the activation is \emph{bigger} than the input --- a text prompt is a
+      few KB; hidden states aren't
+    \item the round trip we fled is back in the loop
+    \item the cloud is gone --- a split model is headless offline
+  \end{itemize}\par}
+
+  \vspace{0.6em}
+  \takeawayat{3-}{Split big-sensory, small-representation jobs.\\
+    Don't split a text chat.}
+\end{frame}
+
+% Teaching note (100 s): collaboration without cutting -- speculative decoding. The
+% small on-device model is fast but mediocre; the big cloud model is slow (and far)
+% but authoritative. Let the small one DRAFT a few tokens, and the big one VERIFY
+% the whole draft in a single parallel pass -- cheap, because checking k given
+% tokens is one prefill-like pass, not k decode steps. Accepted tokens stream out;
+% the first rejected one is corrected and drafting resumes from there. Most drafts
+% are accepted (easy words are easy), so the expensive model runs once per several
+% tokens. Same trick works entirely on-device between a tiny and a mid model.
+% This is "collaborative inference": both models, each where it is strongest.
+\begin{frame}{Or collaborate: draft small, verify big}
+  \vspace{0.6em}
+  \centering
+  \begin{tikzpicture}[scale=0.82,transform shape]
+    \node[nnnode,minimum width=3.1cm,minimum height=1.0cm] (s) at (0,0)
+      {Small model\\[-2pt]{\scriptsize\mdseries on-device: drafts 5 tokens}};
+    \node[chnode,minimum width=3.1cm,minimum height=1.0cm] (b) at (6.4,0)
+      {Big model\\[-2pt]{\scriptsize\mdseries verifies all 5 in one pass}};
+    \draw[flow,draw=coreorange,thick] (s) to[bend left=15]
+      node[iface,above] {draft} (b);
+    \draw[flow] (b) to[bend left=15] node[lbl,below]
+      {accept 4, fix 1, continue} (s);
+  \end{tikzpicture}
+
+  \vspace{0.7em}
+  \raggedright
+  Checking $k$ given tokens is \textbf{one} parallel pass --- not $k$ slow
+  decode steps. Easy words are easy: most drafts survive.\par
+
+  \vspace{0.6em}
+  \takeawayat{2-}{The big model runs once per \emph{several} tokens;\\
+    the small one hides the distance. Speed without losing the big model's
+    judgment.}
+  \plainsource{Leviathan et al., ``Fast Inference from Transformers via
+    Speculative Decoding,'' ICML 2023.}
+\end{frame}
+
+% Teaching note (60 s): one-frame summary of the section before routing. The
+% boundary between the device and the cloud is a design dial with settings, not a
+% wall: all-local (sections 3-5), cut at a layer, draft-and-verify, all-cloud.
+% What's missing is the decision rule for choosing per request -- that is routing,
+% the final trick.
+\begin{frame}{The boundary is a dial}
+  \vspace{0.8em}
+  \centering
+  \begin{tikzpicture}[scale=0.9,transform shape]
+    \draw[flow] (0,0) -- (9.2,0);
+    \node[lbl,align=center] at (0.3,-0.55) {all\\on-device};
+    \node[lbl,align=center] at (3.1,-0.55) {split\\at layer $k$};
+    \node[lbl,align=center] at (6.1,-0.55) {draft here,\\verify there};
+    \node[lbl,align=center] at (8.9,-0.55) {all\\cloud};
+    \foreach \x in {0.3,3.1,6.1,8.9}{\fill[ranblue] (\x,0) circle (0.09);}
+  \end{tikzpicture}
+
+  \vspace{1.0em}
+  \takeawayat{2-}{Four settings on one dial.\\
+    Last question: \textbf{who turns the dial}, per request?}
+\end{frame}

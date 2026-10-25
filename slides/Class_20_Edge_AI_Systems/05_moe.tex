@@ -1,0 +1,161 @@
+%!TEX root = ./main.tex
+
+\section[MoE]{Mixture of Experts}
+
+% SECTION TIMING: 24:00--33:00 (5 frames): 120 + 100 + 100 + 130 + 90 s.
+
+% Teaching note (120 s): the structure in one picture. In a dense model, every token
+% multiplies through every weight of every layer. An MoE layer replaces one big
+% feed-forward block with many smaller "experts" plus a tiny router; the router
+% scores the token and sends it through only the top-k experts. Walk the picture:
+% the token hits the router, two experts light up, the rest stay dark -- capacity
+% (total weights) grew, but compute per token stayed small. The term of art is
+% "active parameters": the subset actually touched for this token.
+\begin{frame}{Trick 2: many experts, use a few}
+  \vspace{0.6em}
+  \centering
+  \begin{tikzpicture}[scale=0.85,transform shape]
+    \node[endnode,minimum width=1.7cm] (tok) at (0,0) {token};
+    \node[nnnode,minimum width=1.9cm,minimum height=0.9cm] (r) at (2.9,0)
+      {Router\\[-2pt]{\scriptsize\mdseries tiny}};
+    \node[netnode,minimum width=1.75cm,visible on=<2->] (e1) at (6.6,1.8)
+      {Expert 1};
+    \node[corenode,minimum width=1.75cm] (e2) at (6.6,0.6) {Expert 2};
+    \node[netnode,minimum width=1.75cm,visible on=<2->] (e3) at (6.6,-0.6)
+      {Expert 3};
+    \node[corenode,minimum width=1.75cm] (e4) at (6.6,-1.8) {Expert 4};
+    \node[endnode,minimum width=1.7cm] (out) at (9.9,0) {output};
+    \draw[flow] (tok) -- (r);
+    \draw[flow,draw=coreorange,thick] (r) -- (e2);
+    \draw[flow,draw=coreorange,thick] (r) -- (e4);
+    \draw[flow,draw=coreorange,thick] (e2) -- (out);
+    \draw[flow,draw=coreorange,thick] (e4) -- (out);
+    \draw[flow,opacity=0.25,visible on=<2->] (r) -- (e1);
+    \draw[flow,opacity=0.25,visible on=<2->] (r) -- (e3);
+    \node[lbl,visible on=<2->] at (6.6,-2.7)
+      {the dark experts hold weights, but this token never reads them};
+  \end{tikzpicture}
+
+  \vspace{0.6em}
+  \takeawayat{3-}{Total capacity grows; \textbf{active} weights per token
+    stay small.\\ You store a big model but \emph{read} a small one.}
+\end{frame}
+
+% Teaching note (100 s): why the data center loves this. DeepSeek-V3: 671B total
+% parameters, ~37B active per token -- the quality of a huge model at the read cost
+% of a mid-size one. The course page's own line: essentially every frontier model of
+% 2025 -- DeepSeek-V3, Llama 4, Qwen3, gpt-oss -- is an MoE. The data center's
+% budget makes this trade easy: HBM capacity is there to hold all experts, batching
+% keeps every expert busy across thousands of users, and compute per token is the
+% scarce resource being saved.
+\begin{frame}{Why every frontier model went MoE}
+  \vspace{0.6em}
+  \raggedright
+  \begin{itemize}\itemsep6pt
+    \item DeepSeek-V3: \textbf{671B} parameters total, $\sim$\textbf{37B active}
+      per token
+    \item Llama 4, Qwen3, gpt-oss: all MoE --- the 2025 frontier default
+  \end{itemize}
+
+  \vspace{0.6em}
+  \uncover<2->{\raggedright The data center's trade: memory is
+    \textbf{plentiful} (80 GB HBM per GPU, many GPUs), compute per token is the
+    scarce thing. MoE spends memory to save compute.\par}
+
+  \vspace{0.7em}
+  \takeawayat{3-}{MoE buys capacity \textbf{with memory} instead of compute\\
+    --- perfect for a data center.}
+  \plainsource{DeepSeek-AI, ``DeepSeek-V3 Technical Report,'' 2024.}
+\end{frame}
+
+% Teaching note (100 s): now flip the budget. The phone has the opposite scarcity:
+% memory is the thing it does not have -- idle experts still occupy RAM; and the
+% router's per-token choices mean different tokens touch different experts, so
+% across a sentence most experts get paged through anyway unless the design keeps
+% them small. Ask the class the question before revealing: "same trick, opposite
+% budget -- what should change?" Expected intuitions: fewer/smaller experts, keep a
+% shared always-on expert, pick more experts per token so each can be tiny, or
+% don't keep them all in RAM. All four appear in the next two frames.
+\begin{frame}{A phone flips the trade}
+  \vspace{0.7em}
+  \raggedright
+  \begin{itemize}\itemsep7pt
+    \item Idle experts still \textbf{occupy RAM} --- the resource the phone
+      lacks most
+    \item Every weight touched is \textbf{bandwidth paid} --- and each token
+      picks different experts
+    \item One user, no batching --- dark experts earn nothing while they sit
+  \end{itemize}
+
+  \vspace{0.9em}
+  \askat{2-}{Same trick, opposite budget:\\ what should an MoE look like
+    \emph{on a phone}?}
+\end{frame}
+
+% Teaching note (130 s): set up Lex's talk without giving it away -- state the
+% question MobileMoE answers and its headline shape, and leave the "how" to the
+% presentation. Meta fitted an MoE scaling law on real smartphones (actual latency
+% and memory measurements, not FLOP counts) and asked: at a FIXED weight-memory
+% budget, what sparsity and expert granularity maximize quality and speed? Their
+% answer: moderate sparsity, fine-grained experts -- 60 routed experts + 1 shared
+% expert, route to the top 4. The shared expert handles what every token needs, so
+% routed experts stay small and the active-bytes-per-token shrink. Result, at equal
+% weight memory: 1.8--3.8x faster prefill and 2.2--3.4x faster decode than a dense
+% model of the same memory. The frame intentionally shows the numbers, not the
+% method -- the method is Lex's 15 minutes.
+\begin{frame}{MobileMoE: the phone-shaped answer (teaser)}
+  \vspace{0.6em}
+  \raggedright
+  Meta fitted an MoE \textbf{scaling law on real smartphones} and asked: at a
+  fixed weight-memory budget, what shape wins?\par
+
+  \vspace{0.6em}
+  \uncover<2->{\begin{itemize}\itemsep5pt
+    \item \textbf{60 routed experts + 1 shared}, route to \textbf{top-4} ---
+      fine-grained, moderately sparse
+    \item At \emph{equal weight memory} vs.\ dense:
+      \textbf{1.8--3.8$\times$} faster prefill,
+      \textbf{2.2--3.4$\times$} faster decode
+  \end{itemize}\par}
+
+  \vspace{0.7em}
+  \takeawayat{3-}{Capacity with \emph{small active bytes per token}\\
+    --- MoE reshaped for the phone's budget.}
+
+  \vspace{0.4em}
+  \uncover<3->{{\small The how --- the scaling law, the shared expert, the
+    measurements --- is \textbf{Lex's talk}, right after this lecture.}\par}
+  \plainsource{MobileMoE: Scaling On-Device Mixture of Experts, Meta, arXiv,
+    May 2026.}
+\end{frame}
+
+% Teaching note (90 s): the loose end that Wednesday pulls. MobileMoE still assumes
+% every expert fits in RAM. Suppose they don't: the natural move is a memory
+% hierarchy -- hot experts in RAM, cold experts in flash, predict which experts the
+% next tokens will route to and prefetch them. Flash is fast enough to stream a
+% small expert if you guess early and are right most of the time; guess late or
+% wrong and decode stalls. That exact problem -- which expert to keep, which to
+% spill, when to prefetch -- is D2MoE on Wednesday 11/4. One sentence of preview,
+% no more.
+\begin{frame}{The loose end: experts that don't fit}
+  \vspace{0.7em}
+  \centering
+  \begin{tikzpicture}[scale=0.85,transform shape]
+    \node[kbnode,minimum width=3.4cm,minimum height=1.0cm] (ram) at (0,0)
+      {RAM\\[-2pt]{\scriptsize\mdseries hot experts}};
+    \node[kbnode,minimum width=3.4cm,minimum height=1.0cm,fill=green!3] (fl)
+      at (5.6,0) {Flash\\[-2pt]{\scriptsize\mdseries cold experts}};
+    \draw[flow,draw=coreorange,thick] (fl) to[bend right=18]
+      node[iface,above] {predict \& prefetch} (ram);
+    \draw[flow] (ram) to[bend right=18] node[lbl,below] {evict} (fl);
+  \end{tikzpicture}
+
+  \vspace{0.8em}
+  \raggedright
+  Guess the next experts early and right, and decode never notices.
+  Guess wrong, and it stalls on flash.\par
+
+  \vspace{0.6em}
+  \takeawayat{2-}{Which experts to keep, spill, and prefetch ---\\
+    that is \textbf{D2MoE}, Wednesday 11/4.}
+\end{frame}

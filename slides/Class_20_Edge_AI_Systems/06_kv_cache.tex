@@ -1,0 +1,111 @@
+%!TEX root = ./main.tex
+
+\section[KV cache]{The KV Cache}
+
+% SECTION TIMING: 33:00--39:00 (4 frames): 110 + 100 + 90 + 60 s.
+
+% Teaching note (110 s): connect to the 10/19 PyTorch lecture (attention appeared in
+% the CNN/RNN/Transformer demo). To produce token N, attention compares the new
+% token's query against a key and value for EVERY previous token. Recomputing all
+% those keys and values from scratch each step would redo the whole prompt's work
+% every token -- so every serious implementation computes each token's K and V once
+% and caches them. The picture: tokens stream in, each drops a small (K,V) brick
+% into a growing shelf; the new token reads the whole shelf. The cache is pure
+% speed-for-memory: nothing is approximated -- yet.
+\begin{frame}{Trick 3's target: the cache you didn't know you had}
+  \vspace{0.6em}
+  \raggedright
+  Attention: the new token compares against a \textbf{key} and \textbf{value}
+  for \emph{every} previous token (PyTorch lecture, 10/19).\par
+
+  \vspace{0.6em}
+  \centering
+  \begin{tikzpicture}[scale=0.85,transform shape]
+    \foreach \i in {0,1,2,3,4}{
+      \node[kbnode,minimum width=0.95cm,minimum height=0.72cm,font=\scriptsize\bfseries]
+        at (1.12*\i,0) {K,V};}
+    \node[kbnode,minimum width=0.95cm,minimum height=0.72cm,
+      font=\scriptsize\bfseries,fill=green!3,visible on=<2->] at (5.6,0) {K,V};
+    \node[endnode,minimum width=1.9cm] (new) at (8.6,0) {new token};
+    \draw[flow,visible on=<2->] (new.west) -- ++(-1.1,0);
+    \node[lbl] at (2.8,-0.85) {computed \textbf{once}, kept in memory};
+    \node[lbl,visible on=<2->] at (8.6,-0.85) {reads the whole shelf};
+  \end{tikzpicture}
+
+  \vspace{0.7em}
+  \takeawayat{3-}{Cache each token's K,V instead of recomputing the whole
+    history\\ every step --- pure speed-for-memory. So far, free lunch.}
+\end{frame}
+
+% Teaching note (100 s): the bill. Bytes per token = 2 (K and V) x layers x KV heads
+% x head dimension x bytes per number. For a classic 7B model (32 layers, 32 heads
+% of dimension 128, FP16): 2 x 32 x 32 x 128 x 2 bytes = 0.5 MB per token. A
+% 4,000-token chat: ~2 GB -- as large as the whole 4-bit quantized model! And unlike
+% the weights, it keeps growing as the conversation continues, and there is one per
+% concurrent conversation. Walk the multiplication slowly; the punchline is the
+% comparison against the 3.5 GB weights from the quantization section.
+\begin{frame}{The cache grows as you chat}
+  \vspace{0.5em}
+  \raggedright
+  Per token: $2 \times \text{layers} \times \text{KV heads} \times
+  \text{head dim} \times \text{bytes}$\par
+
+  \vspace{0.5em}
+  \uncover<2->{A classic 7B model (32 layers, 32 heads $\times$ 128, FP16):\par
+    \vspace{0.2em}
+    \centering
+    $2 \times 32 \times 32 \times 128 \times 2\ \text{B} \approx
+    \textbf{0.5 MB per token}$\par}
+
+  \vspace{0.6em}
+  \uncover<3->{\raggedright A 4{,}000-token chat:
+    $4{,}000 \times 0.5\ \text{MB} \approx \textbf{2 GB}$ ---
+    as big as the whole 4-bit model we just squeezed to 3.5 GB.\par}
+
+  \vspace{0.7em}
+  \takeawayat{4-}{Weights are fixed; \textbf{the cache grows}.\\
+    Long chats are a memory problem, not a compute problem.}
+\end{frame}
+
+% Teaching note (90 s): the standard diet, one line each. (1) Share KV heads:
+% grouped-query attention lets many query heads read the same K,V -- Llama-3-class
+% models use 8 KV heads instead of 32, an immediate 4x; this is baked in at training
+% time and nearly universal now. (2) Quantize the cache like the weights (8- or
+% 4-bit K,V). (3) Evict: old or low-attention tokens get dropped or summarized --
+% the model literally forgets the middle of the conversation; sliding-window
+% attention is the blunt version. Each row trades a little context fidelity for
+% memory; together they are why a phone can hold a long chat at all.
+\begin{frame}{Putting the cache on a diet}
+  \vspace{0.6em}
+  \raggedright
+  \begin{description}[<+->][Quantize it]\itemsep7pt
+    \item[Share it] grouped-query attention: many query heads, few KV heads
+      --- 8 instead of 32 is a built-in $4\times$
+    \item[Quantize it] the same 4-bit trick, applied to K,V
+    \item[Evict] drop or summarize old, rarely-attended tokens ---
+      the model forgets the middle of the chat
+  \end{description}
+
+  \vspace{0.8em}
+  \takeawayat{4-}{Each row trades a little context fidelity for memory.\\
+    Together: how a phone holds a long conversation at all.}
+\end{frame}
+
+% Teaching note (60 s): close the on-device half of the lecture. Scorecard so far,
+% all in bytes: quantization shrank the weights 4x; MoE shrank the bytes *touched*
+% per token; the KV diet caps the part that grows. All three accept the budget and
+% live within it. The remaining two tricks refuse the premise: if the device still
+% can't do the job, change WHERE the job runs -- hand off to split inference.
+\begin{frame}{Scorecard: three tricks, one currency}
+  \vspace{0.7em}
+  \raggedright
+  \begin{itemize}\itemsep7pt
+    \item Quantization: every byte \textbf{smaller} (14 GB $\rightarrow$ 3.5 GB)
+    \item MoE: most bytes \textbf{never touched} per token
+    \item KV diet: the \textbf{growing} bytes, capped
+  \end{itemize}
+
+  \vspace{0.9em}
+  \takeawayat{2-}{All three accept the phone's budget.\\
+    The last two tricks \textbf{refuse it}: change \emph{where} the job runs.}
+\end{frame}

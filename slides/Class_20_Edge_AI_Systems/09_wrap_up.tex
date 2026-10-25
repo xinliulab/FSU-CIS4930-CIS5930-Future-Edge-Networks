@@ -1,0 +1,60 @@
+%!TEX root = ./main.tex
+
+\section[Wrap-up]{Wrap-Up}
+
+% SECTION TIMING: 48:00--50:00 (3 frames): 60 + 40 + 20 s.
+
+% Teaching note (60 s): the decision map, read as a flowchart in words. Start from
+% the budget wall each question hits, and name the trick that answers it. This is
+% the one slide to photograph.
+\begin{frame}{One map of today}
+  \vspace{0.5em}
+  \centering
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    \textbf{The wall} & \textbf{The trick}\\
+    \midrule
+    Weights don't fit & Quantization: fewer bits per weight\\
+    Reading them is slow & Quantization again: fewer bytes per token\\
+    Need more capacity & MoE: store big, read small\\
+    Long chats eat RAM & KV cache: share, quantize, evict\\
+    Still too big & Split: send the representation\\
+    Cloud too slow/far & Collaborate: draft small, verify big\\
+    Most queries are easy & Route: local first, escalate the hard\\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.8em}
+  \takeawayat{2-}{One budget --- bytes in memory, bytes moved, joules ---\\
+    and every trick is a way to spend less of it.}
+\end{frame}
+
+% Teaching note (40 s): what to remember, deliberately only three lines.
+\begin{frame}{If you remember three things}
+  \vspace{0.8em}
+  \raggedright
+  \begin{enumerate}\itemsep9pt
+    \item On a phone, LLM decode is \textbf{bandwidth-bound}: tokens/s
+      $\approx$ bandwidth $\div$ bytes per token
+    \item Quantization, MoE, and the KV diet are all the \textbf{same move}:
+      fewer bytes
+    \item Device vs.\ cloud is a \textbf{dial} --- split, draft, route ---
+      not a wall
+  \end{enumerate}
+\end{frame}
+
+% Teaching note (20 s): logistics and handoff to Lex. HW4 due Wednesday 11/4;
+% final project released 11/4; Wednesday's class: D2MoE (Paper Practicum).
+\begin{frame}{Next}
+  \vspace{0.9em}
+  \raggedright
+  \begin{itemize}\itemsep8pt
+    \item \textbf{Now}: Lex presents \textbf{MobileMoE} (15 min + 5 min Q\&A)
+    \item \textbf{Wednesday 11/4}: D2MoE --- experts that don't fit in memory
+    \item HW4 due \textbf{11/4, 11:59 p.m.\ ET}; final project released 11/4
+  \end{itemize}
+
+  \vspace{1.2em}
+  \centering
+  {\large Questions?}
+\end{frame}

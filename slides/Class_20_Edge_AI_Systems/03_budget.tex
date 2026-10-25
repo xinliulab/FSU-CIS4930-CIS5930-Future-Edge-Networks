@@ -1,0 +1,148 @@
+%!TEX root = ./main.tex
+
+\section[Budget]{The Device's Budget}
+
+% SECTION TIMING: 8:00--16:00 (5 frames): 100 + 110 + 120 + 90 + 60 s.
+% Flex: "And the battery" compresses to 30 s (read the takeaway, skip the joule talk).
+
+% Teaching note (100 s): establish the one mechanical fact the whole lecture rests
+% on. An LLM generates text one token at a time; to produce ONE token, the model
+% multiplies through essentially ALL of its weights. So two numbers decide
+% everything: how many bytes the weights occupy (do they fit?), and how many bytes
+% per second the memory can deliver (how fast can we read them, once per token?).
+% Walk the picture left to right: prompt in, one token out, and the fat arrow is
+% the weights being read -- again for the next token, and again. Computing is not
+% the fat arrow; reading is.
+\begin{frame}{What one token costs}
+  \vspace{0.8em}
+  \centering
+  \begin{tikzpicture}[scale=0.85,transform shape]
+    \node[endnode,minimum width=2.6cm] (in) at (0,0) {prompt so far};
+    \node[nnnode,minimum width=3.2cm,minimum height=1.3cm] (m) at (4.6,0)
+      {Model\\[-2pt]{\scriptsize\mdseries multiply through the weights}};
+    \node[endnode,minimum width=2.2cm] (out) at (8.9,0) {next token};
+    \draw[flow] (in) -- (m);
+    \draw[flow] (m) -- (out);
+    \node[kbnode,minimum width=3.2cm,minimum height=0.9cm,visible on=<2->]
+      (w) at (4.6,-2.0) {Weights in memory};
+    \draw[flow,line width=2.2pt,draw=coreorange,visible on=<2->]
+      (w.north) -- (m.south);
+    \node[iface,visible on=<2->] at (7.1,-1.3) {read \textbf{all} of them};
+    \node[lbl,visible on=<3->] at (4.6,-2.85)
+      {\ldots and again for the next token, and the next};
+  \end{tikzpicture}
+
+  \vspace{0.8em}
+  \takeawayat{4-}{Two numbers rule on-device LLMs:\\
+    \textbf{bytes the weights occupy} and \textbf{bytes/second the memory delivers}.}
+\end{frame}
+
+% Teaching note (110 s): the budget table. Phone: 8--12 GB RAM, shared with the OS
+% and every app -- the model may claim a few GB at best; LPDDR5X delivers roughly
+% 60--80 GB/s; sustained power a few watts before thermal throttling (it sits in a
+% hand or pocket). Laptop: tens of GB, 100--400 GB/s (Apple M-series unified
+% memory). Data-center GPU: H100 = 80 GB of HBM3 at 3.35 TB/s, ~700 W. The point of
+% the table is the two orders of magnitude in bandwidth between phone and GPU --
+% same math, wildly different budgets. Numbers are rounded; exact SKUs differ.
+\begin{frame}{The budget, by device}
+  \vspace{0.6em}
+  \centering
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+    & \textbf{Phone} & \textbf{Laptop} & \textbf{Cloud GPU (H100)}\\
+    \midrule
+    Memory for the model & a few GB & tens of GB & 80 GB HBM\\
+    Memory bandwidth & $\sim$70 GB/s & 100--400 GB/s & 3{,}350 GB/s\\
+    Sustained power & a few W & tens of W & $\sim$700 W\\
+    Serving & you & you & thousands of users\\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.9em}
+  \uncover<2->{\raggedright The GPU's memory is $\sim$\textbf{50$\times$ faster}
+    than the phone's. Same math, a very different budget.\par}
+  \plainsource{Rounded, representative figures: LPDDR5X-class phones ($\sim$2024--26);
+    Apple M-series unified memory; NVIDIA H100 SXM (80 GB HBM3, 3.35 TB/s).}
+\end{frame}
+
+% Teaching note (120 s): THE arithmetic frame -- do it slowly, on the board if
+% possible. A 7B-parameter model at FP16 is 7B x 2 bytes = 14 GB: does not fit in a
+% phone's few GB. Pretend it did: every token must read 14 GB; at 70 GB/s that is
+% at most 70/14 = 5 tokens/s -- around human reading speed, with zero margin.
+% Both problems point at the same lever: shrink the bytes. Preview: at 4 bits per
+% weight the same model is 3.5 GB (fits) and the ceiling becomes 70/3.5 = 20
+% tokens/s. That lever is the next section. Keep the "upper bound" honest: real
+% systems lose some bandwidth to the KV cache and activations, so these are
+% ceilings, not predictions.
+\begin{frame}{Do the math: a 7B model on a phone}
+  \vspace{0.5em}
+  \raggedright
+  {\large\textbf{Fit?}}\par
+  \vspace{0.2em}
+  7B weights $\times$ 2 bytes (FP16) $=$ \textbf{14 GB}
+  \hspace{0.6em}---\hspace{0.6em} the phone has \textbf{a few GB} to spare.
+  \textcolor{coreorange}{\textbf{Doesn't fit.}}\par
+
+  \vspace{0.8em}
+  \uncover<2->{{\large\textbf{Fast enough, even if it fit?}}\par
+    \vspace{0.2em}
+    every token reads 14 GB; at 70 GB/s:
+    \quad $\dfrac{70\ \text{GB/s}}{14\ \text{GB}} = $ \textbf{5 tokens/s} at best
+    --- reading speed, zero margin.\par}
+
+  \vspace{0.8em}
+  \takeawayat{3-}{Both walls are made of \textbf{bytes}.\\
+    Every trick today is a way to move fewer of them.}
+\end{frame}
+
+% Teaching note (90 s): one asymmetry to name now because MoE and split inference
+% both exploit it. PREFILL: the prompt's tokens are all known, so the device
+% processes them in parallel -- lots of arithmetic per byte read -- compute-bound.
+% DECODE: tokens come out one at a time; each step reads all weights to produce one
+% token -- bandwidth-bound. That is why the time-to-first-token and the
+% tokens-per-second afterwards behave differently, and why some tricks help one
+% phase and not the other (quantization helps decode a lot; a faster NPU helps
+% prefill). Students have felt this: the pause before the first word vs. the
+% streaming speed afterwards.
+\begin{frame}{Two phases, two bottlenecks}
+  \vspace{0.6em}
+  \centering
+  \begin{tikzpicture}[scale=0.85,transform shape]
+    \node[netnode,minimum width=4.6cm,minimum height=1.05cm] (pre) at (0,0)
+      {Prefill: eat the prompt\\[-2pt]{\scriptsize\mdseries all tokens at once,
+        in parallel}};
+    \node[corenode,minimum width=4.6cm,minimum height=1.05cm] (dec) at (6.0,0)
+      {Decode: produce the answer\\[-2pt]{\scriptsize\mdseries one token
+        at a time}};
+    \draw[flow] (pre) -- (dec);
+    \node[lbl,visible on=<2->] at (0,-1.0)
+      {\textbf{compute}-bound --- the pause before the first word};
+    \node[lbl,visible on=<2->] at (6.0,-1.0)
+      {\textbf{bandwidth}-bound --- the streaming speed after it};
+  \end{tikzpicture}
+
+  \vspace{0.9em}
+  \takeawayat{3-}{You have felt both: the \textbf{pause}, then the
+    \textbf{stream}.\\ Different walls, different fixes.}
+\end{frame}
+
+% Teaching note (60 s, flex to 30 s): energy seals the argument. Moving a byte in
+% from DRAM costs orders of magnitude more energy than one arithmetic operation on
+% it -- so the bandwidth wall is also the battery wall; the same fix (fewer bytes)
+% serves both. And a phone throttles on heat: it sits in a hand, with no fan.
+% Sustained token generation at full tilt turns into a warm phone and a lower
+% clock. Mention once, move on.
+\begin{frame}{And the battery agrees}
+  \vspace{0.8em}
+  \raggedright
+  \begin{itemize}\itemsep7pt
+    \item Moving a byte from DRAM costs \textbf{far more energy} than computing
+      with it once it has arrived
+    \item No fan, held in a hand: sustained generation $\rightarrow$ heat
+      $\rightarrow$ \textbf{throttling}
+  \end{itemize}
+
+  \vspace{1.0em}
+  \takeawayat{2-}{The bandwidth wall and the battery wall are the
+    \textbf{same wall}:\\ bytes moved. One fix serves both.}
+\end{frame}

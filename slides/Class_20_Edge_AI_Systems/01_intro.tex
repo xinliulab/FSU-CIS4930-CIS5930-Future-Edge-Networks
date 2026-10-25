@@ -1,0 +1,67 @@
+%!TEX root = ./main.tex
+
+\section[Intro]{Introduction}
+
+% SECTION TIMING: 0:00--3:00 (2 frames): 110 + 70 s.
+
+% Teaching note (110 s): open with the question, not the answer. You ask your phone
+% to summarize a voicemail from your doctor. Two things could happen: the phone's own
+% small model answers, or the audio goes to a data center and a frontier model
+% answers. Take guesses on which one actually happens (answer: both exist in shipping
+% products -- Apple routes between an on-device model and its cloud; Pixel runs
+% Gemini Nano locally for summaries). Don't resolve the question; the lecture is the
+% resolution. Point at each arrow while asking what it costs: the left arrow costs
+% RAM, compute, and battery; the right arrow costs latency, privacy, and someone's
+% GPU bill.
+\begin{frame}{One question, two places to answer it}
+  \vspace{0.8em}
+  \centering
+  \begin{tikzpicture}[scale=0.82,transform shape]
+    \node[endnode,minimum width=3.6cm] (q) at (0,0)
+      {``Summarize my doctor's\\[-2pt]voicemail''};
+    \node[nnnode,minimum width=3.3cm,minimum height=1.15cm] (dev) at (6.3,1.15)
+      {Model on the phone\\[-2pt]{\scriptsize\mdseries small, always with you}};
+    \node[chnode,minimum width=3.3cm,minimum height=1.15cm] (cloud) at (6.3,-1.15)
+      {Model in the cloud\\[-2pt]{\scriptsize\mdseries huge, far away}};
+    \draw[flow] (q.east) -- (dev.west);
+    \draw[flow] (q.east) -- (cloud.west);
+    \node[lbl] at (3.1,1.0) {stays on the device};
+    \node[lbl] at (3.1,-1.0) {crosses the network};
+  \end{tikzpicture}
+
+  \vspace{0.7em}
+  \askat{2-}{Where \emph{should} the model run?}
+
+  \vspace{0.6em}
+  \uncover<3->{\raggedright
+    Both answers ship today: your phone has a model in it, and a data center
+    has a bigger one. The interesting question is \textbf{which work goes where
+    --- and why}.\par}
+\end{frame}
+
+% Teaching note (70 s): the roadmap. Read the budget line first: everything after it
+% is a response to that budget. Announce the handoff: after the lecture, Lex presents
+% MobileMoE (15 min + 5 min Q&A), which picks up exactly at our MoE stop. Mention
+% Wednesday 11/4 continues with D2MoE (experts that do NOT fit in memory) and that
+% the final project is released 11/4; HW4 is due 11/4 too.
+\begin{frame}{Today's route}
+  \vspace{0.5em}
+  \raggedright
+  \begin{enumerate}\itemsep5pt
+    \item Why run AI on the device at all?
+    \item The device's \textbf{budget}: memory, bandwidth, energy
+    \item \textbf{Quantization} --- fewer bits per weight
+    \item \textbf{Mixture of Experts} --- don't touch every weight
+    \item The \textbf{KV cache} --- the memory that grows as you chat
+    \item \textbf{Split} and \textbf{collaborative} inference --- cut the model in two
+    \item \textbf{Model routing} --- send the hard questions away
+  \end{enumerate}
+
+  \vspace{0.7em}
+  \takeawayat{2-}{One budget, five responses to it.}
+
+  \vspace{0.5em}
+  \uncover<2->{{\small After the lecture: \textbf{Lex} presents \textbf{MobileMoE}
+    (stop 4, on real phones). Wednesday: \textbf{D2MoE} --- experts that
+    don't fit.}\par}
+\end{frame}

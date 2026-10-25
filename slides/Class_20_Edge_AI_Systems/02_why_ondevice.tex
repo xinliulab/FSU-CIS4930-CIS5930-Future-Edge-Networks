@@ -1,0 +1,91 @@
+%!TEX root = ./main.tex
+
+\section[Why on-device]{Why On-Device AI}
+
+% SECTION TIMING: 3:00--8:00 (3 frames): 110 + 90 + 100 s.
+
+% Teaching note (110 s): four reasons, one line each, revealed in order. Latency:
+% recall the latency lectures -- Zhuge and SAGE fought for milliseconds across the
+% network; not crossing the network at all wins by default, and a round trip to the
+% cloud is tens-to-hundreds of ms before the model even starts. Privacy: the
+% voicemail example -- health data; on-device means the raw data never leaves (echo
+% of semantic communication: the best transmission is the one you don't make).
+% Availability: airplane, basement, disaster area, or just the provider having an
+% outage. Cost: every cloud query runs on a GPU someone pays for; at a billion users,
+% "free" assistant queries are a real bill -- pushing work to the user's own silicon
+% is the provider's favorite cost cut. None of these require the on-device model to
+% be the BEST model; they require it to be good enough for the easy majority.
+\begin{frame}{Four reasons to stay on the device}
+  \vspace{0.6em}
+  \raggedright
+  \begin{description}[<+->][Availability]\itemsep7pt
+    \item[Latency] no network round trip --- the answer starts now, not
+      100\,ms from now
+    \item[Privacy] the voicemail never leaves your phone
+    \item[Availability] works on a plane, in a basement, in an outage
+    \item[Cost] a billion users $\times$ free queries = someone's GPU bill;
+      your phone's silicon is already paid for
+  \end{description}
+
+  \vspace{0.8em}
+  \takeawayat{5-}{On-device doesn't need to beat the cloud model ---\\
+    it needs to be \textbf{good enough} for the easy majority.}
+\end{frame}
+
+% Teaching note (90 s): make it concrete -- students use on-device AI daily without
+% naming it: keyboard next-word prediction and autocorrect; the camera pipeline
+% (night mode, portrait segmentation) runs on the NPU; "Hey Siri" / "Hey Google"
+% wake-word models listen locally precisely because streaming your microphone to a
+% server all day would be unacceptable; watches classify heart rhythm on the wrist;
+% live translate and live captions work offline. The new part (since ~2024) is
+% full LLMs on phones: Apple's on-device foundation model is on the order of 3B
+% parameters, with heavier requests routed to Private Cloud Compute; Pixel ships
+% Gemini Nano for summaries and smart replies. So the lecture's question is not
+% hypothetical: it is a deployed architecture.
+\begin{frame}{You already run models all day}
+  \vspace{0.5em}
+  \raggedright
+  \begin{itemize}\itemsep5pt
+    \item Keyboard: next-word prediction, autocorrect
+    \item Camera: night mode, portrait segmentation --- on the NPU
+      \expand{neural processing unit}
+    \item ``Hey Siri'' / ``Hey Google'': the wake word is detected
+      \textbf{locally} --- nobody streams your mic to a server all day
+    \item Watch: heart-rhythm classification on the wrist
+    \item Live translate, live captions: work in airplane mode
+  \end{itemize}
+
+  \vspace{0.6em}
+  \uncover<2->{\raggedright New since $\sim$2024: \textbf{full LLMs} ---
+    Apple runs a $\sim$3B-parameter model on the phone and routes heavy requests
+    to its cloud; Pixel ships \textbf{Gemini Nano} for summaries.\par}
+  \plainsource{Apple, ``Apple Intelligence Foundation Language Models,'' 2024;
+    Google, Gemini Nano on Pixel, 2023--2026.}
+\end{frame}
+
+% Teaching note (100 s): steelman the cloud before the budget section, so the
+% lecture doesn't read as on-device advocacy. (1) The best model simply doesn't fit:
+% frontier MoE models are hundreds of GB to TB of weights. (2) Batching: a data
+% center serves thousands of users per GPU, so the hardware is used efficiently;
+% your NPU serves one user and idles the rest of the day. (3) One copy to update,
+% measure, and guard. Then flip it: the real design isn't a side to pick but a
+% partition -- which brings us to what the device can actually afford. The last
+% line hands off to the budget section.
+\begin{frame}{The cloud's counterargument}
+  \vspace{0.6em}
+  \raggedright
+  \begin{itemize}[<+->]\itemsep7pt
+    \item The best model \textbf{doesn't fit}: frontier models are hundreds of
+      GB of weights
+    \item A data-center GPU is \textbf{shared}: thousands of users batch on one
+      card; your NPU serves one user, then idles
+    \item One copy in the cloud: always updated, measured, guarded
+  \end{itemize}
+
+  \vspace{0.9em}
+  \takeawayat{4-}{Not ``device \emph{vs.} cloud'' --- a \textbf{partition}:
+    which part of the work runs where?}
+
+  \vspace{0.4em}
+  \uncover<4->{{\small To partition well, we first need the device's budget.}\par}
+\end{frame}
