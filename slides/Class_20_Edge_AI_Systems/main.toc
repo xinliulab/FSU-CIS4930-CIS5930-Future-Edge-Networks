@@ -1,7 +1,0 @@
-\beamer@sectionintoc {1}{The device's budget: memory, bandwidth, energy}{5}{0}{1}
-\beamer@sectionintoc {2}{Quantization: fewer bits per weight}{15}{0}{2}
-\beamer@sectionintoc {3}{Mixture of Experts: capacity without compute}{20}{0}{3}
-\beamer@sectionintoc {4}{The KV cache: memory that grows with the conversation}{25}{0}{4}
-\beamer@sectionintoc {5}{Split and collaborative inference}{34}{0}{5}
-\beamer@sectionintoc {6}{Model routing: choosing the model per request}{41}{0}{6}
-\beamer@sectionintoc {7}{Wrap-up}{45}{0}{7}
