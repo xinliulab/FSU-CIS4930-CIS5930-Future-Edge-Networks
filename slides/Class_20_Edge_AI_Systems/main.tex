@@ -1,0 +1,42 @@
+% aspectratio=169: the deck's TikZ layouts were designed for 16:9; squeezing them
+% to the course's older 4:3 breaks over a hundred frames, so the ratio stays.
+\documentclass[11pt,t,aspectratio=169]{beamer}
+
+\input{../variables.tex}
+\input{edgeai_macros.tex}
+
+\title[Edge AI Systems]{Class 20: Edge AI Systems}
+\subtitle{Where Should the Model Run?}
+
+\FSUOSMeta
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\addtocounter{framenumber}{-1}
+
+% TALK BUDGET (about 44 min of lecture; the MobileMoE student talk follows):
+%   Opening                     0:00 --  4:00   3 frames
+%   1 The device's budget       4:00 -- 13:00   6 frames (incl. 2-min check)
+%   2 Quantization             13:00 -- 20:00   4 frames
+%   3 Mixture of Experts       20:00 -- 26:00   4 frames
+%   4 KV cache                 26:00 -- 33:00   4 frames (incl. exercise)
+%   5 Split & collaborative    33:00 -- 40:00   6 frames
+%   6 Model routing            40:00 -- 43:30   3 frames
+%   7 Wrap-up                  43:30 -- 44:15   1 frame
+% If running late: shorten the roofline frame and the early-exit frame.
+% Speaker notes are in \note{...}; to see them, enable pgfpages in edgeai_macros.tex.
+\input{01_opening.tex}
+\input{02_budget.tex}
+\input{03_quantization.tex}
+\input{04_moe.tex}
+\input{05_kv_cache.tex}
+\input{06_split.tex}
+\input{07_routing.tex}
+\input{08_wrap_up.tex}
+\input{09_references.tex}
+
+\end{document}

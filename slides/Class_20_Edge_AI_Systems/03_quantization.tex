@@ -1,0 +1,134 @@
+%!TEX root = ./main.tex
+
+\section[Quantization]{Quantization: fewer bits per weight}
+% =====================================================================
+\begin{frame}
+\frametitle{Quantization in one picture}
+\[
+q=\mathrm{clamp}\!\Big(\mathrm{round}\big(\tfrac{w}{s}\big)+z,\;0,\;2^{b}-1\Big),
+\qquad \hat w = s\,(q-z),
+\qquad s=\frac{w_{\max}-w_{\min}}{2^{b}-1}
+\]
+\begin{center}
+\begin{tikzpicture}[x=0.72cm]
+  \draw[thick] (0,0) -- (15,0);
+  \foreach \i in {0,...,15} \draw (\i,0.12) -- (\i,-0.12);
+  \node[below,font=\tiny] at (0,-0.15) {0};
+  \node[below,font=\tiny] at (15,-0.15) {15};
+  \node[lbl,anchor=west] at (15.3,0) {16 INT4 levels};
+  \node[lbl,anchor=west] at (15.3,1.0) {FP16 weights};
+  \foreach \x in {0.0,2.4,3.7,5.2,6.3,6.6,7.1,7.45,8.3,9.8,12.6,15.0} {
+    \pgfmathsetmacro{\r}{round(\x)}
+    \fill[devc] (\x,1.0) circle (2.3pt);
+    \draw[-{Latex[length=1.6mm]},edgec] (\x,0.9) -- (\r,0.16);
+  }
+  \node[lbl,anchor=south] at (0,1.15) {$w_{\min}$};
+  \node[lbl,anchor=south] at (15,1.15) {$w_{\max}$};
+  \draw[decorate,decoration={brace,amplitude=3pt,mirror}] (6,-0.45) -- (7,-0.45)
+    node[midway,below=3pt,lbl] {step $s$; error $\le s/2$};
+\end{tikzpicture}
+\end{center}
+\textbf{Granularity}: one scale per tensor $\rightarrow$ per output channel $\rightarrow$ per group of 32--128 weights.\\
+Finer groups are more accurate but cost metadata. An FP16 scale and zero point per 128 weights add 0.25 bit, so ``INT4, g128'' $\approx$ \textbf{4.25 bits/weight}.
+\note{13:00--14:30. Point at one bad rounding. The step size is set by the range, which is why outliers (two frames ahead) hurt.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{What to quantize, and what it buys}
+\vspace{4pt}
+\centering
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+Scheme & W / A bits & Main win & Where \\
+\midrule
+W8A8 & 8 / 8 & faster \textbf{prefill} (integer matmuls); 2$\times$ smaller & NPUs, servers \\
+W4A16 (weight-only) & 4 / 16 & faster \textbf{decode} (4$\times$ fewer bytes); 4$\times$ smaller & phones, laptops \\
+KV-cache quant. & KV: 2--4 & longer context in the same memory & Section 4 \\
+\bottomrule
+\end{tabular}
+\normalsize
+\raggedright
+\vspace{12pt}
+\begin{block}{Rules of thumb for LLMs}
+\begin{itemize}
+  \item 8-bit weights: close to lossless, \emph{if} outliers are handled (next frame).
+  \item 4-bit weights with a good post-training method (GPTQ, AWQ): small accuracy loss.
+  \item 3 bits and below: usually needs \textbf{quantization-aware training} (QAT), i.e., training with quantization in the loop. MobileMoE ships with INT4 QAT.
+\end{itemize}
+\end{block}
+\note{14:30--15:45. Tie back to Section 1: decode is bandwidth-bound, so weight-only quantization is the default on phones.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{The catch: outliers}
+\begin{columns}[T]
+\column{0.57\textwidth}
+\small
+\textbf{LLM.int8()} (NeurIPS'22): a few hidden dimensions carry huge activations (``emergent outliers''). A scale sized for them leaves almost no resolution for the rest.
+\emph{Fix}: keep those dimensions in FP16; $>$99.9\% of values still multiply in INT8.
+
+\vspace{6pt}
+\textbf{SmoothQuant} (ICML'23): weights are easy to quantize and activations are hard, so move the difficulty with an exact rewrite:
+\[
+Y = \big(X\,\mathrm{diag}(s)^{-1}\big)\big(\mathrm{diag}(s)\,W\big),\quad
+s_j = \frac{\max|X_j|^{\alpha}}{\max|W_j|^{1-\alpha}}
+\]
+$\Rightarrow$ W8A8 with up to 1.56$\times$ speedup and 2$\times$ less memory.
+\column{0.40\textwidth}
+\vspace{4pt}
+\begin{tikzpicture}[x=0.2cm,y=0.42cm]
+  \node[lbl,anchor=west] at (0,4.3) {$\max|X_j|$ per channel, before};
+  \foreach \i/\h in {0/0.4,1/0.6,2/0.3,3/0.5,4/3.6,5/0.4,6/0.7,7/0.3,8/0.5,9/0.6,10/0.4,11/0.3,12/0.5,13/3.2,14/0.6,15/0.4,16/0.5,17/0.3,18/0.6,19/0.4} {
+    \pgfmathsetmacro{\c}{\h>2 ? "badc" : "devc"}
+    \fill[\c!75] (\i,0) rectangle (\i+0.75,\h);
+  }
+  \draw[dashed,badc] (-0.3,3.6) -- (20.3,3.6) node[right,font=\tiny,text=badc,align=left] {scale\\set here};
+  \draw (-0.3,0) -- (20.3,0);
+  \begin{scope}[yshift=-1.45cm]
+  \node[lbl,anchor=west] at (0,1.75) {after smoothing};
+  \foreach \i/\h in {0/0.6,1/0.7,2/0.5,3/0.7,4/1.1,5/0.6,6/0.8,7/0.5,8/0.7,9/0.7,10/0.6,11/0.5,12/0.7,13/1.0,14/0.7,15/0.6,16/0.7,17/0.5,18/0.7,19/0.6} {
+    \fill[okc!70] (\i,0) rectangle (\i+0.75,\h);
+  }
+  \draw (-0.3,0) -- (20.3,0);
+  \end{scope}
+  \node[lbl] at (10,-4.3) {(sketch, not measured data)};
+\end{tikzpicture}
+\end{columns}
+\refline{T.~Dettmers et al., LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale, NeurIPS 2022 \textperiodcentered{} G.~Xiao et al., SmoothQuant, ICML 2023}
+\note{15:45--17:45. A range set by two channels wastes levels for the other eighteen.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Getting to 4 bits: GPTQ and AWQ}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{block}{GPTQ (ICLR'23)}
+\small
+\begin{itemize}
+  \item Quantize one weight column at a time.
+  \item After each column, update the not-yet-quantized columns to cancel its error, using second-order (Hessian) information from a small calibration set.
+  \item A 175B model goes to 3--4 bits in $\approx$4 GPU hours with negligible accuracy loss.
+\end{itemize}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{AWQ (MLSys'24)}
+\small
+\begin{itemize}
+  \item Not all weights matter equally. About 1\% of \emph{salient} channels, found from \emph{activation} magnitudes, dominate the error.
+  \item Protect them by scaling those channels before quantization. No backpropagation, no reconstruction.
+  \item With the TinyChat runtime: 4$\times$ smaller models and 3--4$\times$ faster on edge platforms.
+\end{itemize}
+\end{block}
+\end{columns}
+\vspace{6pt}
+\small
+Both are \textbf{post-training} quantization (PTQ): minutes to hours on one GPU, no retraining. On 11/4, \textbf{D2MoE} goes further and picks a precision \emph{per expert} at run time.
+\refline{E.~Frantar et al., GPTQ, ICLR 2023 \textperiodcentered{} J.~Lin et al., AWQ: Activation-aware Weight Quantization for On-Device LLM Compression and Acceleration, MLSys 2024}
+\note{17:45--20:00. Contrast: GPTQ fixes errors after they happen; AWQ avoids the errors that matter. Both use a calibration set.}
+\end{frame}
+
+% =====================================================================

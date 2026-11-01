@@ -1,0 +1,63 @@
+%!TEX root = ./main.tex
+
+%  REFERENCES (not presented; for students)
+% =====================================================================
+\begin{frame}
+\frametitle{References (1/2)}
+\tiny
+\begin{itemize}\setlength{\itemsep}{1pt}
+\item[] \textbf{On-device models and measurement}
+\item Apple. Apple Intelligence Foundation Language Models. arXiv:2407.21075, 2024.
+\item Z.~Liu et al. MobileLLM: Optimizing Sub-billion Parameter Language Models for On-Device Use Cases. \emph{ICML}, 2024.
+\item Y.~Chen et al. MobileMoE: Scaling On-Device Mixture of Experts. arXiv:2605.27358, 2026.
+\item S.~Laskaridis, K.~Katevas, L.~Minto, H.~Haddadi. MELTing Point: Mobile Evaluation of Language Transformers. \emph{ACM MobiCom}, 2024.
+\item D.~Xu et al. Fast On-device LLM Inference with NPUs. \emph{ACM ASPLOS}, 2025.
+\item Y.~Zhong et al. DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving. \emph{USENIX OSDI}, 2024.
+\item S.~Williams, A.~Waterman, D.~Patterson. Roofline: An Insightful Visual Performance Model for Multicore Architectures. \emph{Communications of the ACM}, 52(4), 2009.
+\item M.~Horowitz. Computing's Energy Problem (and What We Can Do About It). \emph{IEEE ISSCC}, 2014.
+\item[] \textbf{Quantization}
+\item T.~Dettmers, M.~Lewis, Y.~Belkada, L.~Zettlemoyer. LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale. \emph{NeurIPS}, 2022.
+\item G.~Xiao, J.~Lin, M.~Seznec, H.~Wu, J.~Demouth, S.~Han. SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models. \emph{ICML}, 2023.
+\item E.~Frantar, S.~Ashkboos, T.~Hoefler, D.~Alistarh. GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers. \emph{ICLR}, 2023.
+\item J.~Lin et al. AWQ: Activation-aware Weight Quantization for On-Device LLM Compression and Acceleration. \emph{MLSys}, 2024.
+\item[] \textbf{Mixture of Experts}
+\item N.~Shazeer et al. Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer. \emph{ICLR}, 2017.
+\item W.~Fedus, B.~Zoph, N.~Shazeer. Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity. \emph{JMLR}, 23, 2022.
+\item D.~Dai et al. DeepSeekMoE: Towards Ultimate Expert Specialization in Mixture-of-Experts Language Models. \emph{ACL}, 2024.
+\item A.~Q.~Jiang et al. Mixtral of Experts. arXiv:2401.04088, 2024.
+\item DeepSeek-AI. DeepSeek-V3 Technical Report. arXiv:2412.19437, 2024.
+\item K.~Alizadeh et al. LLM in a Flash: Efficient Large Language Model Inference with Limited Memory. \emph{ACL}, 2024.
+\item H.~Wang, Q.~Zhou, Z.~Hong, S.~Guo. D2MoE: Dual Routing and Dynamic Scheduling for Efficient On-Device MoE-based LLM Serving. \emph{ACM MobiCom}, 2025.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{References (2/2)}
+\tiny
+\begin{itemize}\setlength{\itemsep}{1pt}
+\item[] \textbf{KV cache}
+\item H.~Touvron et al. Llama 2: Open Foundation and Fine-Tuned Chat Models. arXiv:2307.09288, 2023.
+\item Llama Team, Meta. The Llama 3 Herd of Models. arXiv:2407.21783, 2024.
+\item N.~Shazeer. Fast Transformer Decoding: One Write-Head is All You Need. arXiv:1911.02150, 2019.
+\item J.~Ainslie et al. GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints. \emph{EMNLP}, 2023.
+\item Z.~Zhang et al. H2O: Heavy-Hitter Oracle for Efficient Generative Inference of Large Language Models. \emph{NeurIPS}, 2023.
+\item G.~Xiao, Y.~Tian, B.~Chen, S.~Han, M.~Lewis. Efficient Streaming Language Models with Attention Sinks. \emph{ICLR}, 2024.
+\item Z.~Liu et al. KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache. \emph{ICML}, 2024.
+\item W.~Kwon et al. Efficient Memory Management for Large Language Model Serving with PagedAttention. \emph{ACM SOSP}, 2023.
+\item H.~Zhang, C.~Xia, Z.~Wang. KVSwap: Disk-aware KV Cache Offloading for Long-Context On-device Inference. \emph{ACM MobiSys}, 2026.
+\item[] \textbf{Split and collaborative inference}
+\item E.~Cuervo et al. MAUI: Making Smartphones Last Longer with Code Offload. \emph{ACM MobiSys}, 2010.
+\item Y.~Kang et al. Neurosurgeon: Collaborative Intelligence Between the Cloud and Mobile Edge. \emph{ACM ASPLOS}, 2017.
+\item S.~Teerapittayanon, B.~McDanel, H.~T.~Kung. BranchyNet: Fast Inference via Early Exiting from Deep Neural Networks. \emph{ICPR}, 2016.
+\item S.~Laskaridis, S.~I.~Venieris, M.~Almeida, I.~Leontiadis, N.~D.~Lane. SPINN: Synergistic Progressive Inference of Neural Networks over Device and Cloud. \emph{ACM MobiCom}, 2020.
+\item Y.~Leviathan, M.~Kalman, Y.~Matias. Fast Inference from Transformers via Speculative Decoding. \emph{ICML}, 2023.
+\item W.~Yin et al. Elastic On-Device LLM Service. \emph{ACM MobiCom}, 2025.
+\item G.~Park et al. SAIL: Redesigning Collaborative Language Inference with a Single Server-to-Mobile Handoff. \emph{ACM MobiSys}, 2026.
+\item X.~Zhang et al. Enabling SLO-Aware 5G Multi-Access Edge Computing with SMEC. \emph{USENIX NSDI}, 2026.
+\item Y.~Chen et al. Confidant: Customizing Transformer-based LLMs via Collaborative Training on Mobile Devices. \emph{ACM MobiCom}, 2025.
+\item[] \textbf{Model routing}
+\item P.~Aggarwal et al. AutoMix: Automatically Mixing Language Models. \emph{NeurIPS}, 2024.
+\item D.~Ding et al. Hybrid LLM: Cost-Efficient and Quality-Aware Query Routing. \emph{ICLR}, 2024.
+\item I.~Ong et al. RouteLLM: Learning to Route LLMs from Preference Data. \emph{ICLR}, 2025.
+\end{itemize}
+\end{frame}

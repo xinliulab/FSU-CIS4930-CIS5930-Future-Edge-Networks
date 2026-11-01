@@ -1,0 +1,203 @@
+%!TEX root = ./main.tex
+
+\section[Budget]{The device's budget: memory, bandwidth, energy}
+% =====================================================================
+\begin{frame}
+\frametitle{Budget \#1 --- Memory: will the weights even fit?}
+\begin{columns}[T]
+\column{0.46\textwidth}
+\[ \text{bytes}_{\text{weights}} = N_{\text{params}}\times\frac{b}{8} \]
+\centering
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Params & FP16 & INT8 & INT4 \\
+\midrule
+1B  & 2 GB   & 1 GB  & 0.5 GB \\
+3B  & 6 GB   & 3 GB  & 1.5 GB \\
+8B  & 16 GB  & 8 GB  & 4 GB \\
+70B & 140 GB & 70 GB & 35 GB \\
+\bottomrule
+\end{tabular}
+\column{0.51\textwidth}
+\vspace{2pt}
+\begin{itemize}\setlength{\itemsep}{4pt}
+  \item Flagship phone DRAM: 4 GB (iPhone 13) $\rightarrow$ 12 GB (iPhone 17); 12--16 GB (Galaxy S25 / S25 Ultra).
+  \item That DRAM is \emph{shared} by the OS, camera, GPU, and every open app. One app realistically gets a few GB.
+  \item A data-center GPU (H100) has 80 GB of HBM, and a server has 8 of them.
+\end{itemize}
+\end{columns}
+\vspace{8pt}
+\begin{alertblock}{}
+\centering Realistic on-device range today: about \textbf{1--4B parameters at 4 bits}.
+\end{alertblock}
+\refline{Phone DRAM figures as reported in Y.~Chen et al., MobileMoE: Scaling On-Device Mixture of Experts, arXiv:2605.27358, 2026}
+\note{4:00--5:30. Do one row out loud: 8B times 2 bytes is 16 GB, larger than the whole phone.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Two phases of every LLM request}
+\begin{center}
+\begin{tikzpicture}[x=0.62cm]
+  \node[lbl,anchor=west] at (-0.4,1.35) {\textbf{Prefill}: all prompt tokens in one pass};
+  \foreach \i in {0,...,7} \node[tok,fill=devc!10,minimum width=0.5cm] at (\i,0.6) {};
+  \node[font=\scriptsize] at (8.3,0.6) {$\cdots$};
+  \draw[-{Latex},thick] (3.8,0.25) -- (3.8,-0.35);
+  \node[draw=devc,fill=devc!15,thick,rounded corners=2pt,minimum width=5.2cm,minimum height=0.55cm,font=\scriptsize\bfseries] at (3.8,-0.7) {model (one big batched pass)};
+  \draw[-{Latex},thick] (8.0,-0.7) -- (9.6,-0.7) node[right,font=\scriptsize] {token 1};
+  \node[lbl,anchor=west] at (13.2,1.35) {\textbf{Decode}: one token per step};
+  \foreach \j/\lab in {0/tok 1,1/tok 2,2/tok 3} {
+    \node[tok,fill=edgec!12] (in\j) at (14+2.6*\j,0.6) {\lab};
+    \node[draw=edgec,fill=edgec!15,thick,rounded corners=2pt,minimum width=1.2cm,minimum height=0.55cm,font=\scriptsize\bfseries] (m\j) at (14+2.6*\j,-0.7) {model};
+    \draw[-{Latex}] (in\j) -- (m\j);
+  }
+  \draw[-{Latex}] (m0.east) to[out=0,in=180] (in1.west);
+  \draw[-{Latex}] (m1.east) to[out=0,in=180] (in2.west);
+  \node[font=\scriptsize] at (21.2,0) {$\cdots$};
+\end{tikzpicture}
+\end{center}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{block}{Prefill}
+\small
+Matrix $\times$ matrix: each weight is reused by every prompt token.\\
+$\Rightarrow$ \textbf{compute-bound}. Metric: time to first token (TTFT).
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Decode}
+\small
+Matrix $\times$ vector: \emph{every} weight is read again for \emph{each} token.\\
+$\Rightarrow$ \textbf{memory-bandwidth-bound}. Metric: time per output token (TPOT).
+\end{block}
+\end{columns}
+\vspace{4pt}
+\small
+They differ so much that DistServe (OSDI'24) serves them on separate GPUs, and llm.npu (ASPLOS'25) moves phone prefill to the NPU, at over 1{,}000 tokens/s for a billion-sized model.
+\refline{Y.~Zhong et al., DistServe, USENIX OSDI 2024 \textperiodcentered{} D.~Xu et al., Fast On-device LLM Inference with NPUs, ACM ASPLOS 2025}
+\note{5:30--6:45. Our voicemail example has a 4K-token prefill (reading the transcript) and a 200-token decode (writing the summary). Both matter.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Budget \#2 --- Bandwidth: decode speed is set by bytes, not FLOPs}
+On a phone the batch size is 1, so every new token reads every weight once:
+\[
+\text{tokens/s} \;\le\; \frac{\text{memory bandwidth}}{\text{bytes read per token}} \;\approx\; \frac{BW}{\text{bytes}_{\text{weights}}}
+\]
+\centering
+\begin{tabular}{@{}llllr@{}}
+\toprule
+Device & Bandwidth & Model & Bytes / token & Upper bound \\
+\midrule
+Phone (LPDDR5X) & $\approx$60 GB/s & 3B, FP16 & 6 GB   & $\approx$10 tok/s \\
+Phone           & $\approx$60 GB/s & 3B, INT4 & 1.5 GB & $\approx$40 tok/s \\
+Phone           & $\approx$60 GB/s & 8B, INT4 & 4 GB   & $\approx$15 tok/s \\
+\midrule
+H100 GPU (HBM3) & 3.35 TB/s        & 8B, FP16 & 16 GB  & $\approx$200 tok/s \\
+\bottomrule
+\end{tabular}
+
+\vspace{8pt}
+\begin{alertblock}{}
+\centering Halve the bytes and you roughly double decode speed.\\
+Quantization is a \textbf{speed} technique, not only a memory technique.
+\end{alertblock}
+\raggedright
+\refline{Upper bounds ignore KV-cache reads and runtime overhead. A server also batches many users, so one read of each weight serves many tokens.}
+\note{6:45--8:15. Work out 60/1.5 = 40 together. Emphasize that the server's real advantage is batching: one weight read serves many users.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{The roofline view: where each phase sits}
+\begin{columns}[T]
+\column{0.53\textwidth}
+\begin{tikzpicture}
+\begin{axis}[
+  width=7.4cm, height=5.0cm,
+  xmode=log, ymode=log,
+  xmin=0.3, xmax=10000, ymin=10, ymax=30000,
+  xlabel={arithmetic intensity (FLOP / byte)},
+  ylabel={attainable GFLOP/s},
+  label style={font=\scriptsize}, tick label style={font=\tiny},
+  grid=major, grid style={black!10},
+]
+  \addplot[very thick, devc] coordinates {(0.3,18) (166.7,10000) (10000,10000)};
+  \node[font=\tiny,devc,rotate=31] at (axis cs:2.2,280) {slope = 60 GB/s};
+  \node[font=\tiny,devc] at (axis cs:1500,16000) {peak $\approx$10 TFLOP/s};
+  \draw[dashed,black!50] (axis cs:166.7,10) -- (axis cs:166.7,10000);
+  \node[font=\tiny,black!60,anchor=west] at (axis cs:180,20) {ridge $\approx$170};
+  \addplot[only marks, mark=*, mark size=2.2pt, edgec] coordinates {(1,60) (4,240)};
+  \node[font=\tiny,edgec,anchor=north west] at (axis cs:1,55) {decode FP16};
+  \node[font=\tiny,edgec,anchor=north west] at (axis cs:4,220) {decode INT4};
+  \addplot[only marks, mark=square*, mark size=2.2pt, okc] coordinates {(2000,10000)};
+  \node[font=\tiny,okc,anchor=north] at (axis cs:2000,8000) {prefill};
+\end{axis}
+\end{tikzpicture}
+\column{0.45\textwidth}
+\small
+\textbf{Arithmetic intensity} $I$ = FLOPs per byte moved.
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item Decode: 2 FLOPs per weight over $b/8$ bytes per weight $\Rightarrow I = 16/b$ (FP16: 1; INT4: 4).
+  \item Prefill over $n$ tokens reuses each weight $n$ times: $I\approx 16n/b$.
+  \item Attainable $=\min(\text{peak},\; BW\times I)$.
+\end{itemize}
+\vspace{2pt}
+\alert{Decode uses under 3\% of peak compute.} Fewer bytes help; faster math does not.
+\end{columns}
+\refline{S.~Williams, A.~Waterman, D.~Patterson, Roofline: An Insightful Visual Performance Model for Multicore Architectures, CACM 2009. Phone numbers are round, illustrative values.}
+\note{8:15--9:45. If short on time, state only the red sentence. 240 GFLOP/s out of 10 TFLOP/s is 2.4\%.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Budget \#3 --- Energy: moving data costs more than math}
+\vspace{6pt}
+\begin{columns}[c]
+\column{0.54\textwidth}
+\begin{tikzpicture}[x=0.72cm]
+  \foreach \y/\name/\en/\len/\col in {
+      3/{8-bit integer add}/0.03 pJ/0.48/devc,
+      2/{32-bit float multiply}/3.7 pJ/2.57/devc,
+      1/{32-bit SRAM read (8 KB)}/5 pJ/2.70/devc,
+      0/{32-bit DRAM read}/640 pJ/4.81/badc} {
+    \node[anchor=east,font=\scriptsize] at (0,0.62*\y) {\name};
+    \fill[\col!75] (0.05,0.62*\y-0.2) rectangle (0.05+\len,0.62*\y+0.2);
+    \node[anchor=west,font=\scriptsize\bfseries,text=\col] at (0.1+\len,0.62*\y) {\en};
+  }
+  \node[lbl] at (2.5,-0.62) {45 nm; bar length on a log scale};
+\end{tikzpicture}
+\column{0.44\textwidth}
+\begin{itemize}\setlength{\itemsep}{4pt}
+  \item One DRAM read costs $\approx$170$\times$ a 32-bit float multiply, so \textbf{joules follow bytes moved}.
+  \item A phone battery holds $\approx$15--20 Wh, and the phone can sustain only a few watts before it throttles.
+  \item Measured on phones: ``continuous execution of LLMs remains elusive'' because of energy and heat (MELTing Point).
+\end{itemize}
+\end{columns}
+\vspace{8pt}
+\begin{alertblock}{}
+\centering Fewer bytes per token buys speed \emph{and} battery life.
+\end{alertblock}
+\refline{M.~Horowitz, Computing's Energy Problem (and What We Can Do About It), IEEE ISSCC 2014 \textperiodcentered{} S.~Laskaridis et al., MELTing Point, ACM MobiCom 2024}
+\note{9:45--11:00. The table is from Horowitz's ISSCC keynote paper. The ratio is what matters, not the exact process node.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Quick check (2 minutes)}
+\vspace{4pt}
+A phone has \textbf{12 GB} of DRAM and \textbf{$\approx$60 GB/s} of memory bandwidth.\\
+You want a \textbf{7B} chat model at \textbf{$\ge$20 tokens/s}.
+\vspace{6pt}
+\begin{enumerate}\setlength{\itemsep}{8pt}
+  \item In FP16?\\
+    \uncover<2->{\alert{$7\times2 = 14$ GB $>$ 12 GB: it does not fit. Even if it did, $60/14\approx4$ tok/s.}}
+  \item In INT4?\\
+    \uncover<3->{\alert{3.5 GB fits, but decode is at most $60/3.5\approx17$ tok/s, still short of 20.}}
+  \item What would you change?\\
+    \uncover<4->{\alert{A smaller model (3B INT4: $\le$40 tok/s), fewer weights read per token (MoE, Sec.~3), or run it somewhere else (Sec.~5--6).}}
+\end{enumerate}
+\note{11:00--13:00. Let students answer before each reveal. Q3 motivates the rest of the lecture.}
+\end{frame}
+
+% =====================================================================

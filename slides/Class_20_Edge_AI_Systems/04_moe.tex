@@ -1,0 +1,151 @@
+%!TEX root = ./main.tex
+
+\section[MoE]{Mixture of Experts: capacity without compute}
+% =====================================================================
+\begin{frame}
+\frametitle{Mixture of Experts: a router inside the layer}
+\begin{columns}[T]
+\column{0.54\textwidth}
+\begin{tikzpicture}
+  \node[tok,fill=devc!10,minimum width=0.9cm] (x) at (0,0) {token $x$};
+  \node[draw=edgec,fill=edgec!15,thick,rounded corners=2pt,font=\scriptsize\bfseries,minimum height=0.6cm] (r) at (1.75,0) {router};
+  \draw[-{Latex}] (x) -- (r);
+  \foreach \i in {1,...,8} {
+    \pgfmathsetmacro{\yy}{1.75-0.5*(\i-1)}
+    \ifnum\i=2
+      \node[layer=edgec,minimum width=1.1cm,minimum height=0.38cm] (e\i) at (4.1,\yy) {FFN$_{\i}$};
+    \else\ifnum\i=6
+      \node[layer=edgec,minimum width=1.1cm,minimum height=0.38cm] (e\i) at (4.1,\yy) {FFN$_{\i}$};
+    \else
+      \node[layer=black,draw=black!30,fill=black!4,minimum width=1.1cm,minimum height=0.38cm,text=black!40] (e\i) at (4.1,\yy) {FFN$_{\i}$};
+    \fi\fi
+  }
+  \draw[-{Latex},edgec,thick] (r.east) -- (e2.west) node[pos=0.55,above,font=\tiny] {$g_2$};
+  \draw[-{Latex},edgec,thick] (r.east) -- (e6.west) node[pos=0.55,below,font=\tiny] {$g_6$};
+  \node[circle,draw,thick,inner sep=1pt,font=\small] (sum) at (6.0,0) {$+$};
+  \draw[-{Latex},edgec,thick] (e2.east) -- (sum);
+  \draw[-{Latex},edgec,thick] (e6.east) -- (sum);
+  \node[tok,fill=devc!10] (y) at (7.1,0) {$y$};
+  \draw[-{Latex}] (sum) -- (y);
+  \node[lbl] at (4.1,-2.3) {8 experts stored, top-2 used};
+\end{tikzpicture}
+\column{0.44\textwidth}
+\vspace{-6pt}
+\[
+g(x)=\mathrm{softmax}(W_r\,x)
+\]
+\[
+y=\sum_{i\in\mathrm{TopK}(g(x),\,k)} g_i(x)\,\mathrm{FFN}_i(x)
+\]
+\small
+\begin{itemize}
+  \item Sparsely gated MoE: Shazeer et al.\ (ICLR'17).
+  \item Switch Transformer routes each token to $k{=}1$ expert (JMLR'22).
+  \item Each token \emph{touches} only $k$ experts, but all $E$ experts must be \emph{stored}.
+\end{itemize}
+\end{columns}
+\refline{N.~Shazeer et al., Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer, ICLR 2017 \textperiodcentered{} W.~Fedus, B.~Zoph, N.~Shazeer, Switch Transformers, JMLR 2022}
+\note{20:00--21:30. MoE is our first ``router''. The course theme of routing shows up inside a single layer.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{MoE trades memory for compute}
+\centering
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+Model & Total params & Active per token & Design \\
+\midrule
+Mixtral 8x7B & 47B & 13B & top-2 of 8 experts \\
+DeepSeek-V3 & 671B & 37B & fine-grained + shared experts \\
+MobileMoE family & 1.3--5.3B & 0.3--0.9B & fine-grained + shared, for phones \\
+\bottomrule
+\end{tabular}
+\raggedright
+\vspace{8pt}
+\begin{columns}[T]
+\column{0.46\textwidth}
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item Prefill FLOPs $\propto$ \textbf{active} params.
+  \item Bytes read per decode step $\propto$ \textbf{active} params, \emph{if every expert sits in DRAM}.
+  \item Memory footprint $\propto$ \textbf{total} params.
+\end{itemize}
+\column{0.52\textwidth}
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item \textbf{Data center}: memory is pooled across GPUs and compute is the bill. MoE wins, so frontier models are MoEs.
+  \item \textbf{Phone}: memory is the scarcest resource. Does MoE still pay off?
+  \item \alert{MobileMoE (today): yes, at moderate sparsity.} At equal INT4 weight memory it decodes \textbf{2.2--3.4$\times$ faster} than a dense model.
+\end{itemize}
+\end{columns}
+\refline{A.~Q.~Jiang et al., Mixtral of Experts, arXiv:2401.04088, 2024 \textperiodcentered{} DeepSeek-AI, DeepSeek-V3 Technical Report, arXiv:2412.19437, 2024 \textperiodcentered{} Y.~Chen et al., MobileMoE, arXiv:2605.27358, 2026}
+\note{21:30--23:00. Connect to Section 1: decode reads only active experts, so MoE directly shrinks bytes per token, as long as the experts are resident.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Fine-grained and shared experts}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\vspace{10pt}
+\begin{tikzpicture}
+  \node[lbl,anchor=west] at (-0.1,2.45) {(a) conventional: 8 experts, top-2};
+  \foreach \i in {0,...,7} {
+    \pgfmathsetmacro{\c}{(\i==1 || \i==5) ? "edgec" : "black!25"}
+    \fill[\c] (0.62*\i,1.55) rectangle ++(0.52,0.6);
+  }
+  \node[lbl,anchor=west] at (-0.1,1.05) {(b) fine-grained + shared: 1 shared, 32 small, top-8};
+  \fill[okc!70] (0,-0.35) rectangle ++(0.52,1.0);
+  \node[font=\tiny,text=white] at (0.26,0.15) {S};
+  \foreach \i in {0,...,15} {
+    \foreach \j in {0,1} {
+      \pgfmathtruncatemacro{\k}{\i+16*\j}
+      \pgfmathsetmacro{\c}{(\k==2 || \k==5 || \k==9 || \k==14 || \k==17 || \k==22 || \k==27 || \k==30) ? "edgec" : "black!25"}
+      \fill[\c] (0.72+0.255*\i,0.2-0.55*\j) rectangle ++(0.21,0.45);
+    }
+  }
+  \node[lbl,anchor=north west,align=left] at (-0.1,-0.55) {same active compute, but $\binom{8}{2}=28$ vs.\\$\binom{32}{8}\approx10^{7}$ possible expert combinations};
+\end{tikzpicture}
+\column{0.48\textwidth}
+\small
+\textbf{DeepSeekMoE} (ACL'24)
+\begin{itemize}
+  \item Split each expert into $m$ smaller ones and activate $m\times$ as many: sharper specialization.
+  \item Isolate a few \emph{shared} experts that every token uses, so routed experts do not duplicate common knowledge.
+\end{itemize}
+\vspace{4pt}
+\textbf{MobileMoE's on-device sweet spot}
+\begin{itemize}
+  \item Moderate sparsity, fine-grained experts, one shared expert, e.g., \textbf{60 routed + 1 shared, top-4}. Found with a scaling law fitted under phone limits.
+\end{itemize}
+\end{columns}
+\refline{D.~Dai et al., DeepSeekMoE: Towards Ultimate Expert Specialization in Mixture-of-Experts Language Models, ACL 2024 \textperiodcentered{} Y.~Chen et al., MobileMoE, arXiv:2605.27358, 2026}
+\note{23:00--24:30. This frame sets up Lex's talk. Do not explain the scaling law here; leave it to the presenter.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{When the experts do not fit: offload to flash}
+\begin{columns}[T]
+\column{0.42\textwidth}
+\vspace{14pt}
+\begin{tikzpicture}
+  \node[draw=devc,fill=devc!20,thick,minimum width=2.2cm,minimum height=0.65cm,font=\scriptsize\bfseries,align=center] (s) at (0,2.2) {on-chip SRAM\\[-2pt]\mdseries MBs};
+  \node[draw=devc,fill=devc!10,thick,minimum width=3.6cm,minimum height=0.65cm,font=\scriptsize\bfseries,align=center] (d) at (0,1.1) {DRAM\\[-2pt]\mdseries 8--16 GB, tens of GB/s};
+  \node[draw=cloudc,fill=cloudc!10,thick,minimum width=5.0cm,minimum height=0.65cm,font=\scriptsize\bfseries,align=center] (f) at (0,0) {Flash (UFS)\\[-2pt]\mdseries 128 GB--1 TB, $\approx$2--4 GB/s sequential};
+  \draw[{Latex}-{Latex},thick] (d.south) -- (f.north) node[midway,right,font=\tiny,badc] {10$\times$+ slower};
+  \node[lbl] at (0,-0.75) {small random reads from flash are slower still};
+\end{tikzpicture}
+\column{0.56\textwidth}
+\small
+\begin{itemize}\setlength{\itemsep}{4pt}
+  \item \textbf{LLM in a flash} (ACL'24): keep weights on flash and load only what is needed. It reuses recently loaded neurons (``windowing'') and reads larger contiguous chunks (``row--column bundling''). Models up to 2$\times$ the DRAM size run 4--5$\times$ (CPU) and 20--25$\times$ (GPU) faster than with naive loading.
+  \item \textbf{The MoE twist}: the router decides which expert it needs only at the last moment. So cache the hot experts in DRAM, and predict and prefetch the rest.
+  \item \textbf{D2MoE} (MobiCom'25, on 11/4): route to an expert \emph{and} a precision, and overlap expert loading with compute.
+\end{itemize}
+\end{columns}
+\refline{K.~Alizadeh et al., LLM in a Flash: Efficient Large Language Model Inference with Limited Memory, ACL 2024 \textperiodcentered{} H.~Wang et al., D2MoE, ACM MobiCom 2025}
+\note{24:30--26:00. MobileMoE assumes all experts fit; D2MoE drops that assumption. This is the 11/4 hand-off the course page mentions.}
+\end{frame}
+
+% =====================================================================

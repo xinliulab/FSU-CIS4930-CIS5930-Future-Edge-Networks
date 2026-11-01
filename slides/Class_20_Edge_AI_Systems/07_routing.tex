@@ -1,0 +1,99 @@
+%!TEX root = ./main.tex
+
+\section[Routing]{Model routing: choosing the model per request}
+% =====================================================================
+\begin{frame}
+\frametitle{Model routing: pick the model per request}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\vspace{14pt}
+\begin{tikzpicture}
+  \node[tok,fill=black!5,minimum height=0.7cm] (q) at (0,0) {request $r$};
+  \node[diamond,draw=badc,fill=badc!10,thick,aspect=1.4,inner sep=1pt,font=\scriptsize\bfseries] (r) at (2.2,0) {router};
+  \draw[-{Latex}] (q) -- (r);
+  \node[place=devc,minimum width=2.4cm,minimum height=0.75cm,font=\scriptsize\bfseries] (a) at (5.2,1.3) {on-device 1--4B};
+  \node[place=edgec,minimum width=2.4cm,minimum height=0.75cm,font=\scriptsize\bfseries] (b) at (5.2,0) {edge 8--70B};
+  \node[place=cloudc,minimum width=2.4cm,minimum height=0.75cm,font=\scriptsize\bfseries] (c) at (5.2,-1.3) {cloud frontier};
+  \draw[-{Latex},thick] (r) -- (a);
+  \draw[-{Latex},thick] (r) -- (b);
+  \draw[-{Latex},thick] (r) -- (c);
+  \node[lbl] at (3.2,-2.3) {top $\rightarrow$ bottom: higher quality,\\but more cost, latency, and data exposure};
+\end{tikzpicture}
+\column{0.48\textwidth}
+\[
+m^\star(r)=\arg\max_{m}\;\widehat{Q}(m,r)-\lambda\,\mathrm{Cost}(m,r)
+\]
+\centering\small s.t.\ deadline and privacy constraints
+\raggedright
+\vspace{6pt}
+\begin{block}{Routing, twice}
+\small
+\textbf{Network routing} picks a path per flow from link costs.\\
+\textbf{Model routing} picks a model per request from \emph{predicted} quality and cost.\\[2pt]
+The hard part: predicting quality \emph{before} paying for the big model.
+\end{block}
+\end{columns}
+\note{40:00--41:00. Link to the course theme: model routing and network routing are the same optimization with different costs.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{How routers predict quality}
+\small
+\begin{columns}[T]
+\column{0.32\textwidth}
+\begin{block}{Cascade: try small first}
+\textbf{AutoMix} (NeurIPS'24): the small model answers and checks itself (few-shot self-verification). A POMDP router escalates when it is unsure.\\[2pt]
+$\Rightarrow$ over 50\% lower cost at comparable performance.\\[2pt]
+\con hard queries pay twice.
+\end{block}
+\column{0.32\textwidth}
+\begin{block}{Predict difficulty upfront}
+\textbf{Hybrid LLM} (ICLR'24): a router predicts the quality gap between the small and large model for each query. A threshold, tunable at test time, trades quality for cost.\\[2pt]
+$\Rightarrow$ up to 40\% fewer calls to the large model with no quality drop.
+\end{block}
+\column{0.32\textwidth}
+\begin{block}{Learn from preferences}
+\textbf{RouteLLM} (ICLR'25): routers trained on human preference data, with data augmentation.\\[2pt]
+$\Rightarrow$ over 2$\times$ lower cost without losing quality, and the routers transfer to unseen model pairs.
+\end{block}
+\end{columns}
+\vspace{6pt}
+All three were built around cloud cost. At the edge, ``cost'' also includes battery, RTT, and privacy.
+\refline{P.~Aggarwal et al., AutoMix: Automatically Mixing Language Models, NeurIPS 2024 \textperiodcentered{} D.~Ding et al., Hybrid LLM: Cost-Efficient and Quality-Aware Query Routing, ICLR 2024 \textperiodcentered{}
+I.~Ong et al., RouteLLM: Learning to Route LLMs from Preference Data, ICLR 2025}
+\note{41:00--42:15. Three ways to predict quality, ordered by when the prediction happens: after, before, and learned offline.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Routing at the edge sees more than the prompt}
+\vspace{4pt}
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Request & Binding constraint & Route \\
+\midrule
+``Suggest the next word'' & deadline under 50 ms; tiny task & \textcolor{devc}{\textbf{device}} \\
+``Summarize my doctor's voicemail'' & privacy & \textcolor{devc}{\textbf{device}} (or a trusted cloud) \\
+``Translate live on my AR glasses'' & $\sim$100 ms, needs a bigger model & \textcolor{edgec}{\textbf{edge}} \\
+``Plan a 5-day trip with web search'' & hard, not urgent & \textcolor{cloudc}{\textbf{cloud}} \\
+\bottomrule
+\end{tabular}
+
+\vspace{8pt}
+\textbf{Signals an edge router can use}: query difficulty \textperiodcentered{} deadline \textperiodcentered{} privacy label \textperiodcentered{} RTT and uplink \textperiodcentered{} battery and temperature \textperiodcentered{} price
+\normalsize
+\vspace{8pt}
+\begin{alertblock}{Routing happens at three granularities}
+\centering
+\begin{tabular}{ccc}
+token $\rightarrow$ expert & request $\rightarrow$ model & request $\rightarrow$ place \\
+\scriptsize MoE router (Sec.~3) & \scriptsize LLM router (this section) & \scriptsize device / edge / cloud (Sec.~5)
+\end{tabular}
+\end{alertblock}
+\note{42:15--43:30. Ask the class to route one more request of their choosing. Deadlines in the table are illustrative.}
+\end{frame}
+
+% =====================================================================

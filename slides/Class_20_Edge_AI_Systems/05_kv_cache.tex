@@ -1,0 +1,137 @@
+%!TEX root = ./main.tex
+
+\section[KV cache]{The KV cache: memory that grows with the conversation}
+% =====================================================================
+\begin{frame}
+\frametitle{Why decoding keeps a KV cache}
+\begin{columns}[T]
+\column{0.52\textwidth}
+\[
+o_t=\mathrm{softmax}\!\Big(\frac{q_t\,K_{1:t}^{\top}}{\sqrt{d}}\Big)\,V_{1:t}
+\]
+\small
+\begin{itemize}\setlength{\itemsep}{4pt}
+  \item The keys and values of past tokens never change, so store them and append one row per step.
+  \item Without the cache, every step recomputes all $t$ tokens: $O(t^2)$ total work. With it, each step does $O(t)$ work.
+  \item The price: memory grows \emph{linearly} with context, and every decode step reads the whole cache. That is bandwidth again.
+\end{itemize}
+\column{0.45\textwidth}
+\vspace{18pt}
+\begin{tikzpicture}[x=0.62cm]
+  \node[lbl,anchor=east] at (-0.2,1.0) {$K$};
+  \node[lbl,anchor=east] at (-0.2,0.3) {$V$};
+  \foreach \i in {1,...,6} {
+    \node[tok,fill=devc!12,minimum width=0.5cm] at (\i-1,1.0) {$k_{\i}$};
+    \node[tok,fill=devc!12,minimum width=0.5cm] at (\i-1,0.3) {$v_{\i}$};
+  }
+  \node[tok,fill=edgec!30,draw=edgec,thick,minimum width=0.5cm] at (6,1.0) {$k_{7}$};
+  \node[tok,fill=edgec!30,draw=edgec,thick,minimum width=0.5cm] at (6,0.3) {$v_{7}$};
+  \node[tok,fill=edgec!30,draw=edgec,thick] (q) at (3,2.3) {$q_7$ (new token)};
+  \foreach \i in {0,...,6} \draw[-{Latex[length=1.3mm]},edgec!70] (q.south) -- (\i,1.3);
+  \draw[decorate,decoration={brace,amplitude=3pt,mirror}] (-0.3,-0.1) -- (5.3,-0.1)
+    node[midway,below=3pt,lbl] {cached: read every step};
+  \node[lbl,anchor=north] at (6.1,-0.1) {appended};
+\end{tikzpicture}
+\end{columns}
+\note{26:00--27:15. Do one step by hand: the new query attends to all cached keys, then the new key and value are appended.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{How big is the KV cache?}
+\vspace{-4pt}
+\[
+\text{KV bytes} \;=\; 2\times L\times H_{kv}\times d_{\text{head}}\times n_{\text{ctx}}\times \text{bytes/elem}
+\]
+\begin{center}
+\footnotesize
+\begin{tabular}{@{}l@{\hspace{1.4em}}l@{\hspace{1.4em}}l@{}}
+$L$: layers & $H_{kv}$: key/value heads per layer & $d_{\text{head}}$: dimension per head \\
+$n_{\text{ctx}}$: tokens so far (prompt $+$ output) & $2$: one K and one V & bytes/elem: 2 for FP16, 0.5 for INT4 \\
+\end{tabular}
+\end{center}
+\vspace{-3pt}
+\begin{columns}[T]
+\column{0.43\textwidth}
+\small
+\textbf{Llama-2-7B}: $L{=}32$, $H_{kv}{=}32$, $d_{\text{head}}{=}128$\\
+$\Rightarrow$ 512 KiB/token in FP16; 2 GiB at 4K tokens.
+
+\vspace{6pt}
+\textbf{Llama-3-8B} (GQA): $H_{kv}{=}8$\\
+$\Rightarrow$ 128 KiB/token; 1 GiB at 8K, \textbf{16 GiB at 128K}.
+
+\vspace{6pt}
+\alert{At long context, the cache rivals or exceeds the weights.}
+\column{0.55\textwidth}
+\begin{tikzpicture}
+\begin{axis}[
+  width=7.6cm, height=4.6cm,
+  xmin=0, xmax=32, ymin=0, ymax=16,
+  xlabel={context length (K tokens)}, ylabel={KV cache (GiB)},
+  label style={font=\scriptsize}, tick label style={font=\tiny},
+  legend style={font=\tiny,at={(0.02,0.98)},anchor=north west,draw=none,fill=white,fill opacity=0.85,text opacity=1},
+  legend cell align=left,
+  grid=major, grid style={black!10},
+]
+  \addplot[very thick,badc,domain=0:32] {0.5*x};
+  \addlegendentry{MHA, $H_{kv}{=}32$, FP16}
+  \addplot[very thick,devc,domain=0:32] {0.125*x};
+  \addlegendentry{GQA, $H_{kv}{=}8$, FP16}
+  \addplot[very thick,okc,domain=0:32] {0.03125*x};
+  \addlegendentry{GQA + 4-bit KV}
+  \addplot[dashed,thick,black!60,domain=0:32] {4};
+  \node[font=\tiny,black!70,anchor=south east] at (axis cs:32,4) {$\approx$ INT4 weights of an 8B model};
+\end{axis}
+\end{tikzpicture}
+\end{columns}
+\refline{Lines use an 8B-class shape ($L{=}32$, $d_{\text{head}}{=}128$). Configurations from H.~Touvron et al., Llama 2, arXiv:2307.09288, 2023 \textperiodcentered{} Llama Team (Meta), The Llama 3 Herd of Models, arXiv:2407.21783, 2024}
+\note{27:15--28:45. Compute 2*32*8*128*2 bytes = 128 KiB on the board. Then point at the crossing with the dashed line.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Four knobs to shrink the KV cache}
+\small
+\begin{columns}[T]
+\column{0.49\textwidth}
+\begin{block}{1.\ Fewer KV heads \hfill $H_{kv}$}
+MQA shares one K/V head across all query heads. \textbf{GQA} (EMNLP'23) shares one per group: near-MHA quality at near-MQA speed. Llama-3-8B: 32 query heads, 8 KV heads $\Rightarrow$ 4$\times$ smaller.
+\end{block}
+\begin{block}{3.\ Fewer bits \hfill bytes/elem}
+\textbf{KIVI} (ICML'24): 2-bit KV cache, keys per channel and values per token. Almost the same quality with 2.6$\times$ less peak memory.
+\end{block}
+\column{0.49\textwidth}
+\begin{block}{2.\ Fewer tokens \hfill $n_{\text{ctx}}$}
+\textbf{H2O} (NeurIPS'23) keeps ``heavy-hitter'' tokens plus recent ones. \textbf{StreamingLLM} (ICLR'24) keeps a few ``attention-sink'' tokens plus a sliding window.
+\end{block}
+\begin{block}{4.\ Better placement \hfill where it lives}
+\textbf{PagedAttention} (SOSP'23) pages the cache like an OS to stop fragmentation. \textbf{KVSwap} (MobiSys'26, on 11/4) keeps it on flash and prefetches what is needed next.
+\end{block}
+\end{columns}
+\vspace{2pt}
+The KV cache is your conversation in another form, so it is a privacy target too (KV-Cloak, 11/23).
+\refline{Shazeer, arXiv 2019 (MQA) \textperiodcentered{} Ainslie et al., EMNLP 2023 \textperiodcentered{} Z.~Zhang et al., NeurIPS 2023 \textperiodcentered{} G.~Xiao et al., ICLR 2024 \textperiodcentered{} Z.~Liu et al., ICML 2024 \textperiodcentered{} Kwon et al., ACM SOSP 2023 \textperiodcentered{} H.~Zhang et al., ACM MobiSys 2026. Full titles in the References.}
+\note{28:45--30:30. The four knobs map to the four factors of the formula: H_kv, n_ctx, bytes/elem, and where the bytes live.}
+\end{frame}
+
+% =====================================================================
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Exercise: does it fit in 4 GB?}
+\vspace{4pt}
+A \textbf{3B} GQA model: $L{=}28$, $H_{kv}{=}8$, $d_{\text{head}}{=}128$. App memory budget: \textbf{4 GB}. Phone bandwidth: $\approx$\textbf{60 GB/s}.
+\vspace{4pt}
+\begin{enumerate}\setlength{\itemsep}{6pt}
+  \item Weights at INT4 (g128, $\approx$4.25 bits)?\\
+    \uncover<2->{\alert{$3\times10^9\times4.25/8\approx$ \textbf{1.6 GB}}}
+  \item KV cache per token in FP16? For 8K tokens? For 32K tokens?\\
+    \uncover<3->{\alert{$2\cdot28\cdot8\cdot128\cdot2$ B = \textbf{112 KiB}/token, so $\approx$0.9 GB at 8K and $\approx$3.8 GB at 32K}}
+  \item Does a 32K-token chat fit?\\
+    \uncover<4->{\alert{$1.6+3.8>4$ GB \no. With a 4-bit KV cache ($\approx$0.95 GB) \yes, or evict or offload tokens.}}
+  \item Decode upper bound at 8K context?\\
+    \uncover<5->{\alert{Each token reads $\approx1.6+0.9=2.5$ GB, so at most $60/2.5\approx$ \textbf{24 tok/s}.}}
+\end{enumerate}
+\note{30:30--33:00. Give one minute in pairs, then reveal. Q4 shows that the KV cache costs speed as well as space.}
+\end{frame}

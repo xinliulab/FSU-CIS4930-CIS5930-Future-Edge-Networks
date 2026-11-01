@@ -1,0 +1,98 @@
+%!TEX root = ./main.tex
+
+% =====================================================================
+%  OPENING
+% =====================================================================
+\begin{frame}
+\frametitle{One request, three places it could run}
+\vspace{2pt}
+\begin{center}
+\begin{tikzpicture}
+  \node[draw=black!40,fill=black!3,rounded corners=6pt,inner sep=6pt,align=center] at (5.4,1.75)
+    {\itshape ``Summarize the 20-minute voicemail from my doctor.''\\[1pt]
+     \footnotesize\upshape $\approx$4K-token prompt \textperiodcentered{} $\approx$200-token answer \textperiodcentered{} private};
+  \node[place=devc]   (dev)   at (0,0)    {Phone\\[-2pt]\footnotesize\mdseries on-device model};
+  \node[place=edgec]  (edge)  at (5.4,0)  {Edge server\\[-2pt]\footnotesize\mdseries 5G MEC, next to the RAN};
+  \node[place=cloudc] (cloud) at (10.8,0) {Cloud\\[-2pt]\footnotesize\mdseries data-center GPUs};
+  \draw[{Latex}-{Latex},thick] (dev)  -- node[above,lbl]{RTT $\approx$\\10--20 ms} (edge);
+  \draw[{Latex}-{Latex},thick] (edge) -- node[above,lbl]{RTT $\approx$\\50--100+ ms} (cloud);
+  \node[anchor=north,align=left,font=\footnotesize] at (0,-0.75)
+    {\pro no network, no queue\\ \pro data never leaves\\ \con small model (1--4B)\\ \con battery and heat};
+  \node[anchor=north,align=left,font=\footnotesize] at (5.4,-0.75)
+    {\pro short RTT, real GPUs\\ \pro bigger model\\ \con shared with other users\\ \con only where deployed};
+  \node[anchor=north,align=left,font=\footnotesize] at (10.8,-0.75)
+    {\pro largest models\\ \pro elastic capacity\\ \con longest RTT, queueing\\ \con paid per token; data leaves};
+\end{tikzpicture}
+\end{center}
+\vspace{-4pt}
+\begin{center}
+\alert{The same request can be served at all three. Which one is right depends on the\\
+request, the device, and the network. Today we make that choice precise.}
+\end{center}
+\refline{RTT values are typical, illustrative figures; they vary widely by operator and deployment.}
+\note{0:00--1:30. Running example for the whole lecture. Ask the class: where would you run it, and why? Collect answers (privacy, speed, quality) and say each one is a term we will quantify.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Why push models onto the device?}
+\begin{columns}[T]
+\column{0.52\textwidth}
+\begin{itemize}\setlength{\itemsep}{5pt}
+  \item \textbf{Latency and availability}: no round trip, no queue behind other users; works in a tunnel or on a plane.
+  \item \textbf{Privacy}: messages, photos, and health data never leave the phone.
+  \item \textbf{Cost}: every cloud token burns data-center GPU time; on-device tokens run on hardware the user already paid for.
+  \item \textbf{Personal context}: the phone already holds your calendar, mail, and screen.
+\end{itemize}
+\column{0.45\textwidth}
+\begin{block}{Shipping and measured}
+\small
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item \textbf{Apple Intelligence}: a $\sim$3B on-device model, plus a larger server model on Private Cloud Compute. This is already a router: on-device first, server when needed.
+  \item \textbf{MobileLLM} (ICML'24): sub-billion models designed for phones. Today's paper, MobileMoE, continues this line.
+  \item \textbf{MELTing Point} (MobiCom'24): on phones, LLM inference is largely \emph{memory-bound}; energy and heat limit continuous use.
+\end{itemize}
+\end{block}
+\end{columns}
+\refline{Apple, Apple Intelligence Foundation Language Models, arXiv:2407.21075, 2024 \textperiodcentered{}
+Z.~Liu et al., MobileLLM, ICML 2024 \textperiodcentered{} S.~Laskaridis et al., MELTing Point, ACM MobiCom 2024}
+\note{1:30--2:45. The four motivations. Point out that cost is the industry's motive and privacy is the user's.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Today's question, made precise}
+For a request $r$, choose a place $p\in\{\text{device},\text{edge},\text{cloud}\}$, a model $m$, and a precision $b$:
+\[
+T(r,p) \;=\; \underbrace{T_{\text{up}} + T_{\text{down}}}_{\text{network}}
+\;+\; \underbrace{T_{\text{queue}}}_{\text{sharing}}
+\;+\; \underbrace{T_{\text{prefill}}(n_{\text{in}})}_{\text{read the prompt}}
+\;+\; \underbrace{n_{\text{out}}\cdot T_{\text{decode}}}_{\text{write the answer}}
+\]
+\begin{columns}[T]
+\column{0.42\textwidth}
+\textbf{subject to}
+\begin{itemize}
+  \item memory: weights $+$ KV cache $\le M_{\text{device}}$
+  \item energy: within battery and thermal budget
+  \item quality: $Q(m,b)\ge Q_{\min}$
+  \item privacy: sensitive $r$ $\Rightarrow$ trusted $p$
+\end{itemize}
+\column{0.55\textwidth}
+\textbf{Each part of today attacks one term}\\[3pt]
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+1\; The device's budget & what bounds $T_{\text{decode}}$ and $M$ \\
+2\; Quantization & fewer bytes per weight \\
+3\; Mixture of Experts & fewer weights read per token \\
+4\; KV cache & memory that grows with $n$ \\
+5\; Split \& collaborative & the network terms \\
+6\; Model routing & choose $p$ and $m$ per request \\
+\bottomrule
+\end{tabular}
+\end{columns}
+\note{2:45--4:00. This equation is the outline. Every later frame points back to one term of it.}
+\end{frame}
+
+% =====================================================================

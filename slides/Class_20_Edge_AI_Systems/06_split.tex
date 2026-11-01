@@ -1,0 +1,196 @@
+%!TEX root = ./main.tex
+
+\section[Split]{Split and collaborative inference}
+% =====================================================================
+\begin{frame}
+\frametitle{Before LLMs: offload, or split the network?}
+\begin{center}
+\begin{tikzpicture}
+  \foreach \i in {1,...,8} {
+    \ifnum\i<5
+      \node[layer=devc] (l\i) at (1.15*\i,0) {L\i};
+    \else
+      \node[layer=cloudc] (l\i) at (1.15*\i,0) {L\i};
+    \fi
+  }
+  \foreach \i [evaluate=\i as \j using int(\i+1)] in {1,...,7} \draw[-{Latex}] (l\i) -- (l\j);
+  \draw[dashed,very thick,badc] (5.175,-0.75) -- (5.175,0.9);
+  \node[lbl,text=devc,anchor=south] at (2.875,0.5) {phone: layers $1..k$};
+  \node[lbl,text=cloudc,anchor=south] at (7.475,0.5) {server: layers $k{+}1..N$};
+  \node[lbl,text=badc,anchor=north] at (5.175,-0.75) {upload activation $D_k$};
+\end{tikzpicture}
+\end{center}
+\small
+\begin{itemize}\setlength{\itemsep}{4pt}
+  \item \textbf{MAUI} (MobiSys'10): decide at run time which \emph{methods} to execute remotely, to save energy under current connectivity. Example: face recognition at an order of magnitude less energy.
+  \item \textbf{Neurosurgeon} (ASPLOS'17): split a DNN at a \emph{layer} boundary. Profile per-layer latency and energy, then pick the cut that minimizes end-to-end latency or phone energy.
+  \item Key fact: activation size varies widely across layers. Early CNN layers can be larger than the input image; late layers are tiny.
+\end{itemize}
+\refline{E.~Cuervo et al., MAUI: Making Smartphones Last Longer with Code Offload, ACM MobiSys 2010 \textperiodcentered{} Y.~Kang et al., Neurosurgeon: Collaborative Intelligence Between the Cloud and Mobile Edge, ACM ASPLOS 2017}
+\note{33:00--34:15. The ``where should it run'' question is 15 years old. What changed is the model.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Choosing the split point: the network decides}
+\vspace{-4pt}
+\[
+k^\star=\arg\min_{k}\Big[\underbrace{\textstyle\sum_{i\le k} t^{\text{dev}}_i}_{\text{phone}}
++\underbrace{\tfrac{D_k}{B_{\text{up}}}+\text{RTT}}_{\text{network}}
++\underbrace{\textstyle\sum_{i>k} t^{\text{srv}}_i}_{\text{server}}\Big]
+\qquad (k{=}N\text{: no network term})
+\]
+\begin{columns}[T]
+\column{0.56\textwidth}
+\begin{tikzpicture}
+\begin{axis}[
+  width=7.6cm, height=4.4cm,
+  xmin=-0.3, xmax=8.3, ymin=0, ymax=450,
+  xtick={0,...,8}, xticklabels={cloud,1,2,3,4,5,6,7,phone},
+  xlabel={split after layer $k$}, ylabel={latency (ms)},
+  label style={font=\scriptsize}, tick label style={font=\tiny},
+  legend style={font=\tiny,at={(0.98,0.98)},anchor=north east,draw=none,fill=white,fill opacity=0.85,text opacity=1},
+  legend cell align=left,
+  grid=major, grid style={black!10},
+  clip=true,
+]
+  \addplot[thick,badc,mark=*,mark size=1.4pt] coordinates {(0,2438) (1,12847) (2,6460) (3,1678) (4,421) (5,288) (6,235) (7,222) (8,180)};
+  \addlegendentry{$B_{\text{up}}=1$ Mbps}
+  \addplot[thick,edgec,mark=*,mark size=1.4pt] coordinates {(0,158) (1,687) (2,380) (3,158) (4,117) (5,136) (6,159) (7,184) (8,180)};
+  \addlegendentry{$B_{\text{up}}=20$ Mbps}
+  \addplot[thick,devc,mark=*,mark size=1.4pt] coordinates {(0,62) (1,175) (2,124) (3,94) (4,104) (5,130) (6,156) (7,182) (8,180)};
+  \addlegendentry{$B_{\text{up}}=100$ Mbps}
+  \addplot[only marks,mark=o,mark size=4pt,very thick,black] coordinates {(8,180) (4,117) (0,62)};
+\end{axis}
+\end{tikzpicture}
+\column{0.42\textwidth}
+\small
+\vspace{6pt}
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item 1 Mbps: keep everything on the phone.
+  \item 20 Mbps: cut after layer 4.
+  \item 100 Mbps: just send the input.
+\end{itemize}
+\vspace{4pt}
+\alert{The best placement moves with the uplink.} 5G uplink is much weaker than downlink and fluctuates, so placement must be \textbf{network-aware}.
+\end{columns}
+\refline{Illustrative 8-layer profile: phone 180 ms in total, server 10$\times$ faster, RTT 20 ms, activations from 1.6 MB down to 5 KB. Circles mark each curve's optimum.}
+\note{34:15--35:45. This is the networking heart of the lecture. Ask: what happens to k* during a handover?}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Early exits: stop as soon as you are confident}
+\begin{center}
+\begin{tikzpicture}
+  \foreach \i in {1,...,6} \node[layer=devc] (l\i) at (1.3*\i,0) {L\i};
+  \foreach \i [evaluate=\i as \j using int(\i+1)] in {1,...,5} \draw[-{Latex}] (l\i) -- (l\j);
+  \foreach \i in {2,4} {
+    \node[draw=okc,fill=okc!12,thick,rounded corners=2pt,font=\tiny\bfseries,align=center] (x\i) at (1.3*\i,1.25) {exit if\\[-2pt]conf $>\tau$};
+    \draw[-{Latex},okc] (l\i) -- (x\i);
+  }
+  \node[draw=okc,fill=okc!12,thick,rounded corners=2pt,font=\tiny\bfseries] (x6) at (9.1,0) {final};
+  \draw[-{Latex}] (l6) -- (x6);
+  \node[lbl,text=okc,anchor=west] at (6.0,1.25) {easy inputs leave early};
+\end{tikzpicture}
+\end{center}
+\small
+\begin{itemize}\setlength{\itemsep}{4pt}
+  \item \textbf{BranchyNet} (ICPR'16): attach classifiers to intermediate layers so that easy inputs exit early.
+  \item \textbf{SPINN} (MobiCom'20): combine early exits with device--cloud splitting. A run-time scheduler co-tunes the split point and the exit policy to the network, giving up to 2$\times$ throughput over prior collaborative inference.
+  \item The LLM-era analogue is \emph{elastic} models. \textbf{ElastiLM} (MobiCom'25, on 11/4) shrinks the model and the prompt per request to meet each app's deadline.
+\end{itemize}
+\refline{S.~Teerapittayanon, B.~McDanel, H.~T.~Kung, BranchyNet, ICPR 2016 \textperiodcentered{} S.~Laskaridis et al., SPINN, ACM MobiCom 2020 \textperiodcentered{} W.~Yin et al., Elastic On-Device LLM Service, ACM MobiCom 2025}
+\note{35:45--36:45. Keep this short. The point is that the amount of work per input can adapt, not only its placement.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Why splitting an LLM is different}
+\vspace{10pt}
+\begin{columns}[c]
+\column{0.46\textwidth}
+\begin{tikzpicture}[y=0.9cm]
+  \node[lbl,text=devc,anchor=east] at (0,1) {\textbf{phone}};
+  \node[lbl,text=cloudc,anchor=east] at (0,0) {\textbf{server}};
+  \draw[devc,thick] (0.1,1) -- (5.6,1);
+  \draw[cloudc,thick] (0.1,0) -- (5.6,0);
+  \foreach \s in {0,1,2} {
+    \pgfmathsetmacro{\a}{0.3+1.7*\s}
+    \draw[-{Latex},badc] (\a,1) -- (\a+0.55,0);
+    \draw[-{Latex},badc] (\a+0.75,0) -- (\a+1.3,1);
+    \pgfmathtruncatemacro{\n}{\s+1}
+    \node[lbl] at (\a+0.65,1.35) {tok \n};
+  }
+  \node[font=\scriptsize] at (5.85,0.5) {$\cdots$};
+\end{tikzpicture}
+\column{0.52\textwidth}
+\small
+\begin{itemize}\setlength{\itemsep}{5pt}
+  \item A CNN crosses the network \textbf{once per input}. An LLM split in the middle crosses it \textbf{once per output token}.
+  \item 200-token answer $\times$ 30 ms RTT $=$ \textbf{6 s} of pure waiting.
+  \item The payload is tiny: one hidden vector is $4096\times2$ B $=$ 8 KB. The split is \emph{latency}-bound, not bandwidth-bound.
+\end{itemize}
+\end{columns}
+\vspace{14pt}
+\begin{alertblock}{}
+\centering For LLMs, the goal shifts from \emph{fewer bytes} to \textbf{fewer round trips}.
+\end{alertblock}
+\note{36:45--37:45. This is why naive Neurosurgeon-style splitting is rare for LLMs.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Speculative decoding: draft cheaply, verify in one pass}
+\begin{center}
+\begin{tikzpicture}
+  \node[lbl,anchor=east] at (-0.2,1.3) {small model drafts $\gamma{=}4$};
+  \node[lbl,anchor=east] at (-0.2,0.65) {large model checks all 4 at once};
+  \node[lbl,anchor=east] at (-0.2,0) {output};
+  \foreach \i/\w/\m in {0/the/\yes,1/doctor/\yes,2/called/\yes,3/about/\no} {
+    \node[tok,fill=devc!10,minimum width=1.2cm] at (1.4*\i+0.6,1.3) {\w};
+    \node at (1.4*\i+0.6,0.65) {\large\m};
+  }
+  \foreach \i/\w in {0/the,1/doctor,2/called} \node[tok,fill=devc!10,minimum width=1.2cm] at (1.4*\i+0.6,0) {\w};
+  \node[tok,fill=okc!15,draw=okc,thick,minimum width=1.2cm] at (4.8,0) {to};
+  \node[lbl,anchor=west,align=left] at (5.6,0) {3 accepted + 1 new:\\4 tokens per large pass};
+\end{tikzpicture}
+\end{center}
+\small
+\begin{itemize}\setlength{\itemsep}{4pt}
+  \item Leviathan et al.\ (ICML'23): the output distribution is \textbf{identical} to the large model's; 2--3$\times$ faster on T5-XXL.
+  \item With acceptance rate $\alpha$, the expected tokens per large-model pass are
+  $\frac{1-\alpha^{\gamma+1}}{1-\alpha}$. For $\alpha{=}0.8$, $\gamma{=}4$: $\approx$\textbf{3.4 tokens}.
+  \item \textbf{Edge twist}: draft on the phone, verify on the server: one round trip per $\sim$3 tokens instead of per token.
+\end{itemize}
+\refline{Y.~Leviathan, M.~Kalman, Y.~Matias, Fast Inference from Transformers via Speculative Decoding, ICML 2023}
+\note{37:45--39:00. Work out the formula: (1-0.8\^{}5)/0.2 = 3.36.}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+\frametitle{Four ways to collaborate}
+\vspace{4pt}
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Split by\ldots & Who does what & Example \\
+\midrule
+\textbf{layers} & phone runs the first $k$ layers, the server the rest & Neurosurgeon (ASPLOS'17) \\
+\textbf{role} & phone drafts tokens, the server verifies them & speculative decoding (ICML'23) \\
+\textbf{time} & server writes the hard opening, then hands off once & SAIL (MobiSys'26) \\
+\textbf{device} & one model sliced across home devices as a pipeline & Confidant (MobiCom'25) \\
+\bottomrule
+\end{tabular}
+\normalsize
+\raggedright
+\vspace{12pt}
+\begin{block}{And the edge itself is not a guarantee}
+\textbf{SMEC} (NSDI'26): on commercial 5G edge deployments, both the RAN scheduler and the edge server are shared and blind to deadlines. SMEC puts a deadline-aware manager at each, using only standard 5G signals.
+\end{block}
+\refline{G.~Park et al., SAIL, ACM MobiSys 2026 \textperiodcentered{} Y.~Chen et al., Confidant, ACM MobiCom 2025 \textperiodcentered{} X.~Zhang et al., Enabling SLO-Aware 5G Multi-Access Edge Computing with SMEC, USENIX NSDI 2026}
+\note{39:00--40:00. Three of these papers are presented on 11/9. Ask students to place each one in this table when they read it.}
+\end{frame}
+
+% =====================================================================

@@ -1,0 +1,53 @@
+%!TEX root = ./main.tex
+
+% Styles and macros for this deck (Zhankai Ye's Class 20 source, restyled to the
+% course template). ran_macros.tex is not used; variables.tex supplies the theme.
+
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{arrows.meta,positioning,calc,shapes.geometric}
+
+% ---------------------------------------------------------------------
+% Colors: blue = device, orange = edge, gray = cloud.
+% ---------------------------------------------------------------------
+\definecolor{devc}{RGB}{31,94,160}
+\definecolor{edgec}{RGB}{214,120,20}
+\definecolor{cloudc}{RGB}{105,105,105}
+\definecolor{okc}{RGB}{30,130,60}
+\definecolor{badc}{RGB}{170,20,20}
+
+% Short source line at the bottom of a frame (full list at the end).
+\newcommand{\refline}[1]{%
+  \par\vfill
+  {\tiny\color{black!55}#1\par}%
+  \vspace{1pt}}
+
+\newcommand{\pro}{\textcolor{okc}{\textbf{+}}\ }
+\newcommand{\con}{\textcolor{badc}{\textbf{--}}\ }
+\newcommand{\yes}{\textcolor{okc}{\ensuremath{\checkmark}}}
+\newcommand{\no}{\textcolor{badc}{\ensuremath{\times}}}
+
+\tikzset{
+  place/.style={draw=#1,fill=#1!10,very thick,rounded corners=4pt,
+    minimum width=3.3cm,minimum height=1.15cm,align=center,font=\bfseries},
+  layer/.style={draw=#1,fill=#1!12,thick,rounded corners=2pt,
+    minimum width=0.85cm,minimum height=0.85cm,font=\scriptsize\bfseries},
+  tok/.style={draw=black!50,fill=black!4,rounded corners=1.5pt,
+    minimum height=0.5cm,inner sep=2pt,font=\scriptsize},
+  lbl/.style={font=\scriptsize,text=black!65,align=center},
+}
+
+% Section roadmap, as in the Overleaf Beamer guide.
+\AtBeginSection[]{
+  \begin{frame}[c]
+    \frametitle{Roadmap}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+% ---------------------------------------------------------------------

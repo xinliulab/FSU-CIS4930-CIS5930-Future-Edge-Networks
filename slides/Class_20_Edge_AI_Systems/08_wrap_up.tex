@@ -1,0 +1,19 @@
+%!TEX root = ./main.tex
+
+\section[Wrap-up]{Wrap-up}
+% =====================================================================
+\begin{frame}
+\frametitle{Takeaways}
+\vspace{4pt}
+\begin{enumerate}\setlength{\itemsep}{5pt}
+  \item On a phone, \textbf{memory capacity and bandwidth}, not FLOPs, set the limits: decode speed $\approx$ bandwidth / bytes per token.
+  \item \textbf{Quantization} cuts bytes, which improves memory, speed, and energy at once. Outliers are the enemy (LLM.int8(), SmoothQuant, GPTQ, AWQ).
+  \item \textbf{MoE} buys capacity with memory. On phones it pays only if the experts are resident, or are predicted and prefetched well.
+  \item The \textbf{KV cache} grows with context and can rival the weights. Shrink heads, tokens, or bits, or move it.
+  \item \textbf{Splitting} suits one-pass models. For LLMs, cut \emph{round trips}: speculative decoding, a single handoff.
+  \item \textbf{Routing} decides per request: device, edge, or cloud, using difficulty, deadline, privacy, link, and battery.
+\end{enumerate}
+\note{43:30--44:15. Hand over to Lex for the MobileMoE talk.}
+\end{frame}
+
+% =====================================================================
