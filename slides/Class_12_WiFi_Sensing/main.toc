@@ -1,0 +1,7 @@
+\beamer@sectionintoc {1}{The Question}{2}{0}{1}
+\beamer@sectionintoc {2}{Attempt 1: Signal Strength}{5}{0}{2}
+\beamer@sectionintoc {3}{The Signal Is a Wave}{7}{0}{3}
+\beamer@sectionintoc {4}{Ruler 1: Compare Two Antennas (ArrayTrack)}{9}{0}{4}
+\beamer@sectionintoc {5}{Ruler 2: Compare Two Frequencies (Chronos)}{14}{0}{5}
+\beamer@sectionintoc {6}{Both Rulers from One Packet (SpotFi)}{20}{0}{6}
+\beamer@sectionintoc {7}{Wrap-Up}{22}{0}{7}
