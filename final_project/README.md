@@ -121,7 +121,7 @@ BibTeX for the three papers, ready to paste into your `.bib` file:
 ```bibtex
 @inproceedings{twofia2026,
   author    = {Li, Bofan and Ye, Zhankai and Yu, Weikuan and Tang, Yongning and Liu, Xin},
-  title     = {{2FiA}: Towards {WiFi} Sensing-Based Authentication with Unique Biometrics},
+  title     = "{2FiA}: Towards {WiFi} Sensing-Based Authentication with Unique Biometrics",
   booktitle = {2026 IEEE Symposium on Security and Privacy (SP)},
   pages     = {1618--1634},
   year      = {2026},
@@ -131,7 +131,7 @@ BibTeX for the three papers, ready to paste into your `.bib` file:
 @inproceedings{bfmsense2024,
   author    = {Yi, Enze and Wu, Dan and Xiong, Jie and Zhang, Fusang and Niu, Kai and
                Li, Wenwei and Zhang, Daqing},
-  title     = {{BFMSense}: {WiFi} Sensing Using Beamforming Feedback Matrix},
+  title     = "{BFMSense}: {WiFi} Sensing Using Beamforming Feedback Matrix",
   booktitle = {21st USENIX Symposium on Networked Systems Design and Implementation (NSDI 24)},
   pages     = {1697--1712},
   year      = {2024},
@@ -142,7 +142,7 @@ BibTeX for the three papers, ready to paste into your `.bib` file:
 
 @article{bfmscan2026,
   author    = {Li, Bofan and Liu, Zhuoyuan and Ye, Zhankai and Yu, Weikuan and Liu, Xin},
-  title     = {{BFMScan}: Enabling Explicit Angle-Resolved Sensing via Beamforming Feedback Matrix},
+  title     = "{BFMScan}: Enabling Explicit Angle-Resolved Sensing via Beamforming Feedback Matrix",
   journal   = {Proc. ACM Interact. Mob. Wearable Ubiquitous Technol.},
   volume    = {10},
   number    = {3},
