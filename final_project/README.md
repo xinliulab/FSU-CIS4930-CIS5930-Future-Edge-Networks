@@ -72,11 +72,72 @@ complete project; ten classes recognized poorly is not.
    evidence is a test on a session collected on a different day. Report a confusion matrix,
    not just one accuracy number.
 
-**Read BFMScan first** (paper and code:
-[github.com/xlstacklab/26UbiComp_BFMScan](https://github.com/xlstacklab/26UbiComp_BFMScan)).
-It is the worked example of this whole pipeline - how to go from raw reports to angles, how
-to see motion in them, and how to evaluate a BFM sensing system. BFMSense
-([NSDI 2024](https://usenix.org/conference/nsdi24/presentation/yi)) is the second reading.
+## Required reading and citations
+
+Three papers lead from Wi-Fi sensing to this project. **Your paper must cite all three** in
+its introduction or related work.
+
+1. **2FiA** (IEEE S&P 2026, [paper](https://doi.org/10.1109/SP63933.2026.00087)). Wi-Fi
+   sensing started from channel state information (CSI). The Wi-Fi chip estimates CSI from
+   every packet it receives, and CSI changes when a person moves or even breathes. 2FiA shows
+   how much CSI can see. It reads a person's breathing and the much weaker heartbeat beneath
+   it, and it uses both to verify who the person is.
+2. **BFMSense** (USENIX NSDI 2024,
+   [paper](https://www.usenix.org/conference/nsdi24/presentation/yi)). BFMSense moves Wi-Fi
+   sensing from CSI to the beamforming feedback matrix (BFM). A Wi-Fi 5 or Wi-Fi 6 client
+   computes BFM from the AP's sounding and sends it back as part of normal communication.
+   BFM needs no special driver or firmware, and a sniffer in monitor mode captures it from
+   the air. BFMSense derives how BFM relates to CSI and uses BFM to track breathing and
+   walking.
+3. **BFMScan** (ACM IMWUT/UbiComp 2026, [paper](https://doi.org/10.1145/3832009),
+   [code](https://github.com/xlstacklab/26UbiComp_BFMScan)). BFMScan makes BFM sensing
+   angle-resolved. It derives the subspace structure of compressed BFM and reconstructs the
+   angle-of-departure profile from a single pair of commodity Wi-Fi devices. It resolves the
+   direction of static and moving targets and separates several people at once. **Read
+   BFMScan first.** It is the worked example of this project's pipeline. It shows how to go
+   from raw reports to angles, how to see motion in them, and how to evaluate a BFM sensing
+   system.
+
+Your project takes the next step on this path. 2FiA sensed people through CSI. BFMSense and
+BFMScan showed that the BFM every client already sends is a sensing signal of its own. You
+now capture your own BFM and train a model to recognize something physical from it. Tell
+this story in your own words in your introduction.
+
+BibTeX for the three papers, ready to paste into your `.bib` file:
+
+```bibtex
+@inproceedings{twofia2026,
+  author    = {Li, Bofan and Ye, Zhankai and Yu, Weikuan and Tang, Yongning and Liu, Xin},
+  title     = {{2FiA}: Towards {WiFi} Sensing-Based Authentication with Unique Biometrics},
+  booktitle = {2026 IEEE Symposium on Security and Privacy (SP)},
+  pages     = {1618--1634},
+  year      = {2026},
+  doi       = {10.1109/SP63933.2026.00087}
+}
+
+@inproceedings{bfmsense2024,
+  author    = {Yi, Enze and Wu, Dan and Xiong, Jie and Zhang, Fusang and Niu, Kai and
+               Li, Wenwei and Zhang, Daqing},
+  title     = {{BFMSense}: {WiFi} Sensing Using Beamforming Feedback Matrix},
+  booktitle = {21st USENIX Symposium on Networked Systems Design and Implementation (NSDI 24)},
+  pages     = {1697--1712},
+  year      = {2024},
+  address   = {Santa Clara, CA},
+  publisher = {USENIX Association},
+  url       = {https://www.usenix.org/conference/nsdi24/presentation/yi}
+}
+
+@article{bfmscan2026,
+  author    = {Li, Bofan and Liu, Zhuoyuan and Ye, Zhankai and Yu, Weikuan and Liu, Xin},
+  title     = {{BFMScan}: Enabling Explicit Angle-Resolved Sensing via Beamforming Feedback Matrix},
+  journal   = {Proc. ACM Interact. Mob. Wearable Ubiquitous Technol.},
+  volume    = {10},
+  number    = {3},
+  articleno = {122},
+  year      = {2026},
+  doi       = {10.1145/3832009}
+}
+```
 
 ## The paper
 
@@ -86,7 +147,7 @@ conferences. Use the official [AAAI author kit](https://aaai.org/authorkit26/); 
 hosts ready-to-use copies ([AAAI templates on Overleaf](https://www.overleaf.com/gallery/tagged/aaai)).
 
 A natural structure: abstract; introduction (what you recognize and why BFM can see it);
-background and related work (BFM, BFMScan, BFMSense); data collection (setup, devices,
+background and related work (Wi-Fi sensing with CSI, BFM, and the three required papers); data collection (setup, devices,
 sessions, labels); method; evaluation (splits, confusion matrix, where it fails); discussion
 and conclusion. Every figure must come from your own data.
 
@@ -110,8 +171,9 @@ submission ID, and the pushed repo by the deadline count as on time.
   working pipeline, and a repo README that lets someone redo your result.
 - **Demo video (10%):** the system actually running on your data, shown end to end in 3 to 5
   minutes.
-- **Paper (10%):** a clear task, an honest evaluation (split by session, confusion matrix,
-  failure cases), real figures from your own data, readable writing, posted on arXiv.
+- **Paper (10%):** a clear task, the three required citations (2FiA, BFMSense, BFMScan), an
+  honest evaluation (split by session, confusion matrix, failure cases), real figures from
+  your own data, readable writing, posted on arXiv.
 
 ## Suggested schedule
 
