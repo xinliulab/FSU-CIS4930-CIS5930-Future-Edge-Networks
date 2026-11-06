@@ -77,21 +77,34 @@ complete project; ten classes recognized poorly is not.
 Three papers lead from Wi-Fi sensing to this project. **Your paper must cite all three** in
 its introduction or related work.
 
-1. **2FiA** (IEEE S&P 2026, [paper](https://doi.org/10.1109/SP63933.2026.00087)). Wi-Fi
-   sensing started from channel state information (CSI). The Wi-Fi chip estimates CSI from
-   every packet it receives, and CSI changes when a person moves or even breathes. 2FiA shows
-   how much CSI can see. It reads a person's breathing and the much weaker heartbeat beneath
-   it, and it uses both to verify who the person is.
-2. **BFMSense** (USENIX NSDI 2024,
-   [paper](https://www.usenix.org/conference/nsdi24/presentation/yi)). BFMSense moves Wi-Fi
-   sensing from CSI to the beamforming feedback matrix (BFM). A Wi-Fi 5 or Wi-Fi 6 client
-   computes BFM from the AP's sounding and sends it back as part of normal communication.
-   BFM needs no special driver or firmware, and a sniffer in monitor mode captures it from
-   the air. BFMSense derives how BFM relates to CSI and uses BFM to track breathing and
-   walking.
-3. **BFMScan** (ACM IMWUT/UbiComp 2026, [paper](https://doi.org/10.1145/3832009),
-   [code](https://github.com/xlstacklab/26UbiComp_BFMScan)). BFMScan makes BFM sensing
-   angle-resolved. It derives the subspace structure of compressed BFM and reconstructs the
+1. Bofan Li, Zhankai Ye, Weikuan Yu, Yongning Tang, and Xin Liu.
+   **2FiA: Towards WiFi Sensing-Based Authentication with Unique Biometrics.** In *2026 IEEE
+   Symposium on Security and Privacy (S&P)*, pages 1618–1634, 2026.
+   [[Paper]](https://doi.org/10.1109/SP63933.2026.00087)
+
+   Wi-Fi sensing started from channel state information (CSI). The Wi-Fi chip estimates CSI
+   from every packet it receives, and CSI changes when a person moves or even breathes. 2FiA
+   shows how much CSI can see. It reads a person's breathing and the much weaker heartbeat
+   beneath it, and it uses both to verify who the person is.
+
+2. Enze Yi, Dan Wu, Jie Xiong, Fusang Zhang, Kai Niu, Wenwei Li, and Daqing Zhang.
+   **BFMSense: WiFi Sensing Using Beamforming Feedback Matrix.** In *21st USENIX Symposium on
+   Networked Systems Design and Implementation (NSDI 24)*, pages 1697–1712, Santa Clara, CA,
+   2024. [[Paper]](https://www.usenix.org/conference/nsdi24/presentation/yi)
+
+   BFMSense moves Wi-Fi sensing from CSI to the beamforming feedback matrix (BFM). A Wi-Fi 5
+   or Wi-Fi 6 client computes BFM from the AP's sounding and sends it back as part of normal
+   communication. BFM needs no special driver or firmware, and a sniffer in monitor mode
+   captures it from the air. BFMSense derives how BFM relates to CSI and uses BFM to track
+   breathing and walking.
+
+3. Bofan Li, Zhuoyuan Liu, Zhankai Ye, Weikuan Yu, and Xin Liu.
+   **BFMScan: Enabling Explicit Angle-Resolved Sensing via Beamforming Feedback Matrix.**
+   *Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies
+   (IMWUT/UbiComp)*, 10(3), Article 122, 2026. [[Paper]](https://doi.org/10.1145/3832009)
+   [[Code]](https://github.com/xlstacklab/26UbiComp_BFMScan)
+
+   BFMScan makes BFM sensing angle-resolved. It derives the subspace structure of compressed BFM and reconstructs the
    angle-of-departure profile from a single pair of commodity Wi-Fi devices. It resolves the
    direction of static and moving targets and separates several people at once. **Read
    BFMScan first.** It is the worked example of this project's pipeline. It shows how to go
