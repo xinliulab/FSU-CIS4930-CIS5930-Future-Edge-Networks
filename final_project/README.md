@@ -9,7 +9,7 @@ presentation.
 1. **Code and data (20%)** - pushed to your final-project repository on GitHub.
 2. **Demo video (10%)** - 3 to 5 minutes of your system working; you may talk over your
    slides. Upload it to Canvas.
-3. **Paper (10%)** - up to 8 pages in the ACM HotMobile format, posted on arXiv. Details
+3. **Paper (10%)** - up to 7 pages in the AAAI two-column format, posted on arXiv. Details
    below.
 
 ## The idea
@@ -80,10 +80,10 @@ to see motion in them, and how to evaluate a BFM sensing system. BFMSense
 
 ## The paper
 
-Write it as a real systems paper, **8 pages at most** (references do not count against the
-limit), in the **ACM two-column conference format used by ACM HotMobile**: the official ACM
-template with the `sigconf` option
-([Overleaf template](https://www.overleaf.com/latex/templates/acm-conference-proceedings-primary-article-template/wbvnghjbzwpc)).
+Write it as a real AI paper, **7 pages at most** (references do not count against the
+limit), in the **AAAI two-column format** - the standard format of AAAI, one of the major AI
+conferences. Use the official [AAAI author kit](https://aaai.org/authorkit26/); Overleaf also
+hosts ready-to-use copies ([AAAI templates on Overleaf](https://www.overleaf.com/gallery/tagged/aaai)).
 
 A natural structure: abstract; introduction (what you recognize and why BFM can see it);
 background and related work (BFM, BFMScan, BFMSense); data collection (setup, devices,
