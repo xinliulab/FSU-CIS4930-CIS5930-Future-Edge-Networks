@@ -7,6 +7,7 @@ presentation.
 
 **Three deliverables** (weights are of the course grade, as in the syllabus):
 1. **Code and data (20%)** - pushed to your final-project repository on GitHub.
+   [Accept your final-project repository here.](https://classroom50.org/FSU-CIS4930-5930-F26/cis4930-5930-f26/assignments/final-project/accept)
 2. **Demo video (10%)** - 3 to 5 minutes of your system working; you may talk over your
    slides. Upload it to Canvas.
 3. **Paper (10%)** - up to 7 pages in the AAAI two-column format, posted on arXiv. Details
@@ -172,8 +173,8 @@ Posting the paper on arXiv is **required**. By the deadline:
    endorsement for your category (cs.NI is a good fit), ask me and I will endorse it.
 2. Submit it to arXiv yourself, then paste the arXiv link or submission ID on Canvas.
 3. Push everything to your final-project repository: the paper source and PDF in `paper/`,
-   your code in `code/`, and a `README.md` with the arXiv link and one paragraph on how to
-   reproduce your result.
+   your code in `code/`, your labeled data in `data/`, and a `README.md` with the arXiv
+   link and one paragraph on how to reproduce your result.
 
 If posting stalls (arXiv moderation can take a few days), the emailed PDF, the Canvas
 submission ID, and the pushed repo by the deadline count as on time.
